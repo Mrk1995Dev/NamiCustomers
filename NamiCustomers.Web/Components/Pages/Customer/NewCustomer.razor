@@ -1,0 +1,81 @@
+﻿@page "/add-customer"
+@using NamiCustomers.Web.Services.CustomerService.Dto
+@using NamiCustomers.Web.Services.CustomerService.Implementation
+@using NamiCustomers.Web.Services.CustomerService.Dto
+@using NamiCustomers.Web.Services.CustomerService.Implementation
+@rendermode InteractiveServer
+@inject CustomerService customerService
+@inject NavigationManager navigation
+
+
+<h3>افزودن مشتری</h3>
+
+<EditForm Model="@customer" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-2">
+        <label>نام مشتری:</label>
+        <InputText class="form-control" @bind-Value="customer.Name" />
+    </div>
+
+    <div class="mb-2">
+        <label>آدرس:</label>
+        <InputText class="form-control" @bind-Value="customer.Address" />
+    </div>
+
+    <div class="mb-2">
+        <label>شهر:</label>
+        <InputSelect class="form-control" @bind-Value="customer.CityId">
+            <option value="">-- انتخاب شهر --</option>
+            @foreach (var city in Cities)
+            {
+                <option value="@city.Id">@city.Title</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="mb-2">
+        <label>شماره تماس:</label>
+        <InputText class="form-control" @bind-Value="customer.PhoneNumber" />
+    </div>
+
+    <div class="mb-2">
+        <label>فکس:</label>
+        <InputText class="form-control" @bind-Value="customer.Fax" />
+    </div>
+
+    <div class="mb-2">
+        <label>تعداد همکاران:</label>
+        <InputNumber class="form-control" @bind-Value="customer.CoWorkers" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">ذخیره</button>
+</EditForm>
+
+@if (!string.IsNullOrEmpty(responseMessage))
+{
+    <p class="mt-2">@responseMessage</p>
+}
+
+@code {
+    AddCustomerInfoDto customer = new();
+    List<CityDto> Cities = new();
+    string responseMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // فرض: دریافت لیست شهرها از API
+        Cities = await customerService.GetAllCitiesAsync();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var response = await customerService.CreateAsync(customer);
+        if(response.IsSuccess)
+        {
+            navigation.NavigateTo("/");
+        }
+    }
+}
+

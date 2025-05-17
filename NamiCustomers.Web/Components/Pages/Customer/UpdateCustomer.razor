@@ -1,0 +1,89 @@
+﻿@page "/customer/edit/{customerId:int}"
+@using NamiCustomers.Web.Services.CustomerService.Dto
+@using NamiCustomers.Web.Services.CustomerService.Implementation
+@using NamiCustomers.Web.Services.CustomerService.Dto
+@using NamiCustomers.Web.Services.CustomerService.Implementation
+@inject NavigationManager navigation
+@inject CustomerService customerService
+@rendermode InteractiveServer
+
+
+<h3>ویرایش مشتری</h3>
+
+@if (customer == null)
+{
+    <p>در حال بارگذاری...</p>
+}
+else
+{
+    <EditForm FormName="EditCustomerForm" Model="@customer" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label>نام</label>
+            <InputText class="form-control" @bind-Value="customer.Name" />
+        </div>
+        <div class="mb-3">
+            <label>آدرس</label>
+            <InputText class="form-control" @bind-Value="customer.Address" />
+        </div>
+        <div class="mb-3">
+            <label>شهر</label>
+            <InputSelect class="form-control" @bind-Value="customer.CityId">
+                @foreach (var city in Cities)
+                {
+                    <option value="@city.Id">@city.Title</option>
+                }
+            </InputSelect>
+        </div>
+        <div class="mb-3">
+            <label>تلفن</label>
+            <InputText class="form-control" @bind-Value="customer.PhoneNumber" />
+        </div>
+        <div class="mb-3">
+            <label>فکس</label>
+            <InputText class="form-control" @bind-Value="customer.Fax" />
+        </div>
+        <div class="mb-3">
+            <label>تعداد همکاران</label>
+            <InputNumber class="form-control" @bind-Value="customer.CoWorkers" />
+        </div>
+
+        <button type="submit" class="btn btn-success">ثبت تغییرات</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int CustomerId { get; set; }
+
+    private CustomerInfoDetailsDto customer;
+    private List<CityDto> Cities = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Cities = await customerService.GetAllCitiesAsync();
+        customer = (await customerService.GetByIdAsync(CustomerId)).Data;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var modifiedCustomer = new UpdateCustomerInfoDto
+            {
+                Id = customer.Id,
+                Name = customer.Name,
+                CityId = customer.CityId,
+                Fax = customer.Fax,
+                PhoneNumber = customer.PhoneNumber,
+                Address = customer.Address,
+                CoWorkers = customer.CoWorkers
+            };
+        var response = await customerService.UpdateAsync(modifiedCustomer);
+        if (response.IsSuccess)
+        {
+            navigation.NavigateTo("/");
+        }
+
+    }
+}

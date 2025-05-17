@@ -1,0 +1,80 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36109.1 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamiCustomers.Application", "NamiCustomers.Application\NamiCustomers.Application.csproj", "{486761FF-5983-40A4-BDFB-66826E18726F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamiCustomers.Domain", "NamiCustomers.Domain\NamiCustomers.Domain.csproj", "{623295CB-B508-4109-97A5-692076AC7AD6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructures", "Infrastructures", "{F32EE3DC-67C3-4B53-B6F9-17C3032EBD23}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamiCustomers.Infrastucture", "NamiCustomers.Infrastucture\NamiCustomers.Infrastucture.csproj", "{05F3228C-E891-4EF9-8445-11FEAB06A962}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamiCustomers.Persistence", "NamiCustomers.Persistence\NamiCustomers.Persistence.csproj", "{0ECD3623-2438-480F-9F65-941FB07828B7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentations", "Presentations", "{7E62B90F-CB7C-42C6-A528-08D00F37260C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamiCustomers.API", "NamiCustomers.API\NamiCustomers.API.csproj", "{A6C70763-C216-40B7-B886-FD972F8B110F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C01A53A6-588A-4657-8FC8-8E236043827E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamiCustomers.API.Tests", "NamiCustomers.API.Tests\NamiCustomers.API.Tests.csproj", "{10548C17-240C-42D0-8538-665167ECA1C2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{368340C3-E58F-46D5-9658-3D7297A772B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamiCustomers.Web", "NamiCustomers.Web\NamiCustomers.Web.csproj", "{D192945A-C02E-20BE-EE35-F5E3F9C40505}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{486761FF-5983-40A4-BDFB-66826E18726F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{486761FF-5983-40A4-BDFB-66826E18726F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{486761FF-5983-40A4-BDFB-66826E18726F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{486761FF-5983-40A4-BDFB-66826E18726F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{623295CB-B508-4109-97A5-692076AC7AD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{623295CB-B508-4109-97A5-692076AC7AD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{623295CB-B508-4109-97A5-692076AC7AD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{623295CB-B508-4109-97A5-692076AC7AD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05F3228C-E891-4EF9-8445-11FEAB06A962}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05F3228C-E891-4EF9-8445-11FEAB06A962}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05F3228C-E891-4EF9-8445-11FEAB06A962}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05F3228C-E891-4EF9-8445-11FEAB06A962}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ECD3623-2438-480F-9F65-941FB07828B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ECD3623-2438-480F-9F65-941FB07828B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ECD3623-2438-480F-9F65-941FB07828B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ECD3623-2438-480F-9F65-941FB07828B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6C70763-C216-40B7-B886-FD972F8B110F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6C70763-C216-40B7-B886-FD972F8B110F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6C70763-C216-40B7-B886-FD972F8B110F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6C70763-C216-40B7-B886-FD972F8B110F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10548C17-240C-42D0-8538-665167ECA1C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10548C17-240C-42D0-8538-665167ECA1C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10548C17-240C-42D0-8538-665167ECA1C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10548C17-240C-42D0-8538-665167ECA1C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D192945A-C02E-20BE-EE35-F5E3F9C40505}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D192945A-C02E-20BE-EE35-F5E3F9C40505}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D192945A-C02E-20BE-EE35-F5E3F9C40505}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D192945A-C02E-20BE-EE35-F5E3F9C40505}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{486761FF-5983-40A4-BDFB-66826E18726F} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{623295CB-B508-4109-97A5-692076AC7AD6} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{05F3228C-E891-4EF9-8445-11FEAB06A962} = {F32EE3DC-67C3-4B53-B6F9-17C3032EBD23}
+		{0ECD3623-2438-480F-9F65-941FB07828B7} = {F32EE3DC-67C3-4B53-B6F9-17C3032EBD23}
+		{A6C70763-C216-40B7-B886-FD972F8B110F} = {7E62B90F-CB7C-42C6-A528-08D00F37260C}
+		{10548C17-240C-42D0-8538-665167ECA1C2} = {C01A53A6-588A-4657-8FC8-8E236043827E}
+		{D192945A-C02E-20BE-EE35-F5E3F9C40505} = {7E62B90F-CB7C-42C6-A528-08D00F37260C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F3838700-8F11-4C49-ABA1-2A4851C1FA52}
+	EndGlobalSection
+EndGlobal

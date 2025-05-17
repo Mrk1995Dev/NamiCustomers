@@ -1,0 +1,9 @@
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.AspNetCore.Mvc.ModelBinding;
+global using Moq;
+global using NamiCustomers.API.Controllers.v1;
+global using NamiCustomers.Application.DTOs;
+global using NamiCustomers.Application.Services;
+global using Xunit;
+global using Xunit.Abstractions;

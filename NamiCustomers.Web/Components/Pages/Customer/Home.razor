@@ -1,0 +1,87 @@
+﻿@page "/"
+@using NamiCustomers.Web.Services.CustomerService.Dto
+@using NamiCustomers.Web.Services.CustomerService.Implementation
+@using NamiCustomers.Web.Services.CustomerService.Dto
+@using NamiCustomers.Web.Services.CustomerService.Implementation
+@inject CustomerService customerService
+@inject IJSRuntime jsRunTime
+@inject NavigationManager navigationManager
+
+@rendermode InteractiveServer
+
+
+<h3>لیست مشتریان</h3>
+
+@if (customers == null)
+{
+    <p>در حال بارگذاری...</p>
+}
+else if (!customers.Any())
+{
+    <p>هیچ مشتری یافت نشد.</p>
+}
+else
+{
+    <table class="table table-info">
+        <thead>
+            <tr>
+                <th style="display:none;">Id</th>
+                <th>نام</th>
+                <th>آدرس</th>
+                <th>شهر</th>
+                <th>تلفن</th>
+                <th>فکس</th>
+                <th>تعداد همکاران</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in customers)
+            {
+                <tr>
+                    <td style="display:none;">@customer.Id</td>
+                    <td>@customer.Name</td>
+                    <td>@customer.Address</td>
+                    <td>@customer.CityName</td>
+                    <td>@customer.PhoneNumber</td>
+                    <td>@customer.Fax</td>
+                    <td>@customer.CoWorkers</td>
+                    <button class="btn btn-danger" @onclick="() => DeleteCustomer(customer.Id)">حذف</button>
+                    <button class="btn btn-warning" @onclick="() => EditCustomer(customer.Id)">ویرایش</button>
+                    <button class="btn btn-info" @onclick="() => CustomerInfo(customer.Id)">جزییات مشتری</button>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    List<CustomerListDto> customers;
+
+
+    void CustomerInfo(int id)
+    {
+        navigationManager.NavigateTo($"/customer/info/{id}");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        customers = await customerService.GetAllAsync();
+    }
+
+
+    public async Task DeleteCustomer(int id)
+    {
+        var confirm = await jsRunTime.InvokeAsync<bool>("confirm", $"آیا از حذف مشتری با شناسه {id} مطمئن هستید؟");
+        if (!confirm) return;
+
+        var response = await customerService.DeleteAsync(id);
+        if (response.IsSuccess) navigationManager.NavigateTo("/", true);
+    }
+
+    public async Task EditCustomer(int id)
+    {
+        navigationManager.NavigateTo($"/customer/edit/{id}");
+    }
+}
+

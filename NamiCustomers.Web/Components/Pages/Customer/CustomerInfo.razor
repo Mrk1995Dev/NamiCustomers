@@ -1,0 +1,37 @@
+﻿@page "/customer/info/{id:int}"
+@using NamiCustomers.Web.Services.CustomerService.Dto
+@using NamiCustomers.Web.Services.CustomerService.Implementation
+@using NamiCustomers.Web.Services.CustomerService.Dto
+@using NamiCustomers.Web.Services.CustomerService.Implementation
+@inject CustomerService customerService
+
+<h3>جزئیات مشتری</h3>
+
+@if (customer == null)
+{
+    <p>در حال بارگذاری...</p>
+}
+else
+{
+    <div class="card p-3">
+        <p><strong>نام:</strong> @customer.Data.Name</p>
+        <p><strong>آدرس:</strong> @customer.Data.Address</p>
+        <p><strong>شهر:</strong> @customer.Data.CityName</p>
+        <p><strong>تلفن:</strong> @customer.Data.PhoneNumber</p>
+        <p><strong>فکس:</strong> @customer.Data.Fax</p>
+        <p><strong>تعداد همکاران:</strong> @customer.Data.CoWorkers</p>
+    </div>
+}
+
+@code {
+    [Parameter] 
+    public int id { get; set; }
+
+    ResultDto<CustomerInfoDetailsDto> customer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customer = await customerService.GetByIdAsync(id);
+    }
+
+}
