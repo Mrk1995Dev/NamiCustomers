@@ -1,5 +1,6 @@
 ﻿
 
+using NamiCustomers.API.Controllers.v1;
 using NamiCustomers.Application.Services.SAMPLE;
 
 namespace NamiCustomers.API.Tests.v1

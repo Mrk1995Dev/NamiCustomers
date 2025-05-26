@@ -3,15 +3,25 @@ using NamiCustomers.Web.Services.CustomerService.Dto;
 
 namespace NamiCustomers.Web.Services.CustomerService.Implementation
 {
-
+    public record MyToken(string token);
     public class CustomerService(HttpClient http, ISettingFacade settingFacade)
     {
-        public async Task<List<CustomerListDto>> GetAllAsync()
+        public async Task<List<CustomerListDto>> GetAllAsync(string mobile)
         {
             //https://localhost:7061/v1/Customer/customerList
             //https://localhost:7061/customer/customerList
-            var result = await http.GetFromJsonAsync<List<CustomerListDto>>($"{settingFacade.EndPointSetting.ISQIAPI.URL}/customer/customerList");
+
+            await GetToken(mobile);
+            var result = await http.GetFromJsonAsync<List<CustomerListDto>>($"{settingFacade.EndPointSetting.ISQIAPI.URL}/subscriber/customerList");
             return result;
+        }
+
+        private async Task GetToken(string mobile)
+        {
+            var myToken = await http.GetFromJsonAsync<MyToken>($"{settingFacade.EndPointSetting.ISQIAPI.URL}/Account/GetToken?mobile={mobile}");
+
+            http.DefaultRequestHeaders.Add("accept", "*/*");
+            http.DefaultRequestHeaders.Add("Authorization", $"Bearer {myToken.token}");
         }
 
         public async Task<List<CityDto>> GetAllCitiesAsync()

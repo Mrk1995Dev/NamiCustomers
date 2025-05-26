@@ -1,18 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using NamiCustomers.Application.Services.Customers;
-using NamiCustomers.Application.Services.Customers.Dtos;
+using NamiCustomers.Application.Services.Subscribers;
+using NamiCustomers.Application.Services.Subscribers.Dtos;
 
 namespace NamiCustomers.API.Controllers.v1
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
-    [AllowAnonymous]
+    [Authorize]
+    [NonController]
     public class CustomerController(
-        ICustomerManagmentService customerManagmentService) : ControllerBase
+        ISubscriberService customerManagmentService) : ControllerBase
     {
         [HttpGet("info")]
-        public async Task<ResultDto<CustomerInfoDetailsDto>> CustomerInfo([FromQuery] int id)
+        public async Task<ResultDto<SubscriberDetailsDto>> CustomerInfo([FromQuery] int id)
             => await customerManagmentService.GetCustomerInfoDetailAsync(id);
 
         [HttpGet("customerList")]
@@ -26,7 +27,7 @@ namespace NamiCustomers.API.Controllers.v1
         }
 
         [HttpPost("addCustomer")]
-        public async Task<IActionResult> AddCustomerInfo([FromBody] AddCustomerInfoDto customerInfo)
+        public async Task<IActionResult> AddCustomerInfo([FromBody] AddSubscriberDto customerInfo)
         {
             var result = await customerManagmentService.AddCustomerInfoAsync(customerInfo);
 
@@ -36,7 +37,7 @@ namespace NamiCustomers.API.Controllers.v1
         }
 
         [HttpPut("edit")]
-        public async Task<IActionResult> UpdateCustomer([FromBody] UpdateCustomerInfoDto updateCustomer)
+        public async Task<IActionResult> UpdateCustomer([FromBody] UpdateSubscriberDto updateCustomer)
         {
             if (!ModelState.IsValid) return BadRequest("اطلاعات مربوطه ناقص می باشد.");
             var data = await customerManagmentService.UpdateCustomerInfo(updateCustomer);
@@ -63,4 +64,7 @@ namespace NamiCustomers.API.Controllers.v1
             return File(data.Data, "text/palin", "CustomerInfoReport.txt");
         }
     }
+
+
+ 
 }

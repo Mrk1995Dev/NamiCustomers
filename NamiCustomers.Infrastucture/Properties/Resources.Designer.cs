@@ -70,6 +70,24 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to حذف نشد.
+        /// </summary>
+        public static string errDelete {
+            get {
+                return ResourceManager.GetString("errDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ویرایش نشد.
+        /// </summary>
+        public static string errEdited {
+            get {
+                return ResourceManager.GetString("errEdited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to زمان پایان نمی تواند قبل یا برابر زمان آغاز باشد.
         /// </summary>
         public static string errEndTimeCannotEqualOrLessThanStatrtTime {
@@ -143,6 +161,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to یافت نشد.
+        /// </summary>
+        public static string errNotFound {
+            get {
+                return ResourceManager.GetString("errNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to تعداد نوبت باید بزرگتر از صفر باشد.
         /// </summary>
         public static string errNumberOfAppointmentsCanNotEqualOrLessThanZero {
@@ -157,6 +184,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         public static string Error {
             get {
                 return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to خطا ذخیره.
+        /// </summary>
+        public static string errSave {
+            get {
+                return ResourceManager.GetString("errSave", resourceCulture);
             }
         }
         
@@ -197,6 +233,24 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to حذف شد.
+        /// </summary>
+        public static string msgDeleted {
+            get {
+                return ResourceManager.GetString("msgDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ویرایش شد.
+        /// </summary>
+        public static string msgEdited {
+            get {
+                return ResourceManager.GetString("msgEdited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to کد تایید را وارد نمایید.
         /// </summary>
         public static string msgEnterConfirmCode {
@@ -224,11 +278,29 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to یافت شد.
+        /// </summary>
+        public static string msgFound {
+            get {
+                return ResourceManager.GetString("msgFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to دیتا با موفقیت بازگشت داده شد.
         /// </summary>
         public static string msgReturnDataSuccess {
             get {
                 return ResourceManager.GetString("msgReturnDataSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ذخیره شد.
+        /// </summary>
+        public static string msgSave {
+            get {
+                return ResourceManager.GetString("msgSave", resourceCulture);
             }
         }
     }

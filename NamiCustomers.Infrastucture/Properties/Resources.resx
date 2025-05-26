@@ -175,4 +175,28 @@
   <data name="errMistakeConfirmCode" xml:space="preserve">
     <value>کد تایید وارد شده اشتباه است</value>
   </data>
+  <data name="msgEdited" xml:space="preserve">
+    <value>ویرایش شد</value>
+  </data>
+  <data name="msgDeleted" xml:space="preserve">
+    <value>حذف شد</value>
+  </data>
+  <data name="msgFound" xml:space="preserve">
+    <value>یافت شد</value>
+  </data>
+  <data name="errEdited" xml:space="preserve">
+    <value>ویرایش نشد</value>
+  </data>
+  <data name="errDelete" xml:space="preserve">
+    <value>حذف نشد</value>
+  </data>
+  <data name="errNotFound" xml:space="preserve">
+    <value>یافت نشد</value>
+  </data>
+  <data name="errSave" xml:space="preserve">
+    <value>خطا ذخیره</value>
+  </data>
+  <data name="msgSave" xml:space="preserve">
+    <value>ذخیره شد</value>
+  </data>
 </root>

@@ -22,10 +22,6 @@
         }
         public bool IsSuccess { get; set; }
         public string Message { get; set; }
-        public bool flg { get; set; }
         public T Data { get; set; }
-        public object AddetionalData { get; set; }
-        public int StatusCode { get; set; }
-        public string? ErrorData { get; set; }
     }
 }

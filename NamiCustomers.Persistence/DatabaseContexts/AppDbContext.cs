@@ -1,13 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using NamiCustomers.Domain.Entities.Dealers;
+using NamiCustomers.Domain.Entities.Security;
+using NamiCustomers.Domain.Entities.Subscribers;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Xml;
+using static Dapper.SqlMapper;
 
 namespace NamiCustomers.Persistence.DatabaseContexts
 {
-    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options), IAppDbContext
+    public class AppDbContext : IdentityDbContext<ApplicationUser>, IAppDbContext
     {
         public DbSet<SAMPLEEntity> SAMPLEs { get; set; }
-        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Subscriber> Subscribers { get; set; }
+        public DbSet<SubscriberCode> SubscriberCodes { get; set; }
         public DbSet<City> Cities { get; set; }
+        public DbSet<ApplicationUser> Users { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<VehicleModel> VehicleModels { get; set; }
+        public DbSet<Dealer> Dealers { get; set; }
+
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
@@ -27,13 +44,28 @@ namespace NamiCustomers.Persistence.DatabaseContexts
                     modelBuilder.Entity(entityType.Name).Property<DateTime?>("RemovedAt");
                     modelBuilder.Entity(entityType.Name).Property<bool>("IsRemoved");
 
-                    modelBuilder.Entity<SAMPLEEntity>().HasQueryFilter(b => !EF.Property<bool>(b, "IsRemoved"));
+
+                    // New soft delete filter check
+                    //if (entityType.ClrType.GetProperty("IsRemoved") != null)
+                    //{
+                    //    var parameter = Expression.Parameter(entityType.ClrType, "b");
+                    //    var property = Expression.Property(parameter, "IsRemoved");
+                    //    var notExpression = Expression.Not(property);
+                    //    var lambda = Expression.Lambda(notExpression, parameter);
+
+                    //    modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
+                    //}
+                     modelBuilder.Entity<SAMPLEEntity>().HasQueryFilter(b => !EF.Property<bool>(b, "IsRemoved"));
+                     modelBuilder.Entity<Subscriber>().HasQueryFilter(b => !EF.Property<bool>(b, "IsRemoved"));
+                     modelBuilder.Entity<VehicleModel>().HasQueryFilter(b => !EF.Property<bool>(b, "IsRemoved"));
                 }
+
+                
             }
+
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(SAMPLEConfig)));
+            base.OnModelCreating(modelBuilder);
         }
-
-
 
         public override int SaveChanges()
         {

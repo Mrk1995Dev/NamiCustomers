@@ -3,6 +3,7 @@
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
+    [NonController]
     public class SAMPLEController(ISAMPLEService SAMPLEService) : ControllerBase
     {
         private readonly ISAMPLEService _SAMPLEService = SAMPLEService;
