@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NamiCustomers.Persistence.DatabaseContexts;
 
@@ -11,9 +12,11 @@ using NamiCustomers.Persistence.DatabaseContexts;
 namespace NamiCustomers.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250527050753_dealer_auditabel")]
+    partial class dealer_auditabel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -242,6 +245,47 @@ namespace NamiCustomers.Persistence.Migrations
                     b.HasIndex("CityId");
 
                     b.ToTable("Dealers");
+                });
+
+            modelBuilder.Entity("NamiCustomers.Domain.Entities.Dealers.DealerSubscriber", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DealerId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsAccept")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRemoved")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("RemovedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("SubscriberId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DealerId");
+
+                    b.HasIndex("SubscriberId");
+
+                    b.ToTable("DealerSubscriber");
                 });
 
             modelBuilder.Entity("NamiCustomers.Domain.Entities.SAMPLEEntity", b =>
@@ -614,6 +658,21 @@ namespace NamiCustomers.Persistence.Migrations
                     b.Navigation("City");
                 });
 
+            modelBuilder.Entity("NamiCustomers.Domain.Entities.Dealers.DealerSubscriber", b =>
+                {
+                    b.HasOne("NamiCustomers.Domain.Entities.Dealers.Dealer", "Dealer")
+                        .WithMany("dealerSubscribers")
+                        .HasForeignKey("DealerId");
+
+                    b.HasOne("NamiCustomers.Domain.Entities.Subscribers.Subscriber", "Subscriber")
+                        .WithMany()
+                        .HasForeignKey("SubscriberId");
+
+                    b.Navigation("Dealer");
+
+                    b.Navigation("Subscriber");
+                });
+
             modelBuilder.Entity("NamiCustomers.Domain.Entities.Subscribers.Appointment", b =>
                 {
                     b.HasOne("NamiCustomers.Domain.Entities.Dealers.Dealer", "Dealer")
@@ -654,6 +713,11 @@ namespace NamiCustomers.Persistence.Migrations
                         .HasForeignKey("SubscriberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("NamiCustomers.Domain.Entities.Dealers.Dealer", b =>
+                {
+                    b.Navigation("dealerSubscribers");
                 });
 
             modelBuilder.Entity("NamiCustomers.Domain.Entities.Subscribers.Subscriber", b =>

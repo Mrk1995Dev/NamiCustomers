@@ -8,7 +8,7 @@ namespace NamiCustomers.API.Controllers.v1;
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
-[Authorize]
+//[Authorize]
 public class AppointmentController(IAppointmentService appointmentService, IDealerService  dealerService) : ControllerBase
 {
     [HttpGet("{id}")]

@@ -1,5 +1,6 @@
 ﻿namespace NamiCustomers.Domain.Entities.Dealers;
 
+[Auditable]
     public class Dealer : IBaseEntity<int>
 {
 	public int Id { get; set; }
@@ -15,5 +16,5 @@
     public string? CityName { get; set; }
 	public string? DealerMobile { get; set; }
 	public int? Sort { get; set; }
-	public ICollection<DealerSubscriber>? dealerSubscribers { get; set; }
+
     }
