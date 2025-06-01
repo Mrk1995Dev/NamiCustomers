@@ -80,7 +80,6 @@
 
 
 	<ItemGroup>
-	  <Folder Include="nlog\" />
 	  <Folder Include="wwwroot\ExcelFiles\" />
 	  <Folder Include="wwwroot\namiPrints\" />
 	  <Folder Include="wwwroot\PDF\AdvocacyFormat\" />

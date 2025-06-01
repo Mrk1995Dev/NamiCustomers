@@ -37,8 +37,8 @@ namespace NamiCustomers.API.Extensions
             {
                
                 c.InjectStylesheet("/css/swagger.css");
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nami.Finance v1.0");
-                c.SwaggerEndpoint("/swagger/v2/swagger.json", "Nami.Finance v2.0");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nami.Customers v1.0");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "Nami.Customers v2.0");
                 
             });
             return app;

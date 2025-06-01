@@ -1,0 +1,38 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
+<MudPaper   Class="d-inline-flex py-3" Elevation="0">
+
+
+    <AuthorizeView>
+        <Authorized>
+            <MudNavMenu Class="mud-width-full">
+
+                <MudText Typo="Typo.h6" Class="px-4"> نامی خودرو  </MudText>
+                <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">  @context.User.Identity?.Name  </MudText>
+
+                <MudDivider Class="my-2" />
+
+                <MudNavLink Href="/" Icon="@Icons.Material.Filled.Dashboard" IconColor="Color.Secondary">داشبورد</MudNavLink>
+
+                <MudNavGroup Title="مدیریت نوبت " Icon="@Icons.Material.Filled.Article" IconColor="Color.Tertiary" Expanded="true">
+                    <MudNavLink Href="/posts " Icon="@Icons.Material.Filled.List">لیست نوبت</MudNavLink>
+                    <MudNavLink Href="/posts/create" Icon="@Icons.Material.Filled.AddCircle">ایجاد نوبت جدید</MudNavLink>
+
+                </MudNavGroup>
+
+  
+            </MudNavMenu>
+        </Authorized>
+
+        <NotAuthorized>
+            <MudNavMenu Class="mud-width-full">
+
+                <MudNavLink Href="/login" Icon="@Icons.Material.Filled.Login" IconColor="Color.Secondary">ورود به حساب</MudNavLink>
+
+            </MudNavMenu>
+        </NotAuthorized>
+
+
+    </AuthorizeView>
+
+</MudPaper>

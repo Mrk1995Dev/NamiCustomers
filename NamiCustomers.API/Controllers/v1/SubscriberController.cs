@@ -15,7 +15,7 @@ namespace NamiCustomers.API.Controllers.v1
         public async Task<ResultDto<SubscriberDetailsDto>> CustomerInfo([FromQuery] int id)
             => await customerManagmentService.GetCustomerInfoDetailAsync(id);
 
-        [HttpGet("customerList")]
+        [HttpGet("subscribers")]
         public async Task<IActionResult> GetListCustomerInfo()
         {
             var data = await customerManagmentService.GetCustomerListAsync();
@@ -25,7 +25,7 @@ namespace NamiCustomers.API.Controllers.v1
             return NotFound(data);
         }
 
-        [HttpPost("addCustomer")]
+        [HttpPost("register")]
         public async Task<IActionResult> AddCustomerInfo([FromBody] AddSubscriberDto customerInfo)
         {
             var result = await customerManagmentService.AddCustomerInfoAsync(customerInfo);

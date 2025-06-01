@@ -1,8 +1,12 @@
+using NamiCustomers.MVC;
+using NamiCustomers.MVC.Services.Subscribers.Implementation;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.BaseConfigures(builder);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -15,9 +19,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapStaticAssets();
 
 app.MapControllerRoute(
@@ -27,3 +30,5 @@ app.MapControllerRoute(
 
 
 app.Run();
+
+ 

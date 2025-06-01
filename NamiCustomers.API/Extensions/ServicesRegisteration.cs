@@ -154,7 +154,7 @@ public static class ServicesRegisteration
         {
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "Nami.Finance",
+                Title = "Nami.Customers",
                 Version = "v1.0",
                 Description = "",
                 Contact = new OpenApiContact
@@ -166,7 +166,7 @@ public static class ServicesRegisteration
             });
             c.SwaggerDoc($"v2", new OpenApiInfo
             {
-                Title = "Nami.Finance",
+                Title = "Nami.Customers",
                 Version = "v2.0",
                 Description = ""
             });

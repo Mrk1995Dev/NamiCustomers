@@ -3,33 +3,41 @@ using Microsoft.Extensions.Configuration;
 using MudBlazor.Services;
 using NamiCustomers.Web.Models.Settings;
 using NamiCustomers.Web.Services.CustomerService.Implementation;
+using Microsoft.AspNetCore.Components.Authorization;
+using NamiCustomers.Web.Services.Auth;
+using MudBlazor;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using NamiCustomers.Web;
 
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.Configure<EndPointSetting>(builder.Configuration.GetSection("EndPointSetting"));
-// Add services to the container.
-builder.Services.AddSingleton<ISettingFacade, SettingFacade>();
-builder.Services.AddTransient<CustomerService>();
-builder.Services.AddHttpClient();
-builder.Services.AddMudServices();
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
 
-var app = builder.Build();
+var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.RootComponents.Add<App>("#app");
+builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+
+builder.Services.AddAuthorizationCore();
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+
+
+
+builder.Services.AddApplicationServices();
+//builder.Services.AddMudServices();
+builder.Services.AddMudServices(config =>
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+    config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomLeft;
 
-app.UseHttpsRedirection();
+    config.SnackbarConfiguration.PreventDuplicates = false;
+    config.SnackbarConfiguration.NewestOnTop = false;
+    config.SnackbarConfiguration.ShowCloseIcon = true;
+    config.SnackbarConfiguration.VisibleStateDuration = 10000;
+    config.SnackbarConfiguration.HideTransitionDuration = 500;
+    config.SnackbarConfiguration.ShowTransitionDuration = 500;
+    config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
+});
 
-app.UseStaticFiles();
-app.UseAntiforgery();
 
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
-
-app.Run();
+await builder.Build().RunAsync();

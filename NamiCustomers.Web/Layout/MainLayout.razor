@@ -1,0 +1,187 @@
+﻿@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.JSInterop
+@using MudBlazor
+@inherits LayoutComponentBase
+@inject NavigationManager nav
+
+
+<MudRTLProvider  RightToLeft="true" > 
+    <MudThemeProvider Theme="theme" IsDarkMode="IsDarkMode" />
+    <MudPopoverProvider />
+    
+    
+    <MudDialogProvider />
+    <MudSnackbarProvider />
+
+    <MudLayout>
+        <MudAppBar Elevation="3">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                           Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e)=> DrawerToggle())" />
+            <MudText Typo="Typo.h5" Class="ml-3">مشتریان نامی</MudText>
+
+            <MudSpacer />
+
+            <MudIconButton Icon="@DarkLightModeButtonIcon" Color="Color.Inherit" OnClick="@DarkModeToggle" />
+
+            <AuthorizeView>
+
+                <Authorized>
+
+                    <MudMenu Icon="@Icons.Material.Filled.Settings"
+                             Color="Color.Warning"
+                             AriaLabel="Open user menu">
+
+
+                        <MudMenuItem Label="Profile" />
+                        <MudMenuItem Label="My account" />
+                        <MudMenuItem Label="خروج از حساب کاربری" Href="/logout" Icon="@Icons.Material.Rounded.Logout"
+                                     IconColor="Color.Error" />
+
+
+                    </MudMenu>
+                </Authorized>
+                <NotAuthorized>
+                    <MudButton Href="/login" IconColor="Color.Error" ButtonType="ButtonType.Button" StartIcon="@Icons.Material.Filled.Login">
+                        ورود به حساب کاربری
+                    </MudButton>
+                </NotAuthorized>
+            </AuthorizeView>
+
+
+
+        </MudAppBar>
+        <MudDrawer @bind-Open="drawerOpen" ClipMode="DrawerClipMode.Always" Anchor="Anchor.Right">
+
+            <NavMenu />
+
+        </MudDrawer>
+        <MudMainContent>
+
+
+            <MudPaper Class="ma-4 pa-6 rounded-lg" Elevation="7">
+                @Body
+            </MudPaper>
+
+        </MudMainContent>
+
+    </MudLayout>
+
+</MudRTLProvider>
+
+
+
+
+
+@code {
+
+    @inject IJSRuntime JS
+
+    private bool drawerOpen = true;
+    private MudTheme? theme = null;
+    private bool IsDarkMode = true;
+    private void DrawerToggle()
+    {
+        drawerOpen = !drawerOpen;
+    }
+
+    private async void DarkModeToggle()
+    {
+        IsDarkMode = !IsDarkMode;
+        await JS.InvokeVoidAsync("localStorage.setItem", "isDarkMode", IsDarkMode.ToString().ToLower());
+    }
+
+    private string DarkLightModeButtonIcon => IsDarkMode switch
+    {
+        true => Icons.Material.Filled.LightMode,
+        false => Icons.Material.Filled.DarkMode
+
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        var storedMode = await JS.InvokeAsync<string>("localStorage.getItem", "isDarkMode");
+        if (!string.IsNullOrEmpty(storedMode))
+        {
+            IsDarkMode = storedMode == "true";
+        }
+
+
+        theme = new MudTheme()
+            {
+                // PseudoCss = new PseudoCss
+                // {
+                    
+                // },
+                Typography = new Typography()
+                {
+                    Default = new DefaultTypography()
+                    {
+                        FontFamily = new[] { "Dana", "Arial" }
+                    }
+                },
+                // PaletteLight = new PaletteLight()
+                // {
+                //     Black = "#110e2d",
+                //     AppbarText = "#424242",
+                //     AppbarBackground = "rgba(255,255,255,0.8)",
+                //     DrawerBackground = "#ffffff",
+                //     GrayLight = "#e8e8e8",
+                //     GrayLighter = "#f9f9f9",
+                // },
+                PaletteLight = new PaletteLight()
+                {
+                    Black = "#0D1B2A",
+                    AppbarBackground = "rgba(230, 247, 255, 0.85)",
+                    AppbarText = "#1B263B",
+                    DrawerBackground = "#F0F8FF",
+                    DrawerText = "#1B263B",
+                    GrayLight = "#DDEAF6",
+                    GrayLighter = "#EEF5FB",
+                    Background = "#F5FAFF",
+                    Surface = "#FFFFFF",
+                    Primary = "#1976D2",
+                    PrimaryContrastText = "#FFFFFF",
+                    Secondary = "#64B5F6",
+                    SecondaryContrastText = "#FFFFFF",
+                    Error = "#E53935",
+                    ErrorContrastText = "#FFFFFF",
+                    Success = "#43A047",
+                    SuccessContrastText = "#FFFFFF",
+                    Warning = "#FFC107",
+                    WarningContrastText = "#1B263B",
+                    Info = "#0288D1",
+                    InfoContrastText = "#FFFFFF",
+                },
+                PaletteDark = new PaletteDark()
+                {
+                    Primary = "#7e6fff",
+                    Surface = "#1e1e2d",
+                    Background = "#1a1a27",
+                    BackgroundGray = "#151521",
+                    AppbarText = "#92929f",
+                    AppbarBackground = "rgba(26,26,39,0.8)",
+                    DrawerBackground = "#1a1a27",
+                    ActionDefault = "#74718e",
+                    ActionDisabled = "#9999994d",
+                    ActionDisabledBackground = "#605f6d4d",
+                    TextPrimary = "#b2b0bf",
+                    TextSecondary = "#92929f",
+                    TextDisabled = "#ffffff33",
+                    DrawerIcon = "#92929f",
+                    DrawerText = "#92929f",
+                    GrayLight = "#2a2833",
+                    GrayLighter = "#1e1e2d",
+                    Info = "#4a86ff",
+                    Success = "#3dcb6c",
+                    Warning = "#ffb545",
+                    Error = "#ff3f5f",
+                    LinesDefault = "#33323e",
+                    TableLines = "#33323e",
+                    Divider = "#292838",
+                    OverlayLight = "#1e1e2d80",
+                }
+            };
+    }
+
+}

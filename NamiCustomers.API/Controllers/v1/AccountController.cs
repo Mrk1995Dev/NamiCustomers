@@ -25,7 +25,7 @@ public class AccountController(IConfiguration configuration,UserManager<Applicat
     }
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> LogIn([FromQuery] string otpCode)
+    public async Task<IActionResult> LogInByOtp([FromQuery] string otpCode)
     {
         if (!string.IsNullOrEmpty(otpCode))
         {
@@ -41,6 +41,21 @@ public class AccountController(IConfiguration configuration,UserManager<Applicat
             }
             return Unauthorized();
         }
+        return Unauthorized();
+    }
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> LogIn(LoginModel model)
+    {
+        var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+
+        if (result.Succeeded)
+        {
+            var user = await userManager.FindByEmailAsync(model.Email);
+            var token = $"{GenerateJwtToken(model.Email)}";
+            return Ok(new { token });
+        }
+
         return Unauthorized();
     }
 

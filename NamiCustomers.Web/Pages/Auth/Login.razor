@@ -1,0 +1,49 @@
+﻿@page "/login"
+@using NamiCustomers.Web.Models.Auth
+@using NamiCustomers.Web.Services.Auth.AuthServices
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+
+<MudPaper Class="ma-4 pa-6 rounded-lg" Elevation="8">
+
+<EditForm Model="LoginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <MudAlert Severity="Severity.Error"  ContentAlignment="HorizontalAlignment.Right">
+                @ErrorMessage
+            </MudAlert>
+        }
+        
+ 
+
+        <MudTextField Label="ایمیل" @bind-Value="LoginModel.Email"   Variant="Variant.Outlined" Required="true" />
+        <MudTextField Label="رمز عبور" @bind-Value="LoginModel.Password" InputType="InputType.Password" Variant="Variant.Outlined" Required="true" />
+
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary" FullWidth="true">
+         ورد به حساب کاربری
+     </MudButton>
+</EditForm>
+
+</MudPaper>
+
+@code {
+    private LoginRequestDto LoginModel = new LoginRequestDto();
+    private string ErrorMessage = string.Empty;
+
+    private async Task HandleLogin()
+    {
+        var success = await AuthService.LoginAsync(LoginModel);
+        if(success)
+        {
+            Navigation.NavigateTo("/dashboard");
+        }
+        else
+        {
+            ErrorMessage = "ایمیل یا پسورد اشتباه است";
+        }
+    }
+}
