@@ -43,7 +43,7 @@ public static class ServicesRegisteration
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.SameSite = SameSiteMode.Strict;
         options.ExpireTimeSpan = TimeSpan.FromHours(1);
-        options.LoginPath = "/Account/Login";
+        options.LoginPath = "/Account/GetOtp";
         options.AccessDeniedPath = "/Account/AccessDenied";
     });
         return services;

@@ -8,6 +8,7 @@ namespace NamiCustomers.MVC.Services.Account;
 public interface IAccountService
 {
     Task<MyAccountinfoDto> FindByNameAsync();
+    Task<MyAccountinfoDto> GetOtp( string mobile);
 }
 public class AccountService : IAccountService
 {
@@ -23,6 +24,12 @@ public class AccountService : IAccountService
         var result = await _httpClient.GetFromJsonAsync<MyAccountinfoDto>($"account/FindByNameAsync");
         return result;
     }
+
+	public async Task<MyAccountinfoDto> GetOtp(string mobile)
+	{
+		var result = await _httpClient.GetFromJsonAsync<MyAccountinfoDto>($"account/GetOtp");
+		return result;
+	}
 
 
 }
