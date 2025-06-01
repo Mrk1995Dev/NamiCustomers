@@ -5,12 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NamiCustomers.Domain.Entities.Security
+namespace NamiCustomers.Domain.Entities.Account
 {
     public class ApplicationUser : IdentityUser
     {
         // می‌توانید ویژگی‌های اضافی کاربر را اینجا اضافه کنید
         public string FullName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string PassWord { get; set; }
     }
 
 }

@@ -3,15 +3,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using NamiCustomers.Domain.Entities.Security;
 using Serilog;
 using System.Reflection;
 using System.Text;
-using AspNetCoreRateLimit;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 
 
 namespace NamiCustomers.API.Extensions;
@@ -127,7 +121,7 @@ public static class ServicesRegisteration
     private static IServiceCollection ConfigureDatabaseConnection(this IServiceCollection services, IConfiguration configuration)
     {
         // Configure Identity
-        services.AddIdentity<ApplicationUser, IdentityRole>()
+        services.AddIdentity<Domain.Entities.Account.ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 

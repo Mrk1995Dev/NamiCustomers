@@ -1,8 +1,18 @@
 ﻿using NamiCustomers.MVC.Services.Subscribers.Dtos;
 using System.Reflection;
 
-namespace NamiCustomers.MVC.Services.Subscribers.Implementation
+namespace NamiCustomers.MVC.Services.Subscribers
 {
+    public interface ISubscriberService
+    {
+        Task<ResultDto> CreateAsync(AddSubscriberDto customer);
+        Task<ResultDto> DeleteAsync(int id);
+        Task<List<SubscriberListDto>> GetAllAsync(string mobile);
+        Task<List<CityDto>> GetAllCitiesAsync();
+        Task<ResultDto<SubscriberDetailsDto>> GetByIdAsync(int id);
+        Task<ResultDto> UpdateAsync(UpdateSubscriberDto updateCustomer);
+    }
+
     public record MyToken(string token);
 
 
@@ -16,16 +26,13 @@ namespace NamiCustomers.MVC.Services.Subscribers.Implementation
 
         public async Task<List<SubscriberListDto>> GetAllAsync(string mobile)
         {
-            //https://localhost:7061/v1/Customer/customerList
-            //https://localhost:7061/customer/customerList
-
             await GetToken(mobile);
             var result = await _httpClient.GetFromJsonAsync<List<SubscriberListDto>>($"subscriber/subscribers");
             return result;
         }
 
         private async Task GetToken(string mobile)
-        {   //https://localhost:7061/api/v1/Account/GetToken?Mobile=09191646456
+        { 
             var myToken = await _httpClient.GetFromJsonAsync<MyToken>($"Account/GetToken?mobile={mobile}");
 
             _httpClient.DefaultRequestHeaders.Add("accept", "*/*");

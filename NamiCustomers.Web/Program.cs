@@ -21,9 +21,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddAuthorizationCore();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-
-
-
+ 
 builder.Services.AddApplicationServices();
 //builder.Services.AddMudServices();
 builder.Services.AddMudServices(config =>

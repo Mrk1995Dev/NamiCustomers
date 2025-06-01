@@ -1,0 +1,52 @@
+﻿
+@using NamiCustomers.MVC.Areas.Admin.Models.Dto
+@model IEnumerable<UserListDto>
+
+@{
+    ViewData["Title"] = "UserInRole";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+ 
+ 
+<table class="table">
+    <thead>
+        <tr>
+         
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+ 
+        
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+     
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+ 
+             
+        </tr>
+}
+    </tbody>
+</table>

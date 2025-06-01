@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using NamiCustomers.MVC.Services.Subscribers;
 using NamiCustomers.MVC.Services.Subscribers.Dtos;
-using NamiCustomers.MVC.Services.Subscribers.Implementation;
 
 namespace NamiCustomers.MVC.Controllers
 {
-
+    [Authorize]
     public class SubscriberController(
         ISubscriberService  subscriberService) : Controller
     {

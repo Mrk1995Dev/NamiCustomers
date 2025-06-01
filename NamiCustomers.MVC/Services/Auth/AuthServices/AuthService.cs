@@ -17,7 +17,6 @@ namespace NamiCustomers.MVC.Services.Auth.AuthServices
             this.tokenService = tokenService;
             this.authenticationStateProvider = authenticationStateProvider;
         }
-        //https://localhost:7061/api/v1/Account/GetOtp?mobile=09191646456
         public async Task<bool> LoginAsync(LoginRequestDto loginRequest)
         {
             var response = await httpClient.PostAsJsonAsync("Account/LogIn", loginRequest);

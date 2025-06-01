@@ -1,23 +1,18 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NamiCustomers.Domain.Entities.Dealers;
-using NamiCustomers.Domain.Entities.Security;
 using NamiCustomers.Domain.Entities.Subscribers;
-using System.Linq.Expressions;
 using System.Reflection;
-using System.Xml;
-using static Dapper.SqlMapper;
 
 namespace NamiCustomers.Persistence.DatabaseContexts
 {
-    public class AppDbContext : IdentityDbContext<ApplicationUser>, IAppDbContext
+    public class AppDbContext : IdentityDbContext<Domain.Entities.Account.ApplicationUser>, IAppDbContext
     {
         public DbSet<SAMPLEEntity> SAMPLEs { get; set; }
         public DbSet<Subscriber> Subscribers { get; set; }
         public DbSet<SubscriberCode> SubscriberCodes { get; set; }
         public DbSet<City> Cities { get; set; }
-        public DbSet<ApplicationUser> Users { get; set; }
+        public DbSet<Domain.Entities.Account.ApplicationUser> Users { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<VehicleModel> VehicleModels { get; set; }
         public DbSet<Dealer> Dealers { get; set; }

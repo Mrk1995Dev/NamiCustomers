@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server;
 using NamiCustomers.MVC.Services.Auth.TokenServices;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace NamiCustomers.MVC.Services.Auth
 {
-    public class CustomAuthenticationStateProvider : AuthenticationStateProvider
+    public class CustomAuthenticationStateProvider : ServerAuthenticationStateProvider//AuthenticationStateProvider
     {
         private readonly ITokenService tokenService;
 
@@ -13,6 +14,7 @@ namespace NamiCustomers.MVC.Services.Auth
         {
             this.tokenService = tokenService;
         }
+        
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var token =  tokenService.GetAuthToken();

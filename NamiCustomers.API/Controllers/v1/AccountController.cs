@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using NamiCustomers.Application.Services.Subscribers;
-using NamiCustomers.Domain.Entities.Security;
+using NamiCustomers.Domain.Entities.Account;
+using NamiCustomers.Infrastucture.Model.Account;
 using NamiCustomers.Infrastucture.Utilities;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,14 +15,39 @@ namespace NamiCustomers.API.Controllers.v1;
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
 
-public class AccountController(IConfiguration configuration,UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager, ISubscriberService subscriberService) : ControllerBase
+public class AccountController(IConfiguration configuration, UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager, ISubscriberService subscriberService
+    ) : ControllerBase
 {
+    [HttpGet("[action]")]
+    public async Task<MyAccountinfoDto> FindByNameAsync()
+    {
+        var user = userManager.FindByNameAsync(User.Identity.Name).Result;
+        var myAccount = new MyAccountinfoDto()
+        {
+            Email = user.Email,
+            EmailConfirmed = user.EmailConfirmed,
+            FullName = $"{user.FirstName} {user.LastName}",
+            Id = user.Id,
+            PhoneNumber = user.PhoneNumber,
+            PhoneNumberConfirmed = user.PhoneNumberConfirmed,
+            TwoFactorEnabled = user.TwoFactorEnabled,
+            UserName = user.UserName,
+        };
+        return myAccount;
+    }
+
+
+
+
+
+
+
     [HttpGet("[action]")]
     public async Task<IActionResult> GetOtp([FromQuery] string mobile)
     {
-       var result  =await subscriberService.GetOtp(mobile);
-        return Ok(result);  
+        var result = await subscriberService.GetOtp(mobile);
+        return Ok(result);
     }
 
     [HttpGet("[action]")]
@@ -64,8 +90,8 @@ public class AccountController(IConfiguration configuration,UserManager<Applicat
     {
         if (!string.IsNullOrEmpty(model.Mobile))
         {
-            var user = await userManager.Users.WhereIf(true,c=>c.PhoneNumber==model.Mobile).SingleOrDefaultAsync();
-            if (user!=null)
+            var user = await userManager.Users.WhereIf(true, c => c.PhoneNumber == model.Mobile).SingleOrDefaultAsync();
+            if (user != null)
             {
                 var token = $"{GenerateJwtToken(user.Email)}";
                 return Ok(new { token });
@@ -89,7 +115,7 @@ public class AccountController(IConfiguration configuration,UserManager<Applicat
     [HttpPost("[action]")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterModel model)
     {
-        var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FullName = model.FullName,PhoneNumber=model.Mobile,PhoneNumberConfirmed=true };
+        var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FullName = model.FullName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true };
         var result = await userManager.CreateAsync(user, model.Password);
 
         if (result.Succeeded)
@@ -114,7 +140,7 @@ public class AccountController(IConfiguration configuration,UserManager<Applicat
             Expires = DateTime.UtcNow.AddMinutes(double.Parse(jwtSettings["expiryInMinutes"])),
             Issuer = jwtSettings["validIssuer"],
             Audience = jwtSettings["validAudience"],
-            
+
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
 
@@ -128,12 +154,12 @@ public class AccountController(IConfiguration configuration,UserManager<Applicat
 
 public class LoginModel
 {
-   
+
     public string Email { get; set; }
-    
+
     public string Password { get; set; }
     public string Mobile { get; set; }
-    
+
 }
 
 
@@ -147,4 +173,3 @@ public class RegisterModel
     public string Password { get; set; }
 }
 
- 
