@@ -27,8 +27,16 @@ public class AccountService : IAccountService
 
 	public async Task<MyAccountinfoDto> GetOtp(string mobile)
 	{
-		var result = await _httpClient.GetFromJsonAsync<MyAccountinfoDto>($"account/GetOtp");
-		return result;
+		
+			
+			
+			
+			var result = await _httpClient.GetFromJsonAsync<MyAccountinfoDto>($"account/GetOtp?mobile={Uri.EscapeDataString(mobile)}");
+
+			
+
+			return result;
+		
 	}
 
 

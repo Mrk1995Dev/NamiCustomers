@@ -15,6 +15,11 @@ namespace NamiCustomers.API.Controllers.v1
         public async Task<ResultDto<SubscriberDetailsDto>> CustomerInfo([FromQuery] int id)
             => await customerManagmentService.GetCustomerInfoDetailAsync(id);
 
+        [HttpGet("GetMobile")]
+        public async Task<ResultDto<SubscriberDetailsDto>> CustomerMobile([FromQuery] string mobile)
+           => await customerManagmentService.GetCustomerInfoDetailMobileAsync(mobile);
+
+
         [HttpGet("subscribers")]
         public async Task<IActionResult> GetListCustomerInfo()
         {

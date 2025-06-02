@@ -14,7 +14,8 @@ namespace NamiCustomers.Application.Services.Subscribers
         Task<ResultDto> DeleteCustomerInfoAsync(int customerId);
         Task<ResultDto> UpdateCustomerInfo(UpdateSubscriberDto updateCustomerInfoDto);
         Task<ResultDto<SubscriberDetailsDto>> GetCustomerInfoDetailAsync(int customerId);
-        Task<ResultDto<byte[]>> ExportCustomerInfoAsync();
+		Task<ResultDto<SubscriberDetailsDto>> GetCustomerInfoDetailMobileAsync(string mobile);
+		Task<ResultDto<byte[]>> ExportCustomerInfoAsync();
         Task<List<CityDto>> GetAllCitiesAsync();
         Task<ResultDto<SubscriberCodeDto>> SendOtp(string mobile);
         Task<ResultDto<SubscriberCodeDto>> GetOtp(string mobile);
@@ -123,8 +124,35 @@ namespace NamiCustomers.Application.Services.Subscribers
                 true,
                 customerInfo);
         }
- 
-        public async Task<ResultDto<byte[]>> ExportCustomerInfoAsync()
+
+
+		public async Task<ResultDto<SubscriberDetailsDto>> GetCustomerInfoDetailMobileAsync(string mobile)
+		{
+
+			var data = await context.Subscribers.Where(cu => cu.Mobile == mobile)
+				.Include(cu => cu.City).FirstOrDefaultAsync();
+
+			if (data == null) return new ResultDto<SubscriberDetailsDto>(
+				"کاربر مربوطه یافت نشد.",
+				false,
+				null);
+
+			var customerInfo = new SubscriberDetailsDto
+			{
+				Id = data.Id,
+				Name = data.Name,
+				Address = data.Address,
+				CityName = data.City.Title,
+				PhoneNumber = data.Mobile,
+			};
+
+			return new ResultDto<SubscriberDetailsDto>(
+				"",
+				true,
+				customerInfo);
+		}
+
+		public async Task<ResultDto<byte[]>> ExportCustomerInfoAsync()
         {
             var customerInfos = await context.Subscribers
                 .Include(c => c.City)
@@ -166,7 +194,7 @@ namespace NamiCustomers.Application.Services.Subscribers
             {
                 return new ResultDto<SubscriberCodeDto>("Not found !",false,new SubscriberCodeDto());
             }
-            await smsService.SendSms(otp.Mobile,$"{ otp.AuthCode}\n لغو11");
+          
             otp.Used = true;
             await  context.SaveChangesAsync();
             return new ResultDto<SubscriberCodeDto>("",true,new SubscriberCodeDto { AuthCode = otp.AuthCode,Mobile=otp.Mobile });
@@ -179,7 +207,8 @@ namespace NamiCustomers.Application.Services.Subscribers
             var newOtp = new SubscriberCode { AuthCode = passnew,Mobile=mobile };
             await context.SubscriberCodes.AddAsync(newOtp);
             await context.SaveChangesAsync();
-            return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto {AuthCode= newOtp.AuthCode, Mobile = newOtp.Mobile });
+			await smsService.SendSms(newOtp.Mobile, $"{newOtp.AuthCode}\n لغو11");
+			return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto {AuthCode= newOtp.AuthCode, Mobile = newOtp.Mobile });
         }
     }
 
