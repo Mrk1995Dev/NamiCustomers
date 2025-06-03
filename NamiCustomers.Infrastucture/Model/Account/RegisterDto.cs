@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NamiCustomers.MVC.Models.Account;
+namespace NamiCustomers.Infrastucture.Model.Account;
 
 public class RegisterDto
 {

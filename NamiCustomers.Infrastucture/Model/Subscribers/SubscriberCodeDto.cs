@@ -1,4 +1,4 @@
-﻿namespace NamiCustomers.Application.Services.Subscribers.Dtos;
+﻿namespace NamiCustomers.Infrastucture.Model.Subscribers;
 
 public class SubscriberCodeDto
 {

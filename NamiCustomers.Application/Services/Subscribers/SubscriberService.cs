@@ -1,6 +1,7 @@
 ﻿using NamiCustomers.Application.Services.Subscribers.Dtos;
 using NamiCustomers.Domain.Entities.Subscribers;
 using NamiCustomers.Infrastucture.Model;
+using NamiCustomers.Infrastucture.Model.Subscribers;
 using NamiCustomers.Infrastucture.Utilities;
 using System.Text;
 using static System.Net.WebRequestMethods;
@@ -166,7 +167,7 @@ namespace NamiCustomers.Application.Services.Subscribers
             {
                 return new ResultDto<SubscriberCodeDto>("Not found !",false,new SubscriberCodeDto());
             }
-            await smsService.SendSms(otp.Mobile,$"{ otp.AuthCode}\n لغو11");
+           
             otp.Used = true;
             await  context.SaveChangesAsync();
             return new ResultDto<SubscriberCodeDto>("",true,new SubscriberCodeDto { AuthCode = otp.AuthCode,Mobile=otp.Mobile });
@@ -179,6 +180,7 @@ namespace NamiCustomers.Application.Services.Subscribers
             var newOtp = new SubscriberCode { AuthCode = passnew,Mobile=mobile };
             await context.SubscriberCodes.AddAsync(newOtp);
             await context.SaveChangesAsync();
+            await smsService.SendSms(newOtp.Mobile, $"{newOtp.AuthCode}\n لغو11");
             return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto {AuthCode= newOtp.AuthCode, Mobile = newOtp.Mobile });
         }
     }

@@ -1,4 +1,5 @@
 using NamiCustomers.MVC;
+using NamiCustomers.MVC.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.BaseConfigures(builder);
+//builder.Services.AddScoped<CustomAuthorizeAttribute>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -18,13 +20,14 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapStaticAssets();
-app.MapControllerRoute(
-            name: "areas",
-            pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-                 );
+//app.MapControllerRoute(
+//            name: "areas",
+//            pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+//                 );
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")

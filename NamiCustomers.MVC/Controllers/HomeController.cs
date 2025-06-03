@@ -5,7 +5,10 @@ using System.Diagnostics;
 
 namespace NamiCustomers.MVC.Controllers
 {
-    [Authorize]
+
+    //[Authorize(AuthenticationSchemes = "Bearer")]
+    //[CustomAuthorize]
+    
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -19,7 +22,7 @@ namespace NamiCustomers.MVC.Controllers
         {
             return View();
         }
-
+        [Authorize]
         public IActionResult Privacy()
         {
             return View();

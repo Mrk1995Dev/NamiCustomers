@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NamiCustomers.MVC.Models.Account;
+namespace NamiCustomers.Infrastucture.Model.Account;
 
 public class LoginDto
 {
@@ -21,4 +21,7 @@ public class LoginDto
     public bool IsPersistent { get; set; } = false;
 
     public string ReturnUrl { get; set; }
+
+    public string OtpCode { get; set; }
+    public string Mobile { get; set; }
 }

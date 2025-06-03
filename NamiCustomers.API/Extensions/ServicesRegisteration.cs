@@ -4,8 +4,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using System.Data;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 
 namespace NamiCustomers.API.Extensions;
@@ -75,9 +78,12 @@ public static class ServicesRegisteration
         services.AddControllers(options =>
         {
             //options.ModelBinderProviders.Insert(0, new EnumDisplayNameModelBinderProvider());
-        }).AddNewtonsoftJson(options =>
-         options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-           );
+        }) 
+            .AddJsonOptions(options =>
+           {
+               options.JsonSerializerOptions.PropertyNamingPolicy = null; // PascalCase
+               options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+           });
 
         services.AddEndpointsApiExplorer();
         return services;
@@ -123,11 +129,44 @@ public static class ServicesRegisteration
         // Configure Identity
         services.AddIdentity<Domain.Entities.Account.ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<AppDbContext>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
+            .AddRoles<IdentityRole>()
+        ;
+
+
+        //services.Configure<IdentityOptions>(option =>
+        //{
+        //    //UserSetting
+        //    //option.User.AllowedUserNameCharacters = "abcd123";
+        //    option.User.RequireUniqueEmail = true;
+
+        //    //Password Setting
+        //    option.Password.RequireDigit = false;
+        //    option.Password.RequireLowercase = false;
+        //    option.Password.RequireNonAlphanumeric = false;//!@#$%^&*()_+
+        //    option.Password.RequireUppercase = false;
+        //    option.Password.RequiredLength = 6;
+        //    option.Password.RequiredUniqueChars = 1;
+
+        //    //Lokout Setting
+        //    option.Lockout.MaxFailedAccessAttempts = 3;
+        //    option.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMilliseconds(10);
+
+        //    //SignIn Setting
+        //    option.SignIn.RequireConfirmedAccount = false;
+        //    option.SignIn.RequireConfirmedEmail = false;
+        //    option.SignIn.RequireConfirmedPhoneNumber = false;
+
+        //});
 
         services.AddDbContext<AppDbContext>(options =>
         options.UseSqlServer(configuration.GetConnectionString("Web-db")));
         services.AddScoped<IAppDbContext, AppDbContext>();
+
+
+
+
+
 
         return services;
     }
@@ -136,9 +175,12 @@ public static class ServicesRegisteration
         services.AddCors(options =>
         {
             options.AddPolicy("CorsPolicy", policy =>
-            policy.AllowAnyOrigin()
+            policy
+            .AllowAnyOrigin()
             .AllowAnyMethod()
-            .AllowAnyHeader());
+            .AllowAnyHeader()
+
+            );
         });
 
     private static IServiceCollection ConfigureSwagger(this IServiceCollection services)

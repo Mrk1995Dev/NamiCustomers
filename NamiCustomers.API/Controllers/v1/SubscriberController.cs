@@ -19,7 +19,7 @@ namespace NamiCustomers.API.Controllers.v1
         public async Task<IActionResult> GetListCustomerInfo()
         {
             var data = await customerManagmentService.GetCustomerListAsync();
-            if (data.IsSuccess)
+            if (data.issuccess)
                 return Ok(data.Data);
 
             return NotFound(data);
@@ -58,7 +58,7 @@ namespace NamiCustomers.API.Controllers.v1
         public async Task<IActionResult> ExportCustomerInfo()
         {
             var data = await customerManagmentService.ExportCustomerInfoAsync();
-            if (!data.IsSuccess) return NotFound();
+            if (!data.issuccess) return NotFound();
 
             return File(data.Data, "text/palin", "CustomerInfoReport.txt");
         }

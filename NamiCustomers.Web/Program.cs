@@ -1,14 +1,10 @@
-using NamiCustomers.Web.Components;
-using Microsoft.Extensions.Configuration;
-using MudBlazor.Services;
-using NamiCustomers.Web.Models.Settings;
-using NamiCustomers.Web.Services.CustomerService.Implementation;
 using Microsoft.AspNetCore.Components.Authorization;
-using NamiCustomers.Web.Services.Auth;
-using MudBlazor;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor;
+using MudBlazor.Services;
 using NamiCustomers.Web;
+using NamiCustomers.Web.Services.Auth;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

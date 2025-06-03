@@ -1,19 +1,23 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NamiCustomers.MVC.Services.Account;
-using NamiCustomers.MVC.Services.Auth.AuthServices;
+using NamiCustomers.MVC.Services.Auth;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace NamiCustomers.MVC.Controllers
 {
-    
-    public class AccountController(IAccountService accountService,IAuthService authService) : Controller
+
+    public class AccountController(IAccountService accountService, IAuthService authService) : Controller
     {
         //[Authorize]
         public async Task<IActionResult> Index()
         {
-            var myAccount = await accountService.FindByNameAsync();
-            return View(myAccount);
+            return View(User.Identity);
         }
 
         [HttpGet]
@@ -27,25 +31,84 @@ namespace NamiCustomers.MVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(LoginDto login)
+        public async Task<IActionResult> Login(LoginDto login)
         {
             if (!ModelState.IsValid)
             {
                 return View(login);
             }
 
-            var result = authService.LoginAsync(new Services.Auth.Dtos.LoginRequestDto { Email = login.UserName, Password = login.Password }).Result;
+            var result = authService.LoginAsync(new  LoginRequestDto { Email = login.UserName, Password = login.Password }).Result;
 
-
+            var user =await  accountService.FindByNameAsync();
+            //user.Password = login.Password;
+            //user.IsPersistent = login.IsPersistent;
             if (result == true)
             {
+               // var us=await authService.GetCurrentUserAsync();
+               // ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(us);
+                // Note: For these changes to persist, you typically need to:
+                // 1. Sign out the user
+                //await HttpContext.SignOutAsync();
+                
+                // 2. Sign in with the modified principal
+               // await HttpContext.SignInAsync(claimsPrincipal);
+
                 return Redirect(login.ReturnUrl);
             }
-
-
             ModelState.AddModelError(string.Empty, "Login  Error");
             return View();
         }
+        [HttpGet]
+        public async Task<IActionResult> LoginByMobile()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetOtp(string mobile)
+        {
+            var code = await authService.GetOtp(mobile);
+            return RedirectToAction("LoginByOtp",new { otp= code });
+        }
+        [HttpGet]
+        public async Task<IActionResult> LoginByOtp()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> LoginByOtp(string otp)
+        {
+            var result = await authService.LoginByOtpAsync(otp);
+            if (result.Email!=null)
+            {
+                var claims = new List<System.Security.Claims.Claim>
+            {
+                new  System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name,result.Email)
+            };
+
+                var claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity));
+
+                //var us = await authService.GetCurrentUserAsync();
+                //ClaimsPrincipal claimsPrincipal=new ClaimsPrincipal(us);
+                // Note: For these changes to persist, you typically need to:
+                // 1. Sign out the user
+                // await HttpContext.SignOutAsync();
+
+                // 2. Sign in with the modified principal
+                // await HttpContext.SignInAsync(claimsPrincipal);
+
+                return RedirectToAction("Index","Home");
+            }
+            ModelState.AddModelError(string.Empty, "Login  Error");
+            return View();
+        }
+
 
         //[Authorize]
         //public IActionResult TwoFactorEnabled()
@@ -202,16 +265,24 @@ namespace NamiCustomers.MVC.Controllers
         //    }
         //}
 
-        //public IActionResult LogOut()
+        //public async Task<IActionResult> LogOut()//todo
         //{
-        //    _signInManager.SignOutAsync();
+        //  await   authService.LogoutAsync();
         //    return RedirectToAction("Index", "home");
         //}
 
-        //public IActionResult ForgotPassword()
-        //{
-        //    return View();
-        //}
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
 
         //[HttpPost]
         //public IActionResult ForgotPassword(ForgotPasswordConfirmationDto forgot)

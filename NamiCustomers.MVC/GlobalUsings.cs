@@ -1,1 +1,1 @@
-﻿global using NamiCustomers.MVC.Models.Account; 
+﻿global using NamiCustomers.Infrastucture.Model.Account; 

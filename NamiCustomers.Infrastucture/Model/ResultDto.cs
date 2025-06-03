@@ -1,4 +1,7 @@
-﻿namespace NamiCustomers.Infrastucture.Model
+﻿using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+
+namespace NamiCustomers.Infrastucture.Model
 {
     public class ResultDto
     {
@@ -14,14 +17,15 @@
 
     public class ResultDto<T> where T : class
     {
-        public ResultDto(string message, bool isSuccess, T data)
+        public ResultDto(string? message, bool isSuccess, T data)
         {
-            Message = message;
-            IsSuccess = isSuccess;
-            Data = data;
+            this.message = message;
+            this.issuccess = isSuccess;
+            this.Data = data;
         }
-        public bool IsSuccess { get; set; }
-        public string Message { get; set; }
+
+        public bool issuccess { get; set; }
+        public string? message { get; set; }
         public T Data { get; set; }
     }
 }

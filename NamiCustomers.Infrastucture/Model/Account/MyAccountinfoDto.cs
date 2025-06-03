@@ -24,5 +24,12 @@ namespace NamiCustomers.Infrastucture.Model.Account
         public bool PhoneNumberConfirmed { get; set; }
         [Display(Name = "ورود مرحله ای")]
         public bool TwoFactorEnabled { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "رمز")]
+        public string Password { get; set; }
+
+        [Display(Name = "مرا به خاطر بسپار")]
+        public bool IsPersistent { get; set; } = false;
     }
 }

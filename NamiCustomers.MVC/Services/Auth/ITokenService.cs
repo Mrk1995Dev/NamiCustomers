@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using NuGet.Common;
 
-namespace NamiCustomers.MVC.Services.Auth.TokenServices
+namespace NamiCustomers.MVC.Services.Auth
 {
     public interface ITokenService
     {
@@ -13,41 +14,30 @@ namespace NamiCustomers.MVC.Services.Auth.TokenServices
 
     public class TokenService(IHttpContextAccessor httpContextAccessor) : ITokenService
     {
-
-
         public void ClearToken()
         {
             var httpContext = httpContextAccessor.HttpContext;
-            httpContext.Response.Cookies.Delete("authToken");
-            httpContext.Response.Cookies.Delete("refreshToken");
+            httpContext.Session.Remove("authToken");
+            
         }
 
         public string? GetAuthToken()
         {
             var httpContext = httpContextAccessor.HttpContext;
-            return httpContext.Request.Cookies["authToken"];
+            return httpContext.Session.GetString("authToken");
         }
 
         public string? GetRefreshToken()
         {
             var httpContext = httpContextAccessor.HttpContext;
-            return httpContext.Request.Cookies["refreshToken"];
+            return httpContext.Session.GetString("refreshToken");
         }
 
         public void SetToken(string authToken, string refreshToken)
         {
-
-            var cookieOptions = new CookieOptions
-            {
-                HttpOnly = true, // Prevent JavaScript access
-                Secure = true,   // Only send over HTTPS
-                SameSite = SameSiteMode.Strict, // Prevent CSRF
-                Expires = DateTime.UtcNow.AddHours(1) // Set appropriate expiration
-            };
             var httpContext = httpContextAccessor.HttpContext;
-            httpContext.Response.Cookies.Append("authToken", authToken, cookieOptions);
-            httpContext.Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
-
+            httpContext.Session.SetString("authToken", authToken);
+            httpContext.Session.SetString("refreshToken", refreshToken);
         }
     }
 }

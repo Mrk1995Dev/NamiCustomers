@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using NamiCustomers.MVC.Services.Auth.AuthServices;
-using NamiCustomers.MVC.Services.Auth.TokenServices;
+using NamiCustomers.MVC.Services.Auth;
 using System.Net.Http.Headers;
 
 namespace NamiCustomers.MVC.Handlers

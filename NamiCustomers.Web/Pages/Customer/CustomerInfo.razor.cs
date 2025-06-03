@@ -1,4 +1,4 @@
-﻿namespace NamiCustomers.Web.Components.Pages.Customer
+﻿namespace NamiCustomers.Web.Pages.Customer
 {
     public partial class CustomerInfo
     {
