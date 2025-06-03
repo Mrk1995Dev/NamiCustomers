@@ -15,7 +15,8 @@ namespace NamiCustomers.Application.Services.Subscribers
         Task<ResultDto> DeleteCustomerInfoAsync(int customerId);
         Task<ResultDto> UpdateCustomerInfo(UpdateSubscriberDto updateCustomerInfoDto);
         Task<ResultDto<SubscriberDetailsDto>> GetCustomerInfoDetailAsync(int customerId);
-        Task<ResultDto<byte[]>> ExportCustomerInfoAsync();
+		Task<ResultDto<SubscriberDetailsDto>> GetCustomerInfoDetailMobileAsync(string mobile);
+		Task<ResultDto<byte[]>> ExportCustomerInfoAsync();
         Task<List<CityDto>> GetAllCitiesAsync();
         Task<ResultDto<SubscriberCodeDto>> SendOtp(string mobile);
         Task<ResultDto<SubscriberCodeDto>> GetOtp(string mobile);
@@ -124,8 +125,35 @@ namespace NamiCustomers.Application.Services.Subscribers
                 true,
                 customerInfo);
         }
- 
-        public async Task<ResultDto<byte[]>> ExportCustomerInfoAsync()
+
+
+		public async Task<ResultDto<SubscriberDetailsDto>> GetCustomerInfoDetailMobileAsync(string mobile)
+		{
+
+			var data = await context.Subscribers.Where(cu => cu.Mobile == mobile)
+				.Include(cu => cu.City).FirstOrDefaultAsync();
+
+			if (data == null) return new ResultDto<SubscriberDetailsDto>(
+				"کاربر مربوطه یافت نشد.",
+				false,
+				null);
+
+			var customerInfo = new SubscriberDetailsDto
+			{
+				Id = data.Id,
+				Name = data.Name,
+				Address = data.Address,
+				CityName = data.City.Title,
+				PhoneNumber = data.Mobile,
+			};
+
+			return new ResultDto<SubscriberDetailsDto>(
+				"",
+				true,
+				customerInfo);
+		}
+
+		public async Task<ResultDto<byte[]>> ExportCustomerInfoAsync()
         {
             var customerInfos = await context.Subscribers
                 .Include(c => c.City)
