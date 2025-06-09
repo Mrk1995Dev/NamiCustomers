@@ -17,8 +17,8 @@ namespace NamiCustomers.MVC.Controllers
         {
             _logger = logger;
         }
-
-        public IActionResult Index()
+		[Authorize]
+		public IActionResult Index()
         {
             return View();
         }
