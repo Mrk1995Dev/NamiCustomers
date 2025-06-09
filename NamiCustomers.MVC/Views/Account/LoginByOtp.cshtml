@@ -1,5 +1,125 @@
 ﻿
-<form asp-action="LogInByOtp" asp-controller="Account">
-    <input name="otp" />
-    <button type="submit" value="ارسال"</button>
-</form>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en" view-mode="rtl !important" data-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="خدمات پس از فروش نامی خودرو">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <meta name="theme-color" content="#000008">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!-- Title -->
+    <title>خدمات پس از فروش شرکت نامی خودرو</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="~/SiteTmeplate/img/core-img/favicon.ico">
+    <link rel="apple-touch-icon" href="~/SiteTmeplate/img/icons/icon-96x96.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="~/SiteTmeplate/img/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="~/SiteTmeplate/img/icons/icon-167x167.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/SiteTmeplate/img/icons/icon-180x180.png">
+
+    <!-- Style CSS -->
+    <link rel="stylesheet" href="~/SiteTmeplate/style.css">
+    <link rel="stylesheet" href="~/SiteTmeplate/css/fontiran.css">
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="~/SiteTmeplate/manifest.json">
+</head>
+
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="spinner-grow text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Internet Connection Status -->
+    <div class="internet-connection-status" id="internetStatus"></div>
+
+    <!-- Back Button -->
+    <div class="login-back-button">
+        <a href="LoginByMobile">
+            <i class="bi bi-arrow-left-short"></i>
+        </a>
+    </div>
+
+    <!-- Login Wrapper Area -->
+    <div class="login-wrapper d-flex align-items-center justify-content-center">
+        <div class="custom-container">
+            <div class="text-center">
+                <img class="login-intro-img" src="~/SiteTmeplate/img/bg-img/logo.png" alt="">
+                <h3>کد تایید را وارد نمایید</h3>
+                <p class="mb-4">کد تایید به شماره همراه  <strong>012 3456 7890</strong> ارسال گردید.</p>
+            </div>
+
+            <!-- OTP Verify Form -->
+            <div class="otp-verify-form mt-4" style="direction:ltr !important;">
+                <form asp-action="LogInByOtp" asp-controller="Account">
+                    <div class="input-group mb-3 otp-input-group">
+                       @*  <input class="form-control" id="otp5" name="otp5" onkeyup="checkAllFields()" type="text" style="color: #000 !important;" value="" placeholder="-" maxlength="1">
+                        <input class="form-control" id="otp4" name="otp4" type="text" style="border-top-left-radius: 0px !important;border-bottom-left-radius: 0px !important;color: #000 !important;" value="" placeholder="-" maxlength="1">
+                        <input class="form-control" id="otp3" name="otp3" type="text" style="border-top-left-radius: 0px !important;border-bottom-left-radius: 0px !important;color: #000 !important;" value="" placeholder="-" maxlength="1">
+                        <input class="form-control" id="otp2" name="otp2" type="text" style="border-top-left-radius: 0px !important;border-bottom-left-radius: 0px !important;color: #000 !important;" value="" placeholder="-" maxlength="1">
+                        <input class="form-control" id="otp1" name="otp1" type="text" style="color: #000 !important;" value="" placeholder="-" maxlength="1"> *@
+
+                        <input class="form-control" style="color: #000 !important;" type="text" name="otp" id="otp" placeholder="-">
+
+                    </div>
+
+                   @*  <input class="form-control" name="otp" id="otp" hidden /> *@
+                    <button name="submitBtn" id="submitBtn" type="submit"  class="btn btn-primary w-100">تایید  </button>
+                </form>
+            </div>
+
+            <!-- Term & Privacy Info -->
+            <div class="login-meta-data text-center">
+                <p class="mt-3 mb-0">کد تایید را دریافت نکرده اید؟ <span class="otp-sec" id="resendOTP"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- All JavaScript Files -->
+    <script src="js/pwa.js"></script>
+    <script src="~/SiteTmeplate/js/bootstrap.bundle.min.js"></script>
+    <script src="~/SiteTmeplate/js/internet-status.js"></script>
+    <script src="~/SiteTmeplate/js/dark-rtl.js"></script>
+    <script src="~/SiteTmeplate/js/otp-timer.js"></script>
+    <script src="~/SiteTmeplate/js/otp-input-switch.js"></script>
+    <script src="~/SiteTmeplate/js/active.js"></script>
+    <script type="text/javascript">
+
+
+
+       //   function checkAllFields() {
+       //       alert(document.getElementById('otp1').value);
+       //  const otp1 = document.getElementById('otp1').value;
+       //  const otp2 = document.getElementById('otp2').value;
+       //  const otp3 = document.getElementById('otp3').value;
+       //  const otp4 = document.getElementById('otp4').value;
+       //  const otp5 = document.getElementById('otp5').value;
+       // debuger();
+       //  // اگر همه فیلدها پر باشند:
+       //  if (otp1 && otp2 && otp3 && otp4 && otp5) {
+       //      const fullOtp = otp1 + otp2 + otp3 + otp4 + otp5;
+       //      document.getElementById('otp').value = fullOtp; // ذخیره در فیلد مخفی
+       //      document.getElementById('submitBtn').disabled = false; // فعال کردن دکمه تایید
+       //  } else {
+       //      document.getElementById('submitBtn').disabled = true; // غیرفعال کردن دکمه
+       //  }
+    </script>
+</body>
+
+
+
+
+
+</html>
