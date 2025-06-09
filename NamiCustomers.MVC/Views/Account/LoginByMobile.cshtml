@@ -1,98 +1,108 @@
-﻿ 
-
-
-
-@using NamiCustomers.Infrastucture.Model.Account
-
-@model LoginDto
-
+﻿
 @{
-    ViewData["Title"] = "Login";
+    Layout = null;
 }
-<!-- App css -->
 
-<link href="~/css/theme/default/bootstrap-rtl.min.css" rel="stylesheet" type="text/css" id="bs-default-stylesheet" />
-<link href="~/css/theme/default/app-rtl.min.css" rel="stylesheet" type="text/css" id="app-default-stylesheet" />
+<!DOCTYPE html>
+<html lang="fa" view-mode="rtl" data-theme="dark">
 
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="خدمات پس از فروش نامی خودرو">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
+    <meta name="theme-color" content="#000008">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-<div class="auth-fluid" dir="rtl">
-    <!--Auth fluid left content -->
-    <div class="auth-fluid-form-box">
-        <div class="align-items-center d-flex h-100">
-            <div class="card-body">
+    <!-- Title -->
+    <title>خدمات پس از فروش شرکت نامی خودرو</title>
 
-                <!-- Logo -->
-                <div class="auth-brand text-center text-lg-start">
-                    <div class="auth-logo">
-                        <a href="index.html" class="logo logo-dark text-center">
-                            <span class="logo-lg">
-                                <img src="~/css/theme/images/logo-dark.png" alt="" height="22">
-                            </span>
-                        </a>
+    <!-- Favicon -->
+    <link rel="icon" href="~/SiteTmeplate/img/core-img/favicon.ico">
+    <link rel="apple-touch-icon" href="~/SiteTmeplate/img/icons/icon-96x96.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="~/SiteTmeplate/img/icons/icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="~/SiteTmeplate/img/icons/icon-167x167.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/SiteTmeplate/img/icons/icon-180x180.png">
 
-                        <a href="index.html" class="logo logo-light text-center">
-                            <span class="logo-lg">
-                                <img src="~/css/theme/images/logo-dark.png" alt="" height="22">
-                            </span>
-                        </a>
-                    </div>
-                </div>
+    <!-- Style CSS -->
+    <link rel="stylesheet" href="~/SiteTmeplate/style.css">
+    <link rel="stylesheet" href="~/SiteTmeplate/css/fontiran.css">
 
-                <ul class="nav nav-tabs nav-bordered">
-                    <li class="nav-item">
-                        <a href="#tab-login" data-bs-toggle="tab" aria-expanded="false" class="nav-link active">
-                            ورود
-                        </a>
-                    </li>
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="~/SiteTmeplate/manifest.json">
+</head>
 
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane show active" id="tab-login">
-                        <p class="text-muted mb-3">آدرس ایمیل و رمز عبور خود را برای دسترسی به حساب وارد کنید.</p>
-
-
-
-                        <form asp-action="GetOtp" asp-controller="Account">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="form-group">
-                                <label asp-for="Mobile" class="control-label"></label>
-                                <input asp-for="Mobile" class="form-control" />
-                                <span asp-validation-for="Mobile" class="text-danger"></span>
-                            </div>
-                       
-
-
-                            <input asp-for="ReturnUrl" type="hidden" class="form-control" />
-
-                            <br />
-                            <div class="form-group">
-                                <input type="submit" value="ورود" class="btn btn-success" />
-                                |
-                                @Html.ActionLink("فراموشی رمز عبور", "ForgotPassword", "Account")
-
-
-                            </div>
-
-                        </form>
-                    </div>
-
-                </div>
-
-
-
-            </div>
-            <!-- end .card-body -->
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="spinner-grow text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
         </div>
-        <!-- end .align-items-center.d-flex.h-100-->
     </div>
-</div>
 
+    <!-- Internet Connection Status -->
+    <div class="internet-connection-status" id="internetStatus"></div>
 
+    <!-- Back Button -->
+    <!-- <div class="login-back-button">
+      <a href="hero-blocks.html">
+        <i class="bi bi-arrow-left-short"></i>
+      </a>
+    </div> -->
+    <!-- Login Wrapper Area -->
+    <div class="login-wrapper d-flex align-items-center justify-content-center">
+        <div class="custom-container">
+            <div class="text-center px-4">
+                <img class="login-intro-img" src="~/SiteTmeplate/img/bg-img/logo.png" alt="">
+            </div>
 
+            <!-- Register Form -->
+            <div class="register-form mt-4">
+                <h6 class="mb-3 text-center">  سامانه خدمات پس از فروش نامی خودورو پیشرو</h6>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
+                <form asp-action="GetOtp" asp-controller="Account">
+                    <div class="form-group">
+                        <input class="form-control" style="color: #000 !important;" type="text" id="mobile" placeholder="تلفن همراه را وارد نمایید">
+                    </div>
+
+                    <!-- <div class="form-group position-relative">
+                      <input class="form-control" id="psw-input" type="password" placeholder="Enter Password">
+                      <div class="position-absolute" id="password-visibility">
+                        <i class="bi bi-eye"></i>
+                        <i class="bi bi-eye-slash"></i>
+                      </div>
+                    </div> -->
+
+                    <button class="btn btn-primary w-100" type="submit">ورود</button>
+                </form>
+            </div>
+
+            <!-- Login Meta -->
+            <div class="login-meta-data text-center">
+                <a class="stretched-link forgot-password d-block mt-3 mb-1" href="forget-password.html">رمز عبور خود را فراموش کرده اید؟</a>
+                <!-- <p class="mb-0">Didn't have an account? <a class="stretched-link" href="register.html">ثبت نام  </a></p> -->
+            </div>
+        </div>
+    </div>
+
+    <!-- All JavaScript Files -->
+    <script src="~/SiteTmeplate/js/bootstrap.bundle.min.js"></script>
+    <script src="~/SiteTmeplate/js/slideToggle.min.js"></script>
+    <script src="~/SiteTmeplate/js/internet-status.js"></script>
+    <script src="~/SiteTmeplate/js/tiny-slider.js"></script>
+    <script src="~/SiteTmeplate/js/venobox.min.js"></script>
+    <script src="~/SiteTmeplate/js/countdown.js"></script>
+    <script src="~/SiteTmeplate/js/rangeslider.min.js"></script>
+    <script src="~/SiteTmeplate/js/vanilla-dataTables.min.js"></script>
+    <script src="~/SiteTmeplate/js/index.js"></script>
+    <script src="~/SiteTmeplate/js/imagesloaded.pkgd.min.js"></script>
+    <script src="~/SiteTmeplate/js/isotope.pkgd.min.js"></script>
+    <script src="~/SiteTmeplate/js/dark-rtl.js"></script>
+    <script src="~/SiteTmeplate/js/active.js"></script>
+    <script src="~/SiteTmeplate/js/pwa.js"></script>
+</body>
+
+</html>
