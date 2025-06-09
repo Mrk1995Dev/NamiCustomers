@@ -8,7 +8,7 @@ namespace NamiCustomers.MVC.Controllers
 
     //[Authorize(AuthenticationSchemes = "Bearer")]
     //[CustomAuthorize]
-    
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
