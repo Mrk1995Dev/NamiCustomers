@@ -89,6 +89,21 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                     var refreshToken= $"{GenerateJwtToken(user)}";
                     return Ok(new ResultDto<LoginResponseDto>("",true,new LoginResponseDto { RefreshToken= refreshToken, Token=token,Email=user.Email}));
                 }
+                else
+                {
+                    await RegisterUser(new RegisterModel {
+                    Email=$"{otp.Data.Mobile}@namikhodro.com",
+                    FirstName=$"{otp.Data.Mobile}",
+                    LastName=$"{otp.Data.Mobile}",
+                    Mobile= otp.Data.Mobile,
+                    Password= $"Nn@{otp.Data.Mobile}"
+                    });
+
+                    var newUser = await userManager.Users.WhereIf(true, c => c.PhoneNumber == otp.Data.Mobile).SingleOrDefaultAsync();
+                    var token = $"{GenerateJwtToken(newUser)}";
+                    var refreshToken = $"{GenerateJwtToken(newUser)}";
+                    return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = newUser.Email }));
+                }
             }
             return Unauthorized();
         }
@@ -144,7 +159,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     [HttpPost("[action]")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterModel model)
     {
-        var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FullName = model.FullName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true };
+        var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName,LastName=model.LastName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true ,FullName=$"{model.FirstName} {model.LastName}",PassWord=model.Password};
         var result = await userManager.CreateAsync(user, model.Password);
 
         if (result.Succeeded)
@@ -205,7 +220,11 @@ public class LoginModel
 
 public class RegisterModel
 {
-    public string FullName { get; set; }
+    [Required]
+    public string FirstName { get; set; }
+    [Required]
+    public string LastName { get; set; }
+    [Required]
     public string Mobile { get; set; }
     [Required]
     public string Email { get; set; }

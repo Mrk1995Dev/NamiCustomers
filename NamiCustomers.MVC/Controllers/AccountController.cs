@@ -136,7 +136,7 @@ namespace NamiCustomers.MVC.Controllers
         //        LastName = register.LastName,
         //        Email = register.Email,
         //        UserName = register.Email,
-        //        PassWord= register.Password
+        //        PassWord = register.Password
         //    };
 
         //    var result = _userManager.CreateAsync(newUser, register.Password).Result;
