@@ -20,8 +20,8 @@ public class LoginDto
     [Display(Name ="مرا به خاطر بسپار")]
     public bool IsPersistent { get; set; } = false;
 
-    public string ReturnUrl { get; set; }
+    public string? ReturnUrl { get; set; }
 
-    public string OtpCode { get; set; }
-    public string Mobile { get; set; }
+    public string? OtpCode { get; set; }
+    public string? Mobile { get; set; }
 }

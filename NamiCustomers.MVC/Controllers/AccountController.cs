@@ -38,23 +38,22 @@ namespace NamiCustomers.MVC.Controllers
                 return View(login);
             }
 
-            var result = authService.LoginAsync(new LoginRequestDto { Email = login.UserName, Password = login.Password }).Result;
 
-            var user = await accountService.FindByNameAsync();
-            //user.Password = login.Password;
-            //user.IsPersistent = login.IsPersistent;
-            if (result == true)
+           var result = authService.LoginAsync(new LoginRequestDto { Email = login.UserName, Password = login.Password }).Result;
+            if (result)
             {
-                // var us=await authService.GetCurrentUserAsync();
-                // ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(us);
-                // Note: For these changes to persist, you typically need to:
-                // 1. Sign out the user
-                //await HttpContext.SignOutAsync();
+                var claims = new List<System.Security.Claims.Claim>
+            {
+                new  System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name,login.UserName)
+            };
 
-                // 2. Sign in with the modified principal
-                // await HttpContext.SignInAsync(claimsPrincipal);
+                var claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                return Redirect(login.ReturnUrl);
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity));
+                return RedirectToAction("Index", "Home");
             }
             ModelState.AddModelError(string.Empty, "Login  Error");
             return View();
@@ -122,6 +121,8 @@ namespace NamiCustomers.MVC.Controllers
         //{
         //    return View();
         //}
+
+
         //[HttpPost]
         //public IActionResult Register(RegisterDto register)
         //{
