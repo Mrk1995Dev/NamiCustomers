@@ -69,7 +69,7 @@ namespace NamiCustomers.MVC.Controllers
         public async Task<IActionResult> GetOtp(string mobile)
         {
             var code = await authService.GetOtp(mobile);
-            return RedirectToAction("LoginByOtp", new { otp = code });
+            return RedirectToAction("LoginByOtp", new { mobile = mobile });
         }
         [HttpGet]
         public async Task<IActionResult> LoginByOtp()
