@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -113,6 +114,7 @@ public static class ServicesRegisteration
     private static IServiceCollection ConfigureCurrentUser(this IServiceCollection services)
     {
         services.AddHttpContextAccessor();
+        services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
         services.AddSession();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         //services.AddSingleton<ICurrentUser, CurrentUser>();

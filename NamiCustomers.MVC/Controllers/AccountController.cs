@@ -1,10 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using NamiCustomers.MVC.Models;
 using NamiCustomers.MVC.Services.Account;
 using NamiCustomers.MVC.Services.Auth;
+using NuGet.Common;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -12,7 +18,7 @@ using System.Threading.Tasks;
 namespace NamiCustomers.MVC.Controllers
 {
 
-    public class AccountController(IAccountService accountService, IAuthService authService) : Controller
+    public class AccountController(IAccountService accountService, IAuthService authService, IUrlHelperFactory urlHelperFactory) : Controller
     {
         //[Authorize]
         public async Task<IActionResult> Index()
@@ -39,7 +45,7 @@ namespace NamiCustomers.MVC.Controllers
             }
 
 
-           var result = authService.LoginAsync(new LoginRequestDto { Email = login.UserName, Password = login.Password }).Result;
+            var result = authService.LoginAsync(new LoginRequestDto { Email = login.UserName, Password = login.Password }).Result;
             if (result)
             {
                 var claims = new List<System.Security.Claims.Claim>
@@ -109,7 +115,88 @@ namespace NamiCustomers.MVC.Controllers
         }
 
 
-        //[Authorize]
+        
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest forgot)
+        {
+            var urlHelper = urlHelperFactory.GetUrlHelper(ControllerContext);
+
+            string callbakUrl = urlHelper.Action("ResetPassword", "Account", new
+            {
+                UserId = forgot.Email,
+                Token= "TEMPTOKEN"
+            }, protocol: Request.Scheme);
+
+            var result = await authService.ForgotPassword(new ForgotPasswordRequestDto {Email= forgot.Email,CallBAckUrl= callbakUrl });
+            if (!result.Issuccess)
+            {
+                return ForgotPassword();
+            }
+
+            return View ("DisplayEmail");
+            //return  View("ResetPassword",new ResetPasswordDto
+            //{
+            //    UserId = result.Data.Email,
+            //    Token = result.Data.Token
+            //});
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ResetPassword(string UserId ,string Token)
+        {
+            return View("ResetPassword", new ResetPasswordDto
+            {
+                UserId = UserId,
+                Token = Token.Replace(" ","+")
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto reset)
+        {
+            var result=await authService.ResetPassword(reset);
+            if (result.Issuccess)
+            {
+                return RedirectToAction(nameof(ResetPasswordConfirmation));
+            }
+            return  View("ResetPassword", new ResetPasswordDto
+            {
+                Errors=result.Errors.Errors.Select( c=>  c.Description).ToList(),
+                UserId = reset.UserId,
+                Token = reset.Token.Replace(" ", "+")
+            });
+
+        }
+
+
+
+        [HttpGet]
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+
+      
+
+        public IActionResult VerifySuccess()
+        {
+            return View();
+        }
+  //[Authorize]
         //public IActionResult TwoFactorEnabled()
         //{
         //    var user = _userManager.FindByNameAsync(User.Identity.Name).Result;
@@ -272,97 +359,6 @@ namespace NamiCustomers.MVC.Controllers
         //    return RedirectToAction("Index", "home");
         //}
 
-        [HttpGet]
-        public async Task<IActionResult> Logout()
-        {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            HttpContext.Session.Clear();
-            return RedirectToAction("Index", "Home");
-        }
-
-        public IActionResult ForgotPassword()
-        {
-            return View();
-        }
-
-        //[HttpPost]
-        //public IActionResult ForgotPassword(ForgotPasswordConfirmationDto forgot)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return View(forgot);
-        //    }
-
-        //    var user = _userManager.FindByEmailAsync(forgot.Email).Result;
-        //    if (user == null || _userManager.IsEmailConfirmedAsync(user).Result == false)
-        //    {
-        //        ViewBag.meesage = "ممکن است ایمیل وارد شده معتبر نباشد! و یا اینکه ایمیل خود را تایید نکرده باشید";
-        //        return View();
-        //    }
-
-        //    string token = _userManager.GeneratePasswordResetTokenAsync(user).Result;
-        //    string callbakUrl = Url.Action("ResetPassword", "Account", new
-        //    {
-        //        UserId = user.Id,
-        //        token
-        //    }, protocol: Request.Scheme);
-
-        //    string body = $"برای تنظیم مجدد کلمه عبور بر روی لینک زیر کلیک کنید <br/> <a href={callbakUrl}> link reset Password </a>";
-        //    _emailService.Execute(user.Email, body, "فراموشی رمز عبور");
-        //    ViewBag.meesage = "لینک تنظیم مجدد کلمه عبور برای ایمیل شما ارسال شد";
-        //    return View();
-        //}
-
-        //public IActionResult ResetPassword(string UserId, string Token)
-        //{
-        //    return View(new ResetPasswordDto
-        //    {
-        //        Token = Token,
-        //        UserId = UserId,
-        //    });
-        //}
-
-        //[HttpPost]
-        //public IActionResult ResetPassword(ResetPasswordDto reset)
-        //{
-        //    if (!ModelState.IsValid)
-        //        return View(reset);
-        //    if (reset.Password != reset.ConfirmPassword)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    var user = _userManager.FindByIdAsync(reset.UserId).Result;
-        //    if (user == null)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    var Result = _userManager.ResetPasswordAsync(user, reset.Token, reset.Password).Result;
-
-        //    if (Result.Succeeded)
-        //    {
-        //        var currentUser= _userManager.FindByIdAsync(reset.UserId).Result;
-        //        currentUser.PassWord = reset.Password;
-
-
-        //      var result=  _userManager.UpdateAsync(currentUser).Result;
-
-        //        return RedirectToAction(nameof(ResetPasswordConfirmation));
-        //    }
-        //    else
-        //    {
-        //        ViewBag.Errors = Result.Errors;
-        //        return View(reset);
-        //    }
-
-        //}
-        //[HttpGet]
-        //public IActionResult ResetPasswordConfirmation()
-        //{
-        //    return View();
-        //}
-
-
         //[Authorize]
         //public IActionResult SetPhoneNumber()
         //{
@@ -411,12 +407,6 @@ namespace NamiCustomers.MVC.Controllers
         //    return RedirectToAction("VerifySuccess");
 
         //}
-
-
-        public IActionResult VerifySuccess()
-        {
-            return View();
-        }
 
 
     }

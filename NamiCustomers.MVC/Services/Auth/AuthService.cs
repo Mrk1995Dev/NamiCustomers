@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using NamiCustomers.Infrastucture.Model;
 using NamiCustomers.Infrastucture.Model.Subscribers;
 using NuGet.Common;
@@ -13,6 +16,7 @@ using System.Text.Json;
 
 namespace NamiCustomers.MVC.Services.Auth
 {
+
     public interface IAuthService
     {
         Task<bool> LoginAsync(LoginRequestDto loginRequest);
@@ -20,6 +24,8 @@ namespace NamiCustomers.MVC.Services.Auth
         Task LogoutAsync();
         Task<string> GetOtp(string mobile);
         Task<LoginResponseDto> LoginByOtpAsync(string otp);
+        Task<ResultDto<ForgotPasswordResponse>> ForgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto);
+        Task<ResultDto<IdentityResult>> ResetPassword(ResetPasswordDto reset);
     }
     public class AuthService : IAuthService
     {
@@ -81,7 +87,7 @@ namespace NamiCustomers.MVC.Services.Auth
                 return result.Data;
             }
 
-            return new LoginResponseDto ();//TODO 
+            return new LoginResponseDto();//TODO 
         }
 
         public async Task LogoutAsync()
@@ -106,9 +112,9 @@ namespace NamiCustomers.MVC.Services.Auth
                 throw new Exception("Failed to logout.");
             }
 
-            
+
         }
-            
+
         public async Task<string?> RefreshTokenAsync(string refreshToken)
         {
 
@@ -130,7 +136,17 @@ namespace NamiCustomers.MVC.Services.Auth
             return null;
         }
 
-      
+        public async Task<ResultDto<ForgotPasswordResponse>> ForgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto)
+        {
+            var result = await PostData<ResultDto<ForgotPasswordResponse>>("Account/ForgotPassword", forgotPasswordRequestDto);
+            return result;
+        }
+
+        public async Task<ResultDto<IdentityResult>> ResetPassword(ResetPasswordDto reset)
+        {
+            var result = await PostData<ResultDto<IdentityResult>>("Account/ResetPassword", reset);
+            return result;
+        }
 
 
 
@@ -145,7 +161,7 @@ namespace NamiCustomers.MVC.Services.Auth
             var response = await httpClient.SendAsync(request);
             string content = await response.Content.ReadAsStringAsync();
             var a = JsonSerializer.Deserialize<T>(content);
- 
+
             return await Task.FromResult(a);
         }
 
@@ -164,44 +180,11 @@ namespace NamiCustomers.MVC.Services.Auth
         }
 
 
+
+
         #endregion
     }
 }
 
 
-
-public class Rootobject
-{
-    public bool issuccess { get; set; }
-    public string message { get; set; }
-    public Datum[] Data { get; set; }
-}
-
-public class Datum
-{
-    public string AuthenticationType { get; set; }
-    public bool IsAuthenticated { get; set; }
-    public object Actor { get; set; }
-    public object BootstrapContext { get; set; }
-    public Claim[] Claims { get; set; }
-    public object Label { get; set; }
-    public string Name { get; set; }
-    public string NameClaimType { get; set; }
-    public string RoleClaimType { get; set; }
-}
-
-public class Claim
-{
-    public string Issuer { get; set; }
-    public string OriginalIssuer { get; set; }
-    public Properties Properties { get; set; }
-    public object Subject { get; set; }
-    public string Type { get; set; }
-    public string Value { get; set; }
-    public string ValueType { get; set; }
-}
-
-public class Properties
-{
-    public string httpschemasxmlsoaporgws200505identityclaimpropertiesShortTypeName { get; set; }
-}
+ 
