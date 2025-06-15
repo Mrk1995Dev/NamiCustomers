@@ -74,7 +74,9 @@ namespace NamiCustomers.MVC.Controllers
         public async Task<IActionResult> GetOtp(string mobile)
         {
             var code = await authService.GetOtp(mobile);
-            return RedirectToAction("LoginByOtp", new { mobile = mobile });
+
+            TempData["mobile"] = mobile;
+            return RedirectToAction("LoginByOtp");
         }
         [HttpGet]
         public async Task<IActionResult> LoginByOtp()
@@ -148,11 +150,6 @@ namespace NamiCustomers.MVC.Controllers
             }
 
             return View ("DisplayEmail");
-            //return  View("ResetPassword",new ResetPasswordDto
-            //{
-            //    UserId = result.Data.Email,
-            //    Token = result.Data.Token
-            //});
         }
 
         [HttpGet]
