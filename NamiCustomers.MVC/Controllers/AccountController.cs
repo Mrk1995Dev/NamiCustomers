@@ -73,6 +73,10 @@ namespace NamiCustomers.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> GetOtp(string mobile)
         {
+            if (string.IsNullOrEmpty(mobile))
+            {
+                return RedirectToAction("LoginByMobile");
+            }
             var code = await authService.GetOtp(mobile);
 
             TempData["mobile"] = mobile;

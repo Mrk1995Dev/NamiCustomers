@@ -117,25 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddAccountingForApi" xml:space="preserve">
-    <value>http://7soft.nami.local:8089/api/OnlineSale/AddAccountingForApi</value>
+  <data name="GetChassisInformationByVinNumber" xml:space="preserve">
+    <value>http://7soft.namikhodro.com:8088/api/VINInformation/GetChassisInformationByVinNumber?VinNumber=</value>
   </data>
-  <data name="AddOrUpdatevehicleSaleAttachment" xml:space="preserve">
-    <value>http://7soft.nami.local:8089/api/OnlineSale/AddOrUpdatevehicleSaleAttachment</value>
-  </data>
-  <data name="DeletevehicleSaleAttachment" xml:space="preserve">
-    <value>http://7soft.nami.local:8089/api/OnlineSale/DeletevehicleSaleAttachment</value>
-  </data>
-  <data name="GetAllRequiredAttachmentRequirements" xml:space="preserve">
-    <value>http://7soft.nami.local:8089/api/OnlineSale/GetAllRequiredAttachmentRequirements?VehicleSaleId=</value>
-  </data>
-  <data name="GetAllVehicleModel" xml:space="preserve">
-    <value>http://7soft.nami.local:8089/api/OnlineSale/GetAllVehicleModel?SubscriberId=</value>
+  <data name="RelationCustomerInfoByVinNumber" xml:space="preserve">
+    <value>http://7soft.namikhodro.com:8088/api/VINInformation/RelationCustomerInfoByVinNumber</value>
   </data>
   <data name="GetSubscriberByNationalCode" xml:space="preserve">
     <value>http://7soft.nami.local:8089/api/Subscriber/GetSubscriberByNationalCode?NationalCode=</value>
-  </data>
-  <data name="InsertOnlineSale" xml:space="preserve">
-    <value>http://7soft.nami.local:8089/api/OnlineSale/InsertOnlineSale</value>
   </data>
 </root>
