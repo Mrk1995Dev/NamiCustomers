@@ -1,48 +1,33 @@
-﻿namespace NamiCustomers.API.Controllers.v1
+﻿using NamiCustomers.Application.Services.SevenSoftServices;
+using System.Reflection;
+
+namespace NamiCustomers.API.Controllers.v1;
+
+[ApiController]
+[Route("api/v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
+
+public class SAMPLEController(ISevenSoftService sevenSoftService) : ControllerBase
 {
-    [ApiController]
-    [Route("api/v{version:apiVersion}/[controller]")]
-    [ApiVersion("1.0")]
-    [NonController]
-    public class SAMPLEController(ISAMPLEService SAMPLEService) : ControllerBase
+    [HttpGet("[action]")]
+    public virtual async Task<IActionResult> GetSubscriberByNationalCode(string nationalCode= "0082425639")
     {
-        private readonly ISAMPLEService _SAMPLEService = SAMPLEService;
-
-        [HttpGet]
-        [Route("[action]")]
-        public virtual string Alive() => ".Net Core Web API Version 1";
-
-        [HttpPost]
-        public virtual async Task<IActionResult> Post(SAMPLEDTO SAMPLEDTO)
-        {
-            var result = await _SAMPLEService.CreateAsync(SAMPLEDTO);
-            return Ok(result);
-        }
-        [HttpPut]
-        [Route("[action]")]
-        public virtual async Task<SAMPLEDTO> Update(SAMPLEDTO SAMPLEDTO)
-        {
-            return await _SAMPLEService.UpdateAsync(SAMPLEDTO);
-        }
-        [HttpDelete]
-        [Route("[action]")]
-        public virtual async Task<int> Delete(int id)
-        {
-            return await _SAMPLEService.DeleteAsync(id);
-        }
-        [HttpGet]
-        [Route("GetAll")]
-        public virtual async Task<IActionResult> GetRangeAsync([FromQuery] SAMPLEFilterDTO filter)
-        {
-            var result = await _SAMPLEService.GetAll(filter);
-            return Ok(result);
-        }
-        [HttpGet]
-        [Route("[action]")]
-        public virtual async Task<IActionResult> Get(int id)
-        {
-            var result = await _SAMPLEService.GetAsync(id);
-            return Ok(result);
-        }
+        var a =await  sevenSoftService.GetSubscriberByNationalCode(nationalCode);
+        return Ok(a);
     }
+    [HttpGet("[action]")]
+    public virtual async Task<IActionResult> GetChassisInformationByVinNumber(string vinNumber = "LGBH9VEA4RY757904")
+    {
+        var a = await sevenSoftService.GetChassisInformationByVinNumber(vinNumber);
+        return Ok(a);
+    }
+
+    [HttpGet("[action]")]
+    public virtual async Task<IActionResult> GetRelationCustomerInfoByVinNumber(string chassisVinNumber= "LGBH9VEA4RY757904",string 
+        nationalCodeOrEconomicCode = "2450185811",string  mobile = "09115656557")
+    {
+        var a = await sevenSoftService.GetRelationCustomerInfoByVinNumber(chassisVinNumber,nationalCodeOrEconomicCode,mobile);
+        return Ok(a);
+    }
+    //
 }

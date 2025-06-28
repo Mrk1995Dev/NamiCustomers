@@ -61,47 +61,11 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://7soft.nami.local:8089/api/OnlineSale/AddAccountingForApi.
+        ///   Looks up a localized string similar to http://7soft.namikhodro.com:8088/api/VINInformation/GetChassisInformationByVinNumber?VinNumber=.
         /// </summary>
-        public static string AddAccountingForApi {
+        public static string GetChassisInformationByVinNumber {
             get {
-                return ResourceManager.GetString("AddAccountingForApi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to http://7soft.nami.local:8089/api/OnlineSale/AddOrUpdatevehicleSaleAttachment.
-        /// </summary>
-        public static string AddOrUpdatevehicleSaleAttachment {
-            get {
-                return ResourceManager.GetString("AddOrUpdatevehicleSaleAttachment", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to http://7soft.nami.local:8089/api/OnlineSale/DeletevehicleSaleAttachment.
-        /// </summary>
-        public static string DeletevehicleSaleAttachment {
-            get {
-                return ResourceManager.GetString("DeletevehicleSaleAttachment", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to http://7soft.nami.local:8089/api/OnlineSale/GetAllRequiredAttachmentRequirements?VehicleSaleId=.
-        /// </summary>
-        public static string GetAllRequiredAttachmentRequirements {
-            get {
-                return ResourceManager.GetString("GetAllRequiredAttachmentRequirements", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to http://7soft.nami.local:8089/api/OnlineSale/GetAllVehicleModel?SubscriberId=.
-        /// </summary>
-        public static string GetAllVehicleModel {
-            get {
-                return ResourceManager.GetString("GetAllVehicleModel", resourceCulture);
+                return ResourceManager.GetString("GetChassisInformationByVinNumber", resourceCulture);
             }
         }
         
@@ -115,11 +79,11 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://7soft.nami.local:8089/api/OnlineSale/InsertOnlineSale.
+        ///   Looks up a localized string similar to http://7soft.namikhodro.com:8088/api/VINInformation/RelationCustomerInfoByVinNumber.
         /// </summary>
-        public static string InsertOnlineSale {
+        public static string RelationCustomerInfoByVinNumber {
             get {
-                return ResourceManager.GetString("InsertOnlineSale", resourceCulture);
+                return ResourceManager.GetString("RelationCustomerInfoByVinNumber", resourceCulture);
             }
         }
     }

@@ -3,6 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NamiCustomers.Application.Services.Appointments;
 using NamiCustomers.Application.Services.Dealers;
+using NamiCustomers.Application.Services.Facades;
+using NamiCustomers.Application.Services.SevenSoftServices;
 using NamiCustomers.Application.Services.Subscribers;
 using NamiCustomers.Application.Services.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.Email;
@@ -14,7 +16,8 @@ namespace NamiCustomers.Application
     {
         public static IServiceCollection ConfigurationApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddTransient<ISAMPLEService, SAMPLEService>();
+            services.AddTransient<ISettingsFacadeService, SettingsFacadeService>();
+            services.AddTransient<ISevenSoftService, SevenSoftService>();
             services.AddScoped<ISubscriberService, SubscriberService>();
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IDealerService, DealerService>();
