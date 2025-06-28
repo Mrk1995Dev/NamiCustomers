@@ -1,14 +1,21 @@
-﻿using k8s.KubeConfigModels;
+﻿using Humanizer.Localisation;
+using IdentityModel.OidcClient;
+using k8s.KubeConfigModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.IdentityModel.Tokens;
 using NamiCustomers.Application.Services.Subscribers;
 using NamiCustomers.Domain.Entities.Account;
+using NamiCustomers.Infrastucture.ExternalServices.Email;
 using NamiCustomers.Infrastucture.Model.Account;
+using NamiCustomers.Infrastucture.Properties;
 using NamiCustomers.Infrastucture.Utilities;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NamiCustomers.API.Controllers.v1;
 
@@ -17,7 +24,7 @@ namespace NamiCustomers.API.Controllers.v1;
 [ApiVersion("1.0")]
 
 public class AccountController(IConfiguration configuration, UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager, ISubscriberService subscriberService
+        SignInManager<ApplicationUser> signInManager, ISubscriberService subscriberService, IMailService mailService, IUrlHelperFactory urlHelperFactory
     ) : ControllerBase
 {
     //[HttpGet("[action]")]
@@ -37,15 +44,15 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     //    };
     //    return myAccount;
     //}
-    
+
 
     [HttpGet("[action]")]
-    public async  Task<IActionResult> GetCurrentUser()
+    public async Task<IActionResult> GetCurrentUser()
     {
         return Ok(new ResultDto<List<ClaimsIdentity>>("", true, User.Identities.ToList()));
     }
 
-        [HttpPost("[action]")]
+    [HttpPost("[action]")]
     public async Task<Microsoft.AspNetCore.Identity.SignInResult> PasswordSignInAsync(MyAccountinfoDto myAccountinfoDto)
     {
         await signInManager.SignOutAsync();
@@ -86,17 +93,18 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                 if (user != null)
                 {
                     var token = $"{GenerateJwtToken(user)}";
-                    var refreshToken= $"{GenerateJwtToken(user)}";
-                    return Ok(new ResultDto<LoginResponseDto>("",true,new LoginResponseDto { RefreshToken= refreshToken, Token=token,Email=user.Email}));
+                    var refreshToken = $"{GenerateJwtToken(user)}";
+                    return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email }));
                 }
                 else
                 {
-                    await RegisterUser(new RegisterModel {
-                    Email=$"{otp.Data.Mobile}@namikhodro.com",
-                    FirstName=$"{otp.Data.Mobile}",
-                    LastName=$"{otp.Data.Mobile}",
-                    Mobile= otp.Data.Mobile,
-                    Password= $"Nn@{otp.Data.Mobile}"
+                    await RegisterUser(new RegisterModel
+                    {
+                        Email = $"{otp.Data.Mobile}@namikhodro.com",
+                        FirstName = $"{otp.Data.Mobile}",
+                        LastName = $"{otp.Data.Mobile}",
+                        Mobile = otp.Data.Mobile,
+                        Password = $"Nn@{otp.Data.Mobile}"
                     });
 
                     var newUser = await userManager.Users.WhereIf(true, c => c.PhoneNumber == otp.Data.Mobile).SingleOrDefaultAsync();
@@ -109,6 +117,74 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
         }
         return Unauthorized();
     }
+
+    [HttpPost("[action]")]
+    public IActionResult ResetPassword(ResetPasswordDto reset)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest();
+        if (reset.Password != reset.ConfirmPassword)
+        {
+            return BadRequest();
+        }
+        var user = userManager.FindByEmailAsync(reset.UserId).Result;
+        if (user == null)
+        {
+            return BadRequest();
+        }
+
+        var Result = userManager.ResetPasswordAsync(user, reset.Token.Replace(" ", "+"), reset.Password).Result;
+
+        if (Result.Succeeded)
+        {
+            var currentUser = userManager.FindByEmailAsync(reset.UserId).Result;
+            currentUser.PassWord = reset.Password;
+            var result = userManager.UpdateAsync(currentUser).Result;
+
+            return Ok(new ResultDto<IdentityResult>(Infrastucture.Properties.Resources.msgSave, true, result));
+        }
+        else
+        {
+            var errorResponse = new ApiErrorResponse(Result.Errors.Select(e => new ApiError
+            (e.Code,
+             e.Description
+            )).ToList());
+
+            return BadRequest(new ResultDto<IdentityResult> (Infrastucture.Properties.Resources.Error,false,Result, errorResponse));
+        }
+
+    }
+
+
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(new ResultDto<ForgotPasswordResponse>("ممکن است ایمیل وارد شده معتبر نباشد!", false, new ForgotPasswordResponse { Email = forgotPasswordRequestDto.Email, Token = "" }));
+        }
+
+        var user = await userManager.FindByEmailAsync(forgotPasswordRequestDto.Email);
+        if (user == null || userManager.IsEmailConfirmedAsync(user).Result == false)
+        {
+            return BadRequest(new ResultDto<ForgotPasswordResponse>("ممکن است ایمیل وارد شده معتبر نباشد! و یا اینکه ایمیل خود را تایید نکرده باشید", false, new ForgotPasswordResponse { Email = forgotPasswordRequestDto.Email, Token = "" }));
+        }
+
+        string token = userManager.GeneratePasswordResetTokenAsync(user).Result;
+
+        forgotPasswordRequestDto.CallBAckUrl = forgotPasswordRequestDto.CallBAckUrl.Replace("TEMPTOKEN", token);
+
+
+        string body = $@"برای تنظیم مجدد کلمه عبور بر روی لینک زیر کلیک کنید <br/> <a href='{forgotPasswordRequestDto.CallBAckUrl}'> link reset Password </a>";
+        await mailService.SendEmailAsync(new MailRequest { ToEmail = user.Email, Body = body, Subject = "فراموشی رمز عبور" });
+
+        return Ok(new ResultDto<ForgotPasswordResponse>("لینک تنظیم مجدد کلمه عبور برای ایمیل شما ارسال شد", true, new ForgotPasswordResponse { Email = forgotPasswordRequestDto.Email, Token = token }));
+    }
+
+
+
+
 
     [HttpPost("[action]")]
     public async Task<IActionResult> LogIn(LoginModel model)
@@ -159,7 +235,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     [HttpPost("[action]")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterModel model)
     {
-        var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName,LastName=model.LastName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true ,FullName=$"{model.FirstName} {model.LastName}",PassWord=model.Password};
+        var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true, FullName = $"{model.FirstName} {model.LastName}", PassWord = model.Password };
         var result = await userManager.CreateAsync(user, model.Password);
 
         if (result.Succeeded)
@@ -231,4 +307,7 @@ public class RegisterModel
     [Required]
     public string Password { get; set; }
 }
+
+
+
 

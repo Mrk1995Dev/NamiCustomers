@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using MimeKit;
 using NamiCustomers.Infrastucture.ExternalServices.Email.Dtos;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace NamiCustomers.Infrastucture.ExternalServices.Email
 {
@@ -18,9 +19,23 @@ namespace NamiCustomers.Infrastucture.ExternalServices.Email
         {
             _mailSettings = mailSettings.Value;
         }
-        public Task SendEmailAsync(MailRequest mailRequest)
+        public async Task SendEmailAsync(MailRequest request)
         {
-            throw new NotImplementedException();
+            var email = new MimeMessage();
+            email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
+            email.To.Add(MailboxAddress.Parse(request.ToEmail));
+            email.Subject = request.Subject;
+            var builder = new BodyBuilder();
+            builder.HtmlBody = request.Body;
+            email.Body = builder.ToMessageBody();
+            using var smtp = new MailKit.Net.Smtp.SmtpClient();
+
+            smtp.Connect(_mailSettings.Host, _mailSettings.Port);
+            smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+
+            await smtp.SendAsync(email);
+
+            smtp.Disconnect(true);
         }
 
         public async Task SendForgetPasswordEmailAsync(FrogetPasswordDto request)

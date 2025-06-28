@@ -1,9 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NamiCustomers.Application.Services.Appointments;
 using NamiCustomers.Application.Services.Dealers;
 using NamiCustomers.Application.Services.Subscribers;
 using NamiCustomers.Application.Services.Vehicles;
+using NamiCustomers.Infrastucture.ExternalServices.Email;
 
 
 namespace NamiCustomers.Application
@@ -17,6 +19,7 @@ namespace NamiCustomers.Application
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IDealerService, DealerService>();
             services.AddScoped<IAppointmentService, AppointmentService>();
+            services.AddScoped<IMailService, MailService>();
 
             #region SmsService
 

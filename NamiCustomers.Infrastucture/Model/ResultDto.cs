@@ -17,15 +17,19 @@ namespace NamiCustomers.Infrastucture.Model
 
     public class ResultDto<T> where T : class
     {
-        public ResultDto(string? message, bool isSuccess, T data)
+        public ResultDto(string? Message, bool IsSuccess, T Data, ApiErrorResponse Errors=null)
         {
-            this.message = message;
-            this.issuccess = isSuccess;
-            this.Data = data;
+            this.Message = Message;
+            this.Issuccess = IsSuccess;
+            this.Data = Data;
+            this.Errors = Errors??new ApiErrorResponse(new List<ApiError>());
         }
 
-        public bool issuccess { get; set; }
-        public string? message { get; set; }
+        public bool Issuccess { get; set; }
+        public string? Message { get; set; }
         public T Data { get; set; }
+        public ApiErrorResponse Errors { get; set; }
     }
+
+
 }

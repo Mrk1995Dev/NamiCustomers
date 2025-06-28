@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,6 +19,6 @@ namespace NamiCustomers.Infrastucture.Model.Account
         public string ConfirmPassword { get; set; }
         public string UserId { get; set; }
         public string Token { get; set; }
-
+        public List<string> Errors { get; set; } = new();
     }
 }
