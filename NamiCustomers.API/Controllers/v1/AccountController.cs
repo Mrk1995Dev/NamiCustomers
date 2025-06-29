@@ -78,6 +78,10 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     public async Task<IActionResult> GetOtp([FromQuery] string mobile)
     {
         var result = await subscriberService.GetOtp(mobile);
+        if (!result.Issuccess)
+        {
+            return BadRequest(result);
+        }
         return Ok(result);
     }
 

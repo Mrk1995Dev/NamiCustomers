@@ -208,8 +208,8 @@ namespace NamiCustomers.Application.Services.Subscribers
             var newOtp = new SubscriberCode { AuthCode = passnew,Mobile=mobile };
             await context.SubscriberCodes.AddAsync(newOtp);
             await context.SaveChangesAsync();
-            await smsService.SendSms(newOtp.Mobile, $"{newOtp.AuthCode}\n لغو11");
-            return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto {AuthCode= newOtp.AuthCode, Mobile = newOtp.Mobile });
+             var result=  await smsService.SendSms(newOtp.Mobile, $"{newOtp.AuthCode}\n لغو11");
+            return new ResultDto<SubscriberCodeDto>("", result.IsSuccessStatusCode, new SubscriberCodeDto {AuthCode= newOtp.AuthCode, Mobile = newOtp.Mobile });
         }
     }
 
