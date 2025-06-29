@@ -13,4 +13,24 @@
         public string Token { get; set; }
     }
 
+    public record RegisterResponse
+    {
+        public List<string> Errors { get; set; }
+        public bool IsSuccess { get; set; }
+    }
+    public record ConfirmResponse
+    {
+        public List<string> Errors { get; set; }
+        public bool IsSuccess { get; set; }
+    }
+
+    public record ConfirmRequest
+    {
+       public string UserId { get; set; }
+       public string Token { get; set; }
+    }
+
+
+
+
 }

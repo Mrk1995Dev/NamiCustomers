@@ -1,16 +1,14 @@
-﻿using Humanizer.Localisation;
-using IdentityModel.OidcClient;
-using k8s.KubeConfigModels;
+﻿using k8s.KubeConfigModels;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.IdentityModel.Tokens;
 using NamiCustomers.Application.Services.Subscribers;
 using NamiCustomers.Domain.Entities.Account;
 using NamiCustomers.Infrastucture.ExternalServices.Email;
+using NamiCustomers.Infrastucture.ExternalServices.SmsServices;
 using NamiCustomers.Infrastucture.Model.Account;
-using NamiCustomers.Infrastucture.Properties;
 using NamiCustomers.Infrastucture.Utilities;
+using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -25,7 +23,7 @@ namespace NamiCustomers.API.Controllers.v1;
 
 public class AccountController(IConfiguration configuration, UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager, ISubscriberService subscriberService, IMailService mailService, IUrlHelperFactory urlHelperFactory
-    ) : ControllerBase
+  ,ISmsService  smsService ) : ControllerBase
 {
     //[HttpGet("[action]")]
     //public async Task<MyAccountinfoDto> FindByNameAsync()
@@ -60,7 +58,6 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
         {
             Email = myAccountinfoDto.Email,
             EmailConfirmed = myAccountinfoDto.EmailConfirmed,
-            FullName = myAccountinfoDto.FullName,
             Id = myAccountinfoDto.Id,
             PhoneNumber = myAccountinfoDto.PhoneNumber,
             PhoneNumberConfirmed = myAccountinfoDto.PhoneNumberConfirmed,
@@ -71,6 +68,41 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
         var a = User.Identity;
         return await signInManager.PasswordSignInAsync(user, myAccountinfoDto.Password, myAccountinfoDto.IsPersistent, true);
 
+    }
+
+    [HttpPost("[action]")]
+    public async Task<RegisterResponse> Register(RegisterDto registerDto)
+    {
+       
+        ApplicationUser newUser = new ApplicationUser()
+        {
+            FirstName = registerDto.FirstName,
+            LastName = registerDto.LastName,
+            Email = registerDto.Email,
+            UserName = registerDto.Email,
+            PassWord = registerDto.Password,
+        };
+
+        var result = userManager.CreateAsync(newUser, registerDto.Password).Result;
+        if (result.Succeeded)
+        {
+            var token = userManager.GenerateEmailConfirmationTokenAsync(newUser).Result;
+            string callbackUrl = Url.Action("ConfirmEmail", "Account", new
+            {
+                UserId = newUser.Id
+            ,
+                token
+            }, protocol: Request.Scheme);
+
+
+            registerDto.CallbakUrl = registerDto.CallbakUrl.Replace("TEMPTOKEN", token);
+
+            string body = $"لطفا برای فعال حساب کاربری بر روی لینک زیر کلیک کنید!  <br/> <a href='{registerDto.CallbakUrl}'> Link </a>";
+            await   mailService.SendEmailAsync(new MailRequest {Body=body,Subject= "فعال سازی حساب کاربری",ToEmail=newUser.Email });
+            return new RegisterResponse {IsSuccess=true };
+        }
+
+        return new RegisterResponse { Errors = result.Errors.Select(c => c.Description).ToList(), IsSuccess = false };
     }
 
 
@@ -239,7 +271,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     [HttpPost("[action]")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterModel model)
     {
-        var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true, FullName = $"{model.FirstName} {model.LastName}", PassWord = model.Password };
+        var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true, PassWord = model.Password };
         var result = await userManager.CreateAsync(user, model.Password);
 
         if (result.Succeeded)
@@ -249,6 +281,55 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
 
         return BadRequest(result.Errors);
     }
+    [HttpPost("[action]")]
+    public async Task<ConfirmResponse> ConfirmEmail(ConfirmRequest confirmRequest)
+    {
+       
+        var user = userManager.FindByIdAsync(confirmRequest.UserId).Result;
+        if (user == null)
+        {
+            return new ConfirmResponse { Errors = new List<string> { "user not found" }, IsSuccess = false };
+        }
+
+        var result = userManager.ConfirmEmailAsync(user, confirmRequest.Token).Result;
+        if (result.Succeeded)
+        {
+            return new ConfirmResponse { IsSuccess = true };
+        }
+        return new ConfirmResponse { IsSuccess = false, Errors = result.Errors.Select(c => c.Description).ToList() };
+    }
+
+    [HttpPost("[action]")]
+    public async Task<HttpResponseMessage> SetPhoneNumber(SetPhoneNumberDto phoneNumberDto)
+    {
+        var user = userManager.FindByNameAsync(User.Identity.Name).Result;
+        var setResult = userManager.SetPhoneNumberAsync(user, phoneNumberDto.PhoneNumber).Result;
+        string code = userManager.GenerateChangePhoneNumberTokenAsync(user, phoneNumberDto.PhoneNumber).Result;
+       
+        return await  smsService.SendSms(phoneNumberDto.PhoneNumber, code);
+    }
+
+
+    //[Authorize]
+    [HttpPost("[action]")]
+    public async  Task<ConfirmResponse> VerifyPhoneNumber(VerifyPhoneNumberDto verify)
+    {
+        var user = userManager.FindByNameAsync(User.Identity.Name).Result;
+        bool resultVerify = userManager.VerifyChangePhoneNumberTokenAsync(user, verify.Code, verify.PhoneNumber).Result;
+        if (resultVerify == false)
+        {
+            
+            return new ConfirmResponse { Errors = new List<string> { $"کد وارد شده برای شماره {verify.PhoneNumber} اشتباه است" }, IsSuccess = false };
+        }
+        else
+        {
+            user.PhoneNumberConfirmed = true;
+            var resultUpdate = userManager.UpdateAsync(user).Result;
+        }
+        return new ConfirmResponse { IsSuccess = true };
+    }
+
+
 
     private string GenerateJwtToken(ApplicationUser user)
     {

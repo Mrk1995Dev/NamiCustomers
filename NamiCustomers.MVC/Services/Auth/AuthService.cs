@@ -1,16 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using NamiCustomers.Infrastucture.Model;
 using NamiCustomers.Infrastucture.Model.Subscribers;
 using NuGet.Common;
 using System.Net.Http.Headers;
-using System.Reflection;
-using System.Security.Claims;
 using System.Text.Json;
 
 
@@ -26,6 +19,10 @@ namespace NamiCustomers.MVC.Services.Auth
         Task<LoginResponseDto> LoginByOtpAsync(string otp);
         Task<ResultDto<ForgotPasswordResponse>> ForgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto);
         Task<ResultDto<IdentityResult>> ResetPassword(ResetPasswordDto reset);
+        Task<RegisterResponse> Register(RegisterDto register);
+        Task<ConfirmResponse> ConfirmEmail(string userId, string token);
+        Task<HttpResponseMessage> SetPhoneNumber(SetPhoneNumberDto phoneNumberDto);
+        Task<ConfirmResponse> VerifyPhoneNumber(VerifyPhoneNumberDto verify);
     }
     public class AuthService : IAuthService
     {
@@ -40,6 +37,58 @@ namespace NamiCustomers.MVC.Services.Auth
             this.tokenService = tokenService;
             this.authenticationStateProvider = authenticationStateProvider;
         }
+
+
+        #region Privates
+        private async Task<T> GetData<T>(string apiAddress, dynamic queryString)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{apiAddress}{queryString}");
+
+            var token = tokenService.GetAuthToken();
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await httpClient.SendAsync(request);
+            string content = await response.Content.ReadAsStringAsync();
+            var a = JsonSerializer.Deserialize<T>(content);
+
+            return await Task.FromResult(a);
+        }
+
+        private async Task<T> PostData<T>(string apiAddress, dynamic queryModel)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{apiAddress}");
+
+            var token = tokenService.GetAuthToken();
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var content = new StringContent(JsonSerializer.Serialize(queryModel), null, "application/json");
+            request.Content = content;
+            var response = await httpClient.SendAsync(request);
+            string responseContent = await response.Content.ReadAsStringAsync();
+            return await Task.FromResult(JsonSerializer.Deserialize<T>(responseContent));
+        }
+
+
+
+
+
+
+
+        #endregion
+        public async  Task<ConfirmResponse> ConfirmEmail(string userId, string token)
+        {
+            var response = await httpClient.PostAsJsonAsync("Account/ConfirmEmail", new ConfirmRequest {UserId=userId,Token=token });
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ConfirmResponse>();
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+            return new ConfirmResponse { IsSuccess = false };
+        }
+
         public async Task<bool> LoginAsync(LoginRequestDto loginRequest)
         {
 
@@ -62,6 +111,23 @@ namespace NamiCustomers.MVC.Services.Auth
 
             return false;
         }
+
+
+
+        public async   Task<RegisterResponse> Register(RegisterDto registerDto)
+        {
+            var response = await httpClient.PostAsJsonAsync("Account/Register", registerDto);
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<RegisterResponse>();
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+            return new RegisterResponse { IsSuccess=false};
+        }
+
 
         public async Task<string> GetOtp(string mobile)
         {
@@ -148,41 +214,25 @@ namespace NamiCustomers.MVC.Services.Auth
             return result;
         }
 
-
-
-        #region Privates
-        private async Task<T> GetData<T>(string apiAddress, dynamic queryString)
+        public async  Task<HttpResponseMessage> SetPhoneNumber(SetPhoneNumberDto phoneNumberDto)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{apiAddress}{queryString}");
-
-            var token = tokenService.GetAuthToken();
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            var response = await httpClient.SendAsync(request);
-            string content = await response.Content.ReadAsStringAsync();
-            var a = JsonSerializer.Deserialize<T>(content);
-
-            return await Task.FromResult(a);
+            var result = await PostData<HttpResponseMessage>("Account/SetPhoneNumber", phoneNumberDto);
+            return result;
         }
 
-        private async Task<T> PostData<T>(string apiAddress, dynamic queryModel)
+        public async  Task<ConfirmResponse> VerifyPhoneNumber(VerifyPhoneNumberDto verify)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{apiAddress}");
-
-            var token = tokenService.GetAuthToken();
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            var content = new StringContent(JsonSerializer.Serialize(queryModel), null, "application/json");
-            request.Content = content;
-            var response = await httpClient.SendAsync(request);
-            string responseContent = await response.Content.ReadAsStringAsync();
-            return await Task.FromResult(JsonSerializer.Deserialize<T>(responseContent));
+            var response = await httpClient.PostAsJsonAsync("Account/VerifyPhoneNumber", verify);
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ConfirmResponse>();
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+            return new ConfirmResponse { IsSuccess = false };
         }
-
-
-
-
-        #endregion
     }
 }
 

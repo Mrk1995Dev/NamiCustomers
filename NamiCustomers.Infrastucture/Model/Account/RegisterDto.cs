@@ -27,4 +27,5 @@ public class RegisterDto
     [Compare( nameof(Password))]
     [Display(Name = "تکرارگذر واژه")]
     public string ConfirmPassword { get; set; }
+    public string CallbakUrl { get; set; }
 }

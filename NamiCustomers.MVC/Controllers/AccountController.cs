@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ using NuGet.Common;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using static Org.BouncyCastle.Bcpg.Attr.ImageAttrib;
 
 namespace NamiCustomers.MVC.Controllers
 {
@@ -197,94 +199,118 @@ namespace NamiCustomers.MVC.Controllers
         {
             return View();
         }
-  //[Authorize]
+      
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterDto register)
+        {
+            if (ModelState.IsValid == false)
+            {
+                return View(register);
+            }
+            var urlHelper = urlHelperFactory.GetUrlHelper(ControllerContext);
+            string callbakUrl = urlHelper.Action("ResetPassword", "Account", new
+            {
+                Token = "TEMPTOKEN"
+            }, protocol: Request.Scheme);
+
+
+            register.CallbakUrl = callbakUrl;
+
+            var result= await authService.Register(register);
+          
+            if (result.IsSuccess)
+            {
+                return RedirectToAction("DisplayEmail");
+            }
+
+            string message = "";
+            foreach (var error in result.Errors.ToList())
+            {
+                message +=$"{error} {Environment.NewLine}";
+            }
+            TempData["Message"] = message;
+            return View(register);
+        }
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ConfirmEmail(string UserId, string Token)
+        {
+            if (UserId == null || Token == null)
+            {
+                return BadRequest();
+            }
+           var result= await authService.ConfirmEmail(UserId,Token);
+             
+            if (!result.IsSuccess)
+            {
+                return RedirectToAction("Error",new ErrorViewModel {Errors=result.Errors.ToList() });
+            }
+            
+            return RedirectToAction("login");
+        }
+        public IActionResult DisplayEmail()
+        {
+            return View();
+        }
+        
+
+
+        public IActionResult SetPhoneNumber()
+        {
+            return View();
+        }
+
+        //[Authorize]
+        [HttpPost]
+        public async Task<IActionResult> SetPhoneNumber(SetPhoneNumberDto phoneNumberDto)
+        {
+
+            await authService.SetPhoneNumber(phoneNumberDto);
+             
+            TempData["PhoneNumber"] = phoneNumberDto.PhoneNumber;
+            return RedirectToAction(nameof(VerifyPhoneNumber));
+        }
+
+        //[Authorize]
+        public IActionResult VerifyPhoneNumber()
+        {
+
+            return View(new VerifyPhoneNumberDto
+            {
+                PhoneNumber = TempData["PhoneNumber"].ToString(),
+            });
+        }
+
+       // [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> VerifyPhoneNumber(VerifyPhoneNumberDto verify)
+        {
+            var result = await authService.VerifyPhoneNumber(verify);
+           
+            if (result.IsSuccess == false)
+            {
+                ViewData["Message"] = result.Errors.Select(c=>c).ToList();
+                return View(verify);
+            }
+            
+            return RedirectToAction("VerifySuccess");
+
+        }
+
+        #region TwoFactor
+        //[Authorize]
         //public IActionResult TwoFactorEnabled()
         //{
         //    var user = _userManager.FindByNameAsync(User.Identity.Name).Result;
         //    var Result = _userManager.SetTwoFactorEnabledAsync(user, !user.TwoFactorEnabled).Result;
         //    return RedirectToAction(nameof(Index));
         //}
-
-        //public IActionResult Register()
-        //{
-        //    return View();
-        //}
-
-
-        //[HttpPost]
-        //public IActionResult Register(RegisterDto register)
-        //{
-        //    if (ModelState.IsValid == false)
-        //    {
-        //        return View(register);
-        //    }
-
-        //    User newUser = new User()
-        //    {
-        //        FirstName = register.FirstName,
-        //        LastName = register.LastName,
-        //        Email = register.Email,
-        //        UserName = register.Email,
-        //        PassWord = register.Password
-        //    };
-
-        //    var result = _userManager.CreateAsync(newUser, register.Password).Result;
-        //    if (result.Succeeded)
-        //    {
-        //        var token = _userManager.GenerateEmailConfirmationTokenAsync(newUser).Result;
-        //        string callbackUrl = Url.Action("ConfirmEmail", "Account", new
-        //        {
-        //            UserId = newUser.Id
-        //        ,
-        //            token
-        //        }, protocol: Request.Scheme);
-
-        //        string body = $"لطفا برای فعال حساب کاربری بر روی لینک زیر کلیک کنید!  <br/> <a href={callbackUrl}> Link </a>";
-        //        _emailService.Execute(newUser.Email, body, "فعال سازی حساب کاربری باگتو");
-
-        //        return RedirectToAction("DisplayEmail");
-        //    }
-
-        //    string message = "";
-        //    foreach (var item in result.Errors.ToList())
-        //    {
-        //        message += item.Description + Environment.NewLine;
-        //    }
-        //    TempData["Message"] = message;
-        //    return View(register);
-        //}
-        //[Authorize(Roles = "Admin")]
-        //public IActionResult ConfirmEmail(string UserId, string Token)
-        //{
-        //    if (UserId == null || Token == null)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    var user = _userManager.FindByIdAsync(UserId).Result;
-        //    if (user == null)
-        //    {
-        //        return View("Error");
-        //    }
-
-        //    var result = _userManager.ConfirmEmailAsync(user, Token).Result;
-        //    if (result.Succeeded)
-        //    {
-        //        /// return 
-        //    }
-        //    else
-        //    {
-
-        //    }
-        //    return RedirectToAction("login");
-
-        //}
-        //public IActionResult DisplayEmail()
-        //{
-        //    return View();
-        //}
-
-
-
 
         //public IActionResult TwoFactorLogin(string UserName, bool IsPersistent)
         //{
@@ -354,61 +380,9 @@ namespace NamiCustomers.MVC.Controllers
         //    }
         //}
 
-        //public async Task<IActionResult> LogOut()//todo
-        //{
-        //  await   authService.LogoutAsync();
-        //    return RedirectToAction("Index", "home");
-        //}
+
 
         //[Authorize]
-        //public IActionResult SetPhoneNumber()
-        //{
-        //    return View();
-        //}
-
-        //[Authorize]
-        //[HttpPost]
-        //public IActionResult SetPhoneNumber(SetPhoneNumberDto phoneNumberDro)
-        //{
-        //    var user = _userManager.FindByNameAsync(User.Identity.Name).Result;
-        //    var setResult = _userManager.SetPhoneNumberAsync(user, phoneNumberDro.PhoneNumber).Result;
-        //    string code = _userManager.GenerateChangePhoneNumberTokenAsync(user, phoneNumberDro.PhoneNumber).Result;
-        //    SmsService smsService = new SmsService();
-        //    smsService.Send(phoneNumberDro.PhoneNumber, code);
-        //    TempData["PhoneNumber"] = phoneNumberDro.PhoneNumber;
-        //    return RedirectToAction(nameof(VerifyPhoneNumber));
-        //}
-
-        //[Authorize]
-        //public IActionResult VerifyPhoneNumber()
-        //{
-
-        //    return View(new VerifyPhoneNumberDto
-        //    {
-        //        PhoneNumber = TempData["PhoneNumber"].ToString(),
-        //    });
-        //}
-
-        //[Authorize]
-        //[HttpPost]
-        //public IActionResult VerifyPhoneNumber(VerifyPhoneNumberDto verify)
-        //{
-        //    var user = _userManager.FindByNameAsync(User.Identity.Name).Result;
-        //    bool resultVerify = _userManager.VerifyChangePhoneNumberTokenAsync(user, verify.Code, verify.PhoneNumber).Result;
-        //    if (resultVerify == false)
-        //    {
-        //        ViewData["Message"] = $"کد وارد شده برای شماره {verify.PhoneNumber} اشتباه اشت";
-        //        return View(verify);
-        //    }
-        //    else
-        //    {
-        //        user.PhoneNumberConfirmed = true;
-        //        var resultUpdate = _userManager.UpdateAsync(user).Result;
-        //    }
-        //    return RedirectToAction("VerifySuccess");
-
-        //}
-
-
+        #endregion
     }
 }

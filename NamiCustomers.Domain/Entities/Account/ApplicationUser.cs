@@ -10,7 +10,7 @@ namespace NamiCustomers.Domain.Entities.Account
     public class ApplicationUser : IdentityUser
     {
         // می‌توانید ویژگی‌های اضافی کاربر را اینجا اضافه کنید
-        public string FullName { get; set; }
+        public string FullName => $"{FirstName} {LastName}";
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string PassWord { get; set; }
