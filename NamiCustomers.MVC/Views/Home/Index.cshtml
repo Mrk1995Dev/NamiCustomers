@@ -1,8 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<!-- Notificaiton Start -->
 
-<div class="toast toast-autohide custom-toast-1 toast-primary home-page-toast shadow" role="alert" aria-live="assertive" aria-atomic="true"
+@* <div class="toast toast-autohide custom-toast-1 toast-primary home-page-toast shadow" role="alert" aria-live="assertive" aria-atomic="true"
      data-bs-delay="60000" data-bs-autohide="true" id="installWrap">
     <div class="toast-body p-4">
         <div class="toast-text me-2">
@@ -16,75 +17,28 @@
     </div>
     <button class="btn btn-close btn-close-white position-absolute p-2" type="button" data-bs-dismiss="toast"
             aria-label="Close"></button>
-</div>
+</div> *@
+<!-- Notificaiton End -->
+
 
 <!-- Tiny Slider One Wrapper -->
 <div class="tiny-slider-one-wrapper">
     <div class="tiny-slider-one">
-        <!-- Single Hero Slide -->
+        <!-- Single Slide Start -->
         <div>
             <div class="single-hero-slide bg-overlay" style="background-image: url('img/bg-img/31.jpg')">
                 <div class="h-100 d-flex align-items-center text-center">
                     <div class="container">
-                        <h3 class="text-white mb-1">Build with Bootstrap 5</h3>
-                        <p class="text-white mb-4">Build fast, responsive sites with Bootstrap.</p>
-                        <a class="btn btn-creative btn-warning" href="#">Buy Now</a>
+                        <h3 class="text-white mb-1">وب سایت نامی خودرو</h3>
+                        <p class="text-white mb-4">خبر نامه</p>
+                        <a class="btn btn-creative btn-warning" href="#">خرید</a>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Single  Slide End -->
 
-        <!-- Single Hero Slide -->
-        <div>
-            <div class="single-hero-slide bg-overlay" style="background-image: url('img/bg-img/33.jpg')">
-                <div class="h-100 d-flex align-items-center text-center">
-                    <div class="container">
-                        <h3 class="text-white mb-1">Vanilla JavaScript</h3>
-                        <p class="text-white mb-4">The whole code is written with vanilla JS.</p>
-                        <a class="btn btn-creative btn-warning" href="#">Buy Now</a>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Single Hero Slide -->
-        <div>
-            <div class="single-hero-slide bg-overlay" style="background-image: url('img/bg-img/32.jpg')">
-                <div class="h-100 d-flex align-items-center text-center">
-                    <div class="container">
-                        <h3 class="text-white mb-1">PWA Ready</h3>
-                        <p class="text-white mb-4">Click the "Install Now" button &amp; <br> enjoy it like an app.</p>
-                        <a class="btn btn-creative btn-warning" href="#">Buy Now</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Single Hero Slide -->
-        <div>
-            <div class="single-hero-slide bg-overlay" style="background-image: url('img/bg-img/33.jpg')">
-                <div class="h-100 d-flex align-items-center text-center">
-                    <div class="container">
-                        <h3 class="text-white mb-1">Lots of Elements &amp; Pages</h3>
-                        <p class="text-white mb-4">Create your website in days, not months.</p>
-                        <a class="btn btn-creative btn-warning" href="#">Buy Now</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Single Hero Slide -->
-        <div>
-            <div class="single-hero-slide bg-overlay" style="background-image: url('img/bg-img/1.jpg')">
-                <div class="h-100 d-flex align-items-center text-center">
-                    <div class="container">
-                        <h3 class="text-white mb-1">Dark &amp; RTL Ready</h3>
-                        <p class="text-white mb-4">You can use the Dark or <br> RTL mode of your choice.</p>
-                        <a class="btn btn-creative btn-warning" href="#">Buy Now</a>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -97,27 +51,53 @@
                 <div class="col-4">
                     <div class="feature-card mx-auto text-center">
                         <div class="card mx-auto bg-gray">
-                            <img src="img/demo-img/pwa.png" alt="">
+                              <img src="~/sitetmeplate/img/icon set/svg/warranty inquiry.svg" alt="استعلام گارانتی">
                         </div>
-                        <p class="mb-0">PWA Ready</p>
+                        <p class="mb-0"><a href="#" style="color:#fff"> استعلام گارانتی </a></p>
                     </div>
                 </div>
 
                 <div class="col-4">
                     <div class="feature-card mx-auto text-center">
                         <div class="card mx-auto bg-gray">
-                            <img src="img/demo-img/bootstrap.png" alt="">
+                            <img src="~/sitetmeplate/img/icon set/svg/part_price.svg" alt="استعلام بهای قطعات">
                         </div>
-                        <p class="mb-0">Bootstrap 5</p>
+                        <p class="mb-0">استعلام بهای قطعات </p>
                     </div>
                 </div>
 
                 <div class="col-4">
                     <div class="feature-card mx-auto text-center">
                         <div class="card mx-auto bg-gray">
-                            <img src="img/demo-img/js.png" alt="">
+                            <img src="~/sitetmeplate/img/icon set/svg/service_price.svg" alt="استعلام بهای خدمات">
                         </div>
-                        <p class="mb-0">Vanilla JS</p>
+                        <p class="mb-0">استعلام بهای خدمات</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="feature-card mx-auto text-center">
+                        <div class="card mx-auto bg-gray">
+                            <img src="~/sitetmeplate/img/icon set/svg/Online_repair_shop_appointment.svg" alt="نوبت دهی">
+                        </div>
+                        <p class="mb-0">نوبت دهی</p>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="feature-card mx-auto text-center">
+                        <div class="card mx-auto bg-gray">
+                            <img src="~/sitetmeplate/img/icon set/svg/Repair_records.svg" alt="سوابق تعمیراتی">
+                        </div>
+                        <p class="mb-0">سوابق تعمیراتی</p>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="feature-card mx-auto text-center">
+                        <div class="card mx-auto bg-gray">
+                            <img src="~/sitetmeplate/img/icon set/svg/Campaign.svg" alt="فراخوان">
+                        </div>
+                        <p class="mb-0">فراخوان</p>
                     </div>
                 </div>
             </div>
@@ -128,12 +108,12 @@
 <div class="container">
     <div class="card card-bg-img bg-img bg-overlay mb-3" style="background-image: url('img/bg-img/3.jpg')">
         <div class="card-body direction-rtl p-4">
-            <h2 class="text-white">220+ Reusable Elements</h2>
+            <h2 class="text-white">مشاهده لیست عاملیت ها</h2>
             <p class="mb-3 text-white">
-                More than 220+ reusable modern design elements. Just copy the code and paste it on
-                your desired page.
+                 برای مشاهده لیست نمایندگی‌های معتبر فروش و مراکز خدمات پس از فروش در سراسر کشور، روی لینک زیر کلیک کنید:
+
             </p>
-            <a class="btn btn-warning" href="elements.html">All elements <i class="bi bi-arrow-right"></i></a>
+            <a class="btn btn-danger" href="https://namikhodro.com/%d8%b9%d8%a7%d9%85%d9%84%db%8c%d8%aa-%d9%87%d8%a7/">مشاهده عاملیت ها @* <i class="bi bi-arrow-left"></i> *@</a>
         </div>
     </div>
 </div>

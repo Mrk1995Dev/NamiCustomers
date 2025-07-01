@@ -7188,8 +7188,8 @@ form .btn-lg {
 }
 
 .feature-card .card {
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 5.5rem;
+  height: 5.5rem;
   border-radius: 50%;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -7203,8 +7203,8 @@ form .btn-lg {
   margin-bottom: 0.5rem;
 }
 .feature-card .card img {
-  max-width: 2.125rem;
-  max-height: 2.125rem;
+  /*max-width: 2.125rem;
+  max-height: 2.125rem;*/
 }
 .feature-card p {
   line-height: 1.25;

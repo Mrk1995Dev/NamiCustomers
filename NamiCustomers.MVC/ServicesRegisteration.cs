@@ -74,7 +74,7 @@ public static class ServicesRegisteration
         services.AddHttpClient<IAuthService, AuthService>(client =>
         {
             //  client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"]);
-            client.BaseAddress = new Uri("https://localhost:7061/api/v1/");
+            client.BaseAddress = new Uri("https://localhost:7071/api/v1/");
             client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/json"));
         });

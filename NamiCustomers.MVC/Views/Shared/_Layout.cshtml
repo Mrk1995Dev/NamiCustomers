@@ -23,7 +23,7 @@
 
     <!-- Style CSS -->
     <link rel="stylesheet" href="~/SiteTmeplate/style.css">
-
+    <link href="~/sitetmeplate/css/fontiran.css" rel="stylesheet" />
     <!-- Web App Manifest -->
     <link rel="manifest" href="~/SiteTmeplate/manifest.json">
 </head>
@@ -32,7 +32,7 @@
     <!-- Preloader -->
     <div id="preloader">
         <div class="spinner-grow text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">در حال پردازش لطفا منتظر بمانید...</span>
         </div>
     </div>
 
@@ -52,8 +52,8 @@
                 </div>
 
                 <!-- Navbar Toggler -->
-                <div class="navbar--toggler" id="affanNavbarToggler" data-bs-toggle="offcanvas" data-bs-target="#affanOffcanvas"
-                     aria-controls="affanOffcanvas">
+                <div class="navbar--toggler" id="affanNavbarToggler" data-bs-toggle="offcanvas" data-bs-target="#NamioffCanvas"
+                     aria-controls="NamioffCanvas">
                     <span class="d-block"></span>
                     <span class="d-block"></span>
                     <span class="d-block"></span>
@@ -63,7 +63,7 @@
     </div>
     <!-- # Sidenav Right -->
 
-        <div class="offcanvas offcanvas-end" id="affanOffcanvas" data-bs-scroll="true" tabindex="-1" aria-labelledby="affanOffcanvsLabel">
+        <div class="offcanvas offcanvas-end" id="NamioffCanvas" data-bs-scroll="true" tabindex="-1" aria-labelledby="affanOffcanvsLabel">
 
             <button class="btn-close btn-close-white text-reset" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 
@@ -80,9 +80,9 @@
 
                         <!-- User Info -->
                         <div class="user-info">
-                            <h6 class="user-name mb-0">Affan Islam</h6>
-                            <span>CEO, Designing World</span>
-                        </div>
+                            <h6 class="user-name mb-0">نام و نام خانوادگی مشتری درج شود</h6>
+@*                             <span></span>
+ *@                        </div>
                     </div>
 
                     <!-- Sidenav Nav -->
@@ -95,7 +95,7 @@
                         <li>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">
                                 <i class="bi bi-heart"></i> حریم خصوصی
-                                <span class="badge bg-danger rounded-pill ms-2">220+</span>
+                             @*    <span class="badge bg-danger rounded-pill ms-2">220+</span> *@
                             </a>
                         </li>
           @*               <li>
@@ -178,7 +178,7 @@
 
                     <!-- Copyright Info -->
                     <div class="copyright-info">
-                        <p><span id="copyrightYear">2025</span> © Made by<a href="#"> Designing World</a></p>
+                    <p><span id="copyrightYear">1404</span> © کپی رایت<a href="https://namikhodro.com"> شرکت نامی خودرو پیشرو</a></p>
                     </div>
                 </div>
             </div>
