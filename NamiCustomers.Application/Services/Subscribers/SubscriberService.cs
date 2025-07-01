@@ -1,4 +1,6 @@
 ﻿using NamiCustomers.Abstractions.Dtos.Subscribers;
+using NamiCustomers.Abstractions.Dtos.Vehicles;
+using NamiCustomers.Application.Services.SevenSoftServices;
 using NamiCustomers.Domain.Entities.Subscribers;
 using NamiCustomers.Infrastucture.Model.Subscribers;
 using NamiCustomers.Infrastucture.Utilities;
@@ -15,14 +17,14 @@ namespace NamiCustomers.Application.Services.Subscribers
         Task<ResultDto<SubscriberDetailsDto>> GetCustomerInfoDetailAsync(int customerId);
         Task<ResultDto<SubscriberDetailsDto>> GetByNationalCodeAsync(string nationalCode);
         Task<ResultDto<SubscriberDetailsDto>> GetCustomerInfoDetailMobileAsync(string mobile);
-		Task<ResultDto<byte[]>> ExportCustomerInfoAsync();
+        Task<ResultDto<byte[]>> ExportCustomerInfoAsync();
         Task<List<CityDto>> GetAllCitiesAsync();
         Task<ResultDto<SubscriberCodeDto>> SendOtp(string mobile);
-        Task<ResultDto<SubscriberCodeDto>> GetOtp(string mobile,string nationalCode);
+        Task<ResultDto<SubscriberCodeDto>> GetOtp(string mobile, string nationalCode);
     }
-    public class SubscriberService(IAppDbContext context,ISmsService smsService) : ISubscriberService
+    public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, ISevenSoftService sevenSoftService) : ISubscriberService
     {
-         
+
         public async Task<ResultDto> AddCustomerInfoAsync(AddSubscriberDto addCustomerInfoDto)
         {
             if (addCustomerInfoDto == null) return new ResultDto("اطلاعات وارد شده نامعتبر می باشد.", false);
@@ -34,30 +36,30 @@ namespace NamiCustomers.Application.Services.Subscribers
                 Mobile = addCustomerInfoDto.PhoneNumber,
             };
 
-            await context.Subscribers.AddAsync(newCustomer);
-            if (await context.SaveChangesAsync() < 1) return new ResultDto("خطا در ذخیره اطلاعات مربوطه", false);
+            await dbContext.Subscribers.AddAsync(newCustomer);
+            if (await dbContext.SaveChangesAsync() < 1) return new ResultDto("خطا در ذخیره اطلاعات مربوطه", false);
 
             return new ResultDto("اطلاعات با موفقیت ذخیره شد.", true);
         }
- 
+
         public async Task<ResultDto> DeleteCustomerInfoAsync(int customerId)
         {
             if (customerId == 0)
                 return new ResultDto("شناسه وارد شده نامعتبر می باشد.", false);
 
-            var customer = await context.Subscribers.FirstOrDefaultAsync(cu => cu.Id == customerId);
+            var customer = await dbContext.Subscribers.FirstOrDefaultAsync(cu => cu.Id == customerId);
             if (customer is null)
                 return new ResultDto("کاربر مربوطه یافت نشد.", false);
 
-            context.Subscribers.Remove(customer);
-            if (await context.SaveChangesAsync() < 1) return new ResultDto("خطا در حذف اطلاعات مربوطه", false);
+            dbContext.Subscribers.Remove(customer);
+            if (await dbContext.SaveChangesAsync() < 1) return new ResultDto("خطا در حذف اطلاعات مربوطه", false);
 
             return new ResultDto("کاربر با موفقیت حذف شد.", true);
         }
- 
+
         public async Task<ResultDto<List<SubscriberListDto>>> GetCustomerListAsync()
         {
-            var customers = context.Subscribers.AsQueryable();
+            var customers = dbContext.Subscribers.AsQueryable();
 
             var data = await customers.Select(c => new SubscriberListDto
             {
@@ -73,10 +75,10 @@ namespace NamiCustomers.Application.Services.Subscribers
                 true,
                 data);
         }
- 
+
         public async Task<ResultDto> UpdateCustomerInfo(UpdateSubscriberDto updateCustomerInfoDto)
         {
-            var currentCustomer = await context.Subscribers.Where(cu => cu.Id == updateCustomerInfoDto.Id).FirstOrDefaultAsync();
+            var currentCustomer = await dbContext.Subscribers.Where(cu => cu.Id == updateCustomerInfoDto.Id).FirstOrDefaultAsync();
             if (currentCustomer is null)
                 return new ResultDto(
                     "کاربر مربوطه یافت نشد",
@@ -87,8 +89,8 @@ namespace NamiCustomers.Application.Services.Subscribers
             currentCustomer.Mobile = updateCustomerInfoDto.PhoneNumber;
             currentCustomer.CityId = updateCustomerInfoDto.CityId;
 
-            context.Subscribers.Update(currentCustomer);
-            if (await context.SaveChangesAsync() < 1)
+            dbContext.Subscribers.Update(currentCustomer);
+            if (await dbContext.SaveChangesAsync() < 1)
                 return new ResultDto(
                     "خطا در ویرایش اطلاعات کاربر",
                     false);
@@ -98,11 +100,11 @@ namespace NamiCustomers.Application.Services.Subscribers
                 true);
         }
 
-       
+
         public async Task<ResultDto<SubscriberDetailsDto>> GetCustomerInfoDetailAsync(int customerId)
         {
 
-            var data = await context.Subscribers.Where(cu => cu.Id == customerId)
+            var data = await dbContext.Subscribers.Where(cu => cu.Id == customerId)
                 .Include(cu => cu.City).FirstOrDefaultAsync();
 
             if (data == null) return new ResultDto<SubscriberDetailsDto>(
@@ -126,35 +128,35 @@ namespace NamiCustomers.Application.Services.Subscribers
         }
 
 
-		public async Task<ResultDto<SubscriberDetailsDto>> GetCustomerInfoDetailMobileAsync(string mobile)
-		{
-
-			var data = await context.Subscribers.Where(cu => cu.Mobile == mobile)
-				.Include(cu => cu.City).FirstOrDefaultAsync();
-
-			if (data == null) return new ResultDto<SubscriberDetailsDto>(
-				"کاربر مربوطه یافت نشد.",
-				false,
-				null);
-
-			var customerInfo = new SubscriberDetailsDto
-			{
-				Id = data.Id,
-				Name = data.Name,
-				Address = data.Address,
-				CityName = data.City.Title,
-				PhoneNumber = data.Mobile,
-			};
-
-			return new ResultDto<SubscriberDetailsDto>(
-				"",
-				true,
-				customerInfo);
-		}
-
-		public async Task<ResultDto<byte[]>> ExportCustomerInfoAsync()
+        public async Task<ResultDto<SubscriberDetailsDto>> GetCustomerInfoDetailMobileAsync(string mobile)
         {
-            var customerInfos = await context.Subscribers
+
+            var data = await dbContext.Subscribers.Where(cu => cu.Mobile == mobile)
+                .Include(cu => cu.City).FirstOrDefaultAsync();
+
+            if (data == null) return new ResultDto<SubscriberDetailsDto>(
+                "کاربر مربوطه یافت نشد.",
+                false,
+                null);
+
+            var customerInfo = new SubscriberDetailsDto
+            {
+                Id = data.Id,
+                Name = data.Name,
+                Address = data.Address,
+                CityName = data.City.Title,
+                PhoneNumber = data.Mobile,
+            };
+
+            return new ResultDto<SubscriberDetailsDto>(
+                "",
+                true,
+                customerInfo);
+        }
+
+        public async Task<ResultDto<byte[]>> ExportCustomerInfoAsync()
+        {
+            var customerInfos = await dbContext.Subscribers
                 .Include(c => c.City)
                 .ToListAsync();
 
@@ -176,7 +178,7 @@ namespace NamiCustomers.Application.Services.Subscribers
 
         public async Task<List<CityDto>> GetAllCitiesAsync()
         {
-            var cities = await context.Cities.ToListAsync();
+            var cities = await dbContext.Cities.ToListAsync();
 
             var data = cities.Select(c => new CityDto
             {
@@ -189,52 +191,155 @@ namespace NamiCustomers.Application.Services.Subscribers
 
         public async Task<ResultDto<SubscriberCodeDto>> SendOtp(string authCode)
         {
-            var otp =await  context.SubscriberCodes.FirstOrDefaultAsync(c => !c.Used && c.AuthCode == authCode);
+            var otp = await dbContext.SubscriberCodes.FirstOrDefaultAsync(c => !c.Used && c.AuthCode == authCode);
             if (otp is null)
             {
-                return new ResultDto<SubscriberCodeDto>("Not found !",false,new SubscriberCodeDto());
+                return new ResultDto<SubscriberCodeDto>("Not found !", false, new SubscriberCodeDto());
             }
-           
+
             otp.Used = true;
-            await  context.SaveChangesAsync();
-            return new ResultDto<SubscriberCodeDto>("",true,new SubscriberCodeDto { AuthCode = otp.AuthCode,Mobile=otp.Mobile });
+            await dbContext.SaveChangesAsync();
+            return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto { AuthCode = otp.AuthCode, Mobile = otp.Mobile });
         }
 
-        public async Task<ResultDto<SubscriberCodeDto>> GetOtp(string mobile,string nationalCode)
+        public async Task<ResultDto<SubscriberCodeDto>> GetOtp(string mobile, string nationalCode)
         {
             var Randowmpass = new PasswordUtility();
             string passnew = Randowmpass.RandomString(5);
-            var newOtp = new SubscriberCode { AuthCode = passnew,Mobile=mobile };
-            await context.SubscriberCodes.AddAsync(newOtp);
-            await context.SaveChangesAsync();
-             var result=  await smsService.SendSms(newOtp.Mobile, $"{newOtp.AuthCode}\n لغو11");
-            return new ResultDto<SubscriberCodeDto>("", result.IsSuccessStatusCode, new SubscriberCodeDto {AuthCode= newOtp.AuthCode, Mobile = newOtp.Mobile,NationalCode= nationalCode });
+            var newOtp = new SubscriberCode { AuthCode = passnew, Mobile = mobile };
+            await dbContext.SubscriberCodes.AddAsync(newOtp);
+            await dbContext.SaveChangesAsync();
+            var result = await smsService.SendSms(newOtp.Mobile, $"{newOtp.AuthCode}\n لغو11");
+            return new ResultDto<SubscriberCodeDto>("", result.IsSuccessStatusCode, new SubscriberCodeDto { AuthCode = newOtp.AuthCode, Mobile = newOtp.Mobile, NationalCode = nationalCode });
         }
 
-        public async  Task<ResultDto<SubscriberDetailsDto>> GetByNationalCodeAsync(string nationalCode)
+        public async Task<ResultDto<SubscriberDetailsDto>> GetByNationalCodeAsync(string nationalCode)
         {
-            var a = "";
-            var data = await context.Subscribers.Where(cu => cu.NationalCode == nationalCode)
-                .Include(cu => cu.City).FirstOrDefaultAsync();
+            var subscriber = await dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
+                .Include(cu => cu.VehicleModels).FirstOrDefaultAsync();
 
-            if (data == null) return new ResultDto<SubscriberDetailsDto>(
+
+
+
+
+            if (subscriber is null)
+            {
+                var sevenMember = await sevenSoftService.GetSubscriberByNationalCode(nationalCode);
+                if (sevenMember is null)
+                {
+                    return new ResultDto<SubscriberDetailsDto>(
                 "کاربر مربوطه یافت نشد.",
                 false,
                 null);
+                }
+                else
+                {
+                    var newSubscriber = new Subscriber
+                    {
+                        Name = sevenMember.Name,
+                        Address = sevenMember.Address,
+                        BrithDate = sevenMember.BirthDate,
+                        BrithDatePersian = sevenMember.StrBirthDate,
+                        FathersName = sevenMember.FatherName,
+                        IdNumber = sevenMember.IdNumber,
+                        EconomicCode = sevenMember.EconomicCode?.ToString(),
+                        Phone = sevenMember.Tel,
+                        NationalCode = sevenMember.NationalCode,
+                        Family = sevenMember.LastName,
+                        Mobile = sevenMember.Mobile,
+                        Sex = sevenMember.Gender == 1 ? "زن" : "مرد",
+                    };
+                    //if (sevenMember.VinNumber != null)
+                    //{
+                    //    var chassisInformation = await sevenSoftService.GetChassisInformationByVinNumber(sevenMember.VinNumber.ToString());
+                    //    if (chassisInformation != null)
+                    //    {
+                    //        newSubscriber.VehicleModels = new List<VehicleModel>
+                    //        {
+                    //            new VehicleModel
+                    //            {
+                    //                EnglishName = chassisInformation.VehicleModelName,
+                    //                BrandIdSevenSoft = (Guid?)chassisInformation.BrandId,
+                    //                //Description =chassisInformation.des,
+                    //                //SaleBasketIdSevenSoft =(Guid?) chassisInformation,
+                    //                //SalePlanIdSevenSoft = chassisInformation.pla,
 
-            var customerInfo = new SubscriberDetailsDto
+                    //                VehicleModelIdSevensoft = new Guid(chassisInformation.VehicleModelId),
+                    //                VehicleName = chassisInformation.VehicleModelName,
+                    //                VinNumber = chassisInformation.VinNumber,
+                    //            }
+                    //        };
+                    //    }
+
+                    //    dbContext.Subscribers.Add(newSubscriber);
+                    //    await dbContext.SaveChangesAsync();
+                    //}
+                }
+                var data = await dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
+                   .Include(cu => cu.City).FirstOrDefaultAsync();
+                var customerInfo = new SubscriberDetailsDto
+                {
+                    Id = data.Id,
+                    Name = data.Name,
+                    Address = data.Address,
+
+                    PhoneNumber = data.Phone,
+                    NationalCode = data.NationalCode,
+                    Family = data.Family,
+                    Mobile = data.Mobile,
+                    Sex = data.Sex,
+                    VehicleModels = subscriber.VehicleModels.Any() ? data.VehicleModels.Select(c => new VehicleModelDto
+                    {
+                        EnglishName = c.EnglishName,
+                        BrandIdSevenSoft = c.BrandIdSevenSoft,
+                        Description = c.Description,
+                        SaleBasketIdSevenSoft = c.SaleBasketIdSevenSoft,
+                        SalePlanIdSevenSoft = c.SalePlanIdSevenSoft,
+                        SubscriberId = c.SubscriberId,
+                        VehicleModelIdSevensoft = c.VehicleModelIdSevensoft,
+                        VehicleName = c.VehicleName,
+                        VinNumber = c.VinNumber,
+                    }).ToList() : new()
+                };
+
+                return new ResultDto<SubscriberDetailsDto>(
+                    "",
+                    true,
+                    customerInfo);
+            }
+            else
             {
-                Id = data.Id,
-                Name = data.Name,
-                Address = data.Address,
-                CityName = data.City.Title,
-                PhoneNumber = data.Mobile,
-            };
+                var customerInfo = new SubscriberDetailsDto
+                {
+                    Id = subscriber.Id,
+                    Name = subscriber.Name,
+                    Address = subscriber.Address,
 
-            return new ResultDto<SubscriberDetailsDto>(
-                "",
-                true,
-                customerInfo);
+                    PhoneNumber = subscriber.Phone,
+                    NationalCode = subscriber.NationalCode,
+                    Family = subscriber.Family,
+                    Mobile = subscriber.Mobile,
+                    Sex = subscriber.Sex,
+                    VehicleModels = subscriber.VehicleModels.Any() ? subscriber.VehicleModels.Select(c => new VehicleModelDto
+                    {
+                        EnglishName = c.EnglishName,
+                        BrandIdSevenSoft = c.BrandIdSevenSoft,
+                        Description = c.Description,
+                        SaleBasketIdSevenSoft = c.SaleBasketIdSevenSoft,
+                        SalePlanIdSevenSoft = c.SalePlanIdSevenSoft,
+                        SubscriberId = c.SubscriberId,
+                        VehicleModelIdSevensoft = c.VehicleModelIdSevensoft,
+                        VehicleName = c.VehicleName,
+                        VinNumber = c.VinNumber,
+                    }).ToList() : new()
+                }; ;
+                return new ResultDto<SubscriberDetailsDto>(
+          "",
+          true,
+          customerInfo);
+            }
+
+
         }
     }
 

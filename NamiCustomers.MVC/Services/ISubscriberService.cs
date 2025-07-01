@@ -110,7 +110,17 @@ namespace NamiCustomers.MVC.Services
             
             var nationalCode = httpContextAccessor.GetClaimValue(MyClaims.NationalCode);
             await GetToken();
-            return await _httpClient.GetFromJsonAsync<ResultDto<SubscriberDetailsDto>>($"subscriber/infobynationalcode?nationalcode={nationalCode}");
+            var result= await _httpClient.GetFromJsonAsync<ResultDto<SubscriberDetailsDto>>($"subscriber/infobynationalcode?nationalcode={nationalCode}");
+            if (result.Data!=null)
+            {
+                return new ResultDto<SubscriberDetailsDto>(
+                    "مشتری با موفقیت حذف شد.",
+                    true,
+                    result.Data);
+            }
+            return new ResultDto<SubscriberDetailsDto>(
+                "خطا در حذف مشتری ",
+                false,null);
         }
     }
 }

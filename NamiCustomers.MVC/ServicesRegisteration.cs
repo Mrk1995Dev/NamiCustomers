@@ -14,21 +14,21 @@ namespace NamiCustomers.MVC;
 
 public static class ServicesRegisteration
 {
-	public static IServiceCollection BaseConfigures(
-		this IServiceCollection services,
-	   WebApplicationBuilder webApplicationBuilder)
-	{
-		var configuration = webApplicationBuilder.Configuration;
-		services
-			.ConfigureAppSettings(configuration)
-			.ConfigureCors()
-			.ConfigureCurrentUser()
-			.ConfigureMemoryCache()
-			.ConfigureOther()
-			.AddApplicationServices(configuration)
-			.AddAuthentication(configuration)
-			.ConfigureCookies()
-			;
+    public static IServiceCollection BaseConfigures(
+        this IServiceCollection services,
+       WebApplicationBuilder webApplicationBuilder)
+    {
+        var configuration = webApplicationBuilder.Configuration;
+        services
+            //.ConfigureAppSettings(configuration)
+            .ConfigureCors()
+            .ConfigureCurrentUser()
+            .ConfigureMemoryCache()
+            .ConfigureOther()
+            .AddApplicationServices(configuration)
+            .AddAuthentication(configuration)
+            .ConfigureCookies()
+            ;
 
 		return services;
 	}
