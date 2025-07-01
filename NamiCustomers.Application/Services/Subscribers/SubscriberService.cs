@@ -249,33 +249,36 @@ namespace NamiCustomers.Application.Services.Subscribers
                         Mobile = sevenMember.Mobile,
                         Sex = sevenMember.Gender == 1 ? "زن" : "مرد",
                     };
-                    //if (sevenMember.VinNumber != null)
-                    //{
-                    //    var chassisInformation = await sevenSoftService.GetChassisInformationByVinNumber(sevenMember.VinNumber.ToString());
-                    //    if (chassisInformation != null)
-                    //    {
-                    //        newSubscriber.VehicleModels = new List<VehicleModel>
-                    //        {
-                    //            new VehicleModel
-                    //            {
-                    //                EnglishName = chassisInformation.VehicleModelName,
-                    //                BrandIdSevenSoft = (Guid?)chassisInformation.BrandId,
-                    //                //Description =chassisInformation.des,
-                    //                //SaleBasketIdSevenSoft =(Guid?) chassisInformation,
-                    //                //SalePlanIdSevenSoft = chassisInformation.pla,
+					//if (sevenMember.VinNumber != null)
+					//{
+					//    var chassisInformation = await sevenSoftService.GetChassisInformationByVinNumber(sevenMember.VinNumber.ToString());
+					//    if (chassisInformation != null)
+					//    {
+					//        newSubscriber.VehicleModels = new List<VehicleModel>
+					//        {
+					//            new VehicleModel
+					//            {
+					//                EnglishName = chassisInformation.VehicleModelName,
+					//                BrandIdSevenSoft = (Guid?)chassisInformation.BrandId,
+					//                //Description =chassisInformation.des,
+					//                //SaleBasketIdSevenSoft =(Guid?) chassisInformation,
+					//                //SalePlanIdSevenSoft = chassisInformation.pla,
 
-                    //                VehicleModelIdSevensoft = new Guid(chassisInformation.VehicleModelId),
-                    //                VehicleName = chassisInformation.VehicleModelName,
-                    //                VinNumber = chassisInformation.VinNumber,
-                    //            }
-                    //        };
-                    //    }
+					//                VehicleModelIdSevensoft = new Guid(chassisInformation.VehicleModelId),
+					//                VehicleName = chassisInformation.VehicleModelName,
+					//                VinNumber = chassisInformation.VinNumber,
+					//            }
+					//        };
+					//    }
 
-                    //    dbContext.Subscribers.Add(newSubscriber);
-                    //    await dbContext.SaveChangesAsync();
-                    //}
-                }
-                var data = await dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
+					//    dbContext.Subscribers.Add(newSubscriber);
+					//    await dbContext.SaveChangesAsync();
+					//}
+
+					    dbContext.Subscribers.Add(newSubscriber);
+					 await dbContext.SaveChangesAsync();
+				}
+				var data = await dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
                    .Include(cu => cu.City).FirstOrDefaultAsync();
                 var customerInfo = new SubscriberDetailsDto
                 {
