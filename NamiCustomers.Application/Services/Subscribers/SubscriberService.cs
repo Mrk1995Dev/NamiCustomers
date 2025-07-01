@@ -1,10 +1,8 @@
-﻿using NamiCustomers.Application.Services.Subscribers.Dtos;
+﻿using NamiCustomers.Abstractions.Dtos.Subscribers;
 using NamiCustomers.Domain.Entities.Subscribers;
-using NamiCustomers.Infrastucture.Model;
 using NamiCustomers.Infrastucture.Model.Subscribers;
 using NamiCustomers.Infrastucture.Utilities;
 using System.Text;
-using static System.Net.WebRequestMethods;
 
 namespace NamiCustomers.Application.Services.Subscribers
 {
@@ -15,11 +13,12 @@ namespace NamiCustomers.Application.Services.Subscribers
         Task<ResultDto> DeleteCustomerInfoAsync(int customerId);
         Task<ResultDto> UpdateCustomerInfo(UpdateSubscriberDto updateCustomerInfoDto);
         Task<ResultDto<SubscriberDetailsDto>> GetCustomerInfoDetailAsync(int customerId);
-		Task<ResultDto<SubscriberDetailsDto>> GetCustomerInfoDetailMobileAsync(string mobile);
+        Task<ResultDto<SubscriberDetailsDto>> GetByNationalCodeAsync(string nationalCode);
+        Task<ResultDto<SubscriberDetailsDto>> GetCustomerInfoDetailMobileAsync(string mobile);
 		Task<ResultDto<byte[]>> ExportCustomerInfoAsync();
         Task<List<CityDto>> GetAllCitiesAsync();
         Task<ResultDto<SubscriberCodeDto>> SendOtp(string mobile);
-        Task<ResultDto<SubscriberCodeDto>> GetOtp(string mobile);
+        Task<ResultDto<SubscriberCodeDto>> GetOtp(string mobile,string nationalCode);
     }
     public class SubscriberService(IAppDbContext context,ISmsService smsService) : ISubscriberService
     {
@@ -201,21 +200,42 @@ namespace NamiCustomers.Application.Services.Subscribers
             return new ResultDto<SubscriberCodeDto>("",true,new SubscriberCodeDto { AuthCode = otp.AuthCode,Mobile=otp.Mobile });
         }
 
-        public async Task<ResultDto<SubscriberCodeDto>> GetOtp(string mobile)
+        public async Task<ResultDto<SubscriberCodeDto>> GetOtp(string mobile,string nationalCode)
         {
-            var Randowmpass = new RandomPasswordUtility();
+            var Randowmpass = new PasswordUtility();
             string passnew = Randowmpass.RandomString(5);
             var newOtp = new SubscriberCode { AuthCode = passnew,Mobile=mobile };
             await context.SubscriberCodes.AddAsync(newOtp);
             await context.SaveChangesAsync();
              var result=  await smsService.SendSms(newOtp.Mobile, $"{newOtp.AuthCode}\n لغو11");
-            return new ResultDto<SubscriberCodeDto>("", result.IsSuccessStatusCode, new SubscriberCodeDto {AuthCode= newOtp.AuthCode, Mobile = newOtp.Mobile });
+            return new ResultDto<SubscriberCodeDto>("", result.IsSuccessStatusCode, new SubscriberCodeDto {AuthCode= newOtp.AuthCode, Mobile = newOtp.Mobile,NationalCode= nationalCode });
+        }
+
+        public async  Task<ResultDto<SubscriberDetailsDto>> GetByNationalCodeAsync(string nationalCode)
+        {
+            var a = "";
+            var data = await context.Subscribers.Where(cu => cu.NationalCode == nationalCode)
+                .Include(cu => cu.City).FirstOrDefaultAsync();
+
+            if (data == null) return new ResultDto<SubscriberDetailsDto>(
+                "کاربر مربوطه یافت نشد.",
+                false,
+                null);
+
+            var customerInfo = new SubscriberDetailsDto
+            {
+                Id = data.Id,
+                Name = data.Name,
+                Address = data.Address,
+                CityName = data.City.Title,
+                PhoneNumber = data.Mobile,
+            };
+
+            return new ResultDto<SubscriberDetailsDto>(
+                "",
+                true,
+                customerInfo);
         }
     }
 
-    public class CityDto
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
-    }
 }

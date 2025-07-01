@@ -1,21 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.CodeAnalysis.Options;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using NamiCustomers.Infrastucture.ExternalServices.Email.Dtos;
 using NamiCustomers.Infrastucture.ExternalServices.SmsServices.Dtos;
 using NamiCustomers.MVC.Handlers;
-using NamiCustomers.MVC.Services.Account;
+using NamiCustomers.MVC.Services;
 using NamiCustomers.MVC.Services.Auth;
-using NamiCustomers.MVC.Services.Subscribers;
-using System.Configuration;
 using System.Net.Http.Headers;
-using System.Text;
 
 namespace NamiCustomers.MVC;
 
@@ -83,7 +76,8 @@ public static class ServicesRegisteration
         services.AddScoped<ISubscriberService, SubscriberService>(sp =>
         {
             var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
-            return new SubscriberService(httpClient);
+            var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+            return new SubscriberService(httpClient,httpContextAccessor);
         });
 
         services.AddScoped<IAccountService, AccountService>(sp =>
@@ -159,7 +153,4 @@ public static class ServicesRegisteration
               });
         return services;
     }
-  
-   
-    
 }

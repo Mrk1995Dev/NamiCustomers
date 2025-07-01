@@ -7,6 +7,6 @@ public class SubscriberConfig : IEntityTypeConfiguration<Subscriber>
 {
     public void Configure(EntityTypeBuilder<Subscriber> builder)
     {
-        builder.HasIndex(c => c.NatinalCode).IsUnique();
+        builder.HasIndex(c => c.NationalCode).IsUnique();
     }
 }

@@ -1,8 +1,6 @@
-﻿using NamiCustomers.Web.Models.Settings;
-using NamiCustomers.Web.Services.CustomerService.Dto;
-using System.Net.Http;
+﻿using NamiCustomers.Abstractions.Dtos;
+using NamiCustomers.Abstractions.Dtos.Subscribers;
 using System.Net.Http.Json;
-using System.Reflection;
 
 namespace NamiCustomers.Web.Services.CustomerService.Implementation
 {
@@ -17,13 +15,13 @@ namespace NamiCustomers.Web.Services.CustomerService.Implementation
             _httpClient = httpClient;
         }
 
-        public async Task<List<CustomerListDto>> GetAllAsync(string mobile)
+        public async Task<List<SubscriberListDto>> GetAllAsync(string mobile)
         {
             //https://localhost:7061/v1/Customer/customerList
             //https://localhost:7061/customer/customerList
 
             await GetToken(mobile);
-            var result = await _httpClient.GetFromJsonAsync<List<CustomerListDto>>($"/api/subscriber/customerList");
+            var result = await _httpClient.GetFromJsonAsync<List<SubscriberListDto>>($"/api/subscriber/customerList");
             return result;
         }
 
@@ -42,12 +40,12 @@ namespace NamiCustomers.Web.Services.CustomerService.Implementation
             return result;
         }
 
-        public async Task<ResultDto<CustomerInfoDetailsDto>> GetByIdAsync(int id)
+        public async Task<ResultDto<SubscriberDetailsDto>> GetByIdAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<ResultDto<CustomerInfoDetailsDto>>($"/api/customer/info?id={id}");
+            return await _httpClient.GetFromJsonAsync<ResultDto<SubscriberDetailsDto>>($"/api/customer/info?id={id}");
         }
 
-        public async Task<ResultDto> CreateAsync(AddCustomerInfoDto customer)
+        public async Task<ResultDto> CreateAsync(AddSubscriberDto customer)
         {
             //https://localhost:7061/api/v1/Customer/addCustomer
             var respone = await _httpClient.PostAsJsonAsync($"/api/customer/addCustomer", customer);
@@ -63,7 +61,7 @@ namespace NamiCustomers.Web.Services.CustomerService.Implementation
                 false);
         }
 
-        public async Task<ResultDto> UpdateAsync(UpdateCustomerInfoDto updateCustomer)
+        public async Task<ResultDto> UpdateAsync(UpdateSubscriberDto updateCustomer)
         {
             var response = await _httpClient.PutAsJsonAsync($"/api/customer/edit", updateCustomer);
             if (response.IsSuccessStatusCode)

@@ -1,8 +1,8 @@
 ﻿@page "/customer/edit/{customerId:int}"
-@using NamiCustomers.Web.Services.CustomerService.Dto
+ 
+@using NamiCustomers.Abstractions.Dtos.Subscribers
 @using NamiCustomers.Web.Services.CustomerService.Implementation
-@using NamiCustomers.Web.Services.CustomerService.Dto
-@using NamiCustomers.Web.Services.CustomerService.Implementation
+ 
 @inject NavigationManager navigation
 @inject CustomerService customerService
 @rendermode InteractiveServer
@@ -41,14 +41,7 @@ else
             <label>تلفن</label>
             <InputText class="form-control" @bind-Value="customer.PhoneNumber" />
         </div>
-        <div class="mb-3">
-            <label>فکس</label>
-            <InputText class="form-control" @bind-Value="customer.Fax" />
-        </div>
-        <div class="mb-3">
-            <label>تعداد همکاران</label>
-            <InputNumber class="form-control" @bind-Value="customer.CoWorkers" />
-        </div>
+         
 
         <button type="submit" class="btn btn-success">ثبت تغییرات</button>
     </EditForm>
@@ -58,7 +51,7 @@ else
     [Parameter]
     public int CustomerId { get; set; }
 
-    private CustomerInfoDetailsDto customer;
+    private SubscriberDetailsDto customer;
     private List<CityDto> Cities = new();
 
     protected override async Task OnInitializedAsync()
@@ -69,15 +62,13 @@ else
 
     private async Task HandleValidSubmit()
     {
-        var modifiedCustomer = new UpdateCustomerInfoDto
+        var modifiedCustomer = new UpdateSubscriberDto
             {
                 Id = customer.Id,
                 Name = customer.Name,
                 CityId = customer.CityId,
-                Fax = customer.Fax,
                 PhoneNumber = customer.PhoneNumber,
                 Address = customer.Address,
-                CoWorkers = customer.CoWorkers
             };
         var response = await customerService.UpdateAsync(modifiedCustomer);
         if (response.IsSuccess)

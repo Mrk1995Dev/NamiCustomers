@@ -61,11 +61,12 @@
 
             <!-- Register Form -->
             <div class="register-form mt-4">
-                <h6 class="mb-3 text-center">  سامانه خدمات پس از فروش نامی خودورو پیشرو</h6>
+                <h6 class="mb-3 text-center">  سامانه خدمات پس از فروش نامی خودرو پیشرو</h6>
 
                 <form asp-action="GetOtp" asp-controller="Account">
                     <div class="form-group">
-                        <input class="form-control" style="color: #000 !important;" type="text" name="mobile" id="mobile" placeholder="تلفن همراه را وارد نمایید">
+                        <input class="form-control" style="color: #000 !important;" type="text" name="nationalcode" id="nationalcode" placeholder="کد ملی">
+                        <input class="form-control" style="color: #000 !important;" type="text" name="mobile" id="mobile" placeholder="تلفن همراه">
                     </div>
 
                     <!-- <div class="form-group position-relative">

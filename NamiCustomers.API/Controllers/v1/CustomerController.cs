@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using NamiCustomers.Abstractions.Dtos.Subscribers;
 using NamiCustomers.Application.Services.Subscribers;
-using NamiCustomers.Application.Services.Subscribers.Dtos;
 
 namespace NamiCustomers.API.Controllers.v1
 {

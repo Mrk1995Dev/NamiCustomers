@@ -1,4 +1,5 @@
-﻿using NamiCustomers.Application.Services.Appointments.Dtos;
+﻿
+using NamiCustomers.Abstractions.Dtos.Appointments;
 using NamiCustomers.Domain.Entities.Subscribers;
 using NamiCustomers.Infrastucture.Properties;
 

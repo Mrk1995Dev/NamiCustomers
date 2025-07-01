@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+
+using NamiCustomers.Abstractions.Dtos.Appointments;
 using NamiCustomers.Application.Services.Appointments;
-using NamiCustomers.Application.Services.Appointments.Dtos;
 using NamiCustomers.Application.Services.Dealers;
 
 namespace NamiCustomers.API.Controllers.v1;

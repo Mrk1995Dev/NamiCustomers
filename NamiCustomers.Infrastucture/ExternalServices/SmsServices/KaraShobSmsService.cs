@@ -1,6 +1,5 @@
 ﻿
 using System.Text.Json;
-using NamiCustomers.Infrastucture.ExternalServices.SmsServices.Dtos;
 
 
 namespace NamiCustomers.Infrastucture.ExternalServices.SmsServices

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using NamiCustomers.MVC.Models;
-using NamiCustomers.MVC.Services.Account;
+using NamiCustomers.MVC.Services;
 using NamiCustomers.MVC.Services.Auth;
 using NuGet.Common;
 using System.Security.Claims;
@@ -73,13 +73,13 @@ namespace NamiCustomers.MVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetOtp(string mobile)
+        public async Task<IActionResult> GetOtp(string mobile,string nationalcode)
         {
-            if (string.IsNullOrEmpty(mobile))
+            if (string.IsNullOrEmpty(mobile)|| string.IsNullOrEmpty(nationalcode))
             {
                 return RedirectToAction("LoginByMobile");
             }
-            var code = await authService.GetOtp(mobile);
+            var code = await authService.GetOtp(mobile,nationalcode);
 
             TempData["mobile"] = mobile;
             return RedirectToAction("LoginByOtp");
@@ -97,7 +97,9 @@ namespace NamiCustomers.MVC.Controllers
             {
                 var claims = new List<System.Security.Claims.Claim>
             {
-                new  System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name,result.Email)
+                new  System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name,result.Email),
+                new  System.Security.Claims.Claim("NationalCode",result.NationalCode),
+                new  System.Security.Claims.Claim("Mobile",result.Mobile),
             };
 
                 var claimsIdentity = new ClaimsIdentity(

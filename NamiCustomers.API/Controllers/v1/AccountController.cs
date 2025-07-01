@@ -107,9 +107,9 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
 
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetOtp([FromQuery] string mobile)
+    public async Task<IActionResult> GetOtp([FromQuery] string mobile,string nationalCode)
     {
-        var result = await subscriberService.GetOtp(mobile);
+        var result = await subscriberService.GetOtp(mobile, nationalCode);
         if (!result.Issuccess)
         {
             return BadRequest(result);
@@ -123,14 +123,14 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
         if (!string.IsNullOrEmpty(otpCode))
         {
             var otp = await subscriberService.SendOtp(otpCode);
-            if (otp != null)
+            if (otp.Issuccess)
             {
                 var user = await userManager.Users.WhereIf(true, c => c.PhoneNumber == otp.Data.Mobile).SingleOrDefaultAsync();
                 if (user != null)
                 {
                     var token = $"{GenerateJwtToken(user)}";
                     var refreshToken = $"{GenerateJwtToken(user)}";
-                    return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email }));
+                    return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email ,NationalCode=user.NationalCode,Mobile=user.PhoneNumber }));
                 }
                 else
                 {
@@ -140,7 +140,8 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                         FirstName = $"{otp.Data.Mobile}",
                         LastName = $"{otp.Data.Mobile}",
                         Mobile = otp.Data.Mobile,
-                        Password = $"Nn@{otp.Data.Mobile}"
+                        Password = $"Nn@{otp.Data.Mobile}",
+                        NationalCode=otp.Data.NationalCode
                     });
 
                     var newUser = await userManager.Users.WhereIf(true, c => c.PhoneNumber == otp.Data.Mobile).SingleOrDefaultAsync();
@@ -342,6 +343,8 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
 {
     new Claim(ClaimTypes.Name, user.UserName),
     new Claim(ClaimTypes.Email, user.Email),
+    new Claim("NationalCode", user.NationalCode),
+    new Claim("Mobile", user.PhoneNumber),
     new Claim(ClaimTypes.NameIdentifier, user.Id)
 };
         foreach (var role in roles)
@@ -374,6 +377,7 @@ public class LoginModel
 
     public string Password { get; set; }
     public string Mobile { get; set; }
+    public string NationalCode { get; set; }
     public bool IsPersistent { get; set; } = false;
 
 }
@@ -391,6 +395,8 @@ public class RegisterModel
     public string Email { get; set; }
     [Required]
     public string Password { get; set; }
+    [Required]
+    public string NationalCode { get; set; }
 }
 
 

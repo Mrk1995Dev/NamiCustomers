@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Application.Services.Vehicles;
-using NamiCustomers.Application.Services.Vehicles.Dtos;
 
 namespace NamiCustomers.API.Controllers.v1
 {

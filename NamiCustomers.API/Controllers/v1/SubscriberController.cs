@@ -1,19 +1,23 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using NamiCustomers.Abstractions.Dtos.Subscribers;
 using NamiCustomers.Application.Services.Subscribers;
-using NamiCustomers.Application.Services.Subscribers.Dtos;
 
 namespace NamiCustomers.API.Controllers.v1
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
-    [Authorize]
+    //[Authorize]
     public class SubscriberController(
         ISubscriberService customerManagmentService) : ControllerBase
     {
         [HttpGet("info")]
         public async Task<ResultDto<SubscriberDetailsDto>> CustomerInfo([FromQuery] int id)
             => await customerManagmentService.GetCustomerInfoDetailAsync(id);
+        [HttpGet("infobynationalcode")]
+        public async Task<ResultDto<SubscriberDetailsDto>> InfoByNationalCode([FromQuery] string nationalCode)
+            => await customerManagmentService.GetByNationalCodeAsync(nationalCode);
+
+        
 
         [HttpGet("GetMobile")]
         public async Task<ResultDto<SubscriberDetailsDto>> CustomerMobile([FromQuery] string mobile)

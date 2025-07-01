@@ -1,4 +1,4 @@
-﻿@model IEnumerable<NamiCustomers.MVC.Services.Subscribers.Dtos.SubscriberListDto>
+﻿@model IEnumerable<NamiCustomers.Abstractions.Dtos.Subscribers.SubscriberListDto>
 
 @{
     ViewData["Title"] = "ListCustomerInfo";
@@ -27,12 +27,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.PhoneNumber)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Fax)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CoWorkers)
-            </th>
+             
             <th></th>
         </tr>
     </thead>
@@ -54,12 +49,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.PhoneNumber)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fax)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CoWorkers)
-            </td>
+             
             <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
                 @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |

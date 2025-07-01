@@ -1,9 +1,8 @@
 ﻿
 
-namespace NamiCustomers.Domain.Entities
+namespace NamiCustomers.Domain.Entities;
+
+public class IBaseEntity<TKey>
 {
-    public class IBaseEntity<TKey>
-    {
-        TKey Id { get; set; }
-    }
+    TKey Id { get; set; }
 }

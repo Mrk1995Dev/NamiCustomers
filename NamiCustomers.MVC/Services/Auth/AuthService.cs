@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+
 using NamiCustomers.Infrastucture.Model;
 using NamiCustomers.Infrastucture.Model.Subscribers;
 using NuGet.Common;
@@ -15,7 +16,7 @@ namespace NamiCustomers.MVC.Services.Auth
         Task<bool> LoginAsync(LoginRequestDto loginRequest);
         Task<string?> RefreshTokenAsync(string refreshToken);
         Task LogoutAsync();
-        Task<string> GetOtp(string mobile);
+        Task<string> GetOtp(string mobile, string nationalCode);
         Task<LoginResponseDto> LoginByOtpAsync(string otp);
         Task<ResultDto<ForgotPasswordResponse>> ForgotPassword(ForgotPasswordRequestDto forgotPasswordRequestDto);
         Task<ResultDto<IdentityResult>> ResetPassword(ResetPasswordDto reset);
@@ -75,9 +76,9 @@ namespace NamiCustomers.MVC.Services.Auth
 
 
         #endregion
-        public async  Task<ConfirmResponse> ConfirmEmail(string userId, string token)
+        public async Task<ConfirmResponse> ConfirmEmail(string userId, string token)
         {
-            var response = await httpClient.PostAsJsonAsync("Account/ConfirmEmail", new ConfirmRequest {UserId=userId,Token=token });
+            var response = await httpClient.PostAsJsonAsync("Account/ConfirmEmail", new ConfirmRequest { UserId = userId, Token = token });
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadFromJsonAsync<ConfirmResponse>();
@@ -114,7 +115,7 @@ namespace NamiCustomers.MVC.Services.Auth
 
 
 
-        public async   Task<RegisterResponse> Register(RegisterDto registerDto)
+        public async Task<RegisterResponse> Register(RegisterDto registerDto)
         {
             var response = await httpClient.PostAsJsonAsync("Account/Register", registerDto);
             if (response.IsSuccessStatusCode)
@@ -125,13 +126,13 @@ namespace NamiCustomers.MVC.Services.Auth
                     return result;
                 }
             }
-            return new RegisterResponse { IsSuccess=false};
+            return new RegisterResponse { IsSuccess = false };
         }
 
 
-        public async Task<string> GetOtp(string mobile)
+        public async Task<string> GetOtp(string mobile, string nationalCode)
         {
-            var response = await GetData<ResultDto<SubscriberCodeDto>>("Account/GetOtp?mobile=", mobile);
+            var response = await GetData<ResultDto<SubscriberCodeDto>>($"Account/GetOtp?mobile={mobile}&nationalCode=", nationalCode);
             return response.Data.AuthCode;
         }
 
@@ -141,7 +142,7 @@ namespace NamiCustomers.MVC.Services.Auth
             var result = await GetData<ResultDto<LoginResponseDto>>("Account/LoginByOtp?otpCode=", otp);
 
 
-            if (result != null)
+            if (result.Issuccess)
             {
 
                 //ذخیره اطلاعات
@@ -152,8 +153,7 @@ namespace NamiCustomers.MVC.Services.Auth
                 ((CustomAuthenticationStateProvider)authenticationStateProvider).UpdateAuthenticationState();
                 return result.Data;
             }
-
-            return new LoginResponseDto();//TODO 
+            return new LoginResponseDto() { };//TODO 
         }
 
         public async Task LogoutAsync()
@@ -214,13 +214,13 @@ namespace NamiCustomers.MVC.Services.Auth
             return result;
         }
 
-        public async  Task<HttpResponseMessage> SetPhoneNumber(SetPhoneNumberDto phoneNumberDto)
+        public async Task<HttpResponseMessage> SetPhoneNumber(SetPhoneNumberDto phoneNumberDto)
         {
             var result = await PostData<HttpResponseMessage>("Account/SetPhoneNumber", phoneNumberDto);
             return result;
         }
 
-        public async  Task<ConfirmResponse> VerifyPhoneNumber(VerifyPhoneNumberDto verify)
+        public async Task<ConfirmResponse> VerifyPhoneNumber(VerifyPhoneNumberDto verify)
         {
             var response = await httpClient.PostAsJsonAsync("Account/VerifyPhoneNumber", verify);
             if (response.IsSuccessStatusCode)
@@ -237,4 +237,3 @@ namespace NamiCustomers.MVC.Services.Auth
 }
 
 
- 

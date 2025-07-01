@@ -1,4 +1,4 @@
-﻿@model NamiCustomers.MVC.Services.Subscribers.Dtos.SubscriberDetailsDto
+﻿@model NamiCustomers.Abstractions.Dtos.Subscribers.SubscriberDetailsDto
 
 @{
     ViewData["Title"] = "CustomerInfo";
@@ -46,18 +46,7 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.PhoneNumber)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Fax)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Fax)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CoWorkers)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CoWorkers)
-        </dd>
+         
     </dl>
 </div>
 <div>

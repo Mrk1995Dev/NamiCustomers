@@ -1,14 +1,15 @@
-﻿using NamiCustomers.Web.Services.CustomerService.Dto;
+﻿using NamiCustomers.Abstractions.Dtos;
+using NamiCustomers.Abstractions.Dtos.Subscribers;
 
 namespace NamiCustomers.Web.Services.CustomerService.Implementation
 {
     public interface ICustomerService
     {
-        Task<ResultDto> CreateAsync(AddCustomerInfoDto customer);
+        Task<ResultDto> CreateAsync(AddSubscriberDto customer);
         Task<ResultDto> DeleteAsync(int id);
-        Task<List<CustomerListDto>> GetAllAsync(string mobile);
+        Task<List<SubscriberListDto>> GetAllAsync(string mobile);
         Task<List<CityDto>> GetAllCitiesAsync();
-        Task<ResultDto<CustomerInfoDetailsDto>> GetByIdAsync(int id);
-        Task<ResultDto> UpdateAsync(UpdateCustomerInfoDto updateCustomer);
+        Task<ResultDto<SubscriberDetailsDto>> GetByIdAsync(int id);
+        Task<ResultDto> UpdateAsync(UpdateSubscriberDto updateCustomer);
     }
 }

@@ -29,7 +29,7 @@ public enum PaymentType
 
 public enum SaleStatusType
 {
-    [Description("تکمیل اطلاعاتتکمیل اطلاعات")]
+    [Description("تکمیل اطلاعات تکمیل اطلاعات")]
     FillBiography = 1,
     [Description("تاییدیه کاتالوگ")]
     ConfirmCatalog = 2,
@@ -47,4 +47,10 @@ public enum SaleStatusType
     CompletionPayment = 11,
     [Description("آپلود مدارک")]
     Attachment = 12
+}
+
+public enum MyClaims
+{
+    Mobile,
+    NationalCode
 }

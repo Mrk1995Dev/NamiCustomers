@@ -1,8 +1,8 @@
 ﻿@page "/"
-@using NamiCustomers.Web.Services.CustomerService.Dto
+ 
+@using NamiCustomers.Abstractions.Dtos.Subscribers
 @using NamiCustomers.Web.Services.CustomerService.Implementation
-@using NamiCustomers.Web.Services.CustomerService.Dto
-@using NamiCustomers.Web.Services.CustomerService.Implementation
+ 
 @inject CustomerService customerService
 @inject IJSRuntime jsRunTime
 @inject NavigationManager navigationManager
@@ -44,8 +44,6 @@ else
                     <td>@customer.Address</td>
                     <td>@customer.CityName</td>
                     <td>@customer.PhoneNumber</td>
-                    <td>@customer.Fax</td>
-                    <td>@customer.CoWorkers</td>
                     <button class="btn btn-danger" @onclick="() => DeleteCustomer(customer.Id)">حذف</button>
                     <button class="btn btn-warning" @onclick="() => EditCustomer(customer.Id)">ویرایش</button>
                     <button class="btn btn-info" @onclick="() => CustomerInfo(customer.Id)">جزییات مشتری</button>
@@ -56,7 +54,7 @@ else
 }
 
 @code {
-    List<CustomerListDto> customers;
+    List<SubscriberListDto> customers;
 
 
     void CustomerInfo(int id)
