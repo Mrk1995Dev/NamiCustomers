@@ -20,7 +20,7 @@ public static class ServicesRegisteration
     {
         var configuration = webApplicationBuilder.Configuration;
         services
-            .ConfigureAppSettings(configuration)
+            //.ConfigureAppSettings(configuration)
             .ConfigureCors()
             .ConfigureCurrentUser()
             .ConfigureMemoryCache()

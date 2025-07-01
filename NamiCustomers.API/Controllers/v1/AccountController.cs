@@ -272,7 +272,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     [HttpPost("[action]")]
     public async Task<IActionResult> RegisterUser([FromBody] RegisterModel model)
     {
-        var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true, PassWord = model.Password };
+        var user = new ApplicationUser {NationalCode=model.NationalCode, UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true, PassWord = model.Password };
         var result = await userManager.CreateAsync(user, model.Password);
 
         if (result.Succeeded)
