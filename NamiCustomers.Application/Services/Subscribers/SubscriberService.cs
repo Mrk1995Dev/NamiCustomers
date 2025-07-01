@@ -215,9 +215,14 @@ namespace NamiCustomers.Application.Services.Subscribers
 
         public async Task<ResultDto<SubscriberDetailsDto>> GetByNationalCodeAsync(string nationalCode)
         {
-            var data = await dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
-                .Include(cu => cu.City).FirstOrDefaultAsync();
-            if (data is null)
+            var subscriber = await dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
+                .Include(cu => cu.VehicleModels).FirstOrDefaultAsync();
+
+
+
+
+
+            if (subscriber is null)
             {
                 var sevenMember = await sevenSoftService.GetSubscriberByNationalCode(nationalCode);
                 if (sevenMember is null)
@@ -229,65 +234,112 @@ namespace NamiCustomers.Application.Services.Subscribers
                 }
                 else
                 {
-                    dbContext.Subscribers.Add(new Subscriber
+                    var newSubscriber = new Subscriber
                     {
                         Name = sevenMember.Name,
                         Address = sevenMember.Address,
+                        BrithDate = sevenMember.BirthDate,
+                        BrithDatePersian = sevenMember.StrBirthDate,
+                        FathersName = sevenMember.FatherName,
+                        IdNumber = sevenMember.IdNumber,
+                        EconomicCode = sevenMember.EconomicCode?.ToString(),
                         Phone = sevenMember.Tel,
-                        //CityId = int.Parse(sevenMember.CityId),
                         NationalCode = sevenMember.NationalCode,
                         Family = sevenMember.LastName,
                         Mobile = sevenMember.Mobile,
-                        Sex =  sevenMember.Gender==1?"":"",
-                        //VehicleModels = sevenMember.Any() ? sevenMember.VehicleModels.Select(c => new VehicleModel
-                        //{
-                        //    EnglishName = c.EnglishName,
-                        //    BrandIdSevenSoft = c.BrandIdSevenSoft,
-                        //    Description = c.Description,
-                        //    SaleBasketIdSevenSoft = c.SaleBasketIdSevenSoft,
-                        //    SalePlanIdSevenSoft = c.SalePlanIdSevenSoft,
-                        //    SubscriberId = c.SubscriberId,
-                        //    VehicleModelIdSevensoft = c.VehicleModelIdSevensoft,
-                        //    VehicleName = c.VehicleName,
-                        //    VinNumber = c.VinNumber,
-                        //}).ToList():new()
-                    });
-                
-                     await   dbContext.SaveChangesAsync();
+                        Sex = sevenMember.Gender == 1 ? "زن" : "مرد",
+                    };
+                    //if (sevenMember.VinNumber != null)
+                    //{
+                    //    var chassisInformation = await sevenSoftService.GetChassisInformationByVinNumber(sevenMember.VinNumber.ToString());
+                    //    if (chassisInformation != null)
+                    //    {
+                    //        newSubscriber.VehicleModels = new List<VehicleModel>
+                    //        {
+                    //            new VehicleModel
+                    //            {
+                    //                EnglishName = chassisInformation.VehicleModelName,
+                    //                BrandIdSevenSoft = (Guid?)chassisInformation.BrandId,
+                    //                //Description =chassisInformation.des,
+                    //                //SaleBasketIdSevenSoft =(Guid?) chassisInformation,
+                    //                //SalePlanIdSevenSoft = chassisInformation.pla,
+
+                    //                VehicleModelIdSevensoft = new Guid(chassisInformation.VehicleModelId),
+                    //                VehicleName = chassisInformation.VehicleModelName,
+                    //                VinNumber = chassisInformation.VinNumber,
+                    //            }
+                    //        };
+                    //    }
+
+                    //    dbContext.Subscribers.Add(newSubscriber);
+                    //    await dbContext.SaveChangesAsync();
+                    //}
                 }
+                var data = await dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
+                   .Include(cu => cu.City).FirstOrDefaultAsync();
+                var customerInfo = new SubscriberDetailsDto
+                {
+                    Id = data.Id,
+                    Name = data.Name,
+                    Address = data.Address,
 
+                    PhoneNumber = data.Phone,
+                    NationalCode = data.NationalCode,
+                    Family = data.Family,
+                    Mobile = data.Mobile,
+                    Sex = data.Sex,
+                    VehicleModels = subscriber.VehicleModels.Any() ? data.VehicleModels.Select(c => new VehicleModelDto
+                    {
+                        EnglishName = c.EnglishName,
+                        BrandIdSevenSoft = c.BrandIdSevenSoft,
+                        Description = c.Description,
+                        SaleBasketIdSevenSoft = c.SaleBasketIdSevenSoft,
+                        SalePlanIdSevenSoft = c.SalePlanIdSevenSoft,
+                        SubscriberId = c.SubscriberId,
+                        VehicleModelIdSevensoft = c.VehicleModelIdSevensoft,
+                        VehicleName = c.VehicleName,
+                        VinNumber = c.VinNumber,
+                    }).ToList() : new()
+                };
+
+                return new ResultDto<SubscriberDetailsDto>(
+                    "",
+                    true,
+                    customerInfo);
             }
-            var subscriber = await dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
-               .Include(cu => cu.City).FirstOrDefaultAsync();
-            var customerInfo = new SubscriberDetailsDto
+            else
             {
-                Id = subscriber.Id,
-                Name = subscriber.Name,
-                Address = subscriber.Address,
-                 
-                PhoneNumber = subscriber.Phone,
-                NationalCode = subscriber.NationalCode,
-                Family = subscriber.Family,
-                Mobile = subscriber.Mobile,
-                Sex = subscriber.Sex,
-                //VehicleModels = subscriber.VehicleModels.Any() ? data.VehicleModels.Select(c => new VehicleModelDto
-                //{
-                //    EnglishName = c.EnglishName,
-                //    BrandIdSevenSoft = c.BrandIdSevenSoft,
-                //    Description = c.Description,
-                //    SaleBasketIdSevenSoft = c.SaleBasketIdSevenSoft,
-                //    SalePlanIdSevenSoft = c.SalePlanIdSevenSoft,
-                //    SubscriberId = c.SubscriberId,
-                //    VehicleModelIdSevensoft = c.VehicleModelIdSevensoft,
-                //    VehicleName = c.VehicleName,
-                //    VinNumber = c.VinNumber,
-                //}).ToList() : new()
-            };
+                var customerInfo = new SubscriberDetailsDto
+                {
+                    Id = subscriber.Id,
+                    Name = subscriber.Name,
+                    Address = subscriber.Address,
 
-            return new ResultDto<SubscriberDetailsDto>(
-                "",
-                true,
-                customerInfo);
+                    PhoneNumber = subscriber.Phone,
+                    NationalCode = subscriber.NationalCode,
+                    Family = subscriber.Family,
+                    Mobile = subscriber.Mobile,
+                    Sex = subscriber.Sex,
+                    VehicleModels = subscriber.VehicleModels.Any() ? subscriber.VehicleModels.Select(c => new VehicleModelDto
+                    {
+                        EnglishName = c.EnglishName,
+                        BrandIdSevenSoft = c.BrandIdSevenSoft,
+                        Description = c.Description,
+                        SaleBasketIdSevenSoft = c.SaleBasketIdSevenSoft,
+                        SalePlanIdSevenSoft = c.SalePlanIdSevenSoft,
+                        SubscriberId = c.SubscriberId,
+                        VehicleModelIdSevensoft = c.VehicleModelIdSevensoft,
+                        VehicleName = c.VehicleName,
+                        VinNumber = c.VinNumber,
+                    }).ToList() : new()
+                }; ;
+                return new ResultDto<SubscriberDetailsDto>(
+          "",
+          true,
+          customerInfo);
+            }
+
+
         }
     }
 
