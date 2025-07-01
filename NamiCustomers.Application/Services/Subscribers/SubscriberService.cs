@@ -117,8 +117,8 @@ namespace NamiCustomers.Application.Services.Subscribers
                 Id = data.Id,
                 Name = data.Name,
                 Address = data.Address,
-                CityName = data.City.Title,
-                PhoneNumber = data.Mobile,
+				CityName = data.City?.Title,
+				PhoneNumber = data.Mobile,
             };
 
             return new ResultDto<SubscriberDetailsDto>(

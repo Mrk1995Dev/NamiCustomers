@@ -12,17 +12,17 @@
         <div class="user-profile me-3">
                 <img src="~/sitetmeplate/img/bg-img/2.jpg" alt="">
             <i class="bi bi-pencil"></i>
-            <form action="#">
+   @*          <form action="#">
                 <input class="form-control" type="file">
-            </form>
+            </form> *@
         </div>
         <div class="user-info">
             <div class="d-flex align-items-center">
                     <h5 class="mb-1">@Html.DisplayFor(model => model.Name) - @Html.DisplayFor(model => model.Family)</h5>
                 @* <span class="badge bg-warning ms-2 rounded-pill">Pro</span> *@
             </div>
-@*             <p class="mb-0">UX/UI Designer</p>
- *@        </div>
+            <p class="mb-0">مشتری</p>
+        </div>
     </div>
 </div>
 </div>
@@ -32,32 +32,32 @@
     <div class="card-body">
         <form action="#">
             <div class="form-group mb-3">
-                    <label class="form-label" style="color: #fff !important;" for="@Html.DisplayNameFor(model => model.Name)">نام</label>
-                    <input class="form-control" id="@Html.DisplayNameFor(model => model.Name)" type="text" style="color: #000 !important;" value=" @Html.DisplayFor(model => model.Name)" placeholder="@Html.DisplayNameFor(model => model.Name)">
+                    <label class="form-label" style="color: #fff !important;" for="@Html.DisplayNameFor(model => model.Name)">@Html.DisplayNameFor(model => model.Name)</label>
+                    <input class="form-control" id="@Html.DisplayNameFor(model => model.Name)" type="text" style="color: #000 !important;" value=" @Html.DisplayFor(model => model.Name)" placeholder="@Html.DisplayNameFor(model => model.Name)" disabled>
             </div>
 
                 <div class="form-group mb-3">
-                    <label class="form-label" style="color: #fff !important;" for="@Html.DisplayNameFor(model => model.Family)">نام خانوادگی</label>
-                    <input class="form-control" id="@Html.DisplayNameFor(model => model.Family)" type="text" style="color: #000 !important;" value=" @Html.DisplayFor(model => model.Family)" placeholder="@Html.DisplayNameFor(model => model.Family)">
+                    <label class="form-label" style="color: #fff !important;" for="@Html.DisplayNameFor(model => model.Family)">@Html.DisplayNameFor(model => model.Family)</label>
+                    <input class="form-control" id="@Html.DisplayNameFor(model => model.Family)" type="text" style="color: #000 !important;" value=" @Html.DisplayFor(model => model.Family)" placeholder="@Html.DisplayNameFor(model => model.Family)" disabled>
                 </div>
                 <div class="form-group mb-3">
-                    <label class="form-label" style="color: #fff !important;" for="@Html.DisplayNameFor(model => model.NationalCode)">کد ملی </label>
-                    <input class="form-control" id="@Html.DisplayNameFor(model => model.NationalCode)" type="text" style="color: #000 !important;" value=" @Html.DisplayFor(model => model.NationalCode)" placeholder="@Html.DisplayNameFor(model => model.NationalCode)">
+                    <label class="form-label" style="color: #fff !important;" for="@Html.DisplayNameFor(model => model.NationalCode)">@Html.DisplayNameFor(model => model.NationalCode) </label>
+                    <input class="form-control" id="@Html.DisplayNameFor(model => model.NationalCode)" type="text" style="color: #000 !important;" value=" @Html.DisplayFor(model => model.NationalCode)" placeholder="@Html.DisplayNameFor(model => model.NationalCode)" disabled>
                 </div>
                 <div class="form-group mb-3">
-                    <label class="form-label" style="color: #fff !important;" for="@Html.DisplayNameFor(model => model.Mobile)">موبایل</label>
-                    <input class="form-control" id="@Html.DisplayNameFor(model => model.Mobile)" type="text" style="color: #000 !important;" value=" @Html.DisplayFor(model => model.Mobile)" placeholder="@Html.DisplayNameFor(model => model.Mobile)">
+                    <label class="form-label" style="color: #fff !important;" for="@Html.DisplayNameFor(model => model.Mobile)">@Html.DisplayNameFor(model => model.Mobile)</label>
+                    <input class="form-control" id="@Html.DisplayNameFor(model => model.Mobile)" type="text" style="color: #000 !important;" value=" @Html.DisplayFor(model => model.Mobile)" placeholder="@Html.DisplayNameFor(model => model.Mobile)" disabled>
                 </div>
                 <div class="form-group mb-3">
-                    <label class="form-label" style="color: #fff !important;" for="@Html.DisplayNameFor(model => model.PhoneNumber)">تلفن   </label>
-                    <input class="form-control" id="@Html.DisplayNameFor(model => model.PhoneNumber)" type="text" style="color: #000 !important;" value=" @Html.DisplayFor(model => model.PhoneNumber)" placeholder="@Html.DisplayNameFor(model => model.PhoneNumber)">
+                    <label class="form-label" style="color: #fff !important;" for="@Html.DisplayNameFor(model => model.PhoneNumber)">@Html.DisplayNameFor(model => model.PhoneNumber)</label>
+                    <input class="form-control" id="@Html.DisplayNameFor(model => model.PhoneNumber)" type="text" style="color: #000 !important;" value=" @Html.DisplayFor(model => model.PhoneNumber)" placeholder="@Html.DisplayNameFor(model => model.PhoneNumber)" disabled>
                 </div>
                 <div class="form-group mb-3">
-                    <label class="form-label" style="color: #fff !important;" for="@Html.DisplayNameFor(model => model.Address)">آدرس </label>
-                    <input class="form-control" id="@Html.DisplayNameFor(model => model.Address)" type="text" style="color: #000 !important;" value=" @Html.DisplayFor(model => model.Address)" placeholder="@Html.DisplayNameFor(model => model.Address)">
+                    <label class="form-label" style="color: #fff !important;" for="@Html.DisplayNameFor(model => model.Address)">@Html.DisplayNameFor(model => model.Address) </label>
+                    <input class="form-control" id="@Html.DisplayNameFor(model => model.Address)" type="text" style="color: #000 !important;" value=" @Html.DisplayFor(model => model.Address)" placeholder="@Html.DisplayNameFor(model => model.Address)" disabled>
                 </div>
 
-                @Html.ActionLink("ویرایش", "Edit", new {  /* id = Model.PrimaryKey */ }, new { @class = "btn btn-primary w-100", style = "" })
+                @Html.ActionLink("ویرایش", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary w-100", style = "" })
 
             </form>
     </div>

@@ -1,20 +1,29 @@
 ﻿using NamiCustomers.Abstractions.Dtos.Vehicles;
+using System.ComponentModel.DataAnnotations;
 
 namespace NamiCustomers.Abstractions.Dtos.Subscribers
 {
     public class SubscriberDetailsDto
     {
         public int Id { get; set; }
-        
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public int CityId { get; set; }
-        public string CityName { get; set; }
-        public string PhoneNumber { get; set; }
-        public string? NationalCode { get; set; }
-        public string? Family { get; set; }
-        public string? Mobile { get; set; }
-        public string? Sex { get; set; }
+
+		[Display(Name = "نام")]
+		public string? Name { get; set; }
+		[Display(Name = "آدرس")]
+		public string? Address { get; set; }
+        public int? CityId { get; set; }
+		[Display(Name = "نام شهر")]
+		public string? CityName { get; set; }
+		[Display(Name = "تلفن")]
+		public string? PhoneNumber { get; set; }
+		[Display(Name = "کد ملی")]
+		public string? NationalCode { get; set; }
+		[Display(Name = "نام خانوادگی")]
+		public string? Family { get; set; }
+		[Display(Name = "موبایل")]
+		public string? Mobile { get; set; }
+		[Display(Name = "جنسیت")]
+		public string? Sex { get; set; }
         public ICollection<VehicleModelDto>? VehicleModels { get; set; }
     }
 }
