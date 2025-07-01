@@ -80,6 +80,7 @@
 
 
 	<ItemGroup>
+	  <Folder Include="Controllers\v2\" />
 	  <Folder Include="wwwroot\ExcelFiles\" />
 	  <Folder Include="wwwroot\namiPrints\" />
 	  <Folder Include="wwwroot\PDF\AdvocacyFormat\" />
