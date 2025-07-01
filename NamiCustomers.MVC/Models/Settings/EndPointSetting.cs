@@ -3,10 +3,7 @@
 
 public class EndPointSetting
 {
-    public ISQIAPI ISQIAPI { get; set; }
+    public string BaseAddress { get; set; }
 }
 
-public class ISQIAPI
-{
-    public string URL { get; set; }
-}
+ 

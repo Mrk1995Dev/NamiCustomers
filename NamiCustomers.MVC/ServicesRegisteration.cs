@@ -25,7 +25,7 @@ public static class ServicesRegisteration
             .ConfigureCurrentUser()
             .ConfigureMemoryCache()
             .ConfigureOther()
-            .AddApplicationServices()
+            .AddApplicationServices(configuration)
             .AddAuthentication(configuration)
             .ConfigureCookies()
             ;
@@ -51,13 +51,14 @@ public static class ServicesRegisteration
     });
         return services;
     }
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services,IConfiguration configuration)
     {
         services.AddScoped<JwtAuthorizationMessageHandler>();
 
         services.AddHttpClient("ApiWithAuth", client =>
         {
-            client.BaseAddress = new Uri("https://localhost:7061/api/v1/");
+            client.BaseAddress = new Uri(configuration["EndPointSetting:BaseAddress"]);
+           // client.BaseAddress = new Uri("https://localhost:7061/api/v1/");
             client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -66,8 +67,8 @@ public static class ServicesRegisteration
 
         services.AddHttpClient<IAuthService, AuthService>(client =>
         {
-            //  client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"]);
-            client.BaseAddress = new Uri("https://localhost:7061/api/v1/");
+            client.BaseAddress = new Uri(configuration["EndPointSetting:BaseAddress"]);
+           // client.BaseAddress = new Uri("https://localhost:7061/api/v1/");
             client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/json"));
         });
