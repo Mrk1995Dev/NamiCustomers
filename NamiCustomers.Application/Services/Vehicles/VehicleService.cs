@@ -1,4 +1,4 @@
-﻿using NamiCustomers.Application.Services.Vehicles.Dtos;
+﻿using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Domain.Entities.Subscribers;
 
 

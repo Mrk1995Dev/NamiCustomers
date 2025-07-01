@@ -1,8 +1,6 @@
 ﻿@page "/add-customer"
-@using NamiCustomers.Web.Services.CustomerService.Dto
-@using NamiCustomers.Web.Services.CustomerService.Implementation
-@using NamiCustomers.Web.Services.CustomerService.Dto
-@using NamiCustomers.Web.Services.CustomerService.Implementation
+@using NamiCustomers.Abstractions.Dtos.Subscribers
+ 
 @rendermode InteractiveServer
 @inject CustomerService customerService
 @inject NavigationManager navigation
@@ -59,7 +57,7 @@
 }
 
 @code {
-    AddCustomerInfoDto customer = new();
+    AddSubscriberDto customer = new();
     List<CityDto> Cities = new();
     string responseMessage;
 

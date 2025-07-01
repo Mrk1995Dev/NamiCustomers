@@ -1,4 +1,4 @@
-﻿using NamiCustomers.Application.Services.Dealers.Dtos;
+﻿using NamiCustomers.Abstractions.Dtos.Dealers;
 using NamiCustomers.Domain.Entities.Dealers;
 
 namespace NamiCustomers.Application.Services.Dealers;

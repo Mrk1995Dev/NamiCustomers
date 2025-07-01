@@ -1,9 +1,8 @@
-﻿namespace NamiCustomers.Domain.Entities
+﻿namespace NamiCustomers.Domain.Entities;
+
+[Auditable]
+public class City
 {
-    [Auditable]
-    public class City
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
-    }
+    public int Id { get; set; }
+    public string Title { get; set; }
 }

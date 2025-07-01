@@ -5,7 +5,6 @@ namespace NamiCustomers.Application.IDatabaseContexts
 {
     public interface IAppDbContext
     {
-        public DbSet<SAMPLEEntity> SAMPLEs { get; set; }
         public DbSet<Subscriber> Subscribers { get; set; }
         public DbSet<VehicleModel> VehicleModels { get; set; }
         public DbSet<SubscriberCode> SubscriberCodes { get; set; }

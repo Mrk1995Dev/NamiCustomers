@@ -1,7 +1,6 @@
-﻿namespace NamiCustomers.Domain.Attributes
+﻿namespace NamiCustomers.Domain.Attributes;
+
+[AttributeUsage(AttributeTargets.Class)]
+public class AuditableAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Class)]
-    public class AuditableAttribute : Attribute
-    {
-    }
 }

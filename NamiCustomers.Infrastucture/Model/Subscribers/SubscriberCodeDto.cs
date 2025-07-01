@@ -1,8 +1,0 @@
-﻿namespace NamiCustomers.Infrastucture.Model.Subscribers;
-
-public class SubscriberCodeDto
-{
-    public string AuthCode { get; set; }
-    public string Mobile { get; set; }
-}
-
