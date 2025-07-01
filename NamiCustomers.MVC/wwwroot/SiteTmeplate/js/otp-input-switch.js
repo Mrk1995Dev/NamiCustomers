@@ -12,10 +12,15 @@ otpInput.addEventListener("keyup", function (e) {
         a = t.value.length;
     optcode = document.getElementById("otp1").value + document.getElementById("otp2").value + document.getElementById("otp3").value + document.getElementById("otp4").value + document.getElementById("otp5").value;
     document.getElementById("otp").value = optcode;
-
-    if (optcode.length == 5) {
-
-    }
+    //alert(optcode.length);
+    //debugger;
+    //if (optcode.length == 5) {
+    //    let submitBtn = document.getElementById("submitBtn").id;
+    //    let form = document.getElementById("frmLogInByOtp").id;
+    //    if (submitBtn && form) {
+    //        submitBtn.disabled = true;
+    //        form.submit();
+    //    };
     if (a >= n) {
         for (let r = t; (r = r.previousElementSibling) && r != null;) {
             if (r.tagName.toLowerCase() === "input") {
