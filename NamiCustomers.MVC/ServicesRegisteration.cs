@@ -68,12 +68,11 @@ public static class ServicesRegisteration
 		services.AddHttpClient<IAuthService, AuthService>(client =>
 		{
 			client.BaseAddress = new Uri(configuration["EndPointSetting:BaseAddress"]);
-			// client.BaseAddress = new Uri("https://localhost:7061/api/v1/");
+ 
 			client.DefaultRequestHeaders.Accept.Add(
 			new MediaTypeWithQualityHeaderValue("application/json"));
 		});
-
-<<<<<<< HEAD
+ 
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ISubscriberService, SubscriberService>(sp =>
         {
@@ -88,15 +87,7 @@ public static class ServicesRegisteration
             var subscriberService = sp.GetRequiredService<ISubscriberService>();
             return new VehicleService(httpClient, httpContextAccessor,subscriberService);
         });
-=======
-		services.AddScoped<ITokenService, TokenService>();
-		services.AddScoped<ISubscriberService, SubscriberService>(sp =>
-		{
-			var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
-			var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
-			return new SubscriberService(httpClient, httpContextAccessor);
-		});
->>>>>>> 5f13c91b9ced388bd79f6cb78669b58852404ff6
+ 
 
 		services.AddScoped<IAccountService, AccountService>(sp =>
 		{
