@@ -1,4 +1,6 @@
 ﻿using NamiCustomers.Abstractions.Dtos.Vehicles;
+using NamiCustomers.Application.Services.SevenSoftServices;
+using NamiCustomers.Application.Services.Subscribers;
 using NamiCustomers.Domain.Entities.Subscribers;
 
 
@@ -9,15 +11,22 @@ public interface IVehicleService
 {
     Task<ResultDto<VehicleModelDto>> RemoveAsync(int id);
     Task<ResultDto<VehicleModelDto>> GetAsync(int id);
-    Task<ResultDto<List<VehicleModelDto>>> GetAllAsync();
-    Task<ResultDto<VehicleModelDto>> RegisterByVinNumberAsync(VehicleRegisterDto vehicleRegisterDto);
+    Task<ResultDto<List<VehicleModelDto>>> GetAllAsync(int subscriberId);
+    Task<ResultDto<VehicleModelDto>> RegisterAsync(VehicleModelDto vehicleRegisterDto);
     Task<ResultDto<VehicleModelDto>> EditAsync(VehicleModelDto model);
 }
-public class VehicleService(IAppDbContext dbContext, IMapper mapper) : IVehicleService
+public class VehicleService(IAppDbContext dbContext, IMapper mapper,ISevenSoftService sevenSoftService,ISubscriberService subscriberService) : IVehicleService
 {
-    public async Task<ResultDto<VehicleModelDto>> RegisterByVinNumberAsync(VehicleRegisterDto vehicleRegisterDto)
+    public async Task<ResultDto<VehicleModelDto>> RegisterAsync(VehicleModelDto vehicleModelDto)
     {
-        var newEntity = mapper.Map<VehicleModel>(vehicleRegisterDto);
+        var subscriber =  subscriberService.GetAsync(vehicleModelDto.SubscriberId).Result.Data;
+        var response = await sevenSoftService.GetRelationCustomerInfoByVinNumber(vehicleModelDto.VinNumber, subscriber.NationalCode, subscriber.Mobile);
+        if (response!="OK")
+        {
+            return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errSave, false, null);
+        }
+
+        var newEntity = mapper.Map<VehicleModel>(vehicleModelDto);
         await dbContext.VehicleModels.AddAsync(newEntity);
         var result = await dbContext.SaveChangesAsync();
         if (result < 1)
@@ -41,9 +50,9 @@ public class VehicleService(IAppDbContext dbContext, IMapper mapper) : IVehicleS
     }
 
 
-    public async Task<ResultDto<List<VehicleModelDto>>> GetAllAsync()
+    public async Task<ResultDto<List<VehicleModelDto>>> GetAllAsync(int subscriberId)
     {
-        var data = await dbContext.VehicleModels.ToListAsync();
+        var data = await dbContext.VehicleModels.Where(c=>c.SubscriberId==subscriberId).ToListAsync();
         var models = mapper.Map<List<VehicleModelDto>>(data);
         return new ResultDto<List<VehicleModelDto>>(Infrastucture.Properties.Resources.msgFound, true, models);
     }

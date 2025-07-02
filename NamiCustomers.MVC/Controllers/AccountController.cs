@@ -152,7 +152,7 @@ namespace NamiCustomers.MVC.Controllers
             }, protocol: Request.Scheme);
 
             var result = await authService.ForgotPassword(new ForgotPasswordRequestDto {Email= forgot.Email,CallBAckUrl= callbakUrl });
-            if (!result.Issuccess)
+            if (!result.IsSuccess)
             {
                 return ForgotPassword();
             }
@@ -174,7 +174,7 @@ namespace NamiCustomers.MVC.Controllers
         public async Task<IActionResult> ResetPassword(ResetPasswordDto reset)
         {
             var result=await authService.ResetPassword(reset);
-            if (result.Issuccess)
+            if (result.IsSuccess)
             {
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
             }

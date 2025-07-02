@@ -11,7 +11,7 @@ namespace NamiCustomers.Application.Mappings
         public GeneralProfile()
         {
             CreateMap<VehicleModel, VehicleModelDto>().ReverseMap();
-            CreateMap<VehicleModel, VehicleRegisterDto>().ReverseMap();
+ 
             CreateMap<Dealer, DealerDto>().ReverseMap();
             CreateMap<Appointment, AppointmentDto>().ReverseMap();
         }

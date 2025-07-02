@@ -125,6 +125,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to اطلاعات ورودی معتبر نمی باشد.
+        /// </summary>
+        public static string errInputInValid {
+            get {
+                return ResourceManager.GetString("errInputInValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to کد ملی معتبر نمی باشد.
         /// </summary>
         public static string errInvalidNationalCode {

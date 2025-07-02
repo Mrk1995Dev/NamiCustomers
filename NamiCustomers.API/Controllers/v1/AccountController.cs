@@ -109,8 +109,8 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     [HttpGet("[action]")]
     public async Task<IActionResult> GetOtp([FromQuery] string mobile,string nationalCode)
     {
-        var result = await subscriberService.GetOtp(mobile, nationalCode);
-        if (!result.Issuccess)
+        var result = await subscriberService.GetOtpAsync(mobile, nationalCode);
+        if (!result.IsSuccess)
         {
             return BadRequest(result);
         }
@@ -122,8 +122,8 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     {
         if (!string.IsNullOrEmpty(otpCode))
         {
-            var otp = await subscriberService.SendOtp(otpCode);
-            if (otp.Issuccess)
+            var otp = await subscriberService.SendOtpAsync(otpCode);
+            if (otp.IsSuccess)
             {
                 var user = await userManager.Users.WhereIf(true, c => c.PhoneNumber == otp.Data.Mobile).SingleOrDefaultAsync();
                 if (user != null)

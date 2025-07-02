@@ -10,28 +10,28 @@ namespace NamiCustomers.API.Controllers.v1
     [Authorize]
     public class VehicleController(IVehicleService vehicleService) : ControllerBase
     {
-        [HttpGet("{id}")]
+        [HttpGet("[action]")]
         public async Task<ResultDto<VehicleModelDto>> Get(int id)
         {
             return await vehicleService.GetAsync(id);
         }
-        [HttpGet("GetAll")]
-        public async Task<ResultDto<List<VehicleModelDto>>> GetAll()
+        [HttpGet("[action]")]
+        public async Task<ResultDto<List<VehicleModelDto>>> GetAll(int subscriberId)
         {
-            return await vehicleService.GetAllAsync();
+            return await vehicleService.GetAllAsync(subscriberId);
         }
-        [HttpPost]
-        public async Task<ResultDto<VehicleModelDto>> Post(VehicleRegisterDto vehicleRegisterDto)
+        [HttpPost("[action]")]
+        public async Task<ResultDto<VehicleModelDto>> Register(VehicleModelDto vehicleModelDto)
         {
-            return await vehicleService.RegisterByVinNumberAsync(vehicleRegisterDto);
+            return await vehicleService.RegisterAsync(vehicleModelDto);
         }
-        [HttpDelete]
-        public async Task<ResultDto<VehicleModelDto>> Delete(int id)
+        [HttpDelete("[action]")]
+        public async Task<ResultDto<VehicleModelDto>> Remove(int id)
         {
             return await vehicleService.RemoveAsync(id);
         }
-        [HttpPut]
-        public async Task<ResultDto<VehicleModelDto>> Put(VehicleModelDto vehicleModelDto)
+        [HttpPut("[action]")]
+        public async Task<ResultDto<VehicleModelDto>> Edit(VehicleModelDto vehicleModelDto)
         {
             return await vehicleService.EditAsync(vehicleModelDto);
         }

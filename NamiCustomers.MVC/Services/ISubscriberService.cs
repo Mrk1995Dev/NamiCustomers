@@ -1,126 +1,108 @@
-﻿using NamiCustomers.Abstractions.Dtos;
-
+﻿
 using NamiCustomers.Infrastucture.Utilities;
-using System.Reflection;
-using System.Security.Claims;
 
-namespace NamiCustomers.MVC.Services
+namespace NamiCustomers.MVC.Services;
+
+public interface ISubscriberService
 {
-    public interface ISubscriberService
+    public SubscriberDto CurrentSubscriber { get; }
+    Task<ResultDto> RegisterAsync(SubscriberDto customer);
+
+    Task<ResultDto> RemoveAsync(int id);
+    Task<List<SubscriberDto>> GetAsync();
+    Task<List<CityDto>> GetCitiesAsync();
+    Task<ResultDto<SubscriberDto>> GetAsync(int id);
+    Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync();
+    Task<ResultDto> EditAsync(SubscriberDto updateCustomer);
+}
+public class SubscriberService : ISubscriberService
+{
+    private readonly HttpClient _httpClient;
+    private readonly IHttpContextAccessor httpContextAccessor;
+
+    public SubscriberDto CurrentSubscriber => GetByNationalCodeAsync().Result.Data;
+
+    public SubscriberService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
     {
-        Task<ResultDto> CreateAsync(AddSubscriberDto customer);
-        Task<ResultDto> DeleteAsync(int id);
-        Task<List<SubscriberListDto>> GetAllAsync();
-        Task<List<CityDto>> GetAllCitiesAsync();
-        Task<ResultDto<SubscriberDetailsDto>> GetByIdAsync(int id);
-        Task<ResultDto<SubscriberDetailsDto>> GetByNationalCodeAsync();
-        Task<ResultDto> UpdateAsync(UpdateSubscriberDto updateCustomer);
+        _httpClient = httpClient;
+        this.httpContextAccessor = httpContextAccessor;
+        //GetToken();
     }
 
-    public record MyToken(string token);
-
-
-    public class SubscriberService: ISubscriberService
+    public async Task<List<SubscriberDto>> GetAsync()
     {
-        private readonly HttpClient _httpClient;
-        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public SubscriberService(HttpClient httpClient,IHttpContextAccessor httpContextAccessor)
+        var result = await _httpClient.GetFromJsonAsync<List<SubscriberDto>>($"subscriber/subscribers");
+        return result;
+    }
+
+    private void GetToken()
+    {
+        var mobile = httpContextAccessor.GetClaimValue(MyClaims.Mobile);
+        var myToken =   _httpClient.GetFromJsonAsync<MyToken>($"Account/GetToken?mobile={mobile}").Result;
+
+        _httpClient.DefaultRequestHeaders.Add("accept", "*/*");
+        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {myToken.token}");
+    }
+
+    public async Task<List<CityDto>> GetCitiesAsync()
+    {
+        var result = await _httpClient.GetFromJsonAsync<List<CityDto>>($"City/list");
+        return result;
+    }
+
+    public async Task<ResultDto<SubscriberDto>> GetAsync(int id)
+    {
+        return await _httpClient.GetFromJsonAsync<ResultDto<SubscriberDto>>($"subscriber/info?id={id}");
+    }
+    public async Task<ResultDto> RegisterAsync(SubscriberDto customer)
+    {
+        var respone = await _httpClient.PostAsJsonAsync($"subscriber/register", customer);
+        if (respone.IsSuccessStatusCode)
         {
-            _httpClient = httpClient;
-            this.httpContextAccessor = httpContextAccessor;
-        }
-
-        public async Task<List<SubscriberListDto>> GetAllAsync()
-        {
-            await GetToken();
-            var result = await _httpClient.GetFromJsonAsync<List<SubscriberListDto>>($"subscriber/subscribers");
-            return result;
-        }
-
-        private async Task GetToken()
-        {
-            var mobile = httpContextAccessor.GetClaimValue(MyClaims.Mobile);
-            var myToken = await _httpClient.GetFromJsonAsync<MyToken>($"Account/GetToken?mobile={mobile}");
-
-            _httpClient.DefaultRequestHeaders.Add("accept", "*/*");
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {myToken.token}");
-        }
-
-        public async Task<List<CityDto>> GetAllCitiesAsync()
-        {
-            await GetToken();
-            var result = await _httpClient.GetFromJsonAsync<List<CityDto>>($"City/list");
-            return result;
-        }
-
-        public async Task<ResultDto<SubscriberDetailsDto>> GetByIdAsync(int id)
-        {
-            await GetToken();
-            return await _httpClient.GetFromJsonAsync<ResultDto<SubscriberDetailsDto>>($"subscriber/info?id={id}");
-        }
-
-        public async Task<ResultDto> CreateAsync(AddSubscriberDto customer)
-        {
-            var respone = await _httpClient.PostAsJsonAsync($"subscriber/register", customer);
-            if (respone.IsSuccessStatusCode)
-            {
-                return new ResultDto(
-                    "مشتری جدید با موفقیت ثبت شد.",
-                    true);
-            }
-
             return new ResultDto(
-                "خطا در ثبت مشتری جدید",
-                false);
+                 Infrastucture.Properties.Resources.msgSave,
+                true);
         }
 
-        public async Task<ResultDto> UpdateAsync(UpdateSubscriberDto updateCustomer)
+        return new ResultDto(
+           Infrastucture.Properties.Resources.errSave,
+            false);
+    }
+
+    public async Task<ResultDto> EditAsync(SubscriberDto updateCustomer)
+    {
+        var response = await _httpClient.PutAsJsonAsync($"susbcriber/edit", updateCustomer);
+        if (response.IsSuccessStatusCode)
         {
-            var response = await _httpClient.PutAsJsonAsync($"susbcriber/edit", updateCustomer);
-            if (response.IsSuccessStatusCode)
-            {
-                return new ResultDto(
-                    "مشتری با موفقیت ویرایش شد.",
-                    true);
-            }
-
-            return new ResultDto(
-                "خطا در ویرایش مشتری ",
-                false);
+            return new ResultDto(Infrastucture.Properties.Resources.msgEdited, true);
         }
 
-        public async Task<ResultDto> DeleteAsync(int id)
+        return new ResultDto(Infrastucture.Properties.Resources.errEdited, false);
+    }
+
+    public async Task<ResultDto> RemoveAsync(int id)
+    {
+        var response = await _httpClient.DeleteAsync($"subscriber/remove?id={id}");
+        if (response.IsSuccessStatusCode)
         {
-            var response = await _httpClient.DeleteAsync($"subscriber/remove?id={id}");
-            if (response.IsSuccessStatusCode)
-            {
-                return new ResultDto(
-                    "مشتری با موفقیت حذف شد.",
-                    true);
-            }
-
-            return new ResultDto(
-                "خطا در حذف مشتری ",
-                false);
+            return new ResultDto(Infrastucture.Properties.Resources.msgDeleted, true);
         }
 
-        public async  Task<ResultDto<SubscriberDetailsDto>> GetByNationalCodeAsync()
+        return new ResultDto(Infrastucture.Properties.Resources.errDelete, false);
+    }
+
+    public async Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync()
+    {
+
+        var nationalCode = httpContextAccessor.GetClaimValue(MyClaims.NationalCode);
+        
+        var result = await _httpClient.GetFromJsonAsync<ResultDto<SubscriberDto>>($"subscriber/infobynationalcode?nationalcode={nationalCode}");
+        if (result.Data != null)
         {
-            
-            var nationalCode = httpContextAccessor.GetClaimValue(MyClaims.NationalCode);
-            await GetToken();
-            var result= await _httpClient.GetFromJsonAsync<ResultDto<SubscriberDetailsDto>>($"subscriber/infobynationalcode?nationalcode={nationalCode}");
-            if (result.Data!=null)
-            {
-                return new ResultDto<SubscriberDetailsDto>(
-                    "مشتری با موفقیت حذف شد.",
-                    true,
-                    result.Data);
-            }
-            return new ResultDto<SubscriberDetailsDto>(
-                "خطا در حذف مشتری ",
-                false,null);
+            return new ResultDto<SubscriberDto>(Infrastucture.Properties.Resources.msgFound, true,
+            result.Data);
         }
+        return new ResultDto<SubscriberDto>(Infrastucture.Properties.Resources.errNotFound, false, null);
     }
 }

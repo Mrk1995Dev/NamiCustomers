@@ -199,4 +199,7 @@
   <data name="msgSave" xml:space="preserve">
     <value>ذخیره شد</value>
   </data>
+  <data name="errInputInValid" xml:space="preserve">
+    <value>اطلاعات ورودی معتبر نمی باشد</value>
+  </data>
 </root>

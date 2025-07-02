@@ -51,7 +51,7 @@ else
     [Parameter]
     public int CustomerId { get; set; }
 
-    private SubscriberDetailsDto customer;
+    private SubscriberDto customer;
     private List<CityDto> Cities = new();
 
     protected override async Task OnInitializedAsync()

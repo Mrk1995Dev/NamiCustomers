@@ -40,12 +40,12 @@ namespace NamiCustomers.Web.Services.CustomerService.Implementation
             return result;
         }
 
-        public async Task<ResultDto<SubscriberDetailsDto>> GetByIdAsync(int id)
+        public async Task<ResultDto<SubscriberDto>> GetByIdAsync(int id)
         {
-            return await _httpClient.GetFromJsonAsync<ResultDto<SubscriberDetailsDto>>($"/api/customer/info?id={id}");
+            return await _httpClient.GetFromJsonAsync<ResultDto<SubscriberDto>>($"/api/customer/info?id={id}");
         }
 
-        public async Task<ResultDto> CreateAsync(AddSubscriberDto customer)
+        public async Task<ResultDto> CreateAsync(RegisterSubscriberDto customer)
         {
             //https://localhost:7061/api/v1/Customer/addCustomer
             var respone = await _httpClient.PostAsJsonAsync($"/api/customer/addCustomer", customer);

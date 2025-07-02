@@ -1,0 +1,106 @@
+﻿using NamiCustomers.Abstractions.Dtos.Vehicles;
+using NamiCustomers.Infrastucture.Utilities;
+using System.Text.Json;
+
+namespace NamiCustomers.MVC.Services;
+
+public interface IVehicleService
+{
+    Task<ResultDto<VehicleModelDto>> RegisterAsync(VehicleModelDto  vehicleModelDto);
+    Task<ResultDto> RemoveAsync(int id);
+    Task<ResultDto<VehicleModelDto>> GetAsync(int id);
+    Task<ResultDto<List<VehicleModelDto>>> GetAllAsync(int subscriberId);
+    Task<ResultDto> EditAsync(VehicleModelDto updateCustomer);
+}
+
+
+public class VehicleService : IVehicleService
+{
+    private readonly HttpClient _httpClient;
+    private readonly IHttpContextAccessor httpContextAccessor;
+    private readonly ISubscriberService subscriberService;
+
+    public VehicleService(HttpClient httpClient,IHttpContextAccessor httpContextAccessor,ISubscriberService subscriberService)
+    {
+        _httpClient = httpClient;
+        this.httpContextAccessor = httpContextAccessor;
+        this.subscriberService = subscriberService;
+    }
+
+    private async Task GetToken()
+    {
+        var mobile = httpContextAccessor.GetClaimValue(MyClaims.Mobile);
+        var myToken = await _httpClient.GetFromJsonAsync<MyToken>($"Account/GetToken?mobile={mobile}");
+
+        _httpClient.DefaultRequestHeaders.Add("accept", "*/*");
+        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {myToken.token}");
+    }
+
+    public async Task<ResultDto> EditAsync(VehicleModelDto vehicleModelDto)
+    {
+        var response = await _httpClient.PutAsJsonAsync($"Vehicle/edit", vehicleModelDto);
+        if (response.IsSuccessStatusCode)
+        {
+            return new ResultDto( Infrastucture.Properties.Resources.msgEdited,true);
+        }
+
+        return new ResultDto(Infrastucture.Properties.Resources.errEdited, false);
+    }
+
+    public async Task<ResultDto> RemoveAsync(int id)
+    {
+        var response = await _httpClient.DeleteAsync($"Vehicle/remove?id={id}");
+        if (response.IsSuccessStatusCode)
+        {
+            return new ResultDto(Infrastucture.Properties.Resources.msgDeleted, true);
+        }
+
+        return new ResultDto(Infrastucture.Properties.Resources.errDelete, false);
+    }
+
+    public async  Task<ResultDto<VehicleModelDto>> GetAsync(int id)
+    {
+        await GetToken();
+        var response = await _httpClient.GetFromJsonAsync<ResultDto<VehicleModelDto>>($"Vehicle/Get?id={id}");
+        if (response.Data != null)
+        {
+            return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.msgFound, true,
+            response.Data);
+        }
+        return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errNotFound, false,null);
+    }
+
+    public async Task<ResultDto<List<VehicleModelDto>>> GetAllAsync(int subscriberId)
+    {
+        var response = await _httpClient.GetFromJsonAsync<ResultDto<List<VehicleModelDto>>>($"Vehicle/GetAll?subscriberId={subscriberId}");
+        if (response.IsSuccess)
+        {
+            return response;
+        }
+        return new ResultDto<List<VehicleModelDto>>(Infrastucture.Properties.Resources.errNotFound, false, null);
+    }
+
+    public async Task<ResultDto<VehicleModelDto>> RegisterAsync(VehicleModelDto vehicleRegisterDto)
+    {
+        var nationalCode = httpContextAccessor.GetClaimValue(MyClaims.NationalCode);
+        await GetToken();
+        
+        vehicleRegisterDto.SubscriberId= subscriberService.CurrentSubscriber.Id;
+
+        var response = await _httpClient.PostAsJsonAsync($"Vehicle/Register", vehicleRegisterDto);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = JsonSerializer.Deserialize<VehicleModelDto>(response.Content.ReadAsStringAsync().Result);
+            return new ResultDto<VehicleModelDto>(
+               Infrastucture.Properties.Resources.msgSave,
+                true,
+                result);
+        }
+
+        return new ResultDto<VehicleModelDto>(
+            Infrastucture.Properties.Resources.errSave,
+            false,
+            null);
+    }
+}

@@ -13,23 +13,23 @@ namespace NamiCustomers.API.Controllers.v1
         ISubscriberService customerManagmentService) : ControllerBase
     {
         [HttpGet("info")]
-        public async Task<ResultDto<SubscriberDetailsDto>> CustomerInfo([FromQuery] int id)
-            => await customerManagmentService.GetCustomerInfoDetailAsync(id);
+        public async Task<ResultDto<SubscriberDto>> CustomerInfo([FromQuery] int id)
+            => await customerManagmentService.GetAsync(id);
 
         [HttpGet("customerList")]
         public async Task<IActionResult> GetListCustomerInfo()
         {
-            var data = await customerManagmentService.GetCustomerListAsync();
-            if (data.Issuccess)
+            var data = await customerManagmentService.GetAllAsync();
+            if (data.IsSuccess)
                 return Ok(data.Data);
 
             return NotFound(data);
         }
 
         [HttpPost("addCustomer")]
-        public async Task<IActionResult> AddCustomerInfo([FromBody] AddSubscriberDto customerInfo)
+        public async Task<IActionResult> AddCustomerInfo([FromBody] SubscriberDto customerInfo)
         {
-            var result = await customerManagmentService.AddCustomerInfoAsync(customerInfo);
+            var result = await customerManagmentService.RegisterAsync(customerInfo);
 
             if (result.IsSuccess) return Created();
 
@@ -37,10 +37,10 @@ namespace NamiCustomers.API.Controllers.v1
         }
 
         [HttpPut("edit")]
-        public async Task<IActionResult> UpdateCustomer([FromBody] UpdateSubscriberDto updateCustomer)
+        public async Task<IActionResult> UpdateCustomer([FromBody] SubscriberDto updateCustomer)
         {
             if (!ModelState.IsValid) return BadRequest("اطلاعات مربوطه ناقص می باشد.");
-            var data = await customerManagmentService.UpdateCustomerInfo(updateCustomer);
+            var data = await customerManagmentService.EditAsync(updateCustomer);
             if (data.IsSuccess) return Ok(data);
 
             return BadRequest(data);
@@ -49,7 +49,7 @@ namespace NamiCustomers.API.Controllers.v1
         [HttpDelete("remove")]
         public async Task<IActionResult> DeleteCustomer([FromQuery] int id)
         {
-            var data = await customerManagmentService.DeleteCustomerInfoAsync(id);
+            var data = await customerManagmentService.DeleteAsync(id);
             if (data.IsSuccess) return Ok();
 
             return NotFound(data);
@@ -58,8 +58,8 @@ namespace NamiCustomers.API.Controllers.v1
         [HttpGet("report")]
         public async Task<IActionResult> ExportCustomerInfo()
         {
-            var data = await customerManagmentService.ExportCustomerInfoAsync();
-            if (!data.Issuccess) return NotFound();
+            var data = await customerManagmentService.ExportAsync();
+            if (!data.IsSuccess) return NotFound();
 
             return File(data.Data, "text/palin", "CustomerInfoReport.txt");
         }

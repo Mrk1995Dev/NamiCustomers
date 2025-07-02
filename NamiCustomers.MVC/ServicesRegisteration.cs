@@ -80,6 +80,13 @@ public static class ServicesRegisteration
             var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
             return new SubscriberService(httpClient,httpContextAccessor);
         });
+        services.AddScoped<IVehicleService, VehicleService>(sp =>
+        {
+            var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
+            var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+            var subscriberService = sp.GetRequiredService<ISubscriberService>();
+            return new VehicleService(httpClient, httpContextAccessor,subscriberService);
+        });
 
         services.AddScoped<IAccountService, AccountService>(sp =>
         {

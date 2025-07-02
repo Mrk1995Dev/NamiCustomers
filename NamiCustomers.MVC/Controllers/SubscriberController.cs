@@ -13,7 +13,7 @@ public class SubscriberController(
     
     public async Task<IActionResult> Details(int id)
     {
-        var data = await subscriberService.GetByIdAsync(id);
+        var data = await subscriberService.GetAsync(id);
         return View(data.Data);  
     }
     public async Task<IActionResult> Profile()
@@ -21,17 +21,16 @@ public class SubscriberController(
         var data = await subscriberService.GetByNationalCodeAsync();
         return View(data.Data);
     }
-
-
+ 
     public async Task<IActionResult> List()
     {
-        var data = await subscriberService.GetAllAsync();
+        var data = await subscriberService.GetAsync();
         return View(data);
     }
 
-    public async Task<IActionResult> Register([FromBody] AddSubscriberDto customerInfo)
+    public async Task<IActionResult> Register([FromBody] SubscriberDto subscriberDto)
     {
-        var result = await subscriberService.CreateAsync(customerInfo);
+        var result = await subscriberService.RegisterAsync(subscriberDto);
 
         if (result.IsSuccess) return Created();
 
@@ -40,14 +39,14 @@ public class SubscriberController(
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
-        var data = await subscriberService.GetByIdAsync(id);
+        var data = await subscriberService.GetAsync(id);
         return View(data.Data);
     }
     [HttpPost]
-    public async Task<IActionResult> Edit([FromBody] UpdateSubscriberDto updateCustomer)
+    public async Task<IActionResult> Edit([FromBody] SubscriberDto subscriberDto)
     {
         if (!ModelState.IsValid) return BadRequest("اطلاعات مربوطه ناقص می باشد.");
-        var data = await subscriberService.UpdateAsync(updateCustomer);
+        var data = await subscriberService.EditAsync(subscriberDto);
         if (data.IsSuccess) return Ok(data);
 
         return BadRequest(data);
@@ -55,7 +54,7 @@ public class SubscriberController(
 
     public async Task<IActionResult> Delete([FromQuery] int id)
     {
-        var data = await subscriberService.DeleteAsync(id);
+        var data = await subscriberService.RemoveAsync(id);
         if (data.IsSuccess) return Ok();
 
         return NotFound(data);

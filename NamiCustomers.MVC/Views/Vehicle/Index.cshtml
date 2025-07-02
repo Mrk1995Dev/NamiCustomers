@@ -1,0 +1,89 @@
+﻿@model IEnumerable<NamiCustomers.Abstractions.Dtos.Vehicles.VehicleModelDto>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>MyVehicles</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubscriberId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EnglishName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VinNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SalePlanIdSevenSoft)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SaleBasketIdSevenSoft)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleModelIdSevensoft)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BrandIdSevenSoft)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubscriberId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EnglishName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VinNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SalePlanIdSevenSoft)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SaleBasketIdSevenSoft)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleModelIdSevensoft)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BrandIdSevenSoft)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {  id=item.Id}) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -12,6 +12,6 @@ namespace NamiCustomers.API.Controllers.v1
     {
         [HttpGet("list")]
         public async Task<List<CityDto>> GetAllCities()
-            => await customerManagmentService.GetAllCitiesAsync();
+            => await customerManagmentService.GetCitiesAsync();
     }
 }
