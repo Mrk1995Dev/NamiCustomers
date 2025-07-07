@@ -4,7 +4,109 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>MyVehicles</h1>
+
+<div class="page-content-wrapper py-3">
+
+    <!-- Pagination-->
+    <div class="shop-pagination pb-3">
+        <div class="container">
+            <div class="card">
+                <div class="card-body p-2">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <small class="ms-1">لیست خودروها</small>
+                        <form action="#">
+                     @*        <select class="pe-4 form-select form-select-sm" id="defaultSelectSm" name="defaultSelectSm" aria-label="Default select example">
+                                <option value="1" selected="">Sort by Newest</option>
+                                <option value="2">Sort by Older</option>
+                                <option value="3">Sort by Ratings</option>
+                                <option value="4">Sort by Sales</option>
+                            </select> *@
+                            <a asp-action="Create" class="btn m-1 btn-primary btn-sm">  <i class="bi bi-plus"></i> افزودن خودرو</a>
+
+                     
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Products-->
+    <div class="top-products-area product-list-wrap">
+        <div class="container">
+            <div class="row g-3">
+
+                <!-- Single Top Product Card Start -->
+                @foreach (var item in Model) {
+                <div class="col-12">
+                    <div class="card single-product-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="card-side-img">
+                                    <!-- Product Thumbnail -->
+                                    <a class="product-thumbnail d-block" href="shop-details.html">
+                                        <img src="~/sitetmeplate/img/bg-img/p1.jpg" alt="">
+                                        <!-- Badge -->
+                                            <span class="badge bg-primary">مدل سال: @Html.DisplayFor(modelItem => item.ProductYear)</span>
+                                    </a>
+                                </div>
+
+                                <div class="card-content px-4 py-2">
+                                    <!-- Product Title -->
+                                    <a class="product-title d-block text-truncate mt-0" href="shop-details.html">شماره شاسی: @Html.DisplayFor(modelItem => item.VinNumber)</a>
+                                        <a class="product-title d-block text-truncate mt-0" href="shop-details.html">نام خودور: @Html.DisplayFor(modelItem => item.Description)</a>
+                                    <!-- Product Price -->
+                                        <p class="product-title d-block text-truncate mt-0">رنگ خودرو: @Html.DisplayFor(modelItem => item.BodyColor)</p>
+                                    <!-- Add To Cart Button -->
+                                        <a class="btn btn-primary btn-sm" href="Vehicle/Details/@item.Id">مشاهده جزئیات</a>  
+                                </div>
+                                  @*   @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }) *@
+                                  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+                <!-- Single Top Product Card END-->
+          
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination-->
+    <div class="shop-pagination pt-3">
+        <div class="container">
+            <div class="card">
+                <div class="card-body py-3">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination pagination-two justify-content-center">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                            <li class="page-item active">
+                                <a class="page-link" href="#">1</a>
+                            </li>
+               
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@* <h1>MyVehicles</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -87,3 +189,4 @@
 }
     </tbody>
 </table>
+ *@
