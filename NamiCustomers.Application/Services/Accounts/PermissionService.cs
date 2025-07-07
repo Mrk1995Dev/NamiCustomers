@@ -1,20 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using NamiCustomers.Domain.Entities.Account;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NamiCustomers.Application.Services.Accounts;
 public class PermissionService : IPermissionService
 {
-    private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
     public PermissionService(
-        RoleManager<IdentityRole> roleManager,
-        UserManager<IdentityUser> userManager)
+        RoleManager<ApplicationRole> roleManager,
+        UserManager<ApplicationUser> userManager)
     {
         _roleManager = roleManager;
         _userManager = userManager;

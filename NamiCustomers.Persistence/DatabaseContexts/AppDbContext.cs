@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace NamiCustomers.Persistence.DatabaseContexts;
 
-public class AppDbContext : IdentityDbContext, IAppDbContext
+public class AppDbContext : IdentityDbContext<Domain.Entities.Account.ApplicationUser,Domain.Entities.Account.ApplicationRole,string>, IAppDbContext
 {
     public DbSet<Subscriber> Subscribers { get; set; }
     public DbSet<SubscriberCode> SubscriberCodes { get; set; }

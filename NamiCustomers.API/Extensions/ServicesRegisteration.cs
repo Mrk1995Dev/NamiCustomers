@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NamiCustomers.Domain.Entities.Account;
 using Serilog;
 using System.Data;
 using System.Reflection;
@@ -127,10 +128,10 @@ public static class ServicesRegisteration
     private static IServiceCollection ConfigureDatabaseConnection(this IServiceCollection services, IConfiguration configuration)
     {
         // Configure Identity
-        services.AddIdentity<Domain.Entities.Account.ApplicationUser, IdentityRole>()
+        services.AddIdentity<Domain.Entities.Account.ApplicationUser, ApplicationRole>()
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders()
-            .AddRoles<IdentityRole>()
+            .AddRoles<ApplicationRole>()
         ;
 
 

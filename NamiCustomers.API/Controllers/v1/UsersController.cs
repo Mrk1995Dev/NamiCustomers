@@ -9,7 +9,7 @@ namespace NamiCustomers.API.Controllers.v1
 {
     [Authorize(Roles = "Admin")]
     [Area("Admin")]
-    public class UsersController : Controller
+    public class UsersController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<ApplicationRole> roleManager;
@@ -67,7 +67,7 @@ namespace NamiCustomers.API.Controllers.v1
             {
                 message += item.Description + Environment.NewLine;
             }
-            TempData["Message"] = message;
+            //TempData["Message"] = message;
             return BadRequest(register);
         }
 
@@ -94,7 +94,7 @@ namespace NamiCustomers.API.Controllers.v1
             {
                 message += item.Description + Environment.NewLine;
             }
-            TempData["Message"] = message;
+            //TempData["Message"] = message;
             return BadRequest(result);
         }
 
@@ -116,7 +116,7 @@ namespace NamiCustomers.API.Controllers.v1
             {
                 message += item.Description + Environment.NewLine;
             }
-            TempData["Message"] = message;
+            //TempData["Message"] = message;
 
             return BadRequest(result);
         }

@@ -9,7 +9,7 @@ namespace NamiCustomers.API.Controllers.v1;
 
 [Authorize(Roles = "Admin")]
 [Area("Admin")]
-public class RolesController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager) : Controller
+public class RolesController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager) : ControllerBase
 {
     [HttpGet("[action]")]
     public async Task<ResultDto<List<RoleListDto>>>   GetAllAsync()
@@ -19,7 +19,7 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
              new RoleListDto
              {
                  Id = p.Id,
-                 Description = p.Description,
+                 //Description = p.Description,//diblo
                  Name = p.Name
              })
             .ToListAsync();
@@ -31,7 +31,7 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
     {
         ApplicationRole role = new ApplicationRole()
         {
-            Description = newRole.Description,
+            //Description = newRole.Description,//diblo
             Name = newRole.Name,
         };
         var result = roleManager.CreateAsync(role).Result;
@@ -43,7 +43,7 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
             return new ResultDto(Infrastucture.Properties.Resources.msgFound, true);
         }
         ;
-        ViewBag.Errors = result.Errors.ToList();
+        //ViewBag.Errors = result.Errors.ToList();
         return new ResultDto(Infrastucture.Properties.Resources.errSave, false);
 
     }
