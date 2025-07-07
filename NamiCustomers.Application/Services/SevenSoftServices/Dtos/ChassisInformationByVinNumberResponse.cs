@@ -86,7 +86,7 @@ public class ChassisInformationByVinNumberResponse
     public object Serial { get; set; }
     public object ProviderId { get; set; }
     public object BrandId { get; set; }
-    public DateTime PDICahngeDate { get; set; }
+    public DateTime? PDICahngeDate { get; set; }
     public object SecondMotorNumber { get; set; }
     public bool LicenseOfSaleFromWarehouse { get; set; }
     public DateTime CreatedOn { get; set; }

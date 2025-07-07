@@ -2,18 +2,20 @@
 using Microsoft.AspNetCore.Mvc;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.MVC.Services;
+using System.Numerics;
 
 namespace NamiCustomers.MVC.Controllers;
 
 [Authorize]
 public class VehicleController(
-    ISubscriberService  subscriberService,IVehicleService vehicleService) : Controller
+    ISubscriberService subscriberService, IVehicleService vehicleService) : Controller
 {
+
 
     public async Task<IActionResult> Details(int id)
     {
         var data = await vehicleService.GetAsync(id);
-        return View(data.Data);  
+        return View(data.Data);
     }
 
     public async Task<IActionResult> Index()
@@ -22,17 +24,43 @@ public class VehicleController(
         return View(data.Data);
     }
     [HttpGet]
-    public async Task<IActionResult> Create()
+    public async Task<IActionResult> Create(VehicleModelDto? vehicleModelDto)
     {
-        return View(new VehicleModelDto { SubscriberId=subscriberService.CurrentSubscriber.Id });
+        if (vehicleModelDto is null)
+        {
+            vehicleModelDto = new VehicleModelDto { SubscriberId = subscriberService.CurrentSubscriber.Id };
+        }
+      
+        return View(vehicleModelDto);
     }
+
+
+    [HttpGet]
+    public async Task<IActionResult> ChassisInformationByVinNumber()
+    {
+        return View(new VehicleModelDto { SubscriberId = subscriberService.CurrentSubscriber.Id,VinNumber= "LGBH9VEAXPY770511" });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetChassisInformationByVinNumber(string vinNumber)
+    {
+        var data = await vehicleService.GetChassisInformationByVinNumber(vinNumber);
+        if (data != null)
+        {
+            return    RedirectToAction("Create",data.Data);
+        }
+        return View(new VehicleModelDto { SubscriberId = subscriberService.CurrentSubscriber.Id });
+    }
+
+
+
     [HttpPost]
-    public async Task<IActionResult> Create(VehicleModelDto  vehicleModelDto)
+    public async Task<IActionResult> CreateVehicle(VehicleModelDto vehicleModelDto)
     {
         if (!ModelState.IsValid) return BadRequest(Infrastucture.Properties.Resources.errInputInValid);
         var result = await vehicleService.RegisterAsync(vehicleModelDto);
 
-        if (result.IsSuccess) return  RedirectToAction("Index");
+        if (result.IsSuccess) return RedirectToAction("Index");
 
         return NotFound(result);
     }
@@ -51,7 +79,7 @@ public class VehicleController(
 
         return BadRequest(data);
     }
- 
+
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         var data = await vehicleService.RemoveAsync(id);

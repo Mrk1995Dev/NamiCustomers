@@ -117,7 +117,9 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
             Name = data.Name,
             Address = data.Address,
             //CityName = data.City.Title,
-            PhoneNumber = data.Mobile,
+            PhoneNumber = data.Phone,
+            NationalCode=data.NationalCode,
+            Mobile=data.Mobile
         };
 
         return new ResultDto<SubscriberDto>(
