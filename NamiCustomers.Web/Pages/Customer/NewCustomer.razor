@@ -38,16 +38,9 @@
         <InputText class="form-control" @bind-Value="customer.PhoneNumber" />
     </div>
 
-    <div class="mb-2">
-        <label>فکس:</label>
-        <InputText class="form-control" @bind-Value="customer.Fax" />
-    </div>
+    
 
-    <div class="mb-2">
-        <label>تعداد همکاران:</label>
-        <InputNumber class="form-control" @bind-Value="customer.CoWorkers" />
-    </div>
-
+   
     <button type="submit" class="btn btn-primary">ذخیره</button>
 </EditForm>
 
@@ -57,7 +50,7 @@
 }
 
 @code {
-    RegisterSubscriberDto customer = new();
+    SubscriberDto customer = new();
     List<CityDto> Cities = new();
     string responseMessage;
 

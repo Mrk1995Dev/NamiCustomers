@@ -15,13 +15,13 @@ namespace NamiCustomers.Web.Services.CustomerService.Implementation
             _httpClient = httpClient;
         }
 
-        public async Task<List<SubscriberListDto>> GetAllAsync(string mobile)
+        public async Task<List<SubscriberDto>> GetAllAsync(string mobile)
         {
             //https://localhost:7061/v1/Customer/customerList
             //https://localhost:7061/customer/customerList
 
             await GetToken(mobile);
-            var result = await _httpClient.GetFromJsonAsync<List<SubscriberListDto>>($"/api/subscriber/customerList");
+            var result = await _httpClient.GetFromJsonAsync<List<SubscriberDto>>($"/api/subscriber/customerList");
             return result;
         }
 
@@ -45,7 +45,7 @@ namespace NamiCustomers.Web.Services.CustomerService.Implementation
             return await _httpClient.GetFromJsonAsync<ResultDto<SubscriberDto>>($"/api/customer/info?id={id}");
         }
 
-        public async Task<ResultDto> CreateAsync(RegisterSubscriberDto customer)
+        public async Task<ResultDto> CreateAsync(SubscriberDto customer)
         {
             //https://localhost:7061/api/v1/Customer/addCustomer
             var respone = await _httpClient.PostAsJsonAsync($"/api/customer/addCustomer", customer);
@@ -61,7 +61,7 @@ namespace NamiCustomers.Web.Services.CustomerService.Implementation
                 false);
         }
 
-        public async Task<ResultDto> UpdateAsync(UpdateSubscriberDto updateCustomer)
+        public async Task<ResultDto> UpdateAsync(SubscriberDto updateCustomer)
         {
             var response = await _httpClient.PutAsJsonAsync($"/api/customer/edit", updateCustomer);
             if (response.IsSuccessStatusCode)

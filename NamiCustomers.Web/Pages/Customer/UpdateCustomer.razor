@@ -62,11 +62,11 @@ else
 
     private async Task HandleValidSubmit()
     {
-        var modifiedCustomer = new UpdateSubscriberDto
+        var modifiedCustomer = new SubscriberDto
             {
                 Id = customer.Id,
                 Name = customer.Name,
-                CityId = customer.CityId.Value,
+                CityId = customer.CityId,
                 PhoneNumber = customer.PhoneNumber,
                 Address = customer.Address,
             };
