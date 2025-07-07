@@ -2,7 +2,7 @@
 
 namespace NamiCustomers.Domain.Entities.Account;
 
-public class ApplicationUser : IdentityUser
+public class ApplicationUser : IdentityUser<string>
 {
     // می‌توانید ویژگی‌های اضافی کاربر را اینجا اضافه کنید
     public string FullName => $"{FirstName} {LastName}";

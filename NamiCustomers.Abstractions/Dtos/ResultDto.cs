@@ -1,6 +1,4 @@
-﻿using NamiCustomers.Infrastucture.Model;
-
-namespace NamiCustomers.Abstractions.Dtos
+﻿namespace NamiCustomers.Abstractions.Dtos
 {
     public class ResultDto<T> where T : class
     {

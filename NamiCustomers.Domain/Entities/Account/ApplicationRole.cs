@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace NamiCustomers.Domain.Entities.Account;
 
-public class ApplicationRole : IdentityRole<int>
+public class ApplicationRole : IdentityRole<string>
 {
-    public ICollection<Menu> Menus { get; set; } = [];
+ 
+
+    [Display(Name = "عنوان فارسی")]
+    public string Description { get; set; }
 }

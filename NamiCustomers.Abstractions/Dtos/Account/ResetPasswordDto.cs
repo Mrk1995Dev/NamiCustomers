@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NamiCustomers.Infrastucture.Model.Account
+namespace NamiCustomers.Abstractions.Dtos.Account
 {
     public class ResetPasswordDto
     {

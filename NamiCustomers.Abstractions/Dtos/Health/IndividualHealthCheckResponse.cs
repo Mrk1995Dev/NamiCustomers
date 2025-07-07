@@ -1,4 +1,4 @@
-﻿namespace NamiCustomers.Infrastucture.Model.Health
+﻿namespace NamiCustomers.Abstractions.Dtos.Health
 {
     public class IndividualHealthCheckResponse
     {

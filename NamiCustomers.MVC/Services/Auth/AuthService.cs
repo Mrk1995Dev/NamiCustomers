@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-
-using NamiCustomers.Infrastucture.Model;
-using NamiCustomers.Infrastucture.Model.Subscribers;
-using NuGet.Common;
 using System.Net.Http.Headers;
 using System.Text.Json;
 

@@ -2,7 +2,6 @@
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Application.Services.SevenSoftServices;
 using NamiCustomers.Domain.Entities.Subscribers;
-using NamiCustomers.Infrastucture.Model.Subscribers;
 using NamiCustomers.Infrastucture.Utilities;
 using System.Text;
 

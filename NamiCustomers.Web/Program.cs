@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -14,7 +15,25 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
 
-builder.Services.AddAuthorizationCore();
+builder.Services.AddAuthorizationCore(
+    //options =>
+    //{
+    //    // Dynamic permission policies
+    //    options.AddPolicy("Permission", policy =>
+    //        policy.RequireAssertion(context =>
+    //            context.User.HasClaim(c =>
+    //                c.Type == "Permission" &&
+    //                c.Value == context.GetRequiredService<IAuthorizationService>()
+    //                    .GetPolicyRequirements().First().ToString())));
+
+    //    // Specific permission policies
+    //    options.AddPolicy("CanEditProducts", policy =>
+    //        policy.RequireClaim("Permission", "products.edit"));
+    //    options.AddPolicy("CanDeleteUsers", policy =>
+    //        policy.RequireClaim("Permission", "users.delete"));
+    //}
+
+    );
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
  

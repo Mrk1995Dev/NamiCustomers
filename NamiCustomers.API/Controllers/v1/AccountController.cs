@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.IdentityModel.Tokens;
+using NamiCustomers.Abstractions.Dtos.Account;
 using NamiCustomers.Application.Services.Subscribers;
 using NamiCustomers.Domain.Entities.Account;
 using NamiCustomers.Infrastucture.ExternalServices.Email;
 using NamiCustomers.Infrastucture.ExternalServices.SmsServices;
-using NamiCustomers.Infrastucture.Model.Account;
 using NamiCustomers.Infrastucture.Utilities;
 using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;

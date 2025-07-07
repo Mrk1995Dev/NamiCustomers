@@ -1,4 +1,5 @@
 ﻿using HealthChecks.UI.Client;
+using NamiCustomers.Abstractions.Dtos.Health;
 using NamiCustomers.API.Middlewares;
 using System.Reflection;
 

@@ -1,4 +1,4 @@
-﻿namespace NamiCustomers.Infrastucture.Model.Account;
+﻿namespace NamiCustomers.Abstractions.Dtos.Account;
 
 public class ForgotPasswordRequestDto
 {

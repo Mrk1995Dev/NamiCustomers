@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NamiCustomers.Infrastucture.Model.Account
+namespace NamiCustomers.Abstractions.Dtos.Account
 {
 	public class GetOtpDto
 	{

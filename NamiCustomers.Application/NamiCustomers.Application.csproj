@@ -31,16 +31,8 @@
 	</ItemGroup>
 	 
 	<ItemGroup>
-	  <Compile Remove="Services\Menus\IMenuService.cs" />
-	</ItemGroup>
-	 
-	<ItemGroup>
 	  <ProjectReference Include="..\NamiCustomers.Abstractions\NamiCustomers.Abstractions.csproj" />
 	  <ProjectReference Include="..\NamiCustomers.Domain\NamiCustomers.Domain.csproj" />
 	  <ProjectReference Include="..\NamiCustomers.Infrastucture\NamiCustomers.Infrastucture.csproj" />
-	</ItemGroup>
-	 
-	<ItemGroup>
-	  <Folder Include="Services\Menus\" />
 	</ItemGroup>
 </Project>
