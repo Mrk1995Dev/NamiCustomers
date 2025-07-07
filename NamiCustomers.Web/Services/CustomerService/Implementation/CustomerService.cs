@@ -25,7 +25,7 @@ namespace NamiCustomers.Web.Services.CustomerService.Implementation
             return result;
         }
 
-        private async Task GetToken(string mobile)
+		public async Task GetToken(string mobile)
         {
             var myToken = await _httpClient.GetFromJsonAsync<MyToken>($"/api/Account/GetToken?mobile={mobile}");
 
