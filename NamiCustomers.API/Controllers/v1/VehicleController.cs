@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
+using NamiCustomers.Application.Services.SevenSoftServices;
 using NamiCustomers.Application.Services.Vehicles;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NamiCustomers.API.Controllers.v1
 {
@@ -8,7 +11,7 @@ namespace NamiCustomers.API.Controllers.v1
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
     [Authorize]
-    public class VehicleController(IVehicleService vehicleService) : ControllerBase
+    public class VehicleController(IVehicleService vehicleService, ISevenSoftService sevenSoftService, IMapper mapper) : ControllerBase
     {
         [HttpGet("[action]")]
         public async Task<ResultDto<VehicleModelDto>> Get(int id)
@@ -35,5 +38,28 @@ namespace NamiCustomers.API.Controllers.v1
         {
             return await vehicleService.EditAsync(vehicleModelDto);
         }
+
+        [HttpGet("[action]")]
+        public async Task<ResultDto<VehicleModelDto>> GetChassisInformationByVinNumber(string vinNumber)
+        {
+            var result = await sevenSoftService.GetChassisInformationByVinNumber(vinNumber);
+            if (result == null) return new ResultDto<VehicleModelDto>(
+           Infrastucture.Properties.Resources.errNotFound,
+            false,
+            null);
+
+
+            return new ResultDto<VehicleModelDto>(
+          Infrastucture.Properties.Resources.msgFound,
+          true,
+          new VehicleModelDto
+          {
+              Description = result.SelectedVehicleDescription,
+              VinNumber = result.VinNumber,
+              VehicleName = result.VehicleModelName,
+          });
+
+        }
+        //LGBH9VEAXPY770511
     }
 }

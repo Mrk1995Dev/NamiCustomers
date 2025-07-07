@@ -5,7 +5,7 @@ namespace NamiCustomers.Abstractions.Dtos.Vehicles
 {
     public class VehicleModelDto
     {
-        public int Id { get; set; }
+        public int Id              { get; set; }
         public int SubscriberId { get; set; }
         [Required]
         public string VehicleName { get; set; }

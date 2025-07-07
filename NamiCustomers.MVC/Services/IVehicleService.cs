@@ -1,5 +1,6 @@
 ﻿using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Infrastucture.Utilities;
+using System.Numerics;
 using System.Text.Json;
 
 namespace NamiCustomers.MVC.Services;
@@ -11,6 +12,7 @@ public interface IVehicleService
     Task<ResultDto<VehicleModelDto>> GetAsync(int id);
     Task<ResultDto<List<VehicleModelDto>>> GetAllAsync(int subscriberId);
     Task<ResultDto> EditAsync(VehicleModelDto updateCustomer);
+    Task<ResultDto<VehicleModelDto>> GetChassisInformationByVinNumber(string vinNumber);
 }
 
 
@@ -70,6 +72,21 @@ public class VehicleService : IVehicleService
         return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errNotFound, false,null);
     }
 
+    public async Task<ResultDto<VehicleModelDto>> GetChassisInformationByVinNumber(string vinNumber)
+    {
+        await GetToken();
+        var response = await _httpClient.GetFromJsonAsync<ResultDto<VehicleModelDto>>($"Vehicle/GetChassisInformationByVinNumber?vinNumber={vinNumber}");
+        if (response.Data != null)
+        {
+            return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.msgFound, true,
+            response.Data);
+        }
+        return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errNotFound, false, null);
+    }
+
+   
+
+
     public async Task<ResultDto<List<VehicleModelDto>>> GetAllAsync(int subscriberId)
     {
         var response = await _httpClient.GetFromJsonAsync<ResultDto<List<VehicleModelDto>>>($"Vehicle/GetAll?subscriberId={subscriberId}");
@@ -79,6 +96,9 @@ public class VehicleService : IVehicleService
         }
         return new ResultDto<List<VehicleModelDto>>(Infrastucture.Properties.Resources.errNotFound, false, null);
     }
+
+
+
 
     public async Task<ResultDto<VehicleModelDto>> RegisterAsync(VehicleModelDto vehicleRegisterDto)
     {
