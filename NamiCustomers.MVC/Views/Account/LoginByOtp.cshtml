@@ -65,11 +65,11 @@
             <div class="otp-verify-form mt-4" style="direction:ltr !important;">
                 <form id="frmLogInByOtp" name="frmLogInByOtp" asp-action="LogInByOtp" asp-controller="Account">
                     <div class="input-group mb-3 otp-input-group">
-                        <input class="form-control" id="otp5" name="otp5" onkeyup="checkAllFields()" type="text" style="color: #000 !important;" value="" placeholder="-" maxlength="1">
-                        <input class="form-control" id="otp4" name="otp4" type="text" style="border-top-left-radius: 0px !important;border-bottom-left-radius: 0px !important;color: #000 !important;" value="" placeholder="-" maxlength="1">
-                        <input class="form-control" id="otp3" name="otp3" type="text" style="border-top-left-radius: 0px !important;border-bottom-left-radius: 0px !important;color: #000 !important;" value="" placeholder="-" maxlength="1">
-                        <input class="form-control" id="otp2" name="otp2" type="text" style="border-top-left-radius: 0px !important;border-bottom-left-radius: 0px !important;color: #000 !important;" value="" placeholder="-" maxlength="1">
-                        <input class="form-control" id="otp1" name="otp1" type="text" style="color: #000 !important;" value="" placeholder="-" maxlength="1">
+                        <input class="form-control" id="otp5" name="otp5" onkeyup="checkAllFields()" type="text" inputmode="numeric" pattern="[0-9]*" style="color: #000 !important;border-left:0px !important;"value="" placeholder="-" maxlength="1">
+                        <input class="form-control" id="otp4" name="otp4" type="text" inputmode="numeric" pattern="[0-9]*" style="border-top-left-radius: 0px !important;border-bottom-left-radius: 0px !important;color: #000 !important;" value="" placeholder="-" maxlength="1">
+                        <input class="form-control" id="otp3" name="otp3" type="text" inputmode="numeric" pattern="[0-9]*" style="border-top-left-radius: 0px !important;border-bottom-left-radius: 0px !important;color: #000 !important;" value="" placeholder="-" maxlength="1">
+                        <input class="form-control" id="otp2" name="otp2" type="text" inputmode="numeric" pattern="[0-9]*" style="border-right: 1px solid !important; border-top-left-radius: 0px !important;border-bottom-left-radius: 0px !important;color: #000 !important;" value="" placeholder="-" maxlength="1">
+                        <input class="form-control" id="otp1" name="otp1" type="text" inputmode="numeric" pattern="[0-9]*" style="color: #000 !important;" value="" placeholder="-" maxlength="1">
 
 
                     </div>
