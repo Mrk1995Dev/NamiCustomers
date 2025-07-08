@@ -7,10 +7,19 @@ public class VehicleModel :IBaseEntity<int>
     public string? VehicleName { get; set; }
     public string? EnglishName { get; set; }
     public string? Description { get; set; }
-    /// <summary>
-    /// شماره شاسی 
-    /// </summary>
-    public string? VinNumber { get; set; }
+	public string? ProductYear { get; set; }
+	public string? BodyColor { get; set; }
+	public string? MotorNumber { get; set; }
+	public string? FullSystem { get; set; }
+	public Guid? VehicleModelId { get; set; }
+	public string? ChassisUsageTypeName { get; set; }
+
+	public string? SelectedVehicleCommonName { get; set; }
+	public string? SelectedVehicleDescription { get; set; }
+	/// <summary>
+	/// شماره شاسی 
+	/// </summary>
+	public string? VinNumber { get; set; }
     public Guid? SalePlanIdSevenSoft { get; set; }
     public Guid? SaleBasketIdSevenSoft { get; set; }
     public Guid? VehicleModelIdSevensoft { get; set; }

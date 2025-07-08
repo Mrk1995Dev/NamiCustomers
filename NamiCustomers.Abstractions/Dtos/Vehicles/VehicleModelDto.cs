@@ -15,7 +15,10 @@ namespace NamiCustomers.Abstractions.Dtos.Vehicles
         public string? BodyColor { get; set; }
         public string? MotorNumber { get; set;   }
         public string? FullSystem { get;set; }
-        public string? SelectedVehicleCommonName { get;set; }
+        public Guid? VehicleModelId { get; set; }
+        public string? ChassisUsageTypeName { get; set; }
+
+		public string? SelectedVehicleCommonName { get;set; }
         public string? SelectedVehicleDescription { get;set; }
 		/// <summary>
 		/// شماره شاسی 
