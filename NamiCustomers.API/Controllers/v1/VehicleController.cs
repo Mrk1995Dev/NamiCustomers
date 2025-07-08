@@ -52,12 +52,8 @@ namespace NamiCustomers.API.Controllers.v1
             return new ResultDto<VehicleModelDto>(
           Infrastucture.Properties.Resources.msgFound,
           true,
-          new VehicleModelDto
-          {
-              Description = result.SelectedVehicleDescription,
-              VinNumber = result.VinNumber,
-              VehicleName = result.VehicleModelName,
-          });
+          mapper.Map<VehicleModelDto>(result)
+           );
 
         }
         //LGBH9VEAXPY770511

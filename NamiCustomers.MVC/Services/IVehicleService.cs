@@ -62,7 +62,6 @@ public class VehicleService : IVehicleService
 
     public async  Task<ResultDto<VehicleModelDto>> GetAsync(int id)
     {
-        await GetToken();
         var response = await _httpClient.GetFromJsonAsync<ResultDto<VehicleModelDto>>($"Vehicle/Get?id={id}");
         if (response.Data != null)
         {
@@ -74,7 +73,6 @@ public class VehicleService : IVehicleService
 
     public async Task<ResultDto<VehicleModelDto>> GetChassisInformationByVinNumber(string vinNumber)
     {
-        await GetToken();
         var response = await _httpClient.GetFromJsonAsync<ResultDto<VehicleModelDto>>($"Vehicle/GetChassisInformationByVinNumber?vinNumber={vinNumber}");
         if (response.Data != null)
         {

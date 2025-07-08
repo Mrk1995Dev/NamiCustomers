@@ -286,14 +286,14 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
                 Sex = data.Sex,
                 VehicleModels = subscriber.VehicleModels.Any() ? data.VehicleModels.Select(c => new VehicleModelDto
                 {
-                    EnglishName = c.EnglishName,
-                    BrandIdSevenSoft = c.BrandIdSevenSoft,
-                    Description = c.Description,
+                    VehicleModelLocalizedName = c.EnglishName,
+                    BrandId = c.BrandIdSevenSoft,
+                    SelectedVehicleDescription = c.Description,
                     SaleBasketIdSevenSoft = c.SaleBasketIdSevenSoft,
                     SalePlanIdSevenSoft = c.SalePlanIdSevenSoft,
                     SubscriberId = c.SubscriberId,
                     VehicleModelIdSevensoft = c.VehicleModelIdSevensoft,
-                    VehicleName = c.VehicleName,
+                    VehicleModelName = c.VehicleName,
                     VinNumber = c.VinNumber,
                 }).ToList() : new()
             };
@@ -318,14 +318,14 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
                 Sex = subscriber.Sex,
                 VehicleModels = subscriber.VehicleModels.Any() ? subscriber.VehicleModels.Select(c => new VehicleModelDto
                 {
-                    EnglishName = c.EnglishName,
-                    BrandIdSevenSoft = c.BrandIdSevenSoft,
-                    Description = c.Description,
+                    VehicleModelLocalizedName = c.EnglishName,
+                    BrandId = c.BrandIdSevenSoft,
+                    SelectedVehicleDescription = c.Description,
                     SaleBasketIdSevenSoft = c.SaleBasketIdSevenSoft,
                     SalePlanIdSevenSoft = c.SalePlanIdSevenSoft,
                     SubscriberId = c.SubscriberId,
                     VehicleModelIdSevensoft = c.VehicleModelIdSevensoft,
-                    VehicleName = c.VehicleName,
+                    VehicleModelName = c.VehicleName,
                     VinNumber = c.VinNumber,
                 }).ToList() : new()
             };
