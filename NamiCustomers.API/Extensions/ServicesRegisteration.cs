@@ -1,12 +1,15 @@
 ﻿using AspNetCoreRateLimit;
+using k8s.KubeConfigModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NamiCustomers.Domain.Entities.Account;
+using NamiCustomers.Persistence.Migrations;
 using Serilog;
 using System.Data;
 using System.Reflection;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -134,7 +137,10 @@ public static class ServicesRegisteration
             .AddRoles<ApplicationRole>()
         ;
 
-
+        services.Configure<IdentityOptions>(options =>
+        {
+            options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
+        });
         //services.Configure<IdentityOptions>(option =>
         //{
         //    //UserSetting

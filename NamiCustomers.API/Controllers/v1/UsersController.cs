@@ -7,7 +7,7 @@ using NamiCustomers.Domain.Entities.Account;
 
 namespace NamiCustomers.API.Controllers.v1;
 
-[Authorize(Roles = "Admin")]
+
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]

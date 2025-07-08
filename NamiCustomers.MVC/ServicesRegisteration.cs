@@ -27,73 +27,108 @@ public static class ServicesRegisteration
             .ConfigureOther()
             .AddApplicationServices(configuration)
             .AddAuthentication(configuration)
+            .AddAuthorization(configuration)
             .ConfigureCookies()
             ;
 
-		return services;
-	}
+        return services;
+    }
 
-	public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
-	{
-		var jwtSettings = configuration.GetSection("JWTSettings");
+    public static IServiceCollection AddAuthorization(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminAccess", policy => policy.RequireRole("Admin"));
+    // Policy that requires any of these roles
+    options.AddPolicy("OperatorAccess", policy =>
+        policy.RequireRole("Admin", "Operator"));
 
-		services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-	.AddCookie(options =>
-	{
-		options.Cookie.HttpOnly = true;
-		//options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    // Policy that requires all specified roles
+    options.AddPolicy("SubscriberAccess", policy =>
+        policy.RequireRole("Admin,Operator,Subscriber")
+              );
+    //options =>
+    //{
+    //    // Dynamic permission policies
+    //    options.AddPolicy("Permission", policy =>
+    //        policy.RequireAssertion(context =>
+    //            context.User.HasClaim(c =>
+    //                c.Type == "Permission" &&
+    //                c.Value == context.GetRequiredService<IAuthorizationService>()
+    //                    .GetPolicyRequirements().First().ToString())));
 
-		//options.Cookie.SameSite = SameSiteMode.Lax;
-		options.ExpireTimeSpan = TimeSpan.FromHours(1);
-		options.LoginPath = "/Account/LoginByMobile";
-		options.AccessDeniedPath = "/Account/AccessDenied";
-		options.SlidingExpiration = true;
-	});
-		return services;
-	}
-	public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
-	{
-		services.AddScoped<JwtAuthorizationMessageHandler>();
+    //    // Specific permission policies
+    //    options.AddPolicy("CanEditProducts", policy =>
+    //        policy.RequireClaim("Permission", "products.edit"));
+    //    options.AddPolicy("CanDeleteUsers", policy =>
+    //        policy.RequireClaim("Permission", "users.delete"));
+    //}
 
-		services.AddHttpClient("ApiWithAuth", client =>
-		{
-			client.BaseAddress = new Uri(configuration["EndPointSetting:BaseAddress"]);
-			// client.BaseAddress = new Uri("https://localhost:7061/api/v1/");
-			client.DefaultRequestHeaders.Accept.Add(
-			new MediaTypeWithQualityHeaderValue("application/json"));
+});
+        return services;
+    }
 
-		}).AddHttpMessageHandler<JwtAuthorizationMessageHandler>();
+    public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
+    {
+        var jwtSettings = configuration.GetSection("JWTSettings");
+
+        services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.HttpOnly = true;
+        //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+
+        //options.Cookie.SameSite = SameSiteMode.Lax;
+        options.ExpireTimeSpan = TimeSpan.FromHours(1);
+        options.LoginPath = "/Account/LoginByMobile";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.SlidingExpiration = true;
+    });
+        return services;
+    }
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddScoped<JwtAuthorizationMessageHandler>();
+
+        services.AddHttpClient("ApiWithAuth", client =>
+        {
+            client.BaseAddress = new Uri(configuration["EndPointSetting:BaseAddress"]);
+            // client.BaseAddress = new Uri("https://localhost:7061/api/v1/");
+            client.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/json"));
+
+        }).AddHttpMessageHandler<JwtAuthorizationMessageHandler>();
 
 
-		services.AddHttpClient<IAuthService, AuthService>(client =>
-		{
-			client.BaseAddress = new Uri(configuration["EndPointSetting:BaseAddress"]);
- 
-			client.DefaultRequestHeaders.Accept.Add(
-			new MediaTypeWithQualityHeaderValue("application/json"));
-		});
- 
+        services.AddHttpClient<IAuthService, AuthService>(client =>
+        {
+            client.BaseAddress = new Uri(configuration["EndPointSetting:BaseAddress"]);
+
+            client.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/json"));
+        });
+
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ISubscriberService, SubscriberService>(sp =>
         {
             var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
             var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
-            return new SubscriberService(httpClient,httpContextAccessor);
+            return new SubscriberService(httpClient, httpContextAccessor);
         });
         services.AddScoped<IVehicleService, VehicleService>(sp =>
         {
             var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
             var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
             var subscriberService = sp.GetRequiredService<ISubscriberService>();
-            return new VehicleService(httpClient, httpContextAccessor,subscriberService);
+            return new VehicleService(httpClient, httpContextAccessor, subscriberService);
         });
- 
 
-		services.AddScoped<IAccountService, AccountService>(sp =>
-		{
-			var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
-			return new AccountService(httpClient);
-		});
+
+        services.AddScoped<IAccountService, AccountService>(sp =>
+        {
+            var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
+            return new AccountService(httpClient);
+        });
         services.AddScoped<IRoleService, RoleService>(sp =>
         {
             var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
@@ -110,68 +145,68 @@ public static class ServicesRegisteration
 
 
         return services;
-	}
+    }
 
-	private static IServiceCollection ConfigureOther(this IServiceCollection services)
-	{
-		services.AddHttpClient();
-		services.AddHttpLogging(o => { });
-		services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-		services.AddScoped<ServerAuthenticationStateProvider, CustomAuthenticationStateProvider>();
-		return services;
-	}
+    private static IServiceCollection ConfigureOther(this IServiceCollection services)
+    {
+        services.AddHttpClient();
+        services.AddHttpLogging(o => { });
+        services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+        services.AddScoped<ServerAuthenticationStateProvider, CustomAuthenticationStateProvider>();
+        return services;
+    }
 
-	private static IServiceCollection ConfigureMemoryCache(this IServiceCollection services)
-	{
-		services.AddDistributedMemoryCache();
-		return services;
-	}
-	private static IServiceCollection ConfigureCurrentUser(this IServiceCollection services)
-	{
-		services.AddHttpContextAccessor();
-		services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
-		services.AddSession();
-		services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-		//services.AddSingleton<ICurrentUser, CurrentUser>();
+    private static IServiceCollection ConfigureMemoryCache(this IServiceCollection services)
+    {
+        services.AddDistributedMemoryCache();
+        return services;
+    }
+    private static IServiceCollection ConfigureCurrentUser(this IServiceCollection services)
+    {
+        services.AddHttpContextAccessor();
+        services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
+        services.AddSession();
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        //services.AddSingleton<ICurrentUser, CurrentUser>();
 
-		return services;
-	}
+        return services;
+    }
 
 
-	private static IServiceCollection ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
-	{
-		services.AddOptions();
-		services.Configure<ApiBehaviorOptions>(options =>
-		{
-			options.SuppressModelStateInvalidFilter = true;
-		});
+    private static IServiceCollection ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddOptions();
+        services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
 
-		services.Configure<List<SmsSetting>>(configuration.GetSection("SmsSettings"));
-		services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
-		return services;
-	}
+        services.Configure<List<SmsSetting>>(configuration.GetSection("SmsSettings"));
+        services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
+        return services;
+    }
 
-	private static IServiceCollection ConfigureCors(this IServiceCollection services) =>
-		services.AddCors(options =>
-		{
-			options.AddPolicy("CorsPolicy", policy =>
-			policy.AllowAnyOrigin()
-			.AllowAnyMethod()
-			.AllowAnyHeader()
-			.AllowCredentials());
-		});
-	private static IServiceCollection ConfigureCookies(this IServiceCollection services)
-	{
-		services.ConfigureApplicationCookie(option =>
-		{
-			// cookie setting
-			option.Cookie.Name = "MyCookie";
-			option.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+    private static IServiceCollection ConfigureCors(this IServiceCollection services) =>
+        services.AddCors(options =>
+        {
+            options.AddPolicy("CorsPolicy", policy =>
+            policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials());
+        });
+    private static IServiceCollection ConfigureCookies(this IServiceCollection services)
+    {
+        services.ConfigureApplicationCookie(option =>
+        {
+            // cookie setting
+            option.Cookie.Name = "MyCookie";
+            option.ExpireTimeSpan = TimeSpan.FromMinutes(10);
 
-			option.LoginPath = "/account/login";
-			option.AccessDeniedPath = "/account/AccessDenied";
-			option.SlidingExpiration = true;
-		});
-		return services;
-	}
+            option.LoginPath = "/account/login";
+            option.AccessDeniedPath = "/account/AccessDenied";
+            option.SlidingExpiration = true;
+        });
+        return services;
+    }
 }

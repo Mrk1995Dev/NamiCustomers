@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.Options;
 using MudBlazor;
 using MudBlazor.Services;
 using NamiCustomers.Web;
@@ -15,7 +16,19 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
 
-builder.Services.AddAuthorizationCore(
+builder.Services.AddAuthorizationCore(options =>
+{
+    options.AddPolicy("AdminAccess", policy => policy.RequireRole("Admin"));
+    // Policy that requires any of these roles
+    options.AddPolicy("OperatorAccess", policy =>
+        policy.RequireRole("Admin", "Operator"));
+
+    // Policy that requires all specified roles
+    options.AddPolicy("SubscriberAccess", policy =>
+        policy.RequireRole("Admin")
+              .RequireRole("PowerUser")
+              .RequireRole("subscriber")
+              );
     //options =>
     //{
     //    // Dynamic permission policies
@@ -33,7 +46,7 @@ builder.Services.AddAuthorizationCore(
     //        policy.RequireClaim("Permission", "users.delete"));
     //}
 
-    );
+} );
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
  

@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NamiCustomers.Abstractions.Dtos.Security.Dto;
 using NamiCustomers.Abstractions.Dtos.Security.Dto.Roles;
 using NamiCustomers.MVC.Services;
 
 namespace NamiCustomers.MVC.Areas.Admin.Controllers;
 
-//[Authorize(Roles = "Admin")]
+[Authorize(Roles =  "Admin")]
 [Area("Admin")]
 public class RolesController(IRoleService roleService) : Controller
 {

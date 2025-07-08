@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -10,9 +11,9 @@ using System.Security.Claims;
 namespace NamiCustomers.MVC.Controllers;
 
 
-public class AccountController(IAccountService accountService, IAuthService authService, IUrlHelperFactory urlHelperFactory) : Controller
+public class AccountController(IAccountService accountService, IAuthService authService, IUrlHelperFactory urlHelperFactory, IUserService userService) : Controller
 {
-    //[Authorize]
+    [Authorize]
     public async Task<IActionResult> Index()
     {
         return View(User.Identity);
@@ -63,13 +64,13 @@ public class AccountController(IAccountService accountService, IAuthService auth
     }
 
     [HttpPost]
-    public async Task<IActionResult> GetOtp(string mobile,string nationalcode)
+    public async Task<IActionResult> GetOtp(string mobile, string nationalcode)
     {
-        if (string.IsNullOrEmpty(mobile)|| string.IsNullOrEmpty(nationalcode))
+        if (string.IsNullOrEmpty(mobile) || string.IsNullOrEmpty(nationalcode))
         {
             return RedirectToAction("LoginByMobile");
         }
-        var code = await authService.GetOtp(mobile,nationalcode);
+        var code = await authService.GetOtp(mobile, nationalcode);
 
         TempData["mobile"] = mobile;
         return RedirectToAction("LoginByOtp");
@@ -83,6 +84,7 @@ public class AccountController(IAccountService accountService, IAuthService auth
     public async Task<IActionResult> LoginByOtp(string otp)
     {
         var result = await authService.LoginByOtpAsync(otp);
+        var userRoles = (await userService.GetRolesAsync(result.Id)).Data;
         if (result.Email != null)
         {
             var claims = new List<System.Security.Claims.Claim>
@@ -93,6 +95,11 @@ public class AccountController(IAccountService accountService, IAuthService auth
              new  System.Security.Claims.Claim("UserId",result.Id),
 
         };
+            foreach (var role in userRoles.Roles)
+            {
+                claims.Add(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, role.Value));
+            }
+
 
             var claimsIdentity = new ClaimsIdentity(
             claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -117,7 +124,7 @@ public class AccountController(IAccountService accountService, IAuthService auth
     }
 
 
-    
+
 
     [HttpGet]
     public async Task<IActionResult> Logout()
@@ -131,7 +138,11 @@ public class AccountController(IAccountService accountService, IAuthService auth
     {
         return View();
     }
-
+    [AllowAnonymous]
+    public IActionResult AccessDenied()
+    {
+        return View();
+    }
     [HttpPost]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest forgot)
     {
@@ -140,39 +151,39 @@ public class AccountController(IAccountService accountService, IAuthService auth
         string callbakUrl = urlHelper.Action("ResetPassword", "Account", new
         {
             UserId = forgot.Email,
-            Token= "TEMPTOKEN"
+            Token = "TEMPTOKEN"
         }, protocol: Request.Scheme);
 
-        var result = await authService.ForgotPassword(new ForgotPasswordRequestDto {Email= forgot.Email,CallBAckUrl= callbakUrl });
+        var result = await authService.ForgotPassword(new ForgotPasswordRequestDto { Email = forgot.Email, CallBAckUrl = callbakUrl });
         if (!result.Succeeded)
         {
             return ForgotPassword();
         }
 
-        return View ("DisplayEmail");
+        return View("DisplayEmail");
     }
 
     [HttpGet]
-    public async Task<IActionResult> ResetPassword(string UserId ,string Token)
+    public async Task<IActionResult> ResetPassword(string UserId, string Token)
     {
         return View("ResetPassword", new ResetPasswordDto
         {
             UserId = UserId,
-            Token = Token.Replace(" ","+")
+            Token = Token.Replace(" ", "+")
         });
     }
 
     [HttpPost]
     public async Task<IActionResult> ResetPassword(ResetPasswordDto reset)
     {
-        var result=await authService.ResetPassword(reset);
+        var result = await authService.ResetPassword(reset);
         if (result.Succeeded)
         {
             return RedirectToAction(nameof(ResetPasswordConfirmation));
         }
-        return  View("ResetPassword", new ResetPasswordDto
+        return View("ResetPassword", new ResetPasswordDto
         {
-            Errors=result.Errors.Errors.Select( c=>  c.Description).ToList(),
+            Errors = result.Errors.Errors.Select(c => c.Description).ToList(),
             UserId = reset.UserId,
             Token = reset.Token.Replace(" ", "+")
         });
@@ -187,13 +198,13 @@ public class AccountController(IAccountService accountService, IAuthService auth
         return View();
     }
 
-  
+
 
     public IActionResult VerifySuccess()
     {
         return View();
     }
-  
+
 
     public IActionResult Register()
     {
@@ -217,8 +228,8 @@ public class AccountController(IAccountService accountService, IAuthService auth
 
         register.CallbakUrl = callbakUrl;
 
-        var result= await authService.Register(register);
-      
+        var result = await authService.Register(register);
+
         if (result.IsSuccess)
         {
             return RedirectToAction("DisplayEmail");
@@ -227,7 +238,7 @@ public class AccountController(IAccountService accountService, IAuthService auth
         string message = "";
         foreach (var error in result.Errors.ToList())
         {
-            message +=$"{error} {Environment.NewLine}";
+            message += $"{error} {Environment.NewLine}";
         }
         TempData["Message"] = message;
         return View(register);
@@ -239,20 +250,20 @@ public class AccountController(IAccountService accountService, IAuthService auth
         {
             return BadRequest();
         }
-       var result= await authService.ConfirmEmail(UserId,Token);
-         
+        var result = await authService.ConfirmEmail(UserId, Token);
+
         if (!result.IsSuccess)
         {
-            return RedirectToAction("Error",new ErrorViewModel {Errors=result.Errors.ToList() });
+            return RedirectToAction("Error", new ErrorViewModel { Errors = result.Errors.ToList() });
         }
-        
+
         return RedirectToAction("login");
     }
     public IActionResult DisplayEmail()
     {
         return View();
     }
-    
+
 
 
     public IActionResult SetPhoneNumber()
@@ -266,7 +277,7 @@ public class AccountController(IAccountService accountService, IAuthService auth
     {
 
         await authService.SetPhoneNumber(phoneNumberDto);
-         
+
         TempData["PhoneNumber"] = phoneNumberDto.PhoneNumber;
         return RedirectToAction(nameof(VerifyPhoneNumber));
     }
@@ -281,18 +292,18 @@ public class AccountController(IAccountService accountService, IAuthService auth
         });
     }
 
-   // [Authorize]
+    // [Authorize]
     [HttpPost]
     public async Task<IActionResult> VerifyPhoneNumber(VerifyPhoneNumberDto verify)
     {
         var result = await authService.VerifyPhoneNumber(verify);
-       
+
         if (result.IsSuccess == false)
         {
-            ViewData["Message"] = result.Errors.Select(c=>c).ToList();
+            ViewData["Message"] = result.Errors.Select(c => c).ToList();
             return View(verify);
         }
-        
+
         return RedirectToAction("VerifySuccess");
 
     }

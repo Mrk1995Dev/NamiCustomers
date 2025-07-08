@@ -5,7 +5,7 @@ using NamiCustomers.MVC.Services;
 
 namespace NamiCustomers.MVC.Controllers;
 
-[Authorize]
+[Authorize(Policy = "SubscriberAccess")]
 public class SubscriberController(
     ISubscriberService  subscriberService) : Controller
 {

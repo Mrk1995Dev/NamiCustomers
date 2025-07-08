@@ -8,7 +8,7 @@ using NamiCustomers.Infrastucture.Utilities;
 namespace NamiCustomers.MVC.Areas.Admin.Controllers;
 
 
-//[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin")]
 [Area("Admin")]
 public class UsersController(IUserService userService, IRoleService roleService) : Controller
 {
