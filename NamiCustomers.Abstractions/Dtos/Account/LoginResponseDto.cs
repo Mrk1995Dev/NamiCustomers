@@ -7,6 +7,7 @@
         public string Email { get; set; }
         public string NationalCode { get; set; }
         public string Mobile { get; set; }
+        public string Id { get; set; }
     }
 
     public record ForgotPasswordResponse

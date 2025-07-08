@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using NamiCustomers.Abstractions.Dtos.Security.Dto;
 using NamiCustomers.Abstractions.Dtos.Security.Dto.Roles;
 using NamiCustomers.MVC.Services;
+using NamiCustomers.Infrastucture.Utilities;
 namespace NamiCustomers.MVC.Areas.Admin.Controllers;
+
 
 //[Authorize(Roles = "Admin")]
 [Area("Admin")]
-public class UsersController(IUserService userService, IRoleService roleService,IHttpContextAccessor httpContextAccessor) : Controller
+public class UsersController(IUserService userService, IRoleService roleService) : Controller
 {
     public async Task<IActionResult> Index()
     {
@@ -147,12 +149,37 @@ public class UsersController(IUserService userService, IRoleService roleService,
         return RedirectToAction("UserRoles", "Users", new { user.Data.Id, area = "admin" });
     }
 
+    [HttpGet]
+    public async Task<IActionResult> DeleteUserRole(string userid,string rolename)
+    {
+        var user = await userService.GetAsync(userid);
+
+        AddUserRoleDto userDelete = new  AddUserRoleDto()
+        {
+            Email = user.Data.Email,
+            FullName = $"{user.Data.FirstName}  {user.Data.LastName}",
+            Id = user.Data.Id,
+            Role=rolename
+        };
+        return View(userDelete);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteUserRole(AddUserRoleDto userDelete)
+    {
+        var user = await userService.GetAsync(userDelete.Id);
+        var result = await userService.RemoveUserRole(userDelete);
+        return RedirectToAction("UserRoles", "Users", new { user.Data.Id, area = "admin" });
+    }
+
+    
+
     public async Task<IActionResult> UserRoles(string Id)
     {
         var user = await userService.GetAsync(Id);
         var roles =(await userService.GetRolesAsync(Id)).Data.Roles.Select(c=>c.Value).ToList();
         ViewBag.UserInfo = $"Name : {user.Data.FirstName} {user.Data.LastName} Email:{user.Data.Email}";
-        return View(roles);
+        return View(new KeyValuePair<string,List<string>>(Id, roles));
     }
 
 

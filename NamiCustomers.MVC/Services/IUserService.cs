@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using NamiCustomers.Abstractions.Dtos.Security.Dto;
 using NamiCustomers.Abstractions.Dtos.Security.Dto.Roles;
+using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace NamiCustomers.MVC.Services;
@@ -16,16 +17,16 @@ public interface IUserService
     Task<Microsoft.AspNetCore.Identity.SignInResult> PasswordSignInAsync(MyAccountinfoDto myAccountinfoDto);
     Task<ResultDto<UserListDto>> GetAsync(string id);
     Task<ResultDto<AddUserRoleDto>> GetRolesAsync(string userId);
+    
+    Task<ResultDto> RemoveUserRole(AddUserRoleDto newRole);
 }
 public class UserService : IUserService
 {
     private readonly HttpClient _httpClient;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public UserService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
+    
+    public UserService(HttpClient httpClient )
     {
         _httpClient = httpClient;
-        this._httpContextAccessor = httpContextAccessor;
     }
  
 
@@ -117,6 +118,17 @@ public class UserService : IUserService
             return response;
         }
         return new ResultDto<AddUserRoleDto>(Infrastucture.Properties.Resources.errNotFound, false, null);
+    }
+
+    public async  Task<ResultDto> RemoveUserRole(AddUserRoleDto newRole)
+    {
+        var response = await _httpClient.PostAsJsonAsync($"users/RemoveUserRole",newRole);
+        if (response.IsSuccessStatusCode)
+        {
+            return new ResultDto(Infrastucture.Properties.Resources.msgDeleted, true);
+        }
+
+        return new ResultDto(Infrastucture.Properties.Resources.errDelete, false);
     }
 }
 

@@ -103,7 +103,7 @@ public static class ServicesRegisteration
         {
             var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
             var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
-            return new UserService(httpClient, httpContextAccessor);
+            return new UserService(httpClient);
         });
 
 

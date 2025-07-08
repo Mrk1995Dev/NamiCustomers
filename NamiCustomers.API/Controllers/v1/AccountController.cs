@@ -130,7 +130,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                 {
                     var token = $"{GenerateJwtToken(user)}";
                     var refreshToken = $"{GenerateJwtToken(user)}";
-                    return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email ,NationalCode=user.NationalCode,Mobile=user.PhoneNumber }));
+                    return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email ,NationalCode=user.NationalCode,Mobile=user.PhoneNumber,Id=user.Id }));
                 }
                 else
                 {

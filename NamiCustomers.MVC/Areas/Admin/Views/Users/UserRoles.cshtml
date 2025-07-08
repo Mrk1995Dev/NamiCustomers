@@ -1,4 +1,4 @@
-﻿@model IList<string>
+﻿@model KeyValuePair<string,List<string>>
 @{
     ViewData["Title"] = "UserRoles";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -14,11 +14,15 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Value)
         {
         <tr>
             <td>
                 @item
+            </td>
+
+            <td>
+                    @Html.ActionLink("حذف", "DeleteUserRole", "Users", new {userid=Model.Key, rolename = item, area = "Admin" })
             </td>
         </tr>
         }

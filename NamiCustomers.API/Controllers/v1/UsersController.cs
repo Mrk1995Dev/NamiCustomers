@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using NamiCustomers.Abstractions.Dtos.Account;
 using NamiCustomers.Abstractions.Dtos.Security.Dto;
 using NamiCustomers.Abstractions.Dtos.Security.Dto.Roles;
@@ -6,8 +7,7 @@ using NamiCustomers.Domain.Entities.Account;
 
 namespace NamiCustomers.API.Controllers.v1;
 
-//[Authorize(Roles = "Admin")]
-//[Area("Admin")]
+[Authorize(Roles = "Admin")]
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
@@ -16,7 +16,7 @@ public class UsersController : ControllerBase
     private readonly UserManager<ApplicationUser> userManager;
     private readonly RoleManager<ApplicationRole> roleManager;
 
-    public UsersController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole>  roleManager)
+    public UsersController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
     {
         this.userManager = userManager;
         this.roleManager = roleManager;
@@ -28,15 +28,15 @@ public class UsersController : ControllerBase
         var user = await userManager.Users.SingleOrDefaultAsync(c => c.Id == userId);
         var roles = await userManager.GetRolesAsync(user);
 
-        var rolesDtos=roleManager.Roles.Where(c=>roles.Contains(c.Name)).Select(c=>new KeyValuePair<string, string>(c.Id,c.Name
+        var rolesDtos = roleManager.Roles.Where(c => roles.Contains(c.Name)).Select(c => new KeyValuePair<string, string>(c.Id, c.Name
             )).ToDictionary();
 
         var result = new AddUserRoleDto
         {
-            Email=user.Email,
-            FullName=user.FullName,
-            Id=userId,
-            Roles= rolesDtos
+            Email = user.Email,
+            FullName = user.FullName,
+            Id = userId,
+            Roles = rolesDtos
         };
 
 
@@ -64,7 +64,7 @@ public class UsersController : ControllerBase
     [HttpGet("[action]")]
     public async Task<ResultDto<List<UserListDto>>> GetAllAsync()
     {
-        var users =await  userManager.Users
+        var users = await userManager.Users
             .Select(p => new UserListDto
             {
                 Id = p.Id,
@@ -74,7 +74,7 @@ public class UsersController : ControllerBase
                 PhoneNumber = p.PhoneNumber,
                 EmailConfirmed = p.EmailConfirmed,
                 AccessFailedCount = p.AccessFailedCount,
-                Email=p.Email
+                Email = p.Email
             }).ToListAsync();
         return new ResultDto<List<UserListDto>>(Infrastucture.Properties.Resources.msgFound, true, users);
     }
@@ -93,11 +93,12 @@ public class UsersController : ControllerBase
             LastName = register.LastName,
             Email = register.Email,
             UserName = register.Email,
-            PassWord=register.Password
-            ,EmailConfirmed=true
+            PassWord = register.Password
+            ,
+            EmailConfirmed = true
         };
 
-        var result =await userManager.CreateAsync(newUser, register.Password);
+        var result = await userManager.CreateAsync(newUser, register.Password);
         if (result.Succeeded)
         {
             return new ResultDto(Infrastucture.Properties.Resources.msgSave, true);
@@ -117,16 +118,16 @@ public class UsersController : ControllerBase
     [HttpPut("[action]")]
     public async Task<ResultDto> Edit(UserEditDto userEdit)
     {
-        var user =await  userManager.FindByIdAsync(userEdit.Id);
+        var user = await userManager.FindByIdAsync(userEdit.Id);
         user.FirstName = userEdit.FirstName;
         user.LastName = userEdit.LastName;
         user.PhoneNumber = userEdit.PhoneNumber;
         user.Email = userEdit.Email;
         user.UserName = userEdit.UserName;
         user.EmailConfirmed = userEdit.EmailConfirmed;
-       var result=await   userManager.UpdateAsync(user);
+        var result = await userManager.UpdateAsync(user);
 
-        if(result.Succeeded)
+        if (result.Succeeded)
         {
             return new ResultDto(Infrastucture.Properties.Resources.msgEdited, true);
         }
@@ -141,13 +142,13 @@ public class UsersController : ControllerBase
 
 
     [HttpDelete("[action]")]
-    public async Task<ResultDto> Remove(string  id)
+    public async Task<ResultDto> Remove(string id)
     {
         var user = userManager.FindByIdAsync(id).Result;
 
-       var result=  userManager.DeleteAsync(user).Result;
+        var result = userManager.DeleteAsync(user).Result;
 
-        if(result.Succeeded)
+        if (result.Succeeded)
         {
             return new ResultDto(Infrastucture.Properties.Resources.msgDeleted, true);
         }
@@ -164,8 +165,16 @@ public class UsersController : ControllerBase
     [HttpPost("[action]")]
     public async Task<ResultDto> AddUserRole(AddUserRoleDto newRole)
     {
-        var user =await  userManager.FindByIdAsync(newRole.Id);
-        var result =await  userManager.AddToRoleAsync(user, newRole.Role);
+        var user = await userManager.FindByIdAsync(newRole.Id);
+        var result = await userManager.AddToRoleAsync(user, newRole.Role);
+        return new ResultDto(Infrastucture.Properties.Resources.msgSave, true);
+    }
+
+    [HttpPost("[action]")]
+    public async Task<ResultDto> RemoveUserRole(AddUserRoleDto newRole)
+    {
+        var user = await userManager.FindByIdAsync(newRole.Id);
+        var result = await userManager.RemoveFromRoleAsync(user, newRole.Role);
         return new ResultDto(Infrastucture.Properties.Resources.msgSave, true);
     }
 }

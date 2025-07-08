@@ -100,6 +100,8 @@ namespace NamiCustomers.MVC.Controllers
                 new  System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name,result.Email),
                 new  System.Security.Claims.Claim("NationalCode",result.NationalCode),
                 new  System.Security.Claims.Claim("Mobile",result.Mobile),
+                 new  System.Security.Claims.Claim("UserId",result.Id),
+
             };
 
                 var claimsIdentity = new ClaimsIdentity(
