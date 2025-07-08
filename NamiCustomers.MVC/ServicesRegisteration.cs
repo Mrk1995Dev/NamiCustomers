@@ -42,7 +42,7 @@ public static class ServicesRegisteration
     // Policy that requires any of these roles
     options.AddPolicy("OperatorAccess", policy =>
         policy.RequireRole("Admin", "Operator"));
-
+    
     // Policy that requires all specified roles
     options.AddPolicy("SubscriberAccess", policy =>
         policy.RequireRole("Admin,Operator,Subscriber")
