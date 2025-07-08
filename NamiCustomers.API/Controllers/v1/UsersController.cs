@@ -114,7 +114,7 @@ public class UsersController : ControllerBase
 
 
 
-    [HttpPost("[action]")]
+    [HttpPut("[action]")]
     public async Task<ResultDto> Edit(UserEditDto userEdit)
     {
         var user =await  userManager.FindByIdAsync(userEdit.Id);

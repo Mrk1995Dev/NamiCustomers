@@ -8,7 +8,8 @@ public interface IRoleService
     Task<ResultDto<List<RoleListDto>>> GetAllAsync();
     Task<ResultDto> RegisterAsync(AddNewRoleDto role);
     Task<ResultDto<List<UserListDto>>> GetUsersInRole(string Name);
- 
+    Task<ResultDto<RoleListDto>> GetAsync(string id);
+    Task<ResultDto> Edit(RoleListDto roleEdit);
 }
 public class RoleService : IRoleService
 {
@@ -20,7 +21,16 @@ public class RoleService : IRoleService
         _httpClient = httpClient;
     }
 
-  
+    public async Task<ResultDto> Edit(RoleListDto  roleEdit)
+    {
+        var response = await _httpClient.PutAsJsonAsync($"roles/edit", roleEdit);
+        if (response.IsSuccessStatusCode)
+        {
+            return new ResultDto(Infrastucture.Properties.Resources.msgEdited, true);
+        }
+
+        return new ResultDto(Infrastucture.Properties.Resources.errEdited, false);
+    }
 
     public async Task<ResultDto<List<RoleListDto>>> GetAllAsync()
     {
@@ -38,6 +48,27 @@ public class RoleService : IRoleService
         }
 
         return new ResultDto<List<RoleListDto>>(
+           Infrastucture.Properties.Resources.errNotFound,
+            false,
+            null);
+    }
+
+    public async  Task<ResultDto<RoleListDto>> GetAsync(string id)
+    {
+        var response = await _httpClient.GetFromJsonAsync<ResultDto<RoleListDto>>($"Roles/Get?id={id}");
+
+        if (response.Succeeded)
+        {
+            return new ResultDto<RoleListDto>(
+                 Infrastucture.Properties.Resources.msgFound,
+                true,
+                response.Data)
+            {
+
+            };
+        }
+
+        return new ResultDto<RoleListDto>(
            Infrastucture.Properties.Resources.errNotFound,
             false,
             null);

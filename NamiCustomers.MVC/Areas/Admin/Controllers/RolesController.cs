@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NamiCustomers.Abstractions.Dtos.Security.Dto;
 using NamiCustomers.Abstractions.Dtos.Security.Dto.Roles;
 using NamiCustomers.MVC.Services;
 
@@ -39,5 +40,39 @@ public class RolesController(IRoleService roleService) : Controller
 
         return View(result.Data);
     }
-  
+    [HttpGet]
+    public async Task<IActionResult> Details(string id)
+    {
+        var result = await roleService.GetAsync(id);
+
+        return View(result.Data);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(string Id)
+    {
+        var role = (await roleService.GetAsync(Id)).Data;
+        return View(role);
+
+    }
+    [HttpPost]
+    public async Task<IActionResult> Edit(RoleListDto  role)
+    {
+
+        var result = await roleService.Edit(role);
+
+        if (result.Succeeded)
+        {
+            return RedirectToAction("Index", "Roles", new { area = "Admin" });
+        }
+        //string message = "";
+        //foreach (var item in result.err.ToList())
+        //{
+        //    message += item.Description + Environment.NewLine;
+        //}
+        //TempData["Message"] = message;
+        return View(role);
+    }
+
+
 }

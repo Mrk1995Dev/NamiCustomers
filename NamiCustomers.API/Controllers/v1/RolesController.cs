@@ -30,6 +30,23 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
         return new ResultDto<List<RoleListDto>>(Infrastucture.Properties.Resources.msgFound, true, roles);
     }
 
+    [HttpGet("[action]")]
+    public async Task<ResultDto<RoleListDto>> GetAsync(string id)
+    {
+        var role = await roleManager.Roles.Where(c=>c.Id==id)
+            .Select(p =>
+             new RoleListDto
+             {
+                 Id = p.Id,
+                 Description = p.Description,
+                 Name = p.Name
+             })
+            .FirstOrDefaultAsync();
+        return new ResultDto<RoleListDto>(Infrastucture.Properties.Resources.msgFound, true, role);
+    }
+
+ 
+
     [HttpPost("[action]")]
     public async Task<ResultDto> Register(AddNewRoleDto newRole)
     {
@@ -37,6 +54,7 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
         {
             Description = newRole.Description,
             Name = newRole.Name,
+            Id=Guid.NewGuid().ToString()
         };
         var result = roleManager.CreateAsync(role).Result;
 
@@ -51,6 +69,35 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
         return new ResultDto(Infrastucture.Properties.Resources.errSave, false);
 
     }
+
+
+    [HttpPut("[action]")]
+    public async Task<ResultDto> Edit(RoleListDto roleEdit)
+    {
+        var role = await roleManager.FindByIdAsync(roleEdit.Id);
+        
+        role.Description=roleEdit.Description;
+        role.Name=roleEdit.Name;
+
+        var result = await roleManager.UpdateAsync(role);
+
+        if (result.Succeeded)
+        {
+            return new ResultDto(Infrastucture.Properties.Resources.msgEdited, true);
+        }
+        string message = "";
+        foreach (var item in result.Errors.ToList())
+        {
+            message += item.Description + Environment.NewLine;
+        }
+        //TempData["Message"] = message;
+        return new ResultDto(Infrastucture.Properties.Resources.errEdited, false);
+    }
+
+
+
+
+
     [HttpGet("[action]")]
     public async Task<ResultDto<List<UserListDto>>> GetUsersInRole(string Name)
     {

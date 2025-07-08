@@ -35,9 +35,18 @@ public class UsersController(IUserService userService, IRoleService roleService,
     }
 
 
+   
+    [HttpGet]
+    public async Task<IActionResult> Details(string id)
+    {
+        var result = await userService.GetAsync(id);
+
+        return View(result.Data);
+    }
+    [HttpGet]
     public async Task<IActionResult> Edit(string Id)
     {
-        var user =(await userService.GetAsync(Id)).Data;
+        var user = (await userService.GetAsync(Id)).Data;
         UserEditDto userEdit = new UserEditDto()
         {
             Email = user.Email,
@@ -51,8 +60,6 @@ public class UsersController(IUserService userService, IRoleService roleService,
         return View(userEdit);
 
     }
-
-
     [HttpPost]
     public async Task<IActionResult> Edit(UserEditDto userEdit)
     {
