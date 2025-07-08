@@ -1,10 +1,11 @@
 ﻿
-@using NamiCustomers.MVC.Areas.Admin.Models.Dto
+@using NamiCustomers.Abstractions.Dtos.Security.Dto
+ 
 @model IEnumerable<UserListDto>
 
 @{
     ViewData["Title"] = "Index";
-    Layout="~/Views/Shared/_LayoutAdmin.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
  
  
@@ -59,7 +60,7 @@
             <td>
                 @Html.ActionLink("ویرایش", "Edit","Users", new {  id=item.Id , area="Admin" }) |
                 @Html.ActionLink("حذف", "Delete","Users", new { id = item.Id, area = "Admin" })|
-                @Html.ActionLink("نقش جدید", "AddUserRole", "Users", new { id = item.Id, area = "Admin" })|
+                 @Html.ActionLink("نقش جدید", "AddUserRole", "Users", new { id = item.Id, area = "Admin" })|
                 @Html.ActionLink("نقش ها", "UserRoles", "Users", new { id = item.Id, area = "Admin" })
              </td>
         </tr>

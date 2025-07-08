@@ -12,7 +12,6 @@ namespace NamiCustomers.Abstractions.Dtos.Security.Dto.Roles
         public string Role { get; set; }
         public Dictionary<string,string> Roles { get; set; }
     }
-
-
+ 
 
 }

@@ -28,7 +28,7 @@ namespace NamiCustomers.API.Controllers.v1
         public async Task<IActionResult> GetListCustomerInfo()
         {
             var data = await customerManagmentService.GetAllAsync();
-            if (data.IsSuccess)
+            if (data.Succeeded)
                 return Ok(data.Data);
 
             return NotFound(data);
@@ -39,7 +39,7 @@ namespace NamiCustomers.API.Controllers.v1
         {
             var result = await customerManagmentService.RegisterAsync(customerInfo);
 
-            if (result.IsSuccess) return Created();
+            if (result.Succeeded) return Created();
 
             return NotFound(result);
         }
@@ -49,7 +49,7 @@ namespace NamiCustomers.API.Controllers.v1
         {
             if (!ModelState.IsValid) return BadRequest("اطلاعات مربوطه ناقص می باشد.");
             var data = await customerManagmentService.EditAsync(updateCustomer);
-            if (data.IsSuccess) return Ok(data);
+            if (data.Succeeded) return Ok(data);
 
             return BadRequest(data);
         }
@@ -58,7 +58,7 @@ namespace NamiCustomers.API.Controllers.v1
         public async Task<IActionResult> DeleteCustomer([FromQuery] int id)
         {
             var data = await customerManagmentService.DeleteAsync(id);
-            if (data.IsSuccess) return Ok();
+            if (data.Succeeded) return Ok();
 
             return NotFound(data);
         }
@@ -67,7 +67,7 @@ namespace NamiCustomers.API.Controllers.v1
         public async Task<IActionResult> ExportCustomerInfo()
         {
             var data = await customerManagmentService.ExportAsync();
-            if (!data.IsSuccess) return NotFound();
+            if (!data.Succeeded) return NotFound();
 
             return File(data.Data, "text/palin", "CustomerInfoReport.txt");
         }

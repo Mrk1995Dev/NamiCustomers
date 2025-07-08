@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using NamiCustomers.MVC.Areas.Admin.Models.Dto.Roles;
+﻿using Microsoft.AspNetCore.Mvc;
+using NamiCustomers.Abstractions.Dtos.Security.Dto.Roles;
 using NamiCustomers.MVC.Services;
 
 namespace NamiCustomers.MVC.Areas.Admin.Controllers;
 
-[Authorize(Roles = "Admin")]
+//[Authorize(Roles = "Admin")]
 [Area("Admin")]
 public class RolesController(IRoleService roleService) : Controller
 {
@@ -25,7 +24,7 @@ public class RolesController(IRoleService roleService) : Controller
     public async Task<IActionResult> Create(AddNewRoleDto newRole)
     {
          var result=await roleService.RegisterAsync(newRole);
-        if(result.IsSuccess)
+        if(result.Succeeded)
         {
             return RedirectToAction("Index", "Roles", new { area = "Admin" });
         };
@@ -33,7 +32,7 @@ public class RolesController(IRoleService roleService) : Controller
         return View(newRole);
 
     }
-
+    [HttpGet]
     public async Task<IActionResult> UserInRole(string Name)
     {
        var result=await roleService.GetUsersInRole(Name);

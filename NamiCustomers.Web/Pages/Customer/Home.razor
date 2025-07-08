@@ -74,7 +74,7 @@ else
         if (!confirm) return;
 
         var response = await customerService.DeleteAsync(id);
-        if (response.IsSuccess) navigationManager.NavigateTo("/", true);
+        if (response.Succeeded) navigationManager.NavigateTo("/", true);
     }
 
     public async Task EditCustomer(int id)

@@ -51,6 +51,7 @@ public enum SaleStatusType
 
 public enum MyClaims
 {
+    UserId,
     Mobile,
     NationalCode
 }

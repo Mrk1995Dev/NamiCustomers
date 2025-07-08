@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NamiCustomers.Persistence.DatabaseContexts;
 
@@ -11,9 +12,11 @@ using NamiCustomers.Persistence.DatabaseContexts;
 namespace NamiCustomers.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250707140822_roles")]
+    partial class roles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -534,14 +537,8 @@ namespace NamiCustomers.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("BodyColor")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Guid?>("BrandIdSevenSoft")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ChassisUsageTypeName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
@@ -552,20 +549,11 @@ namespace NamiCustomers.Persistence.Migrations
                     b.Property<string>("EnglishName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FullSystem")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsRemoved")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("MotorNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductYear")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("RemovedAt")
                         .HasColumnType("datetime2");
@@ -576,17 +564,8 @@ namespace NamiCustomers.Persistence.Migrations
                     b.Property<Guid?>("SalePlanIdSevenSoft")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("SelectedVehicleCommonName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SelectedVehicleDescription")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("SubscriberId")
                         .HasColumnType("int");
-
-                    b.Property<Guid?>("VehicleModelId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("VehicleModelIdSevensoft")
                         .HasColumnType("uniqueidentifier");

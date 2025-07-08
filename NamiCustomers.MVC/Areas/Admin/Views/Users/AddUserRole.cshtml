@@ -1,15 +1,17 @@
 ﻿
-@using NamiCustomers.MVC.Areas.Admin.Models.Dto.Roles
+ 
+@using NamiCustomers.Abstractions.Dtos.Security.Dto.Roles
+ 
 @model AddUserRoleDto
 
 @{
     ViewData["Title"] = "AddUserRole";
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="AddUserRole">
+        <form asp-action="AddUserRole" method="post">
             <p>
                 شما قصد افزودن نقش جدید به کاربر
                 <text>@Model.FullName</text>
@@ -17,14 +19,14 @@
                 <text>@Model.Email</text>
                 <span>را دارید</span>
             </p>
-
+            
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <input asp-for="Id" type="hidden" class="form-control" />
             </div>
             <div class="form-group">
                 <label asp-for="Role" class="control-label"></label>
-                <select asp-for="Role" asp-items="Model.Roles" class="form-control"></select>
+                <select asp-for="Role" asp-items="Model.Roles.Select(c=>new SelectListItem{Text=c.Value,Value=c.Key}).ToList()" class="form-control"></select>
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>
             <div class="form-group">

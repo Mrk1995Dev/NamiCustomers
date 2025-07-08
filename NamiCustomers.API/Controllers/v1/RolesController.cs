@@ -7,19 +7,23 @@ using System.Data;
 
 namespace NamiCustomers.API.Controllers.v1;
 
-[Authorize(Roles = "Admin")]
-[Area("Admin")]
+//[Authorize(Roles = "Admin")]
+//[Area("Admin")]
+
+[ApiController]
+[Route("api/v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
 public class RolesController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager) : ControllerBase
 {
     [HttpGet("[action]")]
-    public async Task<ResultDto<List<RoleListDto>>>   GetAllAsync()
+    public async Task<ResultDto<List<RoleListDto>>>  GetAllAsync()
     {
         var roles =await  roleManager.Roles
             .Select(p =>
              new RoleListDto
              {
                  Id = p.Id,
-                 //Description = p.Description,//diblo
+                 Description = p.Description,
                  Name = p.Name
              })
             .ToListAsync();
@@ -31,7 +35,7 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
     {
         ApplicationRole role = new ApplicationRole()
         {
-            //Description = newRole.Description,//diblo
+            Description = newRole.Description,
             Name = newRole.Name,
         };
         var result = roleManager.CreateAsync(role).Result;
@@ -63,4 +67,6 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
 
         return new ResultDto<List<UserListDto>>(Infrastucture.Properties.Resources.msgFound, true, users);
     }
+
+
 }
