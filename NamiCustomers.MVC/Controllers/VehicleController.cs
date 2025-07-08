@@ -60,7 +60,7 @@ public class VehicleController(
         if (!ModelState.IsValid) return BadRequest(Infrastucture.Properties.Resources.errInputInValid);
         var result = await vehicleService.RegisterAsync(vehicleModelDto);
 
-        if (result.IsSuccess) return RedirectToAction("Index");
+        if (result.Succeeded) return RedirectToAction("Index");
 
         return NotFound(result);
     }
@@ -75,7 +75,7 @@ public class VehicleController(
     {
         if (!ModelState.IsValid) return BadRequest(Infrastucture.Properties.Resources.errInputInValid);
         var data = await vehicleService.EditAsync(vehicleModelDto);
-        if (data.IsSuccess) return RedirectToAction("Index");
+        if (data.Succeeded) return RedirectToAction("Index");
 
         return BadRequest(data);
     }
@@ -83,7 +83,7 @@ public class VehicleController(
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         var data = await vehicleService.RemoveAsync(id);
-        if (data.IsSuccess) return RedirectToAction("Index");
+        if (data.Succeeded) return RedirectToAction("Index");
 
         return NotFound(data);
     }

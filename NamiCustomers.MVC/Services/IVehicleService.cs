@@ -90,7 +90,7 @@ public class VehicleService : IVehicleService
     public async Task<ResultDto<List<VehicleModelDto>>> GetAllAsync(int subscriberId)
     {
         var response = await _httpClient.GetFromJsonAsync<ResultDto<List<VehicleModelDto>>>($"Vehicle/GetAll?subscriberId={subscriberId}");
-        if (response.IsSuccess)
+        if (response.Succeeded)
         {
             return response;
         }

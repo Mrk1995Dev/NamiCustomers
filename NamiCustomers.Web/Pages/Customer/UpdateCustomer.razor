@@ -71,7 +71,7 @@ else
                 Address = customer.Address,
             };
         var response = await customerService.UpdateAsync(modifiedCustomer);
-        if (response.IsSuccess)
+        if (response.Succeeded)
         {
             navigation.NavigateTo("/");
         }

@@ -138,7 +138,7 @@ namespace NamiCustomers.MVC.Services.Auth
             var result = await GetData<ResultDto<LoginResponseDto>>("Account/LoginByOtp?otpCode=", otp);
 
 
-            if (result.IsSuccess)
+            if (result.Succeeded)
             {
 
                 //ذخیره اطلاعات

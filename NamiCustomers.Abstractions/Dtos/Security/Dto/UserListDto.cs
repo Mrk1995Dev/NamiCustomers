@@ -22,6 +22,8 @@ namespace NamiCustomers.Abstractions.Dtos.Security.Dto
         public bool EmailConfirmed { get; set; }
         [Display(Name = "خطا در ورود")]
         public int AccessFailedCount { get; set; }
- 
+        [Display(Name = "ایمیل")]
+        public string Email { get; set; }
+
     }
 }

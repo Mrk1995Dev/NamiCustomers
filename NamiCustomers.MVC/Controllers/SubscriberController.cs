@@ -32,7 +32,7 @@ public class SubscriberController(
     {
         var result = await subscriberService.RegisterAsync(subscriberDto);
 
-        if (result.IsSuccess) return Created();
+        if (result.Succeeded) return Created();
 
         return NotFound(result);
     }
@@ -47,7 +47,7 @@ public class SubscriberController(
     {
         if (!ModelState.IsValid) return BadRequest("اطلاعات مربوطه ناقص می باشد.");
         var data = await subscriberService.EditAsync(subscriberDto);
-        if (data.IsSuccess) return Ok(data);
+        if (data.Succeeded) return Ok(data);
 
         return BadRequest(data);
     }
@@ -55,7 +55,7 @@ public class SubscriberController(
     public async Task<IActionResult> Delete([FromQuery] int id)
     {
         var data = await subscriberService.RemoveAsync(id);
-        if (data.IsSuccess) return Ok();
+        if (data.Succeeded) return Ok();
 
         return NotFound(data);
     }

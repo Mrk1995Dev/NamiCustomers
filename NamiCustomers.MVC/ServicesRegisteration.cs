@@ -94,10 +94,22 @@ public static class ServicesRegisteration
 			var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
 			return new AccountService(httpClient);
 		});
+        services.AddScoped<IRoleService, RoleService>(sp =>
+        {
+            var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
+            return new RoleService(httpClient);
+        });
+        services.AddScoped<IUserService, UserService>(sp =>
+        {
+            var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
+            var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+            return new UserService(httpClient, httpContextAccessor);
+        });
 
 
 
-		return services;
+
+        return services;
 	}
 
 	private static IServiceCollection ConfigureOther(this IServiceCollection services)
