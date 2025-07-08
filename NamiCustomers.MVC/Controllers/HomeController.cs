@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NamiCustomers.MVC.Models;
 using System.Diagnostics;
 
 namespace NamiCustomers.MVC.Controllers

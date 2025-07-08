@@ -56,7 +56,7 @@ public class RolesController(IRoleService roleService) : Controller
 
     }
     [HttpPost]
-    public async Task<IActionResult> Edit(RoleListDto  role)
+    public async Task<IActionResult> Edit(RoleDto  role)
     {
 
         var result = await roleService.Edit(role);

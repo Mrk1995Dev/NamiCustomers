@@ -44,9 +44,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("[action]")]
-    public async Task<ResultDto<UserListDto>> GetAsync(string id)
+    public async Task<ResultDto<UserDto>> GetAsync(string id)
     {
-        var user = await userManager.Users.Select(p => new UserListDto
+        var user = await userManager.Users.Select(p => new UserDto
         {
             Id = p.Id,
             FirstName = p.FirstName,
@@ -58,14 +58,14 @@ public class UsersController : ControllerBase
             Email = p.Email
         }).FirstOrDefaultAsync(c => c.Id == id);
 
-        return new ResultDto<UserListDto>(Infrastucture.Properties.Resources.msgFound, true, user);
+        return new ResultDto<UserDto>(Infrastucture.Properties.Resources.msgFound, true, user);
     }
 
     [HttpGet("[action]")]
-    public async Task<ResultDto<List<UserListDto>>> GetAllAsync()
+    public async Task<ResultDto<List<UserDto>>> GetAllAsync()
     {
         var users = await userManager.Users
-            .Select(p => new UserListDto
+            .Select(p => new UserDto
             {
                 Id = p.Id,
                 FirstName = p.FirstName,
@@ -76,7 +76,7 @@ public class UsersController : ControllerBase
                 AccessFailedCount = p.AccessFailedCount,
                 Email = p.Email
             }).ToListAsync();
-        return new ResultDto<List<UserListDto>>(Infrastucture.Properties.Resources.msgFound, true, users);
+        return new ResultDto<List<UserDto>>(Infrastucture.Properties.Resources.msgFound, true, users);
     }
 
     [HttpPost("[action]")]

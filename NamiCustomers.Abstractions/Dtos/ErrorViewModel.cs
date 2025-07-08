@@ -1,4 +1,4 @@
-namespace NamiCustomers.MVC.Models
+namespace NamiCustomers.Abstractions.Dtos
 {
     public class ErrorViewModel
     {

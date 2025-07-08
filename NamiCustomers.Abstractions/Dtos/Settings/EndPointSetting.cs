@@ -1,4 +1,4 @@
-﻿namespace NamiCustomers.MVC.Models.Settings;
+﻿namespace NamiCustomers.Abstractions.Dtos.Settings;
 
 
 public class EndPointSetting

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NamiCustomers.Abstractions.Dtos.Security.Dto.Roles
 {
-    public class RoleListDto
+    public class RoleDto
     {
         [Display(Name = "شناسه")]
         public string Id { get; set; }

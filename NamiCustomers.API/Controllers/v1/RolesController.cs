@@ -14,33 +14,33 @@ namespace NamiCustomers.API.Controllers.v1;
 public class RolesController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager) : ControllerBase
 {
     [HttpGet("[action]")]
-    public async Task<ResultDto<List<RoleListDto>>>  GetAllAsync()
+    public async Task<ResultDto<List<RoleDto>>>  GetAllAsync()
     {
         var roles =await  roleManager.Roles
             .Select(p =>
-             new RoleListDto
+             new RoleDto
              {
                  Id = p.Id,
                  Description = p.Description,
                  Name = p.Name
              })
             .ToListAsync();
-        return new ResultDto<List<RoleListDto>>(Infrastucture.Properties.Resources.msgFound, true, roles);
+        return new ResultDto<List<RoleDto>>(Infrastucture.Properties.Resources.msgFound, true, roles);
     }
 
     [HttpGet("[action]")]
-    public async Task<ResultDto<RoleListDto>> GetAsync(string id)
+    public async Task<ResultDto<RoleDto>> GetAsync(string id)
     {
         var role = await roleManager.Roles.Where(c=>c.Id==id)
             .Select(p =>
-             new RoleListDto
+             new RoleDto
              {
                  Id = p.Id,
                  Description = p.Description,
                  Name = p.Name
              })
             .FirstOrDefaultAsync();
-        return new ResultDto<RoleListDto>(Infrastucture.Properties.Resources.msgFound, true, role);
+        return new ResultDto<RoleDto>(Infrastucture.Properties.Resources.msgFound, true, role);
     }
 
  
@@ -70,7 +70,7 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
 
 
     [HttpPut("[action]")]
-    public async Task<ResultDto> Edit(RoleListDto roleEdit)
+    public async Task<ResultDto> Edit(RoleDto roleEdit)
     {
         var role = await roleManager.FindByIdAsync(roleEdit.Id);
         
@@ -97,11 +97,11 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
 
 
     [HttpGet("[action]")]
-    public async Task<ResultDto<List<UserListDto>>> GetUsersInRole(string Name)
+    public async Task<ResultDto<List<UserDto>>> GetUsersInRole(string Name)
     {
         var usersInRole =await userManager.GetUsersInRoleAsync(Name);
 
-        var users= usersInRole.Select(p => new UserListDto
+        var users= usersInRole.Select(p => new UserDto
         {
             FirstName = p.FirstName,
             LastName = p.LastName,
@@ -110,7 +110,7 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
             Id = p.Id,
         }).ToList();
 
-        return new ResultDto<List<UserListDto>>(Infrastucture.Properties.Resources.msgFound, true, users);
+        return new ResultDto<List<UserDto>>(Infrastucture.Properties.Resources.msgFound, true, users);
     }
 
 

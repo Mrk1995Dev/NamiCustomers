@@ -9,13 +9,13 @@ namespace NamiCustomers.MVC.Services;
 public interface IUserService
 {
 
-    Task<ResultDto<List<UserListDto>>> GetAllAsync();
+    Task<ResultDto<List<UserDto>>> GetAllAsync();
     Task<ResultDto> RegisterAsync(RegisterDto register);
     Task<ResultDto> Edit(UserEditDto userEdit);
     Task<ResultDto> Remove(string id);
     Task<ResultDto> AddUserRole(AddUserRoleDto newRole);
     Task<Microsoft.AspNetCore.Identity.SignInResult> PasswordSignInAsync(MyAccountinfoDto myAccountinfoDto);
-    Task<ResultDto<UserListDto>> GetAsync(string id);
+    Task<ResultDto<UserDto>> GetAsync(string id);
     Task<ResultDto<AddUserRoleDto>> GetRolesAsync(string userId);
     
     Task<ResultDto> RemoveUserRole(AddUserRoleDto newRole);
@@ -41,24 +41,24 @@ public class UserService : IUserService
         return new ResultDto(Infrastucture.Properties.Resources.errEdited, false);
     }
 
-    public async Task<ResultDto<List<UserListDto>>> GetAllAsync()
+    public async Task<ResultDto<List<UserDto>>> GetAllAsync()
     {
-        var response = await _httpClient.GetFromJsonAsync<ResultDto<List<UserListDto>>>($"users/GetAll");
+        var response = await _httpClient.GetFromJsonAsync<ResultDto<List<UserDto>>>($"users/GetAll");
         if (response.Succeeded)
         {
             return response;
         }
-        return new ResultDto<List<UserListDto>>(Infrastucture.Properties.Resources.errNotFound, false, null);
+        return new ResultDto<List<UserDto>>(Infrastucture.Properties.Resources.errNotFound, false, null);
     }
 
-    public async Task<ResultDto<UserListDto>> GetAsync(string id)
+    public async Task<ResultDto<UserDto>> GetAsync(string id)
     {
-        var response = await _httpClient.GetFromJsonAsync<ResultDto<UserListDto>>($"users/Get?id={id}");
+        var response = await _httpClient.GetFromJsonAsync<ResultDto<UserDto>>($"users/Get?id={id}");
         if (response.Succeeded)
         {
             return response;
         }
-        return new ResultDto<UserListDto>(Infrastucture.Properties.Resources.errNotFound, false, null);
+        return new ResultDto<UserDto>(Infrastucture.Properties.Resources.errNotFound, false, null);
     }
 
     public async Task<Microsoft.AspNetCore.Identity.SignInResult> PasswordSignInAsync(MyAccountinfoDto myAccountinfoDto)
