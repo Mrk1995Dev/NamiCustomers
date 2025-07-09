@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NamiCustomers.Abstractions.Dtos.Account;
 
-public class RegisterDto
+public class RegisterUserDto
 {
     [Required]
     [Display(Name ="نام")]

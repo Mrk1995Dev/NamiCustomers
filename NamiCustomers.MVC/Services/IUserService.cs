@@ -10,7 +10,7 @@ public interface IUserService
 {
 
     Task<ResultDto<List<UserDto>>> GetAllAsync();
-    Task<ResultDto> RegisterAsync(RegisterDto register);
+    Task<ResultDto> RegisterAsync(RegisterUserDto register);
     Task<ResultDto> Edit(UserEditDto userEdit);
     Task<ResultDto> Remove(string id);
     Task<ResultDto> AddUserRole(AddUserRoleDto newRole);
@@ -69,7 +69,7 @@ public class UserService : IUserService
         return JsonSerializer.Deserialize<Microsoft.AspNetCore.Identity.SignInResult>(res.Content.ReadAsStream());
     }
 
-    public async  Task<ResultDto> RegisterAsync(RegisterDto register)
+    public async  Task<ResultDto> RegisterAsync(RegisterUserDto register)
     {
         var response = await _httpClient.PostAsJsonAsync($"users/register", register);
         if (response.IsSuccessStatusCode)

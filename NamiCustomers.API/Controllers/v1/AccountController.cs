@@ -1,19 +1,18 @@
-﻿using k8s.KubeConfigModels;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.IdentityModel.Tokens;
 using NamiCustomers.Abstractions.Dtos.Account;
+using NamiCustomers.Abstractions.Dtos.Subscribers;
 using NamiCustomers.Application.Services.Subscribers;
 using NamiCustomers.Domain.Entities.Account;
 using NamiCustomers.Infrastucture.ExternalServices.Email;
 using NamiCustomers.Infrastucture.ExternalServices.SmsServices;
 using NamiCustomers.Infrastucture.Utilities;
-using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NamiCustomers.API.Controllers.v1;
 
@@ -23,7 +22,7 @@ namespace NamiCustomers.API.Controllers.v1;
 
 public class AccountController(IConfiguration configuration, UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager, ISubscriberService subscriberService, IMailService mailService, IUrlHelperFactory urlHelperFactory
-  ,ISmsService  smsService ) : ControllerBase
+  , ISmsService smsService) : ControllerBase
 {
     //[HttpGet("[action]")]
     //public async Task<MyAccountinfoDto> FindByNameAsync()
@@ -44,11 +43,11 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     //}
 
 
-    [HttpGet("[action]")]
-    public async Task<IActionResult> GetCurrentUser()
-    {
-        return Ok(new ResultDto<List<ClaimsIdentity>>("", true, User.Identities.ToList()));
-    }
+    //[HttpGet("[action]")]
+    //public async Task<IActionResult> GetCurrentUser()
+    //{
+    //    return Ok(new ResultDto<List<ClaimsIdentity>>("", true, User.Identities.ToList()));
+    //}
 
     [HttpPost("[action]")]
     public async Task<Microsoft.AspNetCore.Identity.SignInResult> PasswordSignInAsync(MyAccountinfoDto myAccountinfoDto)
@@ -65,94 +64,100 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
             UserName = myAccountinfoDto.UserName,
         };
 
-        var a = User.Identity;
+        var userIdentity = User.Identity;
         return await signInManager.PasswordSignInAsync(user, myAccountinfoDto.Password, myAccountinfoDto.IsPersistent, true);
 
     }
 
     [HttpPost("[action]")]
-    public async Task<RegisterResponse> Register(RegisterDto registerDto)
+    public async Task<ResultDto> RegisterAsync(RegisterUserDto registerUserDto)
     {
-       
-        ApplicationUser newUser = new ApplicationUser()
+
+        var newUser = new ApplicationUser()
         {
-            FirstName = registerDto.FirstName,
-            LastName = registerDto.LastName,
-            Email = registerDto.Email,
-            UserName = registerDto.Email,
-            PassWord = registerDto.Password,
+            FirstName = registerUserDto.FirstName,
+            LastName = registerUserDto.LastName,
+            Email = registerUserDto.Email,
+            UserName = registerUserDto.Email,
+            PassWord = registerUserDto.Password,
         };
 
-        var result = userManager.CreateAsync(newUser, registerDto.Password).Result;
-        if (result.Succeeded)
+        var createResult = await userManager.CreateAsync(newUser, registerUserDto.Password);
+        if (createResult.Succeeded)
         {
-            var token = userManager.GenerateEmailConfirmationTokenAsync(newUser).Result;
+            var token = await userManager.GenerateEmailConfirmationTokenAsync(newUser);
             string callbackUrl = Url.Action("ConfirmEmail", "Account", new
             {
                 UserId = newUser.Id
             ,
                 token
-            }, protocol: Request.Scheme);
+            }
+            , protocol: Request.Scheme);
 
 
-            registerDto.CallbakUrl = registerDto.CallbakUrl.Replace("TEMPTOKEN", token);
+            registerUserDto.CallbakUrl = registerUserDto.CallbakUrl.Replace("TEMPTOKEN", token);
 
-            string body = $"لطفا برای فعال حساب کاربری بر روی لینک زیر کلیک کنید!  <br/> <a href='{registerDto.CallbakUrl}'> Link </a>";
-            await   mailService.SendEmailAsync(new MailRequest {Body=body,Subject= "فعال سازی حساب کاربری",ToEmail=newUser.Email });
-            return new RegisterResponse {IsSuccess=true };
+            string body = $"لطفا برای فعال حساب کاربری بر روی لینک زیر کلیک کنید!  <br/> <a href='{registerUserDto.CallbakUrl}'> Link </a>";
+            await mailService.SendEmailAsync(new MailRequest { Body = body, Subject = "فعال سازی حساب کاربری", ToEmail = newUser.Email });
+            return new ResultDto(Infrastucture.Properties.Resources.msgSave, true); //new RegisterResponse { IsSuccess = true };
         }
 
-        return new RegisterResponse { Errors = result.Errors.Select(c => c.Description).ToList(), IsSuccess = false };
+        return new ResultDto(
+            Infrastucture.Properties.Resources.errSave,
+            false,
+            new ApiErrorResponse(createResult.Errors.Select(c => new ApiError(c.Code, c.Description)).ToList())
+            );
     }
 
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetOtp([FromQuery] string mobile,string nationalCode)
+    public async Task<ResultDto<SubscriberCodeDto>> GetOtpAsync([FromQuery] string mobile, string nationalCode)
     {
         var result = await subscriberService.GetOtpAsync(mobile, nationalCode);
-        if (!result.Succeeded)
-        {
-            return BadRequest(result);
-        }
-        return Ok(result);
+        return result;
     }
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> LogInByOtp([FromQuery] string otpCode)
+    public async Task<ResultDto<LoginResponseDto>> LogInByOtp([FromQuery] string otpCode)
     {
         if (!string.IsNullOrEmpty(otpCode))
         {
-            var otp = await subscriberService.SendOtpAsync(otpCode);
-            if (otp.Succeeded)
+            var otpResult = await subscriberService.SendOtpAsync(otpCode);
+            if (otpResult.Succeeded)
             {
-                var user = await userManager.Users.WhereIf(true, c => c.PhoneNumber == otp.Data.Mobile).SingleOrDefaultAsync();
+                var user = await userManager.Users.WhereIf(true, c => c.PhoneNumber == otpResult.Data.Mobile).SingleOrDefaultAsync();
                 if (user != null)
                 {
                     var token = $"{GenerateJwtToken(user)}";
                     var refreshToken = $"{GenerateJwtToken(user)}";
-                    return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email ,NationalCode=user.NationalCode,Mobile=user.PhoneNumber,Id=user.Id }));
+                    return new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, NationalCode = user.NationalCode, Mobile = user.PhoneNumber, Id = user.Id });
                 }
                 else
                 {
-                    await RegisterUser(new RegisterModel
+                    var registerUserResult = RegisterUser(new RegisterModel
                     {
-                        Email = $"{otp.Data.Mobile}@namikhodro.com",
-                        FirstName = $"{otp.Data.Mobile}",
-                        LastName = $"{otp.Data.Mobile}",
-                        Mobile = otp.Data.Mobile,
-                        Password = $"Nn@{otp.Data.Mobile}",
-                        NationalCode=otp.Data.NationalCode
+                        Email = $"{otpResult.Data.Mobile}@namikhodro.com",
+                        FirstName = $"{otpResult.Data.Mobile}",
+                        LastName = $"{otpResult.Data.Mobile}",
+                        Mobile = otpResult.Data.Mobile,
+                        Password = $"Nn@{otpResult.Data.Mobile}",
+                        NationalCode = otpResult.Data.NationalCode
                     });
 
-                    var newUser = await userManager.Users.WhereIf(true, c => c.PhoneNumber == otp.Data.Mobile).SingleOrDefaultAsync();
-                    var token = $"{GenerateJwtToken(newUser)}";
-                    var refreshToken = $"{GenerateJwtToken(newUser)}";
-                    return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = newUser.Email }));
+                    if (registerUserResult)
+                    {
+                        var newUser = await userManager.Users.WhereIf(true, c => c.PhoneNumber == otpResult.Data.Mobile).SingleOrDefaultAsync();
+                        var token = $"{GenerateJwtToken(newUser)}";
+                        var refreshToken = $"{GenerateJwtToken(newUser)}";
+                        return new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = newUser.Email });
+                    }
+                    return new ResultDto<LoginResponseDto>("", false,new LoginResponseDto());
+
                 }
             }
-            return Unauthorized();
+            return new ResultDto<LoginResponseDto>(Infrastucture.Properties.Resources.errOtpInvalid, false, new LoginResponseDto());
         }
-        return Unauthorized();
+        return new ResultDto<LoginResponseDto>(Infrastucture.Properties.Resources.errOtpInvalid, false, new LoginResponseDto());
     }
 
     [HttpPost("[action]")]
@@ -187,7 +192,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
              e.Description
             )).ToList());
 
-            return BadRequest(new ResultDto<IdentityResult> (Infrastucture.Properties.Resources.Error,false,Result, errorResponse));
+            return BadRequest(new ResultDto<IdentityResult>(Infrastucture.Properties.Resources.Error, false, Result, errorResponse));
         }
 
     }
@@ -241,7 +246,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
 
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetToken([FromQuery] LoginModel model)
+    public async Task<IActionResult> GetTokenAsync([FromQuery] LoginModel model)
     {
         if (!string.IsNullOrEmpty(model.Mobile))
         {
@@ -270,22 +275,22 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> RegisterUser([FromBody] RegisterModel model)
+    private bool RegisterUser([FromBody] RegisterModel model)
     {
-        var user = new ApplicationUser {NationalCode=model.NationalCode, UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true, PassWord = model.Password };
-        var result = await userManager.CreateAsync(user, model.Password);
+        var user = new ApplicationUser { NationalCode = model.NationalCode, UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true, PassWord = model.Password };
+        var result =   userManager.CreateAsync(user, model.Password).Result;
 
         if (result.Succeeded)
         {
-            return Ok(new { message = "User registered successfully!" });
+            return true;
         }
 
-        return BadRequest(result.Errors);
+        return false;
     }
     [HttpPost("[action]")]
     public async Task<ConfirmResponse> ConfirmEmail(ConfirmRequest confirmRequest)
     {
-       
+
         var user = userManager.FindByIdAsync(confirmRequest.UserId).Result;
         if (user == null)
         {
@@ -306,20 +311,20 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
         var user = userManager.FindByNameAsync(User.Identity.Name).Result;
         var setResult = userManager.SetPhoneNumberAsync(user, phoneNumberDto.PhoneNumber).Result;
         string code = userManager.GenerateChangePhoneNumberTokenAsync(user, phoneNumberDto.PhoneNumber).Result;
-       
-        return await  smsService.SendSms(phoneNumberDto.PhoneNumber, code);
+
+        return await smsService.SendSms(phoneNumberDto.PhoneNumber, code);
     }
 
 
     //[Authorize]
     [HttpPost("[action]")]
-    public async  Task<ConfirmResponse> VerifyPhoneNumber(VerifyPhoneNumberDto verify)
+    public async Task<ConfirmResponse> VerifyPhoneNumber(VerifyPhoneNumberDto verify)
     {
         var user = userManager.FindByNameAsync(User.Identity.Name).Result;
         bool resultVerify = userManager.VerifyChangePhoneNumberTokenAsync(user, verify.Code, verify.PhoneNumber).Result;
         if (resultVerify == false)
         {
-            
+
             return new ConfirmResponse { Errors = new List<string> { $"کد وارد شده برای شماره {verify.PhoneNumber} اشتباه است" }, IsSuccess = false };
         }
         else
@@ -372,12 +377,9 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
 
 public class LoginModel
 {
-
     public string Email { get; set; }
-
     public string Password { get; set; }
     public string Mobile { get; set; }
-    public string NationalCode { get; set; }
     public bool IsPersistent { get; set; } = false;
 
 }

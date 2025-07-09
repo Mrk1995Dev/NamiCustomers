@@ -202,4 +202,10 @@
   <data name="errInputInValid" xml:space="preserve">
     <value>اطلاعات ورودی معتبر نمی باشد</value>
   </data>
+  <data name="errGetOtp" xml:space="preserve">
+    <value>خطا دریافت کد تایید</value>
+  </data>
+  <data name="errOtpInvalid" xml:space="preserve">
+    <value>کد وارد شده صحیح نمی باشد</value>
+  </data>
 </root>

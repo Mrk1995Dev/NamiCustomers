@@ -115,6 +115,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to خطا دریافت کد تایید.
+        /// </summary>
+        public static string errGetOtp {
+            get {
+                return ResourceManager.GetString("errGetOtp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to تنها می توان تصاویر از نوع 
         /// را بارگزاری نمودPNG,JPG,JPEG.
         /// </summary>
@@ -193,6 +202,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         public static string Error {
             get {
                 return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to کد وارد شده صحیح نمی باشد.
+        /// </summary>
+        public static string errOtpInvalid {
+            get {
+                return ResourceManager.GetString("errOtpInvalid", resourceCulture);
             }
         }
         

@@ -22,8 +22,14 @@
             Message = message;
             this.Succeeded = Succeeded;
         }
+        public ResultDto(string message, bool Succeeded, ApiErrorResponse Errors)
+        {
+            Message = message;
+            this.Succeeded = Succeeded;
+        }
         public string Message { get; set; }
         public bool Succeeded { get; set; }
+        public ApiErrorResponse ErrorResponse { get; set; }
     }
  
     public record ApiErrorResponse(List<ApiError> Errors);

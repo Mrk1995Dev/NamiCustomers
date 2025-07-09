@@ -11,7 +11,7 @@ using System.Security.Claims;
 namespace NamiCustomers.MVC.Controllers;
 
 
-public class AccountController(IAccountService accountService, IAuthService authService, IUrlHelperFactory urlHelperFactory, IUserService userService) : Controller
+public class AccountController(IAuthService authService, IUrlHelperFactory urlHelperFactory, IUserService userService) : Controller
 {
     [Authorize]
     public async Task<IActionResult> Index()
@@ -70,7 +70,7 @@ public class AccountController(IAccountService accountService, IAuthService auth
         {
             return RedirectToAction("LoginByMobile");
         }
-        var code = await authService.GetOtp(mobile, nationalcode);
+        var code = await authService.GetOtpAsync(mobile, nationalcode);
 
         TempData["mobile"] = mobile;
         return RedirectToAction("LoginByOtp");
@@ -84,15 +84,21 @@ public class AccountController(IAccountService accountService, IAuthService auth
     public async Task<IActionResult> LoginByOtp(string otp)
     {
         var result = await authService.LoginByOtpAsync(otp);
-        var userRoles = (await userService.GetRolesAsync(result.Id)).Data;
-        if (result.Email != null)
+        if (!result.Succeeded)
+        {
+            TempData["otpError"]=result.Message;
+            return View();
+        }
+        var user = result.Data;
+        var userRoles = (await userService.GetRolesAsync(user.Id)).Data;
+        if (user.Email != null)
         {
             var claims = new List<System.Security.Claims.Claim>
         {
-            new  System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name,result.Email),
-            new  System.Security.Claims.Claim("NationalCode",result.NationalCode),
-            new  System.Security.Claims.Claim("Mobile",result.Mobile),
-             new  System.Security.Claims.Claim("UserId",result.Id),
+            new  System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name,user.Email),
+            new  System.Security.Claims.Claim("NationalCode",user.NationalCode),
+            new  System.Security.Claims.Claim("Mobile",user.Mobile),
+            new  System.Security.Claims.Claim("UserId",user.Id),
 
         };
             foreach (var role in userRoles.Roles)
@@ -119,7 +125,7 @@ public class AccountController(IAccountService accountService, IAuthService auth
 
             return RedirectToAction("Index", "Home");
         }
-        ModelState.AddModelError(string.Empty, "Login  Error");
+        TempData["otpError"]="Login  Error";
         return View();
     }
 
@@ -154,7 +160,7 @@ public class AccountController(IAccountService accountService, IAuthService auth
             Token = "TEMPTOKEN"
         }, protocol: Request.Scheme);
 
-        var result = await authService.ForgotPassword(new ForgotPasswordRequestDto { Email = forgot.Email, CallBAckUrl = callbakUrl });
+        var result = await authService.ForgotPasswordAsync(new ForgotPasswordRequestDto { Email = forgot.Email, CallBAckUrl = callbakUrl });
         if (!result.Succeeded)
         {
             return ForgotPassword();
@@ -176,7 +182,7 @@ public class AccountController(IAccountService accountService, IAuthService auth
     [HttpPost]
     public async Task<IActionResult> ResetPassword(ResetPasswordDto reset)
     {
-        var result = await authService.ResetPassword(reset);
+        var result = await authService.ResetPasswordAsync(reset);
         if (result.Succeeded)
         {
             return RedirectToAction(nameof(ResetPasswordConfirmation));
@@ -213,7 +219,7 @@ public class AccountController(IAccountService accountService, IAuthService auth
 
 
     [HttpPost]
-    public async Task<IActionResult> Register(RegisterDto register)
+    public async Task<IActionResult> Register(RegisterUserDto register)
     {
         if (ModelState.IsValid == false)
         {
@@ -228,37 +234,41 @@ public class AccountController(IAccountService accountService, IAuthService auth
 
         register.CallbakUrl = callbakUrl;
 
-        var result = await authService.Register(register);
+        var result = await authService.RegisterAsync(register);
 
-        if (result.IsSuccess)
+        if (result.Succeeded)
         {
             return RedirectToAction("DisplayEmail");
         }
 
         string message = "";
-        foreach (var error in result.Errors.ToList())
+        foreach (var error in result.ErrorResponse.Errors.ToList())
         {
             message += $"{error} {Environment.NewLine}";
         }
         TempData["Message"] = message;
         return View(register);
     }
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> ConfirmEmail(string UserId, string Token)
     {
         if (UserId == null || Token == null)
         {
             return BadRequest();
         }
-        var result = await authService.ConfirmEmail(UserId, Token);
-
-        if (!result.IsSuccess)
+        var result = await authService.ConfirmEmailAsync(UserId, Token);
+        if (result.IsSuccess == false)
         {
+            ViewData["Message"] = result.Errors.Select(c => c).ToList();
             return RedirectToAction("Error", new ErrorViewModel { Errors = result.Errors.ToList() });
         }
 
-        return RedirectToAction("login");
+        return RedirectToAction("VerifySuccess");
+
+ 
     }
+
+
     public IActionResult DisplayEmail()
     {
         return View();
@@ -276,7 +286,7 @@ public class AccountController(IAccountService accountService, IAuthService auth
     public async Task<IActionResult> SetPhoneNumber(SetPhoneNumberDto phoneNumberDto)
     {
 
-        await authService.SetPhoneNumber(phoneNumberDto);
+        await authService.SetPhoneNumberAsync(phoneNumberDto);
 
         TempData["PhoneNumber"] = phoneNumberDto.PhoneNumber;
         return RedirectToAction(nameof(VerifyPhoneNumber));
@@ -296,7 +306,7 @@ public class AccountController(IAccountService accountService, IAuthService auth
     [HttpPost]
     public async Task<IActionResult> VerifyPhoneNumber(VerifyPhoneNumberDto verify)
     {
-        var result = await authService.VerifyPhoneNumber(verify);
+        var result = await authService.VerifyPhoneNumberAsync(verify);
 
         if (result.IsSuccess == false)
         {

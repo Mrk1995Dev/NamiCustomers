@@ -25,6 +25,10 @@ public class UsersController : ControllerBase
     [HttpGet("[action]")]
     public async Task<ResultDto<AddUserRoleDto>> GetUserRolesAsync(string userId)
     {
+        if (userId is null)
+        {
+            return new ResultDto<AddUserRoleDto>(Infrastucture.Properties.Resources.errNotFound, false,new AddUserRoleDto());
+        }
         var user = await userManager.Users.SingleOrDefaultAsync(c => c.Id == userId);
         var roles = await userManager.GetRolesAsync(user);
 
@@ -80,7 +84,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("[action]")]
-    public async Task<ResultDto> Register(RegisterDto register)
+    public async Task<ResultDto> Register(RegisterUserDto register)
     {
         if (ModelState.IsValid == false)
         {

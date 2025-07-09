@@ -25,7 +25,7 @@ public class UsersController(IUserService userService, IRoleService roleService)
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(RegisterDto register)
+    public async Task<IActionResult> Create(RegisterUserDto register)
     {
         if (ModelState.IsValid == false)
         {

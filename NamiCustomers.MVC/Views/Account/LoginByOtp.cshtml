@@ -52,6 +52,18 @@
         </a>
     </div>
 
+
+    @if (TempData["otpError"] != null)
+    {
+        <ul style="text-decoration:none">
+            خطا :
+             
+                <li>
+                <p>@TempData["otpError"].ToString()</p>
+                </li>
+             
+        </ul>
+    }else{
     <!-- Login Wrapper Area -->
     <div class="login-wrapper d-flex align-items-center justify-content-center">
         <div class="custom-container">
@@ -88,7 +100,7 @@
             </div>
         </div>
     </div>
-
+    }
     <!-- All JavaScript Files -->
     <script src="js/pwa.js"></script>
     <script src="~/SiteTmeplate/js/bootstrap.bundle.min.js"></script>
