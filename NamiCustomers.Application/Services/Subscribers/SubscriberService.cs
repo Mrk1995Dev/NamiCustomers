@@ -130,10 +130,12 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
             false,
             null);
 
-        var customerInfo = new SubscriberDto
+        var subscriberDto = new SubscriberDto
         {
             Id = data.Id,
             Name = data.Name,
+            Family=data.Family,
+            
             Address = data.Address,
             //CityName = data.City.Title,
             PhoneNumber = data.Phone,
@@ -144,7 +146,7 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
         return new ResultDto<SubscriberDto>(
             "",
             true,
-            customerInfo);
+            subscriberDto);
     }
 
 
@@ -298,7 +300,6 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
                 Id = data.Id,
                 Name = data.Name,
                 Address = data.Address,
-
                 PhoneNumber = data.Phone,
                 NationalCode = data.NationalCode,
                 Family = data.Family,
@@ -330,7 +331,6 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
                 Id = subscriber.Id,
                 Name = subscriber.Name,
                 Address = subscriber.Address,
-
                 PhoneNumber = subscriber.Phone,
                 NationalCode = subscriber.NationalCode,
                 Family = subscriber.Family,

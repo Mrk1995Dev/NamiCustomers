@@ -61,7 +61,7 @@ public class SubscriberController(
     public async Task<IActionResult> Delete([FromQuery] int id)
     {
         var data = await subscriberService.RemoveAsync(id);
-        if (data.Succeeded) return Ok();
+        if (data.Succeeded) RedirectToAction("List");
 
         return NotFound(data);
     }

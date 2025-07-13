@@ -6,7 +6,7 @@ using System.Numerics;
 
 namespace NamiCustomers.MVC.Controllers;
 
-[Authorize(Policy = "OperatorAccess")]
+[Authorize(Policy = nameof(MyPloicies.SubscriberAccess))]
 public class VehicleController(
     ISubscriberService subscriberService, IVehicleService vehicleService) : Controller
 {
