@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="~/SiteTmeplate/style.css">
     <link href="~/sitetmeplate/css/fontiran.css" rel="stylesheet" />
     <!-- Web App Manifest -->
-   @*  <link rel="manifest" href="~/SiteTmeplate/manifest.json"> *@
+    @*  <link rel="manifest" href="~/SiteTmeplate/manifest.json"> *@
 </head>
 
 <body>
@@ -63,7 +63,7 @@
     </div>
     <!-- # Sidenav Right -->
 
-        <div class="offcanvas offcanvas-end" id="NamioffCanvas" data-bs-scroll="true" tabindex="-1" aria-labelledby="affanOffcanvsLabel">
+    <div class="offcanvas offcanvas-end" id="NamioffCanvas" data-bs-scroll="true" tabindex="-1" aria-labelledby="affanOffcanvsLabel">
 
         <button class="btn-close btn-close-white text-reset" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 
@@ -78,12 +78,21 @@
                         <img src="img/bg-img/2.jpg" alt="">
                     </div>
 
-                        <!-- User Info -->
-                        <div class="user-info">
-                            <h6 class="user-name mb-0">نام و نام خانوادگی مشتری </h6>
-@*                             <span>CEO, Designing World</span>
- *@                        </div>
+                    <!-- User Info -->
+                    <div class="user-info">
+                        <h6 class="user-name mb-0">@User.Claims.Single(c => c.Type == MyClaims.FullName.ToString()).Value</h6>
+                        <span>
+
+                            @{
+                                var roles = string.Join(",", User.Claims.Where(c => c.Type == MyClaims.PersianRole.ToString()).Select(c => c.Value).ToList());
+                                <i>
+                                    @roles
+                                </i>
+                                
+                            }
+                        </span>
                     </div>
+                </div>
 
                 <!-- Sidenav Nav -->
                 <ul class="sidenav-nav ps-0">
@@ -95,7 +104,7 @@
                     <li>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Subscriber" asp-action="Profile">
                             <i class="bi bi-heart"></i> پروفایل
-                             
+
                         </a>
                     </li>
 
@@ -107,9 +116,9 @@
                     </li>
                     @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                     {
-                        <li >
+                        <li>
                             <a href="#" class="nav-url">
-                                <i class="bi bi-cart-check"></i>دسترسی ها 
+                                <i class="bi bi-cart-check"></i>دسترسی ها
                                 <span class="dropdown-icon"><i class="bi bi-chevron-down"></i></span>
                             </a>
                             <ul>
@@ -124,11 +133,11 @@
 
                     <li>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">
-                                <i class="bi bi-heart"></i> حریم خصوصی
-@*                                 <span class="badge bg-danger rounded-pill ms-2">220+</span>
+                            <i class="bi bi-heart"></i> حریم خصوصی
+                            @*                                 <span class="badge bg-danger rounded-pill ms-2">220+</span>
  *@                            </a>
-                        </li>
-          @*               <li>
+                    </li>
+                    @*               <li>
                             <a href="pages.html">
                                 <i class="bi bi-folder2-open"></i> Pages
                                 <span class="badge bg-success rounded-pill ms-2">100+</span>
@@ -206,13 +215,13 @@
                     </a>
                 </div>
 
-                    <!-- Copyright Info -->
-                    <div class="copyright-info">
+                <!-- Copyright Info -->
+                <div class="copyright-info">
                     <p><span id="">1404</span> ©  کپی رایت<a href="#"> شرکت نامی خودرو پیشرو</a></p>
-                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
 
     <div class="page-content-wrapper">
@@ -229,11 +238,11 @@
                 <ul class="h-100 d-flex align-items-center justify-content-between ps-0">
                     <li class="active">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
-                            <i class="bi bi-house-door"></i> 
+                            <i class="bi bi-house-door"></i>
                             <span>خانه </span>
                         </a>
 
-                   
+
                     </li>
 
                     <li>
@@ -282,7 +291,7 @@
     <script src="~/SiteTmeplate/js/isotope.pkgd.min.js"></script>
     <script src="~/SiteTmeplate/js/dark-rtl.js"></script>
     <script src="~/SiteTmeplate/js/active.js"></script>
- @*    <script src="~/SiteTmeplate/js/pwa.js"></script> *@
+    @*    <script src="~/SiteTmeplate/js/pwa.js"></script> *@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

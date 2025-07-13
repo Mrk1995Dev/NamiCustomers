@@ -130,7 +130,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                 {
                     var token = $"{GenerateJwtToken(user)}";
                     var refreshToken = $"{GenerateJwtToken(user)}";
-                    return new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, NationalCode = user.NationalCode, Mobile = user.PhoneNumber, Id = user.Id });
+                    return new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, NationalCode = user.NationalCode, Mobile = user.PhoneNumber, Id = user.Id,FirstName=user.FirstName,LastName=user.LastName });
                 }
                 else
                 {
@@ -238,7 +238,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
         {
             var token = $"{GenerateJwtToken(user)}";
             var refreshToken = $"{GenerateJwtToken(user)}";
-            return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email }));
+            return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email,FirstName=user.FirstName, LastName = user.LastName }));
         }
         return Unauthorized();
     }
@@ -255,7 +255,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
             {
                 var token = $"{GenerateJwtToken(user)}";
                 var refreshToken = $"{GenerateJwtToken(user)}";
-                return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email }));
+                return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, FirstName = user.FirstName, LastName = user.LastName }));
             }
             return Unauthorized();
         }
@@ -268,7 +268,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
             var user = await userManager.FindByEmailAsync(model.Email);
             var token = $"{GenerateJwtToken(user)}";
             var refreshToken = $"{GenerateJwtToken(user)}";
-            return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email }));
+            return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto {RefreshToken = refreshToken, Token = token, Email = user.Email, FirstName = user.FirstName, LastName = user.LastName }));
         }
 
         return Unauthorized();
@@ -350,6 +350,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     new Claim(ClaimTypes.Email, user.Email),
     new Claim("NationalCode", user.NationalCode),
     new Claim("Mobile", user.PhoneNumber),
+    new  System.Security.Claims.Claim("FullName",$"{user.FirstName} {user.LastName}"),
     new Claim(ClaimTypes.NameIdentifier, user.Id)
 };
         foreach (var role in roles)

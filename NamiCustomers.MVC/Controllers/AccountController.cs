@@ -99,11 +99,14 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
             new  System.Security.Claims.Claim("NationalCode",user.NationalCode),
             new  System.Security.Claims.Claim("Mobile",user.Mobile),
             new  System.Security.Claims.Claim("UserId",user.Id),
+            new  System.Security.Claims.Claim("FullName",$"{user.FirstName} {user.LastName}"),
+            
 
         };
             foreach (var role in userRoles.Roles)
             {
-                claims.Add(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, role.Value));
+                claims.Add(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, role.Name));
+                claims.Add(new System.Security.Claims.Claim("PersianRole", role.Description));
             }
 
 

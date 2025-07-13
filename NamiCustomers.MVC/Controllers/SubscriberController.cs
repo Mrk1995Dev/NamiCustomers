@@ -5,7 +5,7 @@ using NamiCustomers.MVC.Services;
 
 namespace NamiCustomers.MVC.Controllers;
 
-[Authorize(Policy = "SubscriberAccess")]
+[Authorize(Policy =nameof(MyPloicies.SubscriberAccess))]
 //[Authorize(Roles = "Subscriber,Admin")]
 public class SubscriberController(
     ISubscriberService  subscriberService) : Controller
@@ -13,6 +13,8 @@ public class SubscriberController(
    [AllowAnonymous]
     public IActionResult CheckMyClaims()
     {
+        
+        var a = nameof(MyPloicies.SubscriberAccess);
         return Json(User.Claims.Select(c => new { c.Type, c.Value }));
     }
 

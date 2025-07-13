@@ -32,8 +32,8 @@ public class UsersController : ControllerBase
         var user = await userManager.Users.SingleOrDefaultAsync(c => c.Id == userId);
         var roles = await userManager.GetRolesAsync(user);
 
-        var rolesDtos = roleManager.Roles.Where(c => roles.Contains(c.Name)).Select(c => new KeyValuePair<string, string>(c.Id, c.Name
-            )).ToDictionary();
+        var rolesDtos = roleManager.Roles.Where(c => roles.Contains(c.Name)).Select(c => new RoleDto{Id= c.Id,Name= c.Name
+            ,Description= c.Description }).ToList();
 
         var result = new AddUserRoleDto
         {
