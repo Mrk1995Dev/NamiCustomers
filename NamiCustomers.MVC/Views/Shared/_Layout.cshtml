@@ -80,7 +80,7 @@
 
                     <!-- User Info -->
                     <div class="user-info">
-                        <h6 class="user-name mb-0">@User.Claims.Single(c => c.Type == MyClaims.FullName.ToString()).Value</h6>
+                        <h6 class="user-name mb-0">@User.Claims.FirstOrDefault(c => c.Type == MyClaims.FullName.ToString())?.Value</h6>
                         <span>
 
                             @{
