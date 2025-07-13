@@ -10,7 +10,7 @@ namespace NamiCustomers.Abstractions.Dtos.Security.Dto.Roles
         public string Id { get; set; }
         [Display(Name ="نقش")]
         public string Role { get; set; }
-        public Dictionary<string,string> Roles { get; set; }
+        public List<RoleDto> Roles { get; set; }
     }
  
 

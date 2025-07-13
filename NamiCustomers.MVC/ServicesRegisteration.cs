@@ -45,17 +45,17 @@ public static class ServicesRegisteration
 
         services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminAccess", policy => policy.RequireRole("Admin"));
+    options.AddPolicy(MyPloicies.AdminAccess, policy => policy.RequireRole(MyRoles.Admin));
  
-    options.AddPolicy("OperatorAccess", policy =>
+    options.AddPolicy(MyPloicies.OperatorAccess, policy =>
     {
-        policy.RequireRole("Admin");
-        policy.RequireRole("Operator");
+        policy.RequireRole(MyRoles.Admin);
+        policy.RequireRole(MyRoles.Operator);
     }
        );
  
-    options.AddPolicy("SubscriberAccess", policy => {
-        policy.RequireRole("Subscriber");
+    options.AddPolicy(MyPloicies.SubscriberAccess, policy => {
+        policy.RequireRole(MyRoles.Subscriber);
     }
               );
     //options =>

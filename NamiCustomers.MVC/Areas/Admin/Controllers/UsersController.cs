@@ -122,18 +122,18 @@ public class UsersController(IUserService userService, IRoleService roleService)
         var user = await userService.GetAsync(Id);
         var allRoles = await roleService.GetAllAsync();
 
-        var roles = new List<SelectListItem>(
-            allRoles.Data.Select(p => new SelectListItem
-            {
-                Text = p.Name,
-                Value = p.Name,
-            }
-            ).ToList());
+        //var roles = new List<SelectListItem>(
+        //    allRoles.Data.Select(p => new SelectListItem
+        //    {
+        //        Text = p.Name,
+        //        Value = p.Name,
+        //    }
+        //    ).ToList());
 
         return View("AddUserRole", new AddUserRoleDto
         {
             Id = Id,
-            Roles = roles.Select(c => new KeyValuePair<string, string>(c.Value, c.Text)).ToDictionary(),
+            Roles = allRoles.Data.Select(c => new RoleDto {Id=c.Id,Description=c.Description,Name=c.Name }).ToList(),
             Email = user.Data.Email,
             FullName = $"{user.Data.FirstName}  {user.Data.LastName}"
         });
@@ -177,7 +177,7 @@ public class UsersController(IUserService userService, IRoleService roleService)
     public async Task<IActionResult> UserRoles(string Id)
     {
         var user = await userService.GetAsync(Id);
-        var roles =(await userService.GetRolesAsync(Id)).Data.Roles.Select(c=>c.Value).ToList();
+        var roles =(await userService.GetRolesAsync(Id)).Data.Roles.Select(c=>c.Name).ToList();
         ViewBag.UserInfo = $"Name : {user.Data.FirstName} {user.Data.LastName} Email:{user.Data.Email}";
         return View(new KeyValuePair<string,List<string>>(Id, roles));
     }
