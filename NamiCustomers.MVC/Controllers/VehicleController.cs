@@ -60,7 +60,8 @@ public class VehicleController(
         if (!ModelState.IsValid) return BadRequest(Infrastucture.Properties.Resources.errInputInValid);
         var result = await vehicleService.RegisterAsync(vehicleModelDto);
 
-        if (result.Succeeded) return RedirectToAction("Index");
+        if (result.Succeeded) 
+            return   RedirectToAction("Index");
 
         return NotFound(result);
     }
