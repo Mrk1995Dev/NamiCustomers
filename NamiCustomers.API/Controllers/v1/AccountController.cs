@@ -13,6 +13,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NamiCustomers.API.Controllers.v1;
 
@@ -130,14 +131,15 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                 {
                     var token = $"{GenerateJwtToken(user)}";
                     var refreshToken = $"{GenerateJwtToken(user)}";
-                    return new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, NationalCode = user.NationalCode, Mobile = user.PhoneNumber, Id = user.Id,FirstName=user.FirstName,LastName=user.LastName });
+                    return new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, NationalCode = user.NationalCode, Mobile = user.PhoneNumber, Id = user.Id, FirstName = user.FirstName, LastName = user.LastName });
                 }
                 else
                 {
-                    var registerUserResult = RegisterUser(new RegisterModel
+                    var registerUserResult =await  RegisterUser(new RegisterModel
                     {
                         Email = $"{otpResult.Data.Mobile}@namikhodro.com",
                         FirstName = $"{otpResult.Data.Mobile}",
+                        
                         LastName = $"{otpResult.Data.Mobile}",
                         Mobile = otpResult.Data.Mobile,
                         Password = $"Nn@{otpResult.Data.Mobile}",
@@ -151,7 +153,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                         var refreshToken = $"{GenerateJwtToken(newUser)}";
                         return new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = newUser.Email });
                     }
-                    return new ResultDto<LoginResponseDto>("", false,new LoginResponseDto());
+                    return new ResultDto<LoginResponseDto>("", false, new LoginResponseDto());
 
                 }
             }
@@ -238,7 +240,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
         {
             var token = $"{GenerateJwtToken(user)}";
             var refreshToken = $"{GenerateJwtToken(user)}";
-            return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email,FirstName=user.FirstName, LastName = user.LastName }));
+            return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, FirstName = user.FirstName, LastName = user.LastName }));
         }
         return Unauthorized();
     }
@@ -268,24 +270,47 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
             var user = await userManager.FindByEmailAsync(model.Email);
             var token = $"{GenerateJwtToken(user)}";
             var refreshToken = $"{GenerateJwtToken(user)}";
-            return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto {RefreshToken = refreshToken, Token = token, Email = user.Email, FirstName = user.FirstName, LastName = user.LastName }));
+            return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, FirstName = user.FirstName, LastName = user.LastName }));
         }
 
         return Unauthorized();
     }
 
     [HttpPost("[action]")]
-    private bool RegisterUser([FromBody] RegisterModel model)
+    private async Task<bool> RegisterUser([FromBody] RegisterModel model)
     {
-        var user = new ApplicationUser { NationalCode = model.NationalCode, UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true, PassWord = model.Password };
-        var result =   userManager.CreateAsync(user, model.Password).Result;
+        var user = new ApplicationUser {Id=Guid.NewGuid().ToString(), NationalCode = model.NationalCode, UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true, PassWord = model.Password };
 
-        if (result.Succeeded)
+        try
         {
-            return true;
+            var result = userManager.CreateAsync(user, model.Password).Result;
+
+            if (!result.Succeeded)
+            {
+                return false;
+            }
+
+            var subResult = await subscriberService.RegisterAsync(new SubscriberDto
+            {
+                Name = user.FirstName,
+                Family = user.LastName,
+                Mobile = user.PhoneNumber,
+                NationalCode = user.NationalCode,
+                PhoneNumber=user.PhoneNumber,
+                
+            });
+
+            if (subResult.Succeeded)
+            {
+                var roleResult = await userManager.AddToRoleAsync(user, MyRoles.Subscriber);
+            }
+        }
+        catch (Exception)
+        {
+            return false;
         }
 
-        return false;
+        return true;
     }
     [HttpPost("[action]")]
     public async Task<ConfirmResponse> ConfirmEmail(ConfirmRequest confirmRequest)

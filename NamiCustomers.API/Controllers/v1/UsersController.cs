@@ -11,6 +11,7 @@ namespace NamiCustomers.API.Controllers.v1;
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
+[Authorize]
 public class UsersController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> userManager;
@@ -149,7 +150,10 @@ public class UsersController : ControllerBase
     public async Task<ResultDto> Remove(string id)
     {
         var user = userManager.FindByIdAsync(id).Result;
-
+        if (user is null)
+        {
+            return new ResultDto(Infrastucture.Properties.Resources.msgDeleted, true);
+        }
         var result = userManager.DeleteAsync(user).Result;
 
         if (result.Succeeded)

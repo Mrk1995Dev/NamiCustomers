@@ -8,6 +8,7 @@ public class SubscriberCode : IBaseEntity<int>
     [Display(Name = "تلفن همراه")]
     [StringLength(maximumLength: 11, ErrorMessage = "طول {0} میبایست  {1} کاراکتر باشد", MinimumLength = 12)]
     public string Mobile { get; set; }
+    public string NationalCode { get; set; }
     public string AuthCode { get; set; }
     public bool Used { get; set; }
 

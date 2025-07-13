@@ -71,8 +71,8 @@ public class SubscriberService : ISubscriberService
     }
 
     public async Task<ResultDto> EditAsync(SubscriberDto updateCustomer)
-    {
-        var response = await _httpClient.PutAsJsonAsync($"susbcriber/edit", updateCustomer);
+    {    
+        var response = await _httpClient.PutAsJsonAsync($"Subscriber/Edit", updateCustomer);
         if (response.IsSuccessStatusCode)
         {
             return new ResultDto(Infrastucture.Properties.Resources.msgEdited, true);
