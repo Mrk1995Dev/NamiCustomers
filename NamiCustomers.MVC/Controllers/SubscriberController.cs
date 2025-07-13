@@ -53,7 +53,7 @@ public class SubscriberController(
     {
         if (!ModelState.IsValid) return BadRequest("اطلاعات مربوطه ناقص می باشد.");
         var data = await subscriberService.EditAsync(subscriberDto);
-        if (data.Succeeded) return Ok(data);
+        if (data.Succeeded) return RedirectToAction("Profile");
 
         return BadRequest(data);
     }

@@ -11,6 +11,7 @@ namespace NamiCustomers.API.Controllers.v1;
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
+[Authorize]
 public class UsersController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> userManager;

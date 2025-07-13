@@ -108,13 +108,13 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
 
         if (user is null || subRessult < 1)
             return new ResultDto(
-                "خطا در ویرایش اطلاعات کاربر",
+               Infrastucture.Properties.Resources.errEdited,
                 false);
 
 
 
         return new ResultDto(
-            "اطلاعات کاربر با موفقیت ویرایش شد",
+           Infrastucture.Properties.Resources.msgEdited,
             true);
     }
 
@@ -126,7 +126,7 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
             .Include(cu => cu.City).FirstOrDefaultAsync();
 
         if (data == null) return new ResultDto<SubscriberDto>(
-            "کاربر مربوطه یافت نشد.",
+             Infrastucture.Properties.Resources.errNotFound,
             false,
             null);
 
@@ -155,7 +155,7 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
             .Include(cu => cu.City).FirstOrDefaultAsync();
 
         if (data == null) return new ResultDto<SubscriberDto>(
-            "کاربر مربوطه یافت نشد.",
+           Infrastucture.Properties.Resources.errNotFound,
             false,
             null);
 

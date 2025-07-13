@@ -1,4 +1,5 @@
-﻿using NamiCustomers.Abstractions.Dtos.Subscribers;
+﻿using Microsoft.AspNetCore.Authorization;
+using NamiCustomers.Abstractions.Dtos.Subscribers;
 using NamiCustomers.Application.Services.Subscribers;
 
 namespace NamiCustomers.API.Controllers.v1
@@ -6,6 +7,7 @@ namespace NamiCustomers.API.Controllers.v1
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
+    [Authorize]
     public class SubscriberController(
         ISubscriberService subscriberService) : ControllerBase
     {
@@ -43,7 +45,7 @@ namespace NamiCustomers.API.Controllers.v1
             return NotFound(result);
         }
 
-        [HttpPost("[action]")]
+        [HttpPut("[action]")]
         public async Task<IActionResult> Edit([FromBody] SubscriberDto updateCustomer)
         {
             if (!ModelState.IsValid) return BadRequest("اطلاعات مربوطه ناقص می باشد.");
