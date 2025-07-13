@@ -9,9 +9,10 @@ public class VehicleModelDto
     public int SubscriberId { get; set; }
 	[Display(Name = "مدل خودرو ")]
 	public string? VehicleModelName { get; set; }
-	[Display(Name = "نام خودرو")]
+	[Display(Name = " نام خودرو")]
 	public string? VehicleModelLocalizedName { get; set; }
-    public string? SelectedVehicleDescription { get; set; }
+	[Display(Name = "نام خودرو")]
+	public string? SelectedVehicleDescription { get; set; }
 	[Display(Name = "سال ساخت")]
 	public string? ProductYear { get; set; }
 	[Display(Name = "رنگ بدنه")]
