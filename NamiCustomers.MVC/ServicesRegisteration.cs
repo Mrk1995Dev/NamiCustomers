@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using NamiCustomers.Infrastucture.ExternalServices.Email.Dtos;
@@ -9,6 +10,7 @@ using NamiCustomers.MVC.Handlers;
 using NamiCustomers.MVC.Services;
 using NamiCustomers.MVC.Services.Auth;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 
 namespace NamiCustomers.MVC;
 
@@ -36,16 +38,25 @@ public static class ServicesRegisteration
 
     public static IServiceCollection AddAuthorization(this IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<IdentityOptions>(options =>
+        {
+            options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
+        });
+
         services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminAccess", policy => policy.RequireRole("Admin"));
-    // Policy that requires any of these roles
+ 
     options.AddPolicy("OperatorAccess", policy =>
-        policy.RequireRole("Admin", "Operator"));
-    
-    // Policy that requires all specified roles
-    options.AddPolicy("SubscriberAccess", policy =>
-        policy.RequireRole("Admin,Operator,Subscriber")
+    {
+        policy.RequireRole("Admin");
+        policy.RequireRole("Operator");
+    }
+       );
+ 
+    options.AddPolicy("SubscriberAccess", policy => {
+        policy.RequireRole("Subscriber");
+    }
               );
     //options =>
     //{
@@ -72,6 +83,9 @@ public static class ServicesRegisteration
     {
         var jwtSettings = configuration.GetSection("JWTSettings");
 
+       
+
+
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -83,7 +97,7 @@ public static class ServicesRegisteration
         options.LoginPath = "/Account/LoginByMobile";
         options.AccessDeniedPath = "/Account/AccessDenied";
         options.SlidingExpiration = true;
-    });
+    }) ;
         return services;
     }
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)

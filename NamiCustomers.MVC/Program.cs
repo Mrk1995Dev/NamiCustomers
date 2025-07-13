@@ -1,10 +1,15 @@
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.Extensions.Options;
 using NamiCustomers.MVC;
 using NamiCustomers.MVC.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    //options.Filters.Add(new AuthorizeFilter());
+});
 
 builder.Services.BaseConfigures(builder);
 //builder.Services.AddScoped<CustomAuthorizeAttribute>();

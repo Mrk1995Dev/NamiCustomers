@@ -6,11 +6,16 @@ using NamiCustomers.MVC.Services;
 namespace NamiCustomers.MVC.Controllers;
 
 [Authorize(Policy = "SubscriberAccess")]
+//[Authorize(Roles = "Subscriber,Admin")]
 public class SubscriberController(
     ISubscriberService  subscriberService) : Controller
 {
-    
-    
+   [AllowAnonymous]
+    public IActionResult CheckMyClaims()
+    {
+        return Json(User.Claims.Select(c => new { c.Type, c.Value }));
+    }
+
     public async Task<IActionResult> Details(int id)
     {
         var data = await subscriberService.GetAsync(id);

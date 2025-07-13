@@ -131,16 +131,15 @@ public static class ServicesRegisteration
     private static IServiceCollection ConfigureDatabaseConnection(this IServiceCollection services, IConfiguration configuration)
     {
         // Configure Identity
-        services.AddIdentity<Domain.Entities.Account.ApplicationUser, ApplicationRole>()
+        services.AddIdentity<Domain.Entities.Account.ApplicationUser, ApplicationRole>(options =>
+        {
+            options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
+        })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders()
             .AddRoles<ApplicationRole>()
         ;
-
-        services.Configure<IdentityOptions>(options =>
-        {
-            options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
-        });
+ 
         //services.Configure<IdentityOptions>(option =>
         //{
         //    //UserSetting
