@@ -13,7 +13,6 @@ public class SubscriberController(
    [AllowAnonymous]
     public IActionResult CheckMyClaims()
     {
-        
         var a = nameof(MyPloicies.SubscriberAccess);
         return Json(User.Claims.Select(c => new { c.Type, c.Value }));
     }
@@ -50,7 +49,7 @@ public class SubscriberController(
         return View(data.Data);
     }
     [HttpPost]
-    public async Task<IActionResult> Edit([FromBody] SubscriberDto subscriberDto)
+    public async Task<IActionResult> Edit(SubscriberDto subscriberDto)
     {
         if (!ModelState.IsValid) return BadRequest("اطلاعات مربوطه ناقص می باشد.");
         var data = await subscriberService.EditAsync(subscriberDto);

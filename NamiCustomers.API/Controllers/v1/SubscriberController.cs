@@ -6,67 +6,66 @@ namespace NamiCustomers.API.Controllers.v1
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
-    //[Authorize]
     public class SubscriberController(
-        ISubscriberService customerManagmentService) : ControllerBase
+        ISubscriberService subscriberService) : ControllerBase
     {
-        [HttpGet("info")]
-        public async Task<ResultDto<SubscriberDto>> CustomerInfo([FromQuery] int id)
-            => await customerManagmentService.GetAsync(id);
-        [HttpGet("infobynationalcode")]
+        [HttpGet("[action]")]
+        public async Task<ResultDto<SubscriberDto>> Info([FromQuery] int id)
+            => await subscriberService.GetAsync(id);
+        [HttpGet("[action]")]
         public async Task<ResultDto<SubscriberDto>> InfoByNationalCode([FromQuery] string nationalCode)
-            => await customerManagmentService.GetByNationalCodeAsync(nationalCode);
+            => await subscriberService.GetByNationalCodeAsync(nationalCode);
 
         
 
-        [HttpGet("GetByMobile")]
-        public async Task<ResultDto<SubscriberDto>> CustomerMobile([FromQuery] string mobile)
-           => await customerManagmentService.GetAsync(mobile);
+        [HttpGet("[action]")]
+        public async Task<ResultDto<SubscriberDto>> GetByMobile([FromQuery] string mobile)
+           => await subscriberService.GetAsync(mobile);
 
 
-        [HttpGet("subscribers")]
-        public async Task<IActionResult> GetListCustomerInfo()
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Subscribers()
         {
-            var data = await customerManagmentService.GetAllAsync();
+            var data = await subscriberService.GetAllAsync();
             if (data.Succeeded)
                 return Ok(data.Data);
 
             return NotFound(data);
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> AddCustomerInfo([FromBody] SubscriberDto customerInfo)
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Register([FromBody] SubscriberDto customerInfo)
         {
-            var result = await customerManagmentService.RegisterAsync(customerInfo);
+            var result = await subscriberService.RegisterAsync(customerInfo);
 
             if (result.Succeeded) return Created();
 
             return NotFound(result);
         }
 
-        [HttpPut("edit")]
-        public async Task<IActionResult> UpdateCustomer([FromBody] SubscriberDto updateCustomer)
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Edit([FromBody] SubscriberDto updateCustomer)
         {
             if (!ModelState.IsValid) return BadRequest("اطلاعات مربوطه ناقص می باشد.");
-            var data = await customerManagmentService.EditAsync(updateCustomer);
+            var data = await subscriberService.EditAsync(updateCustomer);
             if (data.Succeeded) return Ok(data);
 
             return BadRequest(data);
         }
 
-        [HttpDelete("remove")]
-        public async Task<IActionResult> DeleteCustomer([FromQuery] int id)
+        [HttpDelete("[action]")]
+        public async Task<IActionResult> Remove([FromQuery] int id)
         {
-            var data = await customerManagmentService.DeleteAsync(id);
+            var data = await subscriberService.DeleteAsync(id);
             if (data.Succeeded) return Ok();
 
             return NotFound(data);
         }
 
-        [HttpGet("report")]
+        [HttpGet("[action]")]
         public async Task<IActionResult> ExportCustomerInfo()
         {
-            var data = await customerManagmentService.ExportAsync();
+            var data = await subscriberService.ExportAsync();
             if (!data.Succeeded) return NotFound();
 
             return File(data.Data, "text/palin", "CustomerInfoReport.txt");

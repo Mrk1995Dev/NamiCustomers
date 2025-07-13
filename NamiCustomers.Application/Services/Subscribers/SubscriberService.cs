@@ -1,6 +1,8 @@
-﻿using NamiCustomers.Abstractions.Dtos.Subscribers;
+﻿using Microsoft.AspNetCore.Identity;
+using NamiCustomers.Abstractions.Dtos.Subscribers;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Application.Services.SevenSoftServices;
+using NamiCustomers.Domain.Entities.Account;
 using NamiCustomers.Domain.Entities.Subscribers;
 using NamiCustomers.Infrastucture.Utilities;
 using System.Text;
@@ -21,7 +23,7 @@ public interface ISubscriberService
     Task<ResultDto<SubscriberCodeDto>> SendOtpAsync(string mobile);
     Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string mobile, string nationalCode);
 }
-public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, ISevenSoftService sevenSoftService) : ISubscriberService
+public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, ISevenSoftService sevenSoftService, UserManager<ApplicationUser> userManager) : ISubscriberService
 {
     public async Task<ResultDto> RegisterAsync(SubscriberDto addCustomerInfoDto)
     {
@@ -29,13 +31,14 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
         Subscriber newCustomer = new Subscriber
         {
             Name = addCustomerInfoDto.Name,
-            Address = addCustomerInfoDto.Address,
-            CityId = addCustomerInfoDto.CityId,
+            Family = addCustomerInfoDto.Family,
             Mobile = addCustomerInfoDto.PhoneNumber,
+            NationalCode=addCustomerInfoDto.NationalCode,
         };
 
         await dbContext.Subscribers.AddAsync(newCustomer);
-        if (await dbContext.SaveChangesAsync() < 1) return new ResultDto("خطا در ذخیره اطلاعات مربوطه", false);
+        if (await dbContext.SaveChangesAsync() < 1) 
+            return new ResultDto("خطا در ذخیره اطلاعات مربوطه", false);
 
         return new ResultDto("اطلاعات با موفقیت ذخیره شد.", true);
     }
@@ -63,6 +66,7 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
         {
             Id = c.Id,
             Name = c.Name,
+            Family = c.Family,
             Address = c.Address,
             CityName = c.City.Title,
             PhoneNumber = c.Mobile
@@ -76,22 +80,38 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
 
     public async Task<ResultDto> EditAsync(SubscriberDto subscriberDto)
     {
-        var currentCustomer = await dbContext.Subscribers.Where(cu => cu.Id == subscriberDto.Id).FirstOrDefaultAsync();
-        if (currentCustomer is null)
+        var subscriber = await dbContext.Subscribers.Where(cu => cu.Id == subscriberDto.Id).FirstOrDefaultAsync();
+
+        if (subscriber is null)
             return new ResultDto(
                 "کاربر مربوطه یافت نشد",
                 false);
 
-        currentCustomer.Name = subscriberDto.Name;
-        currentCustomer.Address = subscriberDto.Address;
-        currentCustomer.Mobile = subscriberDto.PhoneNumber;
-        currentCustomer.CityId = subscriberDto.CityId;
 
-        dbContext.Subscribers.Update(currentCustomer);
-        if (await dbContext.SaveChangesAsync() < 1)
+
+        subscriber.Name = subscriberDto.Name;
+        subscriber.Family = subscriberDto.Family;
+        subscriber.Address = subscriberDto.Address;
+        subscriber.Mobile = subscriberDto.PhoneNumber;
+        subscriber.CityId = subscriberDto.CityId;
+
+        dbContext.Subscribers.Update(subscriber);
+
+        var user = await userManager.Users.Where(c => c.NationalCode == subscriber.NationalCode).FirstOrDefaultAsync();
+        if (user != null)
+        {
+            user.FirstName = subscriber.Name;
+            user.LastName = subscriber.Family;
+        }
+        var subRessult = await dbContext.SaveChangesAsync();
+        var userResult = await userManager.UpdateAsync(user);
+
+        if (user is null || subRessult < 1)
             return new ResultDto(
                 "خطا در ویرایش اطلاعات کاربر",
                 false);
+
+
 
         return new ResultDto(
             "اطلاعات کاربر با موفقیت ویرایش شد",
@@ -117,8 +137,8 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
             Address = data.Address,
             //CityName = data.City.Title,
             PhoneNumber = data.Phone,
-            NationalCode=data.NationalCode,
-            Mobile=data.Mobile
+            NationalCode = data.NationalCode,
+            Mobile = data.Mobile
         };
 
         return new ResultDto<SubscriberDto>(
@@ -143,6 +163,7 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
         {
             Id = data.Id,
             Name = data.Name,
+            Family = data.Family,
             Address = data.Address,
             CityName = data.City.Title,
             PhoneNumber = data.Mobile,
@@ -196,21 +217,20 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
         {
             return new ResultDto<SubscriberCodeDto>("Not found !", false, new SubscriberCodeDto());
         }
-
-        otp.Used = true;
+         
         await dbContext.SaveChangesAsync();
-        return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto { AuthCode = otp.AuthCode, Mobile = otp.Mobile });
+        return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto {NationalCode= otp.NationalCode,  AuthCode = otp.AuthCode, Mobile = otp.Mobile });
     }
 
     public async Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string mobile, string nationalCode)
     {
         var Randowmpass = new PasswordUtility();
         string passnew = Randowmpass.RandomString(5);
-        var newOtp = new SubscriberCode { AuthCode = passnew, Mobile = mobile };
+        var newOtp = new SubscriberCode { AuthCode = passnew, Mobile = mobile ,NationalCode=nationalCode};
         await dbContext.SubscriberCodes.AddAsync(newOtp);
         await dbContext.SaveChangesAsync();
         var result = await smsService.SendSms(newOtp.Mobile, $"{newOtp.AuthCode}\n لغو11");
-        return new ResultDto<SubscriberCodeDto>("", result.IsSuccessStatusCode, new SubscriberCodeDto { AuthCode = newOtp.AuthCode, Mobile = newOtp.Mobile, NationalCode = nationalCode });
+        return new ResultDto<SubscriberCodeDto>("", result.IsSuccessStatusCode, new SubscriberCodeDto { AuthCode = newOtp.AuthCode, Mobile = newOtp.Mobile, NationalCode = newOtp.NationalCode });
     }
 
     public async Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync(string nationalCode)
