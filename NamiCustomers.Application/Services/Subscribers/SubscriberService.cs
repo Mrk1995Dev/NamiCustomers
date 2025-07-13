@@ -92,8 +92,9 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
         subscriber.Name = subscriberDto.Name;
         subscriber.Family = subscriberDto.Family;
         subscriber.Address = subscriberDto.Address;
-        subscriber.Mobile = subscriberDto.PhoneNumber;
+        subscriber.Mobile = subscriberDto.Mobile;
         subscriber.CityId = subscriberDto.CityId;
+        subscriber.Phone=subscriberDto.PhoneNumber;
 
         dbContext.Subscribers.Update(subscriber);
 

@@ -25,8 +25,9 @@ public class VehicleService(IAppDbContext dbContext, IMapper mapper,ISevenSoftSe
         {
             return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errSave, false, null);
         }
+         
 
-        var newEntity = mapper.Map<VehicleModel>(vehicleModelDto);
+            var newEntity = mapper.Map<VehicleModel>(vehicleModelDto);
         await dbContext.VehicleModels.AddAsync(newEntity);
         var result = await dbContext.SaveChangesAsync();
         if (result < 1)
