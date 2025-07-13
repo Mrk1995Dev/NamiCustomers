@@ -134,6 +134,8 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
         {
             Id = data.Id,
             Name = data.Name,
+            Family=data.Family,
+            
             Address = data.Address,
             //CityName = data.City.Title,
             PhoneNumber = data.Phone,
