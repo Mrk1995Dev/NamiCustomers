@@ -3,71 +3,106 @@
 @{
     ViewData["Title"] = "Create";
 }
+<br />
+<div class="container direction-rtl">
+    <div class="card">
+        <div class="card-body p-2">
+            <div class="d-flex align-items-center justify-content-between">
+                <small class="ms-1">تایید خودرو</small>
+                <form action="#">
+                    @*         <select class="pe-4 form-select form-select-sm form-control-clicked" id="defaultSelectSm" name="defaultSelectSm" aria-label="Default select example">
+                        <option value="1" selected="">Sort by Newest</option>
+                        <option value="2">Sort by Older</option>
+                        <option value="3">Sort by Ratings</option>
+                        <option value="4">Sort by Sales</option>
+                    </select> *@
+                    <a asp-action="Index" title="بازگشت"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></a>
 
-<h1>Create</h1>
-
-<h4>VehicleModelDto</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="CreateVehicle">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
-            <div style="display:none" class="form-group">
-                <label asp-for="SubscriberId" class="control-label"></label>
-                <input asp-for="SubscriberId" class="form-control" />
-                <span asp-validation-for="SubscriberId" class="text-danger"></span>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="VehicleModelName" class="control-label"></label>
-                <input asp-for="VehicleModelName" class="form-control" />
-                <span asp-validation-for="VehicleModelName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VehicleModelLocalizedName" class="control-label"></label>
-                <input asp-for="VehicleModelLocalizedName" class="form-control" />
-                <span asp-validation-for="VehicleModelLocalizedName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SelectedVehicleDescription" class="control-label"></label>
-                <input asp-for="SelectedVehicleDescription" class="form-control" />
-                <span asp-validation-for="SelectedVehicleDescription" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProductYear" class="control-label"></label>
-                <input asp-for="ProductYear" class="form-control" />
-                <span asp-validation-for="ProductYear" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BodyColor" class="control-label"></label>
-                <input asp-for="BodyColor" class="form-control" />
-                <span asp-validation-for="BodyColor" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MotorNumber" class="control-label"></label>
-                <input asp-for="MotorNumber" class="form-control" />
-                <span asp-validation-for="MotorNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FullSystem" class="control-label"></label>
-                <input asp-for="FullSystem" class="form-control" />
-                <span asp-validation-for="FullSystem" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BrandId" class="control-label"></label>
-                <input asp-for="BrandId" class="form-control" />
-                <span asp-validation-for="BrandId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="container">
+    <!-- User Meta Data-->
+    <div class="card user-data-card">
+        <div class="card-body">
+            <form asp-action="GetChassisInformationByVinNumber" method="get">
+                <form asp-action="CreateVehicle">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div style="display:none" class="form-group">
+                        <label asp-for="SubscriberId" class="control-label" style="color: #fff !important;"></label>
+                        <input asp-for="SubscriberId" class="form-control" style="color: #000 !important;" />
+                        <span asp-validation-for="SubscriberId" class="text-danger"></span>
+                    </div>
+                    <div style="display:none" class="form-group">
+                        <label asp-for="VehicleModelName" class="control-label" style="color: #fff !important;"></label>
+                        <input asp-for="VehicleModelName" class="form-control" style="color: #000 !important;" />
+                        <span asp-validation-for="VehicleModelName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="VehicleModelLocalizedName" class="control-label" style="color: #fff !important;"></label>
+                        <input asp-for="VehicleModelLocalizedName" class="form-control" style="color: #000 !important;" />
+                        <span asp-validation-for="VehicleModelLocalizedName" class="text-danger"></span>
+                    </div><div class="form-group">
+                        <label asp-for="SelectedVehicleCommonName" class="control-label" style="color: #fff !important;"></label>
+                        <input asp-for="SelectedVehicleCommonName" class="form-control" style="color: #000 !important;" />
+                        <span asp-validation-for="SelectedVehicleCommonName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="VinNumber" class="control-label" style="color: #fff !important;"></label>
+                        <input asp-for="VinNumber" class="form-control" style="color: #000 !important;" />
+                        <span asp-validation-for="VinNumber" class="text-danger"></span>
+                    </div>
+                    <div style="display:none;" class="form-group">
+                        <label asp-for="SelectedVehicleDescription" class="control-label" style="color: #fff !important;"></label>
+                        <input asp-for="SelectedVehicleDescription" class="form-control" style="color: #000 !important;" />
+                        <span asp-validation-for="SelectedVehicleDescription" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ProductYear" class="control-label" style="color: #fff !important;"></label>
+                        <input asp-for="ProductYear" class="form-control" style="color: #000 !important;" />
+                        <span asp-validation-for="ProductYear" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="BodyColor" class="control-label" style="color: #fff !important;"></label>
+                        <input asp-for="BodyColor" class="form-control" style="color: #000 !important;" />
+                        <span asp-validation-for="BodyColor" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="MotorNumber" class="control-label" style="color: #fff !important;"></label>
+                        <input asp-for="MotorNumber" class="form-control" style="color: #000 !important;" />
+                        <span asp-validation-for="MotorNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FullSystem" class="control-label" style="color: #fff !important;"></label>
+                        <input asp-for="FullSystem" class="form-control" style="color: #000 !important;" />
+                        <span asp-validation-for="FullSystem" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="BrandId" class="control-label" style="color: #fff !important;"></label>
+                        <input asp-for="BrandId" class="form-control" style="color: #000 !important;" />
+                        <span asp-validation-for="BrandId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="تایید" class="btn btn-primary w-100" />
+                    </div>
+                </form>
+
+                
+
+
+
+            </form>
+        </div>
+    </div>
 </div>
+
+
+
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

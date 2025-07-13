@@ -47,17 +47,20 @@
                                     <a class="product-thumbnail d-block" href="shop-details.html">
                                         <img src="~/sitetmeplate/img/bg-img/p1.jpg" alt="">
                                         <!-- Badge -->
-                                            <span class="badge bg-primary">مدل سال: @Html.DisplayFor(modelItem => item.ProductYear)</span>
+                                            <span class="badge bg-primary"> @Html.DisplayFor(modelItem => item.ProductYear)</span>
                                     </a>
                                 </div>
 
                                 <div class="card-content px-4 py-2">
                                     <!-- Product Title -->
-                                    <a class="product-title d-block text-truncate mt-0" href="shop-details.html">شماره شاسی: @Html.DisplayFor(modelItem => item.VinNumber)</a>
-                                        <a class="product-title d-block text-truncate mt-0" href="shop-details.html">نام خودور: @Html.DisplayFor(modelItem => item.SelectedVehicleDescription)</a>
-                                    <!-- Product Price -->
-                                        <p class="product-title d-block text-truncate mt-0">رنگ خودرو: @Html.DisplayFor(modelItem => item.BodyColor)</p>
+@*                                         <a class="product-title d-block text-truncate mt-0" href="shop-details.html"> @Html.DisplayFor(modelItem => item.SelectedVehicleCommonName)</a>
+ *@                                        <p class="product-title d-block text-truncate mt-0">  @Html.DisplayFor(modelItem => item.SelectedVehicleCommonName)</p>
+                                        <p class="product-title d-block text-truncate mt-0">  @Html.DisplayFor(modelItem => item.VinNumber)</p>
+@*                                     <a class="product-title d-block text-truncate mt-0" href="shop-details.html"> @Html.DisplayFor(modelItem => item.VinNumber)</a>
+ *@                                     <!-- Product Price -->
+                                        <p class="product-title d-block text-truncate mt-0">  @Html.DisplayFor(modelItem => item.BodyColor)</p>
                                     <!-- Add To Cart Button -->
+                                   
                                         <a class="btn btn-primary btn-sm" href="Vehicle/Details/@item.Id">مشاهده جزئیات</a>  
                                 </div>
                                   @*   @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |

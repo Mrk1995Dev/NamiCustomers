@@ -3,11 +3,61 @@
 @{
     ViewData["Title"] = "ChassisInformationByVinNumber";
 }
+<br />
 
-<h1>Create</h1>
 
-<h4>VehicleModelDto</h4>
-<hr />
+
+<div class="container direction-rtl">
+    <div class="card">
+        <div class="card-body p-2">
+            <div class="d-flex align-items-center justify-content-between">
+                <small class="ms-1">افزودن خودرو</small>
+                <form action="#">
+            @*         <select class="pe-4 form-select form-select-sm form-control-clicked" id="defaultSelectSm" name="defaultSelectSm" aria-label="Default select example">
+                        <option value="1" selected="">Sort by Newest</option>
+                        <option value="2">Sort by Older</option>
+                        <option value="3">Sort by Ratings</option>
+                        <option value="4">Sort by Sales</option>
+                    </select> *@
+                    <a asp-action="Index" title="بازگشت"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></a>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="container">
+    <!-- User Meta Data-->
+    <div class="card user-data-card">
+        <div class="card-body">
+            <form asp-action="GetChassisInformationByVinNumber" method="get">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group mb-3">
+                  @*   <label class="form-label" style="color: #fff !important;" for="@Html.DisplayNameFor(model => model.VinNumber)">@Html.DisplayNameFor(model => model.VinNumber)</label>
+                    <input class="form-control" id="@Html.DisplayNameFor(model => model.VinNumber)" type="text" style="color: #000 !important;" value=" @Html.DisplayFor(model => model.VinNumber)" placeholder="@Html.DisplayNameFor(model => model.VinNumber)" disabled> *@
+
+                    <label asp-for="VinNumber" class="control-label" style="color: #fff !important;"></label>
+                    <input asp-for="VinNumber" class="form-control" type="text" style="color: #000 !important;" placeholder="@Html.DisplayNameFor(model => model.VinNumber)  />
+                    <span asp-validation-for="VinNumber" class="text-danger"></span>
+                </div>
+
+
+                 
+               @*  @Html.ActionLink("بررسی خودرو", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary w-100", style = "" }) *@
+                   
+                        <input type="submit" value="افزودن" class="btn btn-primary w-100" />
+                    
+                   
+                   
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+@* <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="GetChassisInformationByVinNumber" method="get">
@@ -21,7 +71,7 @@
             </div>
            
             <div class="form-group">
-                <input type="submit" value="Search" class="btn btn-primary" />
+                <input type="submit" value="Search" class="btn btn-primary w-100" />
             </div>
         </form>
     </div>
@@ -29,7 +79,7 @@
 
 <div>
     <a asp-action="Index">Back to List</a>
-</div>
+</div> *@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
