@@ -127,6 +127,6 @@
     <value>http://7soft.nami.local:8089/api/Subscriber/GetSubscriberByNationalCode?NationalCode=</value>
   </data>
   <data name="GetActiveMainChassisGuarantee" xml:space="preserve">
-    <value>/api/Guaranty/GetActiveMainChassisGuarantee?vinNumber=</value>
+    <value>http://7soft.namikhodro.com:8088/api/Guaranty/GetActiveMainChassisGuarantee?vinNumber=</value>
   </data>
 </root>

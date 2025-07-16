@@ -10,13 +10,22 @@ namespace NamiCustomers.MVC.Controllers;
 public class VehicleController(
     ISubscriberService subscriberService, IVehicleService vehicleService) : Controller
 {
-
-
-    public async Task<IActionResult> ActiveMainChassisGuarantee(string vinNumber)
+    [HttpGet]
+    public async Task<IActionResult> ActiveMainChassisGuarantee(string? VinNumber)
     {
-        var data = await vehicleService.GetActiveMainChassisGuarantee(vinNumber);
-        return View(data.Data);
+        if (VinNumber != null)
+        {
+            var data = await vehicleService.GetActiveMainChassisGuarantee(VinNumber);
+            if (!data.Succeeded)
+            {
+                return View(new ActiveMainChassisGuaranteeResponse() { VinNumber = VinNumber });
+            }
+            data.Data.VinNumber = VinNumber;
+            return View(data.Data);
+        }
+        return View(new ActiveMainChassisGuaranteeResponse() { VinNumber = VinNumber });
     }
+
 
     public async Task<IActionResult> Details(int id)
     {
@@ -36,7 +45,7 @@ public class VehicleController(
         {
             vehicleModelDto = new VehicleModelDto { SubscriberId = subscriberService.CurrentSubscriber.Id };
         }
-      
+
         return View(vehicleModelDto);
     }
 
@@ -44,7 +53,7 @@ public class VehicleController(
     [HttpGet]
     public async Task<IActionResult> ChassisInformationByVinNumber()
     {
-        return View(new VehicleModelDto { SubscriberId = subscriberService.CurrentSubscriber.Id,VinNumber= "LGBH9VEAXPY770511" });
+        return View(new VehicleModelDto { SubscriberId = subscriberService.CurrentSubscriber.Id, VinNumber = "LGBH9VEAXPY770511" });
     }
 
     [HttpGet]
@@ -53,7 +62,7 @@ public class VehicleController(
         var data = await vehicleService.GetChassisInformationByVinNumber(vinNumber);
         if (data != null)
         {
-            return    RedirectToAction("Create",data.Data);
+            return RedirectToAction("Create", data.Data);
         }
         return View(new VehicleModelDto { SubscriberId = subscriberService.CurrentSubscriber.Id });
     }
@@ -66,8 +75,8 @@ public class VehicleController(
         if (!ModelState.IsValid) return BadRequest(Infrastucture.Properties.Resources.errInputInValid);
         var result = await vehicleService.RegisterAsync(vehicleModelDto);
 
-        if (result.Succeeded) 
-            return   RedirectToAction("Index");
+        if (result.Succeeded)
+            return RedirectToAction("Index");
 
         return NotFound(result);
     }
