@@ -4833,7 +4833,7 @@ a.affan-element-item:hover, a.affan-element-item:focus {
 
 .form-label {
   font-size: 14px;
-  color: var(--text);
+  color: #ffffff;
   font-weight: 500;
 }
 
@@ -8212,12 +8212,12 @@ form .btn-lg {
   background-color: var(--dark-secondary); */
   border-color: rgba(255, 255, 255, 0.2);
 }
-[data-theme=dark] .form-control.form-control-clicked,
-[data-theme=dark] .form-select.form-control-clicked {
-  color: var(--white);
-  background-color: var(--primary-950);
-  border-color: rgba(255, 255, 255, 0.2);
-}
+    [data-theme=dark] .form-control.form-control-clicked,
+    [data-theme=dark] .form-select.form-control-clicked {
+        color: #000000;
+        background-color: var(--primary-950);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
 [data-theme=dark] #password-visibility i {
   color: var(--warning-700);
 }

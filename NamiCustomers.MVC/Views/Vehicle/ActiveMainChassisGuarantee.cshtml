@@ -13,7 +13,7 @@
             <div class="d-flex align-items-center justify-content-between">
                 <small class="ms-1">استعلام</small>
                 <form action="#">
-                    <a asp-action="Index" title="بازگشت"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></a>
+                    <a asp-controller="Home" asp-action="Index" title="بازگشت"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></a>
                 </form>
             </div>
         </div>
@@ -25,265 +25,166 @@
     <div class="card user-data-card">
         <div class="card-body">
             <form asp-action="ActiveMainChassisGuarantee" method="get">
-                
-                <div class="form-group mb-3">
-                    <div class="row">
-                        <div class="col-md-2"><label class="control-label" style="color: #fff !important;">شماره شاسی</label></div>
-                        <div class="col-md-3">
-                            <select name="VinNumber">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+
+                            <br />
+                            <a class="btn m-1 btn-secondary w-100" href="/Vehicle/Create">
+                                <i class="bi bi-plus"></i> افزودن خودرو
+                            </a>
+
+
+                            @* <input name="VinNumber" value="@Model.VinNumber" class="form-control" type="text" style="color: #000 !important;"   /> *@
+
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="form-group ">
+                            <label class="form-label" for="defaultSelect">انتخاب شاسی</label>
+                            <select class="form-select form-control-clicked" name="VinNumber">
+                                <option value="0">لطفا انتخاب نمایید</option>
                                 @foreach (var vinNumber in (List<KeyValuePair<string, string>>)ViewBag.relatedVins)
                                 {
                                     <option value="@vinNumber.Key">@vinNumber.Value</option>
                                 }
                             </select>
                         </div>
-                        <div class="col-md-1"><a href="/Vehicle/Create"><label class="control-label" style="color: #fff !important;">+</label></a></div>
                     </div>
 
-                    @* <input name="VinNumber" value="@Model.VinNumber" class="form-control" type="text" style="color: #000 !important;"   /> *@
-                     
                 </div>
-                <input type="submit" value="استعلام" class="btn btn-primary w-100" />
-            </form>
-            @if (Model.ChassisGuaranteeListWarrantyStatus == "Has Guarantee")
-            {
-                <div>
-                   
-                    <hr />
-                    <dl class="row">
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.Code)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.Code)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.UniqueId)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.UniqueId)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.RegisterDateTime)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.RegisterDateTime)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.StrRegisterDateTime)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.StrRegisterDateTime)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.ExpireDateTime)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.ExpireDateTime)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.StrExpireDateTime)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.StrExpireDateTime)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.Active)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.Active)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.GuarantyTypeName)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.GuarantyTypeName)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.GuarantyGroupName)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.GuarantyGroupName)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.GuarantyTypeGroupId)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.GuarantyTypeGroupId)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.GuarantyTypeGroupName)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.GuarantyTypeGroupName)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.GuaranteeMileage)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.GuaranteeMileage)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.GuaranteeDuration)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.GuaranteeDuration)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.ReceptionVehicleStatusIsWarranty)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.ReceptionVehicleStatusIsWarranty)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.SubscriberChassisAllocationId)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.SubscriberChassisAllocationId)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.StartMileage)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.StartMileage)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.StartClock)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.StartClock)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.ContinuityGuaranty)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.ContinuityGuaranty)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.Reserved)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.Reserved)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.ChassisGuaranteeListWarrantyStatus)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.ChassisGuaranteeListWarrantyStatus)
-                        </dd>
-                        <dt class="col-sm-2">
-                            @Html.DisplayNameFor(model => model.ShowInInvoice)
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.ShowInInvoice)
-                        </dd>
-                    </dl>
-                </div>
-                <div>
-                    <a asp-action="Index">Back to List</a>
-                </div>
+                <div class="row">
+                    <divc class="col-md-12">
+                        <div class="form-group ">
+                            <input type="submit" value="استعلام" class="btn m-1 btn-primary w-100" />
+                        </div>
 
-            }
-            else if (!string.IsNullOrEmpty(Model.VinNumber))
-            {
-                <p class="alert alert-danger">گارانتی یافت نشد</p>
-            } 
+                    </divc>
+                </div>
+            </form>
+
         </div>
     </div>
 </div>
-<br />
+
+
+
 @if (Model.ChassisGuaranteeListWarrantyStatus == "Has Guarantee")
 {
-<div class="container">
-    <div class="card">
-        <div class="card-body">
-            <!-- Price Table One -->
-            <div class="price-table-one">
+    <br />
+    <div class="container">
+
+        <div class="divider divider-center-icon mt-3">
+            <i class="bi bi-gear"></i>
+        </div>
+
+    </div>
+    <br />
+    <div class="container">
+        <div class="card comparison-table-one">
+            <div class="card-body">
+                <table class="table mb-0">
+                    <thead class="thead-light">
+                        <tr style="text-align:center">
+                            <th colspan="2"> نتیجه استعلام گارانتی</th>
 
 
-                <div class="tab-content" id="priceTabContent">
-@*                     <div class="tab-pane fade" id="priceTab_One" role="tabpanel" aria-labelledby="priceTabOne">
-                        <!-- Single Price Table -->
-                        <div class="single-price-content shadow-sm">
-                            <div class="price">
-                                <span class="text-white mb-2">Intro</span>
-                                <h2 class="display-3">$3.19</h2>
-                                <span class="badge bg-light text-dark rounded-pill">Save -29%</span>
-                            </div>
-                            <!-- Pricing Desc -->
-                            <div class="pricing-desc">
-                                <ul class="ps-0">
-                                    <li><i class="bi bi-check-lg me-2"></i>3 Month Usage</li>
-                                    <li><i class="bi bi-check-lg me-2"></i>Lifetime Updates</li>
-                                    <li><i class="bi bi-check-lg me-2"></i>2 Website License</li>
-                                    <li class="times"><i class="bi bi-x-lg me-2"></i>Free Support</li>
-                                    <li class="times"><i class="bi bi-x-lg me-2"></i>Download New Release</li>
-                                </ul>
-                            </div>
-                            <!-- Purchase -->
-                            <div class="purchase">
-                                <a class="btn btn-warning btn-lg btn-creative w-100" href="#">Choose Plan</a>
-                                <small class="d-block text-white mt-2 ms-1">No credit card required*</small>
-                            </div>
-                        </div>
-                    </div> *@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th> @Html.DisplayNameFor(model => model.GuarantyTypeName)</th>
+                            <td> @Html.DisplayFor(model => model.GuarantyTypeName)</td>
 
-                        <div class="tab-pane fade show active" >
-                        <!-- Single Price Table -->
-                            <div class="single-price-content shadow-sm" style="max-height:22px !important;">
-                            <div class="price">
-                                <span class="text-white mb-2">نتیجه گارانتی</span>
-                               @*  <h2 class="display-3">$19.19</h2>
-                                <span class="badge bg-light text-dark rounded-pill">Save -29%</span> *@
-                            </div>
-                            <!-- Pricing Desc -->
-                            <div class="pricing-desc">
-                                <ul class="ps-0">
-                                        <li><i class="bi bi-check-lg me-2"></i> @Html.DisplayFor(model => model.StrExpireDateTime)</li>
-                                    <li><i class="bi bi-check-lg me-2"></i>Lifetime Updates</li>
-                                    <li><i class="bi bi-check-lg me-2"></i>10 Website License</li>
-                                    <li><i class="bi bi-check-lg me-2"></i>Free Support</li>
-                                    <li class="times"><i class="bi bi-x-lg me-2"></i>Download New Release</li>
-                                </ul>
-                            </div>
-                            <!-- Purchase -->
-                            <div class="purchase">
-                                <a class="btn btn-light btn-lg btn-creative" href="#">Choose Plan</a>
-                            </div>
-                        </div>
-                    </div>
+                        </tr>
+                        <tr>
+                            <th> @Html.DisplayNameFor(model => model.StrRegisterDateTime)</th>
+                            <td> @Html.DisplayFor(model => model.StrRegisterDateTime)</td>
 
- @*                    <div class="tab-pane fade" id="priceTab_Three" role="tabpanel" aria-labelledby="priceTabThree">
-                        <!-- Single Price Table -->
-                        <div class="single-price-content shadow-sm">
-                            <div class="price">
-                                <span class="text-white mb-2">Pro</span>
-                                <h2 class="display-3">$49.99</h2>
-                                <span class="badge bg-light text-dark rounded-pill">Save -29%</span>
-                            </div>
-                            <!-- Pricing Desc -->
-                            <div class="pricing-desc">
-                                <ul class="ps-0">
-                                    <li><i class="bi bi-check-lg me-2"></i>12 Month Usage</li>
-                                    <li><i class="bi bi-check-lg me-2"></i>Lifetime Updates</li>
-                                    <li><i class="bi bi-check-lg me-2"></i>Unlimited Website License</li>
-                                    <li><i class="bi bi-check-lg me-2"></i>Free Support</li>
-                                    <li><i class="bi bi-check-lg me-2"></i>Download New Release</li>
-                                </ul>
-                            </div>
-                            <!-- Purchase -->
-                            <div class="purchase">
-                                <a class="btn btn-primary btn-lg btn-creative" href="#">Choose Plan</a>
-                            </div>
-                        </div>
-                    </div> *@
+                        </tr>
+                        <tr>
+                            <th> @Html.DisplayNameFor(model => model.StrExpireDateTime)</th>
+                            <td> @Html.DisplayFor(model => model.StrExpireDateTime)</td>
 
-                </div>
+                        </tr>
+                        <tr>
+                            <th> @Html.DisplayNameFor(model => model.GuaranteeMileage)</th>
+                            <td>@string.Format("{0:#,##0}", Model.GuaranteeMileage) کیلومتر</td>
+                        </tr>
+                        <tr>
+                            <th> @Html.DisplayNameFor(model => model.GuaranteeDuration)</th>
+                            <td> @Html.DisplayFor(model => model.GuaranteeDuration)  ماه</td>
+
+                        </tr>
+                        <tr>
+                            <th> @Html.DisplayNameFor(model => model.ChassisGuaranteeListWarrantyStatus)</th>
+
+                            @if (Model.ChassisGuaranteeListWarrantyStatus == "Has Guarantee")
+                            {
+                                <td><i class="text-success bi bi-check-lg fz-16"></i></td>
+                            }
+                            else
+                            {
+
+                                <td><i class="text-danger bi bi-x-lg"></i></td>
+
+                            }
+
+
+                        </tr>
+
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-</div>
+
+
+
 }
+else if (!string.IsNullOrEmpty(Model.VinNumber))
+{
+    <br />
+    <div class="container">
+
+        <div class="divider divider-center-icon mt-3">
+            <i class="bi bi-gear"></i>
+        </div>
+
+    </div>
+    <br />
+    <div class="container">
+        <div class="card comparison-table-one">
+            <div class="card-body">
+                <div class="alert custom-alert-one alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-x-circle"></i>
+                    هیچ موردی یافت نشد!
+                  @*   <button class="btn btn-close position-relative p-1 ms-auto" type="button" data-bs-dismiss="alert" aria-label="Close"></button> *@
+                </div>
+@*                 <table class="table mb-0">
+                    <thead class="thead-light">
+                        <tr style="text-align:center">
+                            <th > نتیجه استعلام گارانتی</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th> هیچ موردی یافت نشد</th>
+                           
+
+                        </tr>
+                       
+                    </tbody>
+                </table> *@
+            </div>
+        </div>
+    </div>
+
+}
+
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
