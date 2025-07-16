@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 
 namespace NamiCustomers.MVC.Handlers
 {
-    public class JwtAuthorizationMessageHandler: DelegatingHandler
+    public class JwtAuthorizationMessageHandler : DelegatingHandler
     {
         private readonly ITokenService tokenService;
         private readonly IAuthService authService;
@@ -22,35 +22,36 @@ namespace NamiCustomers.MVC.Handlers
         {
             try
             {
-            var token =  tokenService.GetAuthToken();
+                var token = tokenService.GetAuthToken();
 
-            if (!string.IsNullOrEmpty(token))
-            {
-                request.Headers.Authorization= new AuthenticationHeaderValue("Bearer",token);
-            }
-
-             var response= await base.SendAsync(request,cancellationToken); 
-
-
-            if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                //send RefreshToken
-                var refreshToken= tokenService.GetRefreshToken();
-                if(!string.IsNullOrEmpty(refreshToken))
+                if (!string.IsNullOrEmpty(token))
                 {
-                    var newToken = await authService.RefreshTokenAsync(refreshToken);
-                    if (!string.IsNullOrEmpty(newToken))
+                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                }
+              //todo ali if token was null must be ?
+
+                var response = await base.SendAsync(request, cancellationToken);
+
+
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    //send RefreshToken
+                    var refreshToken = tokenService.GetRefreshToken();
+                    if (!string.IsNullOrEmpty(refreshToken))
                     {
-                        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", newToken);
-                        return await base.SendAsync(request, cancellationToken);
+                        var newToken = await authService.RefreshTokenAsync(refreshToken);
+                        if (!string.IsNullOrEmpty(newToken))
+                        {
+                            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", newToken);
+                            return await base.SendAsync(request, cancellationToken);
+                        }
                     }
+
+                    navigationManager.NavigateTo("login", true);
                 }
 
-               navigationManager.NavigateTo("login",true);
-            }
 
-
-            return response;
+                return response;
             }
             catch (Exception ex)
             {
