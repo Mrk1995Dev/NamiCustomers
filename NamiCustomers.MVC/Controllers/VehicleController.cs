@@ -13,6 +13,9 @@ public class VehicleController(
     [HttpGet]
     public async Task<IActionResult> ActiveMainChassisGuarantee(string? VinNumber)
     {
+
+        var relatedVins= await vehicleService.GetAllAsync(subscriberService.CurrentSubscriber.Id);
+        ViewBag.relatedVins=relatedVins.Data.Select(c=>new KeyValuePair<string, string>(c.VinNumber,c.VinNumber)).ToList();
         if (VinNumber != null)
         {
             var data = await vehicleService.GetActiveMainChassisGuarantee(VinNumber);
@@ -26,7 +29,7 @@ public class VehicleController(
         return View(new ActiveMainChassisGuaranteeResponse());
     }
 
-
+   
     public async Task<IActionResult> Details(int id)
     {
         var data = await vehicleService.GetAsync(id);
@@ -103,5 +106,7 @@ public class VehicleController(
 
         return NotFound(data);
     }
+
+
 
 }
