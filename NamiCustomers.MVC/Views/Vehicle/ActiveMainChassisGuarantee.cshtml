@@ -173,10 +173,10 @@
                 </div>
 
             }
-            else
+            else if (!string.IsNullOrEmpty(Model.VinNumber))
             {
                 <p class="alert alert-danger">گارانتی یافت نشد</p>
-            }
+            } 
         </div>
     </div>
 </div>

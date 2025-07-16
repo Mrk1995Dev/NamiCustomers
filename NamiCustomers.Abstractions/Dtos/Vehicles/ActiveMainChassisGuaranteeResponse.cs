@@ -14,7 +14,7 @@ public class ActiveMainChassisGuaranteeResponse
     public string GuarantyGroupName { get; set; }
     public string GuarantyTypeGroupId { get; set; }
     public string GuarantyTypeGroupName { get; set; }
-    public object VinNumber { get; set; }
+    public string VinNumber { get; set; }
     public int GuaranteeMileage { get; set; }
     public int GuaranteeDuration { get; set; }
     public object GuaranteeClock { get; set; }

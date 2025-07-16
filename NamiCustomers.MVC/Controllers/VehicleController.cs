@@ -23,7 +23,7 @@ public class VehicleController(
             data.Data.VinNumber = VinNumber;
             return View(data.Data);
         }
-        return View(new ActiveMainChassisGuaranteeResponse() { VinNumber = VinNumber });
+        return View(new ActiveMainChassisGuaranteeResponse());
     }
 
 
