@@ -13,6 +13,7 @@ public interface IVehicleService
     Task<ResultDto<List<VehicleModelDto>>> GetAllAsync(int subscriberId);
     Task<ResultDto> EditAsync(VehicleModelDto updateCustomer);
     Task<ResultDto<VehicleModelDto>> GetChassisInformationByVinNumber(string vinNumber);
+    Task <ResultDto<ActiveMainChassisGuaranteeResponse>> GetActiveMainChassisGuarantee(string vinNumber);
 }
 
 
@@ -120,5 +121,15 @@ public class VehicleService : IVehicleService
             Infrastucture.Properties.Resources.errSave,
             false,
             null);
+    }
+
+    public async  Task<ResultDto<ActiveMainChassisGuaranteeResponse>> GetActiveMainChassisGuarantee(string vinNumber)
+    {
+        var response = await _httpClient.GetFromJsonAsync<ResultDto<ActiveMainChassisGuaranteeResponse>>($"Vehicle/GetActiveMainChassisGuarantee?vinNumber={vinNumber}");
+        if (response.Succeeded)
+        {
+            return response;
+        }
+        return new ResultDto<ActiveMainChassisGuaranteeResponse>(Infrastucture.Properties.Resources.errNotFound, false, null);
     }
 }

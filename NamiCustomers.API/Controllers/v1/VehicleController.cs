@@ -56,6 +56,27 @@ namespace NamiCustomers.API.Controllers.v1
            );
 
         }
+
+        [HttpGet("[action]")]
+        public async Task<ResultDto<ActiveMainChassisGuaranteeResponse>> GetActiveMainChassisGuarantee(string vinNumber)
+        {
+            var result = await sevenSoftService.GetActiveMainChassisGuarantee(vinNumber);
+            if (result == null) return new ResultDto<ActiveMainChassisGuaranteeResponse>(
+            Infrastucture.Properties.Resources.errNotFound,
+            false,
+            null);
+
+
+            return new ResultDto<ActiveMainChassisGuaranteeResponse>(
+          Infrastucture.Properties.Resources.msgFound,
+          true,
+          mapper.Map<ActiveMainChassisGuaranteeResponse>(result)
+           );
+
+        }
+
+
+
         //LGBH9VEAXPY770511
     }
 }

@@ -12,6 +12,12 @@ public class VehicleController(
 {
 
 
+    public async Task<IActionResult> ActiveMainChassisGuarantee(string vinNumber)
+    {
+        var data = await vehicleService.GetActiveMainChassisGuarantee(vinNumber);
+        return View(data.Data);
+    }
+
     public async Task<IActionResult> Details(int id)
     {
         var data = await vehicleService.GetAsync(id);

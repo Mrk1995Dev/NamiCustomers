@@ -61,6 +61,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /api/Guaranty/GetActiveMainChassisGuarantee?vinNumber=.
+        /// </summary>
+        public static string GetActiveMainChassisGuarantee {
+            get {
+                return ResourceManager.GetString("GetActiveMainChassisGuarantee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to http://7soft.namikhodro.com:8088/api/VINInformation/GetChassisInformationByVinNumber?VinNumber=.
         /// </summary>
         public static string GetChassisInformationByVinNumber {

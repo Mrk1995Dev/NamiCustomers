@@ -1,4 +1,5 @@
-﻿using NamiCustomers.Application.Services.Facades;
+﻿using NamiCustomers.Abstractions.Dtos.Vehicles;
+using NamiCustomers.Application.Services.Facades;
 using NamiCustomers.Application.Services.SevenSoftServices.Dtos;
 using NamiCustomers.Infrastucture.Properties;
 using System.Text.Json;
@@ -29,12 +30,22 @@ public interface ISevenSoftService
     /// <param name="nationalCode"></param>
     /// <returns></returns>
     Task<SevenSubscriberResponse> GetSubscriberByNationalCode(string nationalCode);
+    /// <summary>
+    /// استعلام گارانتی
+    /// </summary>
+    /// <param name="vinNumber"></param>
+    /// <returns></returns>
+    Task<ActiveMainChassisGuaranteeResponse> GetActiveMainChassisGuarantee(string vinNumber);
 
 }
 
 public class SevenSoftService(ISettingsFacadeService settingsFacadeService) : ISevenSoftService
 {
 
+    public async Task<ActiveMainChassisGuaranteeResponse> GetActiveMainChassisGuarantee(string vinNumber)
+    {
+        return await GetData<ActiveMainChassisGuaranteeResponse>(Resource7Soft.GetActiveMainChassisGuarantee, vinNumber);
+    }
     public async Task<SevenSubscriberResponse> GetSubscriberByNationalCode(string nationalCode)
     {
         return await GetData<SevenSubscriberResponse>(Resource7Soft.GetSubscriberByNationalCode, nationalCode);
