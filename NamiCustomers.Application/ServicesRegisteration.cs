@@ -5,10 +5,10 @@ using NamiCustomers.Application.Services.Accounts;
 using NamiCustomers.Application.Services.Appointments;
 using NamiCustomers.Application.Services.Dealers;
 using NamiCustomers.Application.Services.Facades;
-using NamiCustomers.Application.Services.SevenSoftServices;
 using NamiCustomers.Application.Services.Subscribers;
 using NamiCustomers.Application.Services.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.Email;
+using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 
 
 namespace NamiCustomers.Application

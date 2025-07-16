@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using NamiCustomers.Abstractions.Dtos.Subscribers;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
-using NamiCustomers.Application.Services.SevenSoftServices;
 using NamiCustomers.Domain.Entities.Account;
 using NamiCustomers.Domain.Entities.Subscribers;
+using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 using NamiCustomers.Infrastucture.Utilities;
 using System.Text;
 

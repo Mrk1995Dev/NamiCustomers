@@ -118,15 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="GetChassisInformationByVinNumber" xml:space="preserve">
-    <value>http://7soft.namikhodro.com:8088/api/VINInformation/GetChassisInformationByVinNumber?VinNumber=</value>
+    <value>api/VINInformation/GetChassisInformationByVinNumber?VinNumber=</value>
   </data>
   <data name="RelationCustomerInfoByVinNumber" xml:space="preserve">
-    <value>http://7soft.namikhodro.com:8088/api/VINInformation/RelationCustomerInfoByVinNumber</value>
+    <value>api/VINInformation/RelationCustomerInfoByVinNumber</value>
   </data>
   <data name="GetSubscriberByNationalCode" xml:space="preserve">
-    <value>http://7soft.nami.local:8089/api/Subscriber/GetSubscriberByNationalCode?NationalCode=</value>
+    <value>api/Subscriber/GetSubscriberByNationalCode?NationalCode=</value>
   </data>
   <data name="GetActiveMainChassisGuarantee" xml:space="preserve">
-    <value>http://7soft.namikhodro.com:8088/api/Guaranty/GetActiveMainChassisGuarantee?vinNumber=</value>
+    <value>api/Guaranty/GetActiveMainChassisGuarantee?vinNumber=</value>
+  </data>
+  <data name="BaseUrl" xml:space="preserve">
+    <value>http://7soft.namikhodro.com:8088/</value>
   </data>
 </root>
