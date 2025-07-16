@@ -61,7 +61,16 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://7soft.namikhodro.com:8088/api/Guaranty/GetActiveMainChassisGuarantee?vinNumber=.
+        ///   Looks up a localized string similar to http://7soft.namikhodro.com:8088/.
+        /// </summary>
+        public static string BaseUrl {
+            get {
+                return ResourceManager.GetString("BaseUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/Guaranty/GetActiveMainChassisGuarantee?vinNumber=.
         /// </summary>
         public static string GetActiveMainChassisGuarantee {
             get {
@@ -70,7 +79,7 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://7soft.namikhodro.com:8088/api/VINInformation/GetChassisInformationByVinNumber?VinNumber=.
+        ///   Looks up a localized string similar to api/VINInformation/GetChassisInformationByVinNumber?VinNumber=.
         /// </summary>
         public static string GetChassisInformationByVinNumber {
             get {
@@ -79,7 +88,7 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://7soft.nami.local:8089/api/Subscriber/GetSubscriberByNationalCode?NationalCode=.
+        ///   Looks up a localized string similar to api/Subscriber/GetSubscriberByNationalCode?NationalCode=.
         /// </summary>
         public static string GetSubscriberByNationalCode {
             get {
@@ -88,7 +97,7 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://7soft.namikhodro.com:8088/api/VINInformation/RelationCustomerInfoByVinNumber.
+        ///   Looks up a localized string similar to api/VINInformation/RelationCustomerInfoByVinNumber.
         /// </summary>
         public static string RelationCustomerInfoByVinNumber {
             get {

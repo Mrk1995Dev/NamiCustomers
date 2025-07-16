@@ -1,7 +1,7 @@
 ﻿using NamiCustomers.Abstractions.Dtos.Vehicles;
-using NamiCustomers.Application.Services.SevenSoftServices;
 using NamiCustomers.Application.Services.Subscribers;
 using NamiCustomers.Domain.Entities.Subscribers;
+using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 
 
 

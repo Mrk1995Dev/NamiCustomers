@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NamiCustomers.Application.Mappings;
 using NamiCustomers.Domain.Entities.Account;
 using NamiCustomers.Persistence.Migrations;
 using Serilog;
@@ -13,6 +14,8 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 
 
 namespace NamiCustomers.API.Extensions;
@@ -49,7 +52,8 @@ public static class ServicesRegisteration
 
     private static IServiceCollection ConfigureOther(this IServiceCollection services)
     {
-        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+       services.AddAutoMapper(c => { c.AddProfile(typeof(GeneralProfile)); },AppDomain.CurrentDomain.GetAssemblies());
+
         services.AddHttpClient();
         services.AddHttpLogging(o => { });
         return services;
@@ -206,13 +210,19 @@ public static class ServicesRegisteration
                     Url = new Uri("https://www.linkedin.com/in/alimoradi573/")
                 }
             });
-            c.SwaggerDoc($"v2", new OpenApiInfo
+            c.SwaggerDoc("v2", new OpenApiInfo
             {
                 Title = "Nami.Customers",
                 Version = "v2.0",
-                Description = ""
+                Description = "",
+                Contact = new OpenApiContact
+                {
+                    Name = "Ali Moradi",
+                    Email = "a.moradi@namikhodro.com",
+                    Url = new Uri("https://www.linkedin.com/in/alimoradi573/")
+                }
             });
-
+ 
             c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             var securityScheme = new OpenApiSecurityScheme
             {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NamiCustomers.Application.Services.SevenSoftServices.Dtos;
+namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
  
  
 public class GetAllRequiredAttachmentRequirementsResponse

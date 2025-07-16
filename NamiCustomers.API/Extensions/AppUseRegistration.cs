@@ -17,9 +17,9 @@ namespace NamiCustomers.API.Extensions
             app.UseHttpLogging();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-           
-           
-            
+
+
+
 
             return app;
         }
@@ -32,15 +32,15 @@ namespace NamiCustomers.API.Extensions
 
         private static IApplicationBuilder UsingSwagger(this IApplicationBuilder app)
         {
-            app.UseSwagger();
-            
+            app.UseSwagger(options => options.OpenApiVersion =
+                                Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0);
+
             app.UseSwaggerUI(c =>
             {
-               
                 c.InjectStylesheet("/css/swagger.css");
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nami.Customers v1.0");
                 c.SwaggerEndpoint("/swagger/v2/swagger.json", "Nami.Customers v2.0");
-                
+
             });
             return app;
         }

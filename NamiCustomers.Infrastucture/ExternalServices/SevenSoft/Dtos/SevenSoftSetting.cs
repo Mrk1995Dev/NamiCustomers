@@ -1,4 +1,4 @@
-﻿namespace NamiCustomers.Application.Services.SevenSoftServices.Dtos;
+﻿namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
 public class SevenSoftSetting
 {

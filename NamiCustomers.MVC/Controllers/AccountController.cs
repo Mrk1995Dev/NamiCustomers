@@ -20,6 +20,7 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
     }
 
     [HttpGet]
+
     public IActionResult Login(string returnUrl = "/")
     {
 
@@ -86,7 +87,7 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
         var result = await authService.LoginByOtpAsync(otp);
         if (!result.Succeeded)
         {
-            TempData["otpError"]=result.Message;
+            TempData["otpError"] = result.Message;
             return View();
         }
         var user = result.Data;
@@ -100,7 +101,7 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
             new  System.Security.Claims.Claim("Mobile",user.Mobile),
             new  System.Security.Claims.Claim("UserId",user.Id),
             new  System.Security.Claims.Claim("FullName",$"{user.FirstName} {user.LastName}"),
-            
+
 
         };
             foreach (var role in userRoles.Roles)
@@ -128,7 +129,7 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
 
             return RedirectToAction("Index", "Home");
         }
-        TempData["otpError"]="Login  Error";
+        TempData["otpError"] = "Login  Error";
         return View();
     }
 
@@ -147,7 +148,6 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
     {
         return View();
     }
-    [AllowAnonymous]
     public IActionResult AccessDenied()
     {
         return View();
@@ -252,7 +252,7 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
         TempData["Message"] = message;
         return View(register);
     }
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = nameof(MyPloicies.AdminAccess))]
     public async Task<IActionResult> ConfirmEmail(string UserId, string Token)
     {
         if (UserId == null || Token == null)
@@ -268,7 +268,7 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
 
         return RedirectToAction("VerifySuccess");
 
- 
+
     }
 
 
@@ -278,14 +278,14 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
     }
 
 
-
+    [Authorize]
     public IActionResult SetPhoneNumber()
     {
         return View();
     }
 
-    //[Authorize]
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> SetPhoneNumber(SetPhoneNumberDto phoneNumberDto)
     {
 
@@ -294,8 +294,7 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
         TempData["PhoneNumber"] = phoneNumberDto.PhoneNumber;
         return RedirectToAction(nameof(VerifyPhoneNumber));
     }
-
-    //[Authorize]
+    [Authorize]
     public IActionResult VerifyPhoneNumber()
     {
 
@@ -305,8 +304,9 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
         });
     }
 
-    // [Authorize]
+ 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> VerifyPhoneNumber(VerifyPhoneNumberDto verify)
     {
         var result = await authService.VerifyPhoneNumberAsync(verify);

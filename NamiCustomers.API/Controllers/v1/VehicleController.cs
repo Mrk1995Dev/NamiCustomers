@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
-using NamiCustomers.Application.Services.SevenSoftServices;
 using NamiCustomers.Application.Services.Vehicles;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 
 namespace NamiCustomers.API.Controllers.v1
 {

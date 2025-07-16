@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using NamiCustomers.Application.Services.Facades.Dtos;
-using NamiCustomers.Application.Services.SevenSoftServices.Dtos;
 using NamiCustomers.Infrastucture.ExternalServices.Email.Dtos;
+using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
 namespace NamiCustomers.Application.Services.Facades;
 
