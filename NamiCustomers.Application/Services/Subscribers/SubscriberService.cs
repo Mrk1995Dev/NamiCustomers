@@ -23,7 +23,7 @@ public interface ISubscriberService
     Task<ResultDto<SubscriberCodeDto>> SendOtpAsync(string mobile);
     Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string mobile, string nationalCode);
 }
-public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, ISevenSoftService sevenSoftService, UserManager<ApplicationUser> userManager) : ISubscriberService
+public class SubscriberService (IMapper mapper, IAppDbContext dbContext, ISmsService smsService, ISevenSoftService sevenSoftService, UserManager<ApplicationUser> userManager) : ISubscriberService
 {
     public async Task<ResultDto> RegisterAsync(SubscriberDto addCustomerInfoDto)
     {
@@ -235,7 +235,7 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
     public async Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync(string nationalCode)
     {
         var subscriber =  dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
-            .Include(cu => cu.VehicleModels).FirstOrDefault();
+           .Include(cu => cu.VehicleModels).FirstOrDefault();
 
         if (subscriber is null)
         {
@@ -262,35 +262,24 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
                     Mobile = sevenMember.Mobile,
                     Sex = sevenMember.Gender == 1 ? "زن" : "مرد",
                 };
-                //if (sevenMember.VinNumber != null)
-                //{
-                //    var chassisInformation = await sevenSoftService.GetChassisInformationByVinNumber(sevenMember.VinNumber.ToString());
-                //    if (chassisInformation != null)
-                //    {
-                //        newSubscriber.VehicleModels = new List<VehicleModel>
-                //        {
-                //            new VehicleModel
-                //            {
-                //                EnglishName = chassisInformation.VehicleModelName,
-                //                BrandIdSevenSoft = (Guid?)chassisInformation.BrandId,
-                //                //Description =chassisInformation.des,
-                //                //SaleBasketIdSevenSoft =(Guid?) chassisInformation,
-                //                //SalePlanIdSevenSoft = chassisInformation.pla,
+                if (sevenMember.VinNumber != null )
+                {
+                    var chassisInformation = await sevenSoftService.GetChassisInformationByVinNumber(sevenMember.VinNumber.ToString());
 
-                //                VehicleModelIdSevensoft = new Guid(chassisInformation.VehicleModelId),
-                //                VehicleName = chassisInformation.VehicleModelName,
-                //                VinNumber = chassisInformation.VinNumber,
-                //            }
-                //        };
-                //    }
+                    if (chassisInformation != null)
+                    {
+                        var vehicleDto = mapper.Map<VehicleModelDto>(chassisInformation);
+                        newSubscriber.VehicleModels = new List<VehicleModel> {
+                            mapper.Map<VehicleModel>(vehicleDto)};
+                    }
 
-                //    dbContext.Subscribers.Add(newSubscriber);
-                //    await dbContext.SaveChangesAsync();
-                //}
+                    dbContext.Subscribers.Add(newSubscriber);
+                    await dbContext.SaveChangesAsync();
+                }
             }
             var data = await dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
                .Include(cu => cu.City).FirstOrDefaultAsync();
-            var customerInfo = new SubscriberDto
+            var subscriberDto = new SubscriberDto 
             {
                 Id = data.Id,
                 Name = data.Name,
@@ -300,27 +289,17 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
                 Family = data.Family,
                 Mobile = data.Mobile,
                 Sex = data.Sex,
-                //VehicleModels = subscriber.VehicleModels.Any() ? data.VehicleModels.Select(c => new VehicleModelDto
-                //{
-                //    VehicleModelLocalizedName = c.EnglishName,
-                //    BrandId = c.BrandIdSevenSoft,
-                //    SelectedVehicleDescription = c.Description,
-                //    SaleBasketIdSevenSoft = c.SaleBasketIdSevenSoft,
-                //    SalePlanIdSevenSoft = c.SalePlanIdSevenSoft,
-                //    SubscriberId = c.SubscriberId,
-                //    VehicleModelIdSevensoft = c.VehicleModelIdSevensoft,
-                //    VehicleModelName = c.VehicleName,
-                //    VinNumber = c.VinNumber,
-                //}).ToList() : new()
+                VehicleModels =  mapper.Map<List<VehicleModelDto>>(subscriber.VehicleModels)
+
             };
 
             return new ResultDto<SubscriberDto>(
                 "",
-                true, customerInfo);
+                true, subscriberDto);
         }
         else
         {
-            var customerInfo = new SubscriberDto
+            var existedSubscriber = new SubscriberDto
             {
                 Id = subscriber.Id,
                 Name = subscriber.Name,
@@ -330,36 +309,12 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
                 Family = subscriber.Family,
                 Mobile = subscriber.Mobile,
                 Sex = subscriber.Sex,
-                //VehicleModels = subscriber.VehicleModels.Any() ? subscriber.VehicleModels.Select(c => new VehicleModelDto
-                //{
-                //    VehicleModelLocalizedName = c.EnglishName,
-                //    BrandId = c.BrandIdSevenSoft,
-                //    SelectedVehicleDescription = c.Description,
-                //    SaleBasketIdSevenSoft = c.SaleBasketIdSevenSoft,
-                //    SalePlanIdSevenSoft = c.SalePlanIdSevenSoft,
-                //    SubscriberId = c.SubscriberId,
-                //    VehicleModelIdSevensoft = c.VehicleModelIdSevensoft,
-                //    VehicleModelName = c.VehicleName,
-                //    VinNumber = c.VinNumber,
-                //    VehicleAttachment = c.VehicleAttachment != null ? new VehicleAttachmentDto
-                //    {
-                //        Catalog = c.VehicleAttachment?.Catalog,
-                //        Guidanc = c.VehicleAttachment?.Guidanc,
-                //        Id = c.VehicleAttachment?.Id??0,
-                //        ImagePath = c.VehicleAttachment?.ImagePath,
-                //        ThumbnailPath = c.VehicleAttachment?.ThumbnailPath,
-                //        VehicleModelId = c.VehicleAttachment?.VehicleModelId??0
-                //    } : new VehicleAttachmentDto()
-                //}).ToList() 
-                
-               // : new()
+                VehicleModels = mapper.Map<List<VehicleModelDto>>(subscriber.VehicleModels)
             };
             return new ResultDto<SubscriberDto>(
       ""
     , true,
-      customerInfo);
+      existedSubscriber);
         }
-
-
     }
 }

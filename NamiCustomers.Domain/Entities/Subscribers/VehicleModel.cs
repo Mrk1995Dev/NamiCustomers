@@ -1,4 +1,6 @@
-﻿namespace NamiCustomers.Domain.Entities.Subscribers;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace NamiCustomers.Domain.Entities.Subscribers;
 [Auditable]
 public class VehicleModel :IBaseEntity<int>
 {
@@ -20,18 +22,18 @@ public class VehicleModel :IBaseEntity<int>
     //public Guid? SalePlanIdSevenSoft { get; set; }
     //public Guid? SaleBasketIdSevenSoft { get; set; }
     //public Guid? BrandIdSevenSoft { get; set; }
-	public VehicleAttachment?  VehicleAttachment { get; set; }
-
-
+    public VehicleAttachment?  VehicleAttachment { get; set; }
 }
 
 
 public class VehicleAttachment:IBaseEntity<int>
 {
     public int Id { get; set; }
-    public int VehicleModelId { get; set; }
-	public string? ThumbnailPath { get; set; }
+    public Guid? VehicleModelIdSevenSoft { get; set; }
+    public string? ThumbnailPath { get; set; }
 	public string? ImagePath { get; set; }
 	public string? Guidanc { get; set; }
 	public string? Catalog { get; set; }
+
+ 
 }

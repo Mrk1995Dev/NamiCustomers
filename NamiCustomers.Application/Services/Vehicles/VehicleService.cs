@@ -38,14 +38,14 @@ public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftS
         }
 
 
-        var sVehicle= await sevenSoftService.GetChassisInformationByVinNumber(vehicleModelDto.VinNumber);
-        if (sVehicle==null)
+        var sVehicle = await sevenSoftService.GetChassisInformationByVinNumber(vehicleModelDto.VinNumber);
+        if (sVehicle == null)
         {
             return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errSave, false);
         }
         else
         {
-            vehicleModelDto.VehicleModelIdSevenSoft =new Guid( sVehicle.VehicleModelId);
+            vehicleModelDto.VehicleModelIdSevenSoft = new Guid(sVehicle.VehicleModelId);
             vehicleModelDto.ChassisUsageTypeName = sVehicle.ChassisUsageTypeName;
             //vehicleModelDto.BrandIdSevenSoft = sVehicle.BrandId;
             vehicleModelDto.BodyColor = sVehicle.BodyColor;
@@ -55,14 +55,14 @@ public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftS
             vehicleModelDto.SelectedVehicleDescription = sVehicle.SelectedVehicleDescription;
             vehicleModelDto.VehicleModelLocalizedName = sVehicle.VehicleModelLocalizedName;
             vehicleModelDto.VehicleModelName = sVehicle.VehicleModelName;
+            vehicleModelDto.VehicleAttachment = new VehicleAttachmentDto { };
         }
 
-
-      
-
-            var newEntity = mapper.Map<VehicleModel>(vehicleModelDto);
-
-        
+        var newEntity = mapper.Map<VehicleModel>(vehicleModelDto);
+        if (!dbContext.VehicleAttachments.Where(c => c.VehicleModelIdSevenSoft == vehicleModelDto.VehicleModelIdSevenSoft).Any())
+        {
+            newEntity.VehicleAttachment = new VehicleAttachment() { VehicleModelIdSevenSoft = newEntity.VehicleModelIdSevenSoft };
+        }
 
         await dbContext.VehicleModels.AddAsync(newEntity);
         var result = await dbContext.SaveChangesAsync();
@@ -72,7 +72,7 @@ public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftS
             return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errSave, false);
         }
         var newModel = mapper.Map<VehicleModelDto>(newEntity);
-        return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.msgSave, true,newModel);
+        return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.msgSave, true, newModel);
     }
 
     public async Task<ResultDto<VehicleModelDto>> RemoveAsync(int id)
@@ -111,11 +111,11 @@ public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftS
                );
         return new ResultDto<VehicleModelDto>(
             Infrastucture.Properties.Resources.msgEdited
-            
+
             , true, editedEntity);
     }
 
-    
+
 
 
     public async Task<ResultDto<VehicleModelDto>> GetAsync(int id)
@@ -124,10 +124,15 @@ public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftS
         if (data == null) return new ResultDto<VehicleModelDto>(
            Infrastucture.Properties.Resources.errNotFound, false
            );
+        var relatedAttach = dbContext.VehicleAttachments.FirstOrDefault(c => c.VehicleModelIdSevenSoft == data.VehicleModelIdSevenSoft);
+        if (relatedAttach!=null)
+        {
+            data.VehicleAttachment = relatedAttach;
+        }
         var model = mapper.Map<VehicleModelDto>(data);
         return new ResultDto<VehicleModelDto>(
             Infrastucture.Properties.Resources.msgFound,
-            
+
             true, model);
     }
 

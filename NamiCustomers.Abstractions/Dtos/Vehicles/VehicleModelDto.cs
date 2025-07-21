@@ -42,8 +42,8 @@ public class VehicleModelDto
 public class VehicleAttachmentDto
 {
 	public int Id { get; set; }
-	public int VehicleModelId { get; set; }
-	public string? ThumbnailPath { get; set; }
+    public Guid? VehicleModelIdSevenSoft { get; set; }
+    public string? ThumbnailPath { get; set; }
 	public string? ImagePath { get; set; }
 	public string? Guidanc { get; set; }
 	public string? Catalog { get; set; }
