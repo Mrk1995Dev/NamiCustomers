@@ -28,7 +28,7 @@ public class UsersController : ControllerBase
     {
         if (userId is null)
         {
-            return new ResultDto<AddUserRoleDto>(Infrastucture.Properties.Resources.errNotFound, false,new AddUserRoleDto());
+            return new ResultDto<AddUserRoleDto>(Infrastucture.Properties.Resources.errNotFound, false);
         }
         var user = await userManager.Users.SingleOrDefaultAsync(c => c.Id == userId);
         var roles = await userManager.GetRolesAsync(user);
@@ -45,7 +45,7 @@ public class UsersController : ControllerBase
         };
 
 
-        return new ResultDto<AddUserRoleDto>(Infrastucture.Properties.Resources.msgFound, true, result);
+        return new ResultDto<AddUserRoleDto>(Infrastucture.Properties.Resources.msgFound,true,result);
     }
 
     [HttpGet("[action]")]

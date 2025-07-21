@@ -16,7 +16,10 @@ namespace NamiCustomers.Application.Mappings
             CreateMap<Dealer, DealerDto>().ReverseMap();
             CreateMap<Appointment, AppointmentDto>().ReverseMap();
             CreateMap<ChassisInformationByVinNumberResponse, VehicleModelDto>();
+            CreateMap<VehicleAttachment, VehicleAttachmentDto>().ReverseMap();
             
+
+
         }
     }
 }

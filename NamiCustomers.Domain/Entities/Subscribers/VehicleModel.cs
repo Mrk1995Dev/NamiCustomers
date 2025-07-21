@@ -3,15 +3,12 @@
 public class VehicleModel :IBaseEntity<int>
 {
     public int Id { get; set; }
-    public int SubscriberId { get; set; }
-    public string? VehicleName { get; set; }
-    public string? EnglishName { get; set; }
-    public string? Description { get; set; }
+    public int? SubscriberId { get; set; }
 	public string? ProductYear { get; set; }
 	public string? BodyColor { get; set; }
 	public string? MotorNumber { get; set; }
 	public string? FullSystem { get; set; }
-	public Guid? VehicleModelId { get; set; }
+	public Guid? VehicleModelIdSevenSoft { get; set; }
 	public string? ChassisUsageTypeName { get; set; }
 
 	public string? SelectedVehicleCommonName { get; set; }
@@ -20,10 +17,21 @@ public class VehicleModel :IBaseEntity<int>
 	/// شماره شاسی 
 	/// </summary>
 	public string? VinNumber { get; set; }
-    public Guid? SalePlanIdSevenSoft { get; set; }
-    public Guid? SaleBasketIdSevenSoft { get; set; }
-    public Guid? VehicleModelIdSevensoft { get; set; }
-    public Guid? BrandIdSevenSoft { get; set; }
+    //public Guid? SalePlanIdSevenSoft { get; set; }
+    //public Guid? SaleBasketIdSevenSoft { get; set; }
+    //public Guid? BrandIdSevenSoft { get; set; }
+	public VehicleAttachment?  VehicleAttachment { get; set; }
 
 
+}
+
+
+public class VehicleAttachment:IBaseEntity<int>
+{
+    public int Id { get; set; }
+    public int VehicleModelId { get; set; }
+	public string? ThumbnailPath { get; set; }
+	public string? ImagePath { get; set; }
+	public string? Guidanc { get; set; }
+	public string? Catalog { get; set; }
 }

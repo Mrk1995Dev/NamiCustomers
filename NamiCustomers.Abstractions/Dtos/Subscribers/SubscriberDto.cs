@@ -11,7 +11,6 @@ namespace NamiCustomers.Abstractions.Dtos.Subscribers
         public string? Address { get; set; }
         public int? CityId { get; set; }
         public string? CityName { get; set; }
-        [Required(ErrorMessage ="Required")]
         public string? PhoneNumber { get; set; }
         public string? NationalCode { get; set; }
         public string? Mobile { get; set; }

@@ -1,6 +1,8 @@
 ﻿using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Http;
 using NamiCustomers.Abstractions.Dtos.Health;
 using NamiCustomers.API.Middlewares;
+using System.Net.Http;
 using System.Reflection;
 
 namespace NamiCustomers.API.Extensions

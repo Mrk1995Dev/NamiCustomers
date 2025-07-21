@@ -18,19 +18,9 @@ public interface IAuthService
     Task<HttpResponseMessage> SetPhoneNumberAsync(SetPhoneNumberDto phoneNumberDto);
     Task<ConfirmResponse> VerifyPhoneNumberAsync(VerifyPhoneNumberDto verify);
 }
-public class AuthService : IAuthService
+public class AuthService(HttpClient httpClient, ITokenSessionService tokenService
+        , AuthenticationStateProvider authenticationStateProvider) : IAuthService
 {
-    private readonly HttpClient httpClient;
-    private readonly ITokenService tokenService;
-    private readonly AuthenticationStateProvider authenticationStateProvider;
-
-    public AuthService(HttpClient httpClient, ITokenService tokenService
-        , AuthenticationStateProvider authenticationStateProvider)
-    {
-        this.httpClient = httpClient;
-        this.tokenService = tokenService;
-        this.authenticationStateProvider = authenticationStateProvider;
-    }
 
 
     #region Privates
@@ -61,12 +51,6 @@ public class AuthService : IAuthService
         string responseContent = await response.Content.ReadAsStringAsync();
         return await Task.FromResult(JsonSerializer.Deserialize<T>(responseContent));
     }
-
-
-
-
-
-
 
     #endregion
     public async Task<ConfirmResponse> ConfirmEmailAsync(string userId, string token)
@@ -111,7 +95,6 @@ public class AuthService : IAuthService
                 tokenService.SetToken(result.Token, result.RefreshToken);
 
                 //اطلاع رسانی تغییر وضعیت کاربر
-
                 ((CustomAuthenticationStateProvider)authenticationStateProvider).UpdateAuthenticationState();
                 return true;
             }

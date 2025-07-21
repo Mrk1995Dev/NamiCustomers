@@ -3,6 +3,8 @@
 
 
 
+using NamiCustomers.Abstractions.Dtos.Settings;
+
 namespace NamiCustomers.Infrastucture.ExternalServices.SmsServices
 {
 

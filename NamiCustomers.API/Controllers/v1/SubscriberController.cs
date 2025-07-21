@@ -11,14 +11,21 @@ namespace NamiCustomers.API.Controllers.v1
     public class SubscriberController(
         ISubscriberService subscriberService) : ControllerBase
     {
+
+        [HttpGet("cities")]
+        public async Task<List<CityDto>> GetAllCities()
+            => await subscriberService.GetCitiesAsync();
+
         [HttpGet("[action]")]
         public async Task<ResultDto<SubscriberDto>> Info([FromQuery] int id)
             => await subscriberService.GetAsync(id);
         [HttpGet("[action]")]
         public async Task<ResultDto<SubscriberDto>> InfoByNationalCode([FromQuery] string nationalCode)
-            => await subscriberService.GetByNationalCodeAsync(nationalCode);
+        {
+            return await subscriberService.GetByNationalCodeAsync(nationalCode);
+        }
 
-        
+
 
         [HttpGet("[action]")]
         public async Task<ResultDto<SubscriberDto>> GetByMobile([FromQuery] string mobile)

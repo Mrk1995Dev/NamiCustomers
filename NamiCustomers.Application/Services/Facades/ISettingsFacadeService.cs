@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using NamiCustomers.Abstractions.Dtos.Settings;
 using NamiCustomers.Application.Services.Facades.Dtos;
 using NamiCustomers.Infrastucture.ExternalServices.Email.Dtos;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;

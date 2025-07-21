@@ -7,9 +7,9 @@ namespace NamiCustomers.MVC.Services.Auth
 {
     public class CustomAuthenticationStateProvider : ServerAuthenticationStateProvider//AuthenticationStateProvider
     {
-        private readonly ITokenService tokenService;
+        private readonly ITokenSessionService tokenService;
 
-        public CustomAuthenticationStateProvider(ITokenService tokenService)
+        public CustomAuthenticationStateProvider(ITokenSessionService tokenService)
         {
             this.tokenService = tokenService;
         }

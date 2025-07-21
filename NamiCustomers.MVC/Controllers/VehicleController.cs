@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.MVC.Services;
@@ -8,7 +9,7 @@ namespace NamiCustomers.MVC.Controllers;
 
 [Authorize(Policy = nameof(MyPloicies.SubscriberAccess))]
 public class VehicleController(
-    ISubscriberService subscriberService, IVehicleService vehicleService) : Controller
+    ISubscriberService subscriberService, IVehicleService vehicleService) : MyBaseController
 {
     [HttpGet]
     public async Task<IActionResult> ActiveMainChassisGuarantee(string? VinNumber)
@@ -81,7 +82,8 @@ public class VehicleController(
         if (result.Succeeded)
             return RedirectToAction("Index");
 
-        return NotFound(result);
+        return MyError(result.Errors);
+        
     }
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
@@ -106,7 +108,4 @@ public class VehicleController(
 
         return NotFound(data);
     }
-
-
-
 }

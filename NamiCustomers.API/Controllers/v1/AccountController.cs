@@ -104,9 +104,9 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
         }
 
         return new ResultDto(
-            Infrastucture.Properties.Resources.errSave,
-            false,
-            new ApiErrorResponse(createResult.Errors.Select(c => new ApiError(c.Code, c.Description)).ToList())
+            Infrastucture.Properties.Resources.errSave
+            ,  false//todo moradi
+            //  new ApiErrorResponse(createResult.Errors.Select(c => new ApiError(c.Code, c.Description)).ToList())
             );
     }
 
@@ -131,15 +131,15 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                 {
                     var token = $"{GenerateJwtToken(user)}";
                     var refreshToken = $"{GenerateJwtToken(user)}";
-                    return new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, NationalCode = user.NationalCode, Mobile = user.PhoneNumber, Id = user.Id, FirstName = user.FirstName, LastName = user.LastName });
+                    return new ResultDto<LoginResponseDto>("",true ,new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, NationalCode = user.NationalCode, Mobile = user.PhoneNumber, Id = user.Id, FirstName = user.FirstName, LastName = user.LastName });
                 }
                 else
                 {
-                    var registerUserResult =await  RegisterUser(new RegisterModel
+                    var registerUserResult = await RegisterUser(new RegisterModelDto
                     {
                         Email = $"{otpResult.Data.Mobile}@namikhodro.com",
                         FirstName = $"{otpResult.Data.Mobile}",
-                        
+
                         LastName = $"{otpResult.Data.Mobile}",
                         Mobile = otpResult.Data.Mobile,
                         Password = $"Nn@{otpResult.Data.Mobile}",
@@ -153,13 +153,13 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                         var refreshToken = $"{GenerateJwtToken(newUser)}";
                         return new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = newUser.Email });
                     }
-                    return new ResultDto<LoginResponseDto>("", false, new LoginResponseDto());
+                    return new ResultDto<LoginResponseDto>("", false);//todo moradi
 
                 }
             }
-            return new ResultDto<LoginResponseDto>(Infrastucture.Properties.Resources.errOtpInvalid, false, new LoginResponseDto());
+            return new ResultDto<LoginResponseDto>(Infrastucture.Properties.Resources.errOtpInvalid, false);
         }
-        return new ResultDto<LoginResponseDto>(Infrastucture.Properties.Resources.errOtpInvalid, false, new LoginResponseDto());
+        return new ResultDto<LoginResponseDto>(Infrastucture.Properties.Resources.errOtpInvalid, false);
     }
 
     [HttpPost("[action]")]
@@ -185,16 +185,16 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
             currentUser.PassWord = reset.Password;
             var result = userManager.UpdateAsync(currentUser).Result;
 
-            return Ok(new ResultDto<IdentityResult>(Infrastucture.Properties.Resources.msgSave, true, result));
+            return Ok(new ResultDto<IdentityResult>(Infrastucture.Properties.Resources.msgSave, false));
         }
         else
         {
-            var errorResponse = new ApiErrorResponse(Result.Errors.Select(e => new ApiError
-            (e.Code,
-             e.Description
-            )).ToList());
+            //var errorResponse = new ApiErrorResponse(Result.Errors.Select(e => new ApiError
+            //(e.Code,
+            // e.Description
+            //)).ToList());//todo moradi
 
-            return BadRequest(new ResultDto<IdentityResult>(Infrastucture.Properties.Resources.Error, false, Result, errorResponse));
+            return BadRequest(new ResultDto<IdentityResult>(Infrastucture.Properties.Resources.Error, false));
         }
 
     }
@@ -206,13 +206,13 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(new ResultDto<ForgotPasswordResponse>("ممکن است ایمیل وارد شده معتبر نباشد!", false, new ForgotPasswordResponse { Email = forgotPasswordRequestDto.Email, Token = "" }));
+            return BadRequest(new ResultDto<ForgotPasswordResponse>("ممکن است ایمیل وارد شده معتبر نباشد!", false));
         }
 
         var user = await userManager.FindByEmailAsync(forgotPasswordRequestDto.Email);
         if (user == null || userManager.IsEmailConfirmedAsync(user).Result == false)
         {
-            return BadRequest(new ResultDto<ForgotPasswordResponse>("ممکن است ایمیل وارد شده معتبر نباشد! و یا اینکه ایمیل خود را تایید نکرده باشید", false, new ForgotPasswordResponse { Email = forgotPasswordRequestDto.Email, Token = "" }));
+            return BadRequest(new ResultDto<ForgotPasswordResponse>("ممکن است ایمیل وارد شده معتبر نباشد! و یا اینکه ایمیل خود را تایید نکرده باشید", false));
         }
 
         string token = userManager.GeneratePasswordResetTokenAsync(user).Result;
@@ -231,7 +231,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
 
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> LogIn(LoginModel model)
+    public async Task<IActionResult> LogIn(LoginModelDto model)
     {
         var user = userManager.FindByNameAsync(model.Email).Result;
         await signInManager.SignOutAsync();
@@ -248,7 +248,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
 
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetTokenAsync([FromQuery] LoginModel model)
+    public async Task<IActionResult> GetTokenAsync([FromQuery] LoginModelDto model)
     {
         if (!string.IsNullOrEmpty(model.Mobile))
         {
@@ -277,9 +277,9 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     }
 
     [HttpPost("[action]")]
-    private async Task<bool> RegisterUser([FromBody] RegisterModel model)
+    private async Task<bool> RegisterUser([FromBody] RegisterModelDto model)
     {
-        var user = new ApplicationUser {Id=Guid.NewGuid().ToString(), NationalCode = model.NationalCode, UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true, PassWord = model.Password };
+        var user = new ApplicationUser { Id = Guid.NewGuid().ToString(), NationalCode = model.NationalCode, UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true, PassWord = model.Password };
 
         try
         {
@@ -296,8 +296,8 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                 Family = user.LastName,
                 Mobile = user.PhoneNumber,
                 NationalCode = user.NationalCode,
-                PhoneNumber=user.PhoneNumber,
-                
+                PhoneNumber = user.PhoneNumber,
+
             });
 
             if (subResult.Succeeded)
@@ -369,15 +369,14 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
         var jwtSettings = configuration.GetSection("JWTSettings");
         var key = Encoding.ASCII.GetBytes(jwtSettings["securityKey"]);
 
-        var claims = new List<Claim>
-{
-    new Claim(ClaimTypes.Name, user.UserName),
-    new Claim(ClaimTypes.Email, user.Email),
-    new Claim("NationalCode", user.NationalCode),
-    new Claim("Mobile", user.PhoneNumber),
-    new  System.Security.Claims.Claim("FullName",$"{user.FirstName} {user.LastName}"),
-    new Claim(ClaimTypes.NameIdentifier, user.Id)
-};
+        var claims = new List<Claim>{
+                                        new Claim(ClaimTypes.Name, user.UserName),
+                                        new Claim(ClaimTypes.Email, user.Email),
+                                        new Claim("NationalCode", user.NationalCode),
+                                        new Claim("Mobile", user.PhoneNumber),
+                                        new  System.Security.Claims.Claim("FullName",$"{user.FirstName} {user.LastName}"),
+                                        new Claim(ClaimTypes.NameIdentifier, user.Id)
+                                    };
         foreach (var role in roles)
         {
             claims.Add(new Claim(ClaimTypes.Role, role));
@@ -401,31 +400,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
 }
 
 
-public class LoginModel
-{
-    public string Email { get; set; }
-    public string Password { get; set; }
-    public string Mobile { get; set; }
-    public bool IsPersistent { get; set; } = false;
 
-}
-
-
-public class RegisterModel
-{
-    [Required]
-    public string FirstName { get; set; }
-    [Required]
-    public string LastName { get; set; }
-    [Required]
-    public string Mobile { get; set; }
-    [Required]
-    public string Email { get; set; }
-    [Required]
-    public string Password { get; set; }
-    [Required]
-    public string NationalCode { get; set; }
-}
 
 
 

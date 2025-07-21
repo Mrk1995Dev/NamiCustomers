@@ -208,4 +208,11 @@
   <data name="errOtpInvalid" xml:space="preserve">
     <value>کد وارد شده صحیح نمی باشد</value>
   </data>
+  <data name="errDuplicateSubscriberVin" xml:space="preserve">
+    <value>قبلا این شماره شاسی برای مشترک ثبت شده است</value>
+    <comment>101</comment>
+  </data>
+  <data name="errExistedSubscriber" xml:space="preserve">
+    <value>شماره شاسی به نام مشترک دیگری ثبت شده است</value>
+  </data>
 </root>

@@ -1,5 +1,6 @@
 ﻿
 using NamiCustomers.Infrastucture.Utilities;
+using NamiCustomers.MVC.Services.Auth;
 
 namespace NamiCustomers.MVC.Services;
 
@@ -20,13 +21,13 @@ public class SubscriberService : ISubscriberService
     private readonly HttpClient _httpClient;
     private readonly IHttpContextAccessor httpContextAccessor;
 
-    public SubscriberDto CurrentSubscriber => GetByNationalCodeAsync().Result.Data;
+    public SubscriberDto CurrentSubscriber => GetByNationalCodeAsync().GetAwaiter().GetResult().Data;
 
     public SubscriberService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
     {
         _httpClient = httpClient;
         this.httpContextAccessor = httpContextAccessor;
-        //GetToken();
+
     }
 
     public async Task<List<SubscriberDto>> GetAsync()
@@ -96,13 +97,31 @@ public class SubscriberService : ISubscriberService
     {
 
         var nationalCode = httpContextAccessor.GetClaimValue(MyClaims.NationalCode);
-        
-        var result = await _httpClient.GetFromJsonAsync<ResultDto<SubscriberDto>>($"subscriber/infobynationalcode?nationalcode={nationalCode}");
-        if (result.Data != null)
+
+        var response = await _httpClient.GetAsync($"subscriber/InfoByNationalCode?nationalcode={nationalCode}");
+
+        if (response.IsSuccessStatusCode)
         {
-            return new ResultDto<SubscriberDto>(Infrastucture.Properties.Resources.msgFound, true,
-            result.Data);
+            var result = await _httpClient.GetFromJsonAsync<ResultDto<SubscriberDto>>($"subscriber/InfoByNationalCode?nationalcode={nationalCode}");
+            if (result?.Data != null)
+            {
+                return new ResultDto<SubscriberDto>(Infrastucture.Properties.Resources.msgFound, true,
+               ((ResultDto<SubscriberDto>)result).Data);
+            }
         }
-        return new ResultDto<SubscriberDto>(Infrastucture.Properties.Resources.errNotFound, false, null);
+        
+            // Log or handle the error response
+            var errorContent = await response.Content.ReadAsStringAsync();
+           // _logger.LogError($"API Error: {response.StatusCode} - {errorContent}");
+
+            // You might want to return null or throw a custom exception
+            return new ResultDto<SubscriberDto>(Infrastucture.Properties.Resources.errNotFound, false);
+        
+
+
+
+
+        
+        
     }
 }

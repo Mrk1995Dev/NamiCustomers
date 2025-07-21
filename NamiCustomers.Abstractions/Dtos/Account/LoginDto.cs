@@ -25,3 +25,15 @@ public class LoginDto
     public string? OtpCode { get; set; }
     public string? Mobile { get; set; }
 }
+
+public class LoginModelDto
+{
+    public string Email { get; set; }
+    public string Password { get; set; }
+    public string Mobile { get; set; }
+    public bool IsPersistent { get; set; } = false;
+
+}
+
+
+

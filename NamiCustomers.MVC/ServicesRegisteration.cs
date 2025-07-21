@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using NamiCustomers.Infrastucture.ExternalServices.Email.Dtos;
-using NamiCustomers.Infrastucture.ExternalServices.SmsServices.Dtos;
 using NamiCustomers.MVC.Handlers;
 using NamiCustomers.MVC.Services;
 using NamiCustomers.MVC.Services.Auth;
@@ -83,9 +82,6 @@ public static class ServicesRegisteration
     {
         var jwtSettings = configuration.GetSection("JWTSettings");
 
-       
-
-
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -122,7 +118,7 @@ public static class ServicesRegisteration
             new MediaTypeWithQualityHeaderValue("application/json"));
         });
 
-        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<ITokenSessionService, TokenSessionService>();
         services.AddScoped<ISubscriberService, SubscriberService>(sp =>
         {
             var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");

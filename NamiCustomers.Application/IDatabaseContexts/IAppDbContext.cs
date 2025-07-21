@@ -11,7 +11,8 @@ namespace NamiCustomers.Application.IDatabaseContexts
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Dealer> Dealers { get; set; }
         public DbSet<City> Cities { get; set; }
-        
+        public DbSet<VehicleAttachment> VehicleAttachments { get; set; }
+
 
         public int SaveChanges();
 

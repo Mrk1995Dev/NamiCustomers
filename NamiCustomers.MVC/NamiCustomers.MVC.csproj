@@ -23,8 +23,4 @@
     <ProjectReference Include="..\NamiCustomers.Infrastucture\NamiCustomers.Infrastucture.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
 </Project>

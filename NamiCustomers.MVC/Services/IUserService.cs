@@ -48,7 +48,7 @@ public class UserService : IUserService
         {
             return response;
         }
-        return new ResultDto<List<UserDto>>(Infrastucture.Properties.Resources.errNotFound, false, null);
+        return new ResultDto<List<UserDto>>(Infrastucture.Properties.Resources.errNotFound, false);
     }
 
     public async Task<ResultDto<UserDto>> GetAsync(string id)
@@ -58,7 +58,7 @@ public class UserService : IUserService
         {
             return response;
         }
-        return new ResultDto<UserDto>(Infrastucture.Properties.Resources.errNotFound, false, null);
+        return new ResultDto<UserDto>(Infrastucture.Properties.Resources.errNotFound, false);
     }
 
     public async Task<Microsoft.AspNetCore.Identity.SignInResult> PasswordSignInAsync(MyAccountinfoDto myAccountinfoDto)
@@ -117,7 +117,7 @@ public class UserService : IUserService
         {
             return response;
         }
-        return new ResultDto<AddUserRoleDto>(Infrastucture.Properties.Resources.errNotFound, false, null);
+        return new ResultDto<AddUserRoleDto>(Infrastucture.Properties.Resources.errNotFound, false);
     }
 
     public async  Task<ResultDto> RemoveUserRole(AddUserRoleDto newRole)

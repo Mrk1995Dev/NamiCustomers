@@ -29,3 +29,19 @@ public class RegisterUserDto
     public string ConfirmPassword { get; set; }
     public string CallbakUrl { get; set; }
 }
+
+public class RegisterModelDto
+{
+    [Required]
+    public string FirstName { get; set; }
+    [Required]
+    public string LastName { get; set; }
+    [Required]
+    public string Mobile { get; set; }
+    [Required]
+    public string Email { get; set; }
+    [Required]
+    public string Password { get; set; }
+    [Required]
+    public string NationalCode { get; set; }
+}

@@ -79,6 +79,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to قبلا این شماره شاسی برای مشترک ثبت شده است.
+        /// </summary>
+        public static string errDuplicateSubscriberVin {
+            get {
+                return ResourceManager.GetString("errDuplicateSubscriberVin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ویرایش نشد.
         /// </summary>
         public static string errEdited {
@@ -93,6 +102,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         public static string errEndTimeCannotEqualOrLessThanStatrtTime {
             get {
                 return ResourceManager.GetString("errEndTimeCannotEqualOrLessThanStatrtTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to شماره شاسی به نام مشترک دیگری ثبت شده است.
+        /// </summary>
+        public static string errExistedSubscriber {
+            get {
+                return ResourceManager.GetString("errExistedSubscriber", resourceCulture);
             }
         }
         

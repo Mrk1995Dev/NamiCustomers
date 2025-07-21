@@ -192,7 +192,7 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
         }
         return View("ResetPassword", new ResetPasswordDto
         {
-            Errors = result.Errors.Errors.Select(c => c.Description).ToList(),
+            Errors = result.Errors.Select(c => c).ToList(),
             UserId = reset.UserId,
             Token = reset.Token.Replace(" ", "+")
         });
@@ -245,10 +245,10 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
         }
 
         string message = "";
-        foreach (var error in result.ErrorResponse.Errors.ToList())
-        {
-            message += $"{error} {Environment.NewLine}";
-        }
+        //foreach (var error in result.ErrorResponse.Errors.ToList())//todo moradi
+        //{
+        //    message += $"{error} {Environment.NewLine}";
+        //}
         TempData["Message"] = message;
         return View(register);
     }

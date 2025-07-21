@@ -11,6 +11,7 @@ namespace NamiCustomers.Persistence.DatabaseContexts;
 
 public class AppDbContext : IdentityDbContext<Domain.Entities.Account.ApplicationUser,Domain.Entities.Account.ApplicationRole,string>, IAppDbContext
 {
+    public DbSet<VehicleAttachment> VehicleAttachments { get; set; }
     public DbSet<Subscriber> Subscribers { get; set; }
     public DbSet<SubscriberCode> SubscriberCodes { get; set; }
     public DbSet<City> Cities { get; set; }

@@ -6,7 +6,7 @@ namespace NamiCustomers.Abstractions.Dtos.Vehicles;
 public class VehicleModelDto
 {
     public int? Id              { get; set; }
-    public int SubscriberId { get; set; }
+    public int? SubscriberId { get; set; }
 	[Display(Name = "مدل خودرو ")]
 	public string? VehicleModelName { get; set; }
 	[Display(Name = " نام خودرو")]
@@ -21,7 +21,7 @@ public class VehicleModelDto
 	public string? MotorNumber { get; set;   }
 	[Display(Name = "نوع سوخت")]
 	public string? FullSystem { get;set; }
-    public Guid? VehicleModelId { get; set; }
+    public Guid? VehicleModelIdSevenSoft { get; set; }
     public string? ChassisUsageTypeName { get; set; }
 
 		public string? SelectedVehicleCommonName { get;set; }
@@ -32,8 +32,19 @@ public class VehicleModelDto
 
 	[Display(Name = "شماره شاسی")]
 	public string? VinNumber { get; set; }
-    public Guid? SalePlanIdSevenSoft { get; set; }
-    public Guid? SaleBasketIdSevenSoft { get; set; }
-    public Guid? VehicleModelIdSevensoft { get; set; }
-    public Guid? BrandId { get; set; }
+    //public Guid? SalePlanIdSevenSoft { get; set; }
+    //public Guid? SaleBasketIdSevenSoft { get; set; }
+    //public Guid? BrandIdSevenSoft { get; set; }
+
+	public VehicleAttachmentDto? VehicleAttachment { get; set; }
+}
+
+public class VehicleAttachmentDto
+{
+	public int Id { get; set; }
+	public int VehicleModelId { get; set; }
+	public string? ThumbnailPath { get; set; }
+	public string? ImagePath { get; set; }
+	public string? Guidanc { get; set; }
+	public string? Catalog { get; set; }
 }

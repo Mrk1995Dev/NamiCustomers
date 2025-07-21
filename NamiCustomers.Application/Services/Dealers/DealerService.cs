@@ -21,7 +21,7 @@ public class DealerService(IAppDbContext dbContext,IMapper mapper) : IDealerServ
         if (result < 1)
         {
             var model = mapper.Map<DealerDto>(newEntity);
-            return new ResultDto<DealerDto>(Infrastucture.Properties.Resources.errSave, false, model);
+            return new ResultDto<DealerDto>(Infrastucture.Properties.Resources.errSave, false);
         }
         var newModel = mapper.Map<DealerDto>(newEntity);
         return new ResultDto<DealerDto>(Infrastucture.Properties.Resources.msgSave, true, newModel);
@@ -31,10 +31,10 @@ public class DealerService(IAppDbContext dbContext,IMapper mapper) : IDealerServ
     {
         var entity = await dbContext.Dealers.FindAsync(id);
         if (entity is null)
-            return new ResultDto<DealerDto>(Infrastucture.Properties.Resources.errNotFound, false, new DealerDto { Id = id });
+            return new ResultDto<DealerDto>(Infrastucture.Properties.Resources.errNotFound, false);
         var model = mapper.Map<DealerDto>(entity);
         dbContext.Dealers.Remove(entity);
-        if (await dbContext.SaveChangesAsync() < 1) return new ResultDto<DealerDto>(Infrastucture.Properties.Resources.errDelete, false, model);
+        if (await dbContext.SaveChangesAsync() < 1) return new ResultDto<DealerDto>(Infrastucture.Properties.Resources.errDelete, false);
         return new ResultDto<DealerDto>(Infrastucture.Properties.Resources.msgDeleted, true, model);
     }
 
@@ -52,21 +52,19 @@ public class DealerService(IAppDbContext dbContext,IMapper mapper) : IDealerServ
         var entity = await dbContext.Dealers.FindAsync(model.Id);
         if (entity is null)
             return new ResultDto<DealerDto>(
-               Infrastucture.Properties.Resources.errNotFound
-                , false
-                , model);
+               Infrastucture.Properties.Resources.errNotFound,false
+               );
         mapper.Map(model, entity);
         dbContext.Dealers.Update(entity);
         var editedEntity = mapper.Map<DealerDto>(entity);
         if (await dbContext.SaveChangesAsync() < 1)
             return new ResultDto<DealerDto>(
-                Infrastucture.Properties.Resources.errEdited
-                , false
-                , editedEntity);
+                Infrastucture.Properties.Resources.errEdited, false
+                );
         return new ResultDto<DealerDto>(
             Infrastucture.Properties.Resources.msgEdited
-            , true
-            , editedEntity);
+           
+            , true, editedEntity);
     }
 
 
@@ -74,14 +72,12 @@ public class DealerService(IAppDbContext dbContext,IMapper mapper) : IDealerServ
     {
         var data = await dbContext.Dealers.FirstOrDefaultAsync(cu => cu.Id == id);
         if (data == null) return new ResultDto<DealerDto>(
-           Infrastucture.Properties.Resources.errNotFound,
-            false,
-            null);
+           Infrastucture.Properties.Resources.errNotFound, false
+          );
         var model = mapper.Map<DealerDto>(data);
         return new ResultDto<DealerDto>(
             Infrastucture.Properties.Resources.msgFound,
-             
-            true,
-            model);
+           
+            true, model);
     }
 }

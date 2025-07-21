@@ -39,8 +39,8 @@ public class RoleService : IRoleService
         if (response.Succeeded)
         {
             return new ResultDto<List<RoleDto>>(
-                 Infrastucture.Properties.Resources.msgFound,
-                true,
+                 Infrastucture.Properties.Resources.msgFound
+               ,true, 
                 response.Data)
             {
 
@@ -48,9 +48,7 @@ public class RoleService : IRoleService
         }
 
         return new ResultDto<List<RoleDto>>(
-           Infrastucture.Properties.Resources.errNotFound,
-            false,
-            null);
+           Infrastucture.Properties.Resources.errNotFound, false);
     }
 
     public async  Task<ResultDto<RoleDto>> GetAsync(string id)
@@ -61,7 +59,7 @@ public class RoleService : IRoleService
         {
             return new ResultDto<RoleDto>(
                  Infrastucture.Properties.Resources.msgFound,
-                true,
+            true,
                 response.Data)
             {
 
@@ -69,9 +67,8 @@ public class RoleService : IRoleService
         }
 
         return new ResultDto<RoleDto>(
-           Infrastucture.Properties.Resources.errNotFound,
-            false,
-            null);
+           Infrastucture.Properties.Resources.errNotFound, false
+            );
     }
 
     public async Task<ResultDto<List<UserDto>>> GetUsersInRole(string roleName)
@@ -80,15 +77,14 @@ public class RoleService : IRoleService
         if (response.Succeeded)
         {
             return new ResultDto<List<UserDto>>(
-                 Infrastucture.Properties.Resources.msgSave,
-                true,
+                 Infrastucture.Properties.Resources.msgSave
+              , true,
                 response.Data);
         }
 
         return new ResultDto<List<UserDto>>(
-           Infrastucture.Properties.Resources.errSave,
-            false,
-            null);
+           Infrastucture.Properties.Resources.errSave, false
+           );
     }
 
     public async Task<ResultDto> RegisterAsync(AddNewRoleDto role)

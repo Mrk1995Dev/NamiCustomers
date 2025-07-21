@@ -6,7 +6,6 @@ using NamiCustomers.MVC.Services;
 namespace NamiCustomers.MVC.Controllers;
 
 [Authorize(Policy =nameof(MyPloicies.SubscriberAccess))]
-//[Authorize(Roles = "Subscriber,Admin")]
 public class SubscriberController(
     ISubscriberService  subscriberService) : Controller
 {

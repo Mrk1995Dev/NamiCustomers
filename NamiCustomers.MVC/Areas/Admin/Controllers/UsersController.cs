@@ -6,7 +6,7 @@ using NamiCustomers.MVC.Services;
 namespace NamiCustomers.MVC.Areas.Admin.Controllers;
 
 
-[Authorize(Roles = "Admin")]
+[Authorize(Policy = nameof(MyPloicies.AdminAccess))]
 [Area("Admin")]
 public class UsersController(IUserService userService, IRoleService roleService) : Controller
 {

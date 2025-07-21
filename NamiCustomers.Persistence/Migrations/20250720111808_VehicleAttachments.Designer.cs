@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NamiCustomers.Persistence.DatabaseContexts;
 
@@ -11,9 +12,11 @@ using NamiCustomers.Persistence.DatabaseContexts;
 namespace NamiCustomers.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250720111808_VehicleAttachments")]
+    partial class VehicleAttachments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -572,11 +575,20 @@ namespace NamiCustomers.Persistence.Migrations
                     b.Property<string>("BodyColor")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("BrandIdSevenSoft")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("ChassisUsageTypeName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EnglishName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullSystem")
                         .HasColumnType("nvarchar(max)");
@@ -596,17 +608,29 @@ namespace NamiCustomers.Persistence.Migrations
                     b.Property<DateTime?>("RemovedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("SaleBasketIdSevenSoft")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("SalePlanIdSevenSoft")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("SelectedVehicleCommonName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SelectedVehicleDescription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SubscriberId")
+                    b.Property<int>("SubscriberId")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("VehicleModelIdSevenSoft")
+                    b.Property<Guid?>("VehicleModelId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("VehicleModelIdSevensoft")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("VehicleName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VinNumber")
                         .HasColumnType("nvarchar(max)");
@@ -724,7 +748,9 @@ namespace NamiCustomers.Persistence.Migrations
                 {
                     b.HasOne("NamiCustomers.Domain.Entities.Subscribers.Subscriber", null)
                         .WithMany("VehicleModels")
-                        .HasForeignKey("SubscriberId");
+                        .HasForeignKey("SubscriberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("NamiCustomers.Domain.Entities.Subscribers.Subscriber", b =>

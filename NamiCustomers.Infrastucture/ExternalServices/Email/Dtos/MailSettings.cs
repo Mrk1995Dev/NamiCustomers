@@ -19,16 +19,7 @@ namespace NamiCustomers.Infrastucture.ExternalServices.Email.Dtos
 
 
 
-    public class CompanySetting
-    {
-        public string? CompanyName { get; set; }
-        public string? Accountnumber { get; set; }
-        public string? Shebanumber { get; set; }
-        public string? BankName { get; set; }
-        public string? BankCode { get; set; }
 
-        public string? BanckBranch { get; set; }
-    }
 
 
 

@@ -6,7 +6,7 @@ namespace NamiCustomers.Infrastucture.Utilities
     public static class PersianDateUtility
     {
 
-        private static CultureInfo _Culture;
+        private static CultureInfo _culture;
         public static string GetPersianDateString(DateTime? date)
         {
             string PersianDate = "";
@@ -55,10 +55,10 @@ namespace NamiCustomers.Infrastucture.Utilities
         }
         public static CultureInfo GetPersianCulture()
         {
-            if (_Culture == null)
+            if (_culture == null)
             {
-                _Culture = new CultureInfo("fa-IR");
-                DateTimeFormatInfo formatInfo = _Culture.DateTimeFormat;
+                _culture = new CultureInfo("fa-IR");
+                DateTimeFormatInfo formatInfo = _culture.DateTimeFormat;
                 formatInfo.AbbreviatedDayNames = new[] { "ی", "د", "س", "چ", "پ", "ج", "ش" };
                 formatInfo.DayNames = new[] { "یکشنبه", "دوشنبه", "سه شنبه", "چهار شنبه", "پنجشنبه", "جمعه", "شنبه" };
                 var monthNames = new[]
@@ -77,19 +77,19 @@ namespace NamiCustomers.Infrastucture.Utilities
                 formatInfo.FirstDayOfWeek = DayOfWeek.Saturday;
                 Calendar cal = new PersianCalendar();
 
-                FieldInfo fieldInfo = _Culture.GetType().GetField("calendar", BindingFlags.NonPublic | BindingFlags.Instance);
+                FieldInfo fieldInfo = _culture.GetType().GetField("calendar", BindingFlags.NonPublic | BindingFlags.Instance);
                 if (fieldInfo != null)
-                    fieldInfo.SetValue(_Culture, cal);
+                    fieldInfo.SetValue(_culture, cal);
 
                 FieldInfo info = formatInfo.GetType().GetField("calendar", BindingFlags.NonPublic | BindingFlags.Instance);
                 if (info != null)
                     info.SetValue(formatInfo, cal);
 
-                _Culture.NumberFormat.NumberDecimalSeparator = "/";
-                _Culture.NumberFormat.DigitSubstitution = DigitShapes.NativeNational;
-                _Culture.NumberFormat.NumberNegativePattern = 0;
+                _culture.NumberFormat.NumberDecimalSeparator = "/";
+                _culture.NumberFormat.DigitSubstitution = DigitShapes.NativeNational;
+                _culture.NumberFormat.NumberNegativePattern = 0;
             }
-            return _Culture;
+            return _culture;
         }
 
         public static string ToPersianDateString(this DateTime date, string format = "yyyy/MM/dd")

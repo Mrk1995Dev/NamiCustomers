@@ -33,11 +33,11 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
             Name = addCustomerInfoDto.Name,
             Family = addCustomerInfoDto.Family,
             Mobile = addCustomerInfoDto.PhoneNumber,
-            NationalCode=addCustomerInfoDto.NationalCode,
+            NationalCode = addCustomerInfoDto.NationalCode,
         };
 
         await dbContext.Subscribers.AddAsync(newCustomer);
-        if (await dbContext.SaveChangesAsync() < 1) 
+        if (await dbContext.SaveChangesAsync() < 1)
             return new ResultDto("خطا در ذخیره اطلاعات مربوطه", false);
 
         return new ResultDto("اطلاعات با موفقیت ذخیره شد.", true);
@@ -74,8 +74,8 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
 
         return new ResultDto<List<SubscriberDto>>(
             "",
-            true,
-            data);
+          
+            true, data);
     }
 
     public async Task<ResultDto> EditAsync(SubscriberDto subscriberDto)
@@ -94,7 +94,7 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
         subscriber.Address = subscriberDto.Address;
         subscriber.Mobile = subscriberDto.Mobile;
         subscriber.CityId = subscriberDto.CityId;
-        subscriber.Phone=subscriberDto.PhoneNumber;
+        subscriber.Phone = subscriberDto.PhoneNumber;
 
         dbContext.Subscribers.Update(subscriber);
 
@@ -127,16 +127,14 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
             .Include(cu => cu.City).FirstOrDefaultAsync();
 
         if (data == null) return new ResultDto<SubscriberDto>(
-             Infrastucture.Properties.Resources.errNotFound,
-            false,
-            null);
+             Infrastucture.Properties.Resources.errNotFound, false);
 
         var subscriberDto = new SubscriberDto
         {
             Id = data.Id,
             Name = data.Name,
-            Family=data.Family,
-            
+            Family = data.Family,
+
             Address = data.Address,
             //CityName = data.City.Title,
             PhoneNumber = data.Phone,
@@ -146,8 +144,8 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
 
         return new ResultDto<SubscriberDto>(
             "",
-            true,
-            subscriberDto);
+           
+            true, subscriberDto);
     }
 
 
@@ -158,9 +156,7 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
             .Include(cu => cu.City).FirstOrDefaultAsync();
 
         if (data == null) return new ResultDto<SubscriberDto>(
-           Infrastucture.Properties.Resources.errNotFound,
-            false,
-            null);
+           Infrastucture.Properties.Resources.errNotFound, false);
 
         var customerInfo = new SubscriberDto
         {
@@ -174,8 +170,8 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
 
         return new ResultDto<SubscriberDto>(
             "",
-            true,
-            customerInfo);
+           
+            true, customerInfo);
     }
 
     public async Task<ResultDto<byte[]>> ExportAsync()
@@ -196,8 +192,8 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
 
         return new ResultDto<byte[]>(
             "خروجی با موفقیت دانلود شد",
-            true,
-            bytes);
+            
+            true, bytes);
     }
 
     public async Task<List<CityDto>> GetCitiesAsync()
@@ -218,28 +214,28 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
         var otp = await dbContext.SubscriberCodes.FirstOrDefaultAsync(c => !c.Used && c.AuthCode == authCode);
         if (otp is null)
         {
-            return new ResultDto<SubscriberCodeDto>("Not found !", false, new SubscriberCodeDto());
+            return new ResultDto<SubscriberCodeDto>(Infrastucture.Properties.Resources.errNotFound, false);
         }
-         
+
         await dbContext.SaveChangesAsync();
-        return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto {NationalCode= otp.NationalCode,  AuthCode = otp.AuthCode, Mobile = otp.Mobile });
+        return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto { NationalCode = otp.NationalCode, AuthCode = otp.AuthCode, Mobile = otp.Mobile });
     }
 
     public async Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string mobile, string nationalCode)
     {
         var Randowmpass = new PasswordUtility();
         string passnew = Randowmpass.RandomString(5);
-        var newOtp = new SubscriberCode { AuthCode = passnew, Mobile = mobile ,NationalCode=nationalCode};
+        var newOtp = new SubscriberCode { AuthCode = passnew, Mobile = mobile, NationalCode = nationalCode };
         await dbContext.SubscriberCodes.AddAsync(newOtp);
         await dbContext.SaveChangesAsync();
         var result = await smsService.SendSms(newOtp.Mobile, $"{newOtp.AuthCode}\n لغو11");
-        return new ResultDto<SubscriberCodeDto>("", result.IsSuccessStatusCode, new SubscriberCodeDto { AuthCode = newOtp.AuthCode, Mobile = newOtp.Mobile, NationalCode = newOtp.NationalCode });
+        return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto { AuthCode = newOtp.AuthCode, Mobile = newOtp.Mobile, NationalCode = newOtp.NationalCode });
     }
 
     public async Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync(string nationalCode)
     {
-        var subscriber = await dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
-            .Include(cu => cu.VehicleModels).FirstOrDefaultAsync();
+        var subscriber =  dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
+            .Include(cu => cu.VehicleModels).FirstOrDefault();
 
         if (subscriber is null)
         {
@@ -247,9 +243,7 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
             if (sevenMember is null)
             {
                 return new ResultDto<SubscriberDto>(
-            "کاربر مربوطه یافت نشد.",
-            false,
-            null);
+            "کاربر مربوطه یافت نشد.", false);
             }
             else
             {
@@ -306,24 +300,23 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
                 Family = data.Family,
                 Mobile = data.Mobile,
                 Sex = data.Sex,
-                VehicleModels = subscriber.VehicleModels.Any() ? data.VehicleModels.Select(c => new VehicleModelDto
-                {
-                    VehicleModelLocalizedName = c.EnglishName,
-                    BrandId = c.BrandIdSevenSoft,
-                    SelectedVehicleDescription = c.Description,
-                    SaleBasketIdSevenSoft = c.SaleBasketIdSevenSoft,
-                    SalePlanIdSevenSoft = c.SalePlanIdSevenSoft,
-                    SubscriberId = c.SubscriberId,
-                    VehicleModelIdSevensoft = c.VehicleModelIdSevensoft,
-                    VehicleModelName = c.VehicleName,
-                    VinNumber = c.VinNumber,
-                }).ToList() : new()
+                //VehicleModels = subscriber.VehicleModels.Any() ? data.VehicleModels.Select(c => new VehicleModelDto
+                //{
+                //    VehicleModelLocalizedName = c.EnglishName,
+                //    BrandId = c.BrandIdSevenSoft,
+                //    SelectedVehicleDescription = c.Description,
+                //    SaleBasketIdSevenSoft = c.SaleBasketIdSevenSoft,
+                //    SalePlanIdSevenSoft = c.SalePlanIdSevenSoft,
+                //    SubscriberId = c.SubscriberId,
+                //    VehicleModelIdSevensoft = c.VehicleModelIdSevensoft,
+                //    VehicleModelName = c.VehicleName,
+                //    VinNumber = c.VinNumber,
+                //}).ToList() : new()
             };
 
             return new ResultDto<SubscriberDto>(
                 "",
-                true,
-                customerInfo);
+                true, customerInfo);
         }
         else
         {
@@ -337,22 +330,33 @@ public class SubscriberService(IAppDbContext dbContext, ISmsService smsService, 
                 Family = subscriber.Family,
                 Mobile = subscriber.Mobile,
                 Sex = subscriber.Sex,
-                VehicleModels = subscriber.VehicleModels.Any() ? subscriber.VehicleModels.Select(c => new VehicleModelDto
-                {
-                    VehicleModelLocalizedName = c.EnglishName,
-                    BrandId = c.BrandIdSevenSoft,
-                    SelectedVehicleDescription = c.Description,
-                    SaleBasketIdSevenSoft = c.SaleBasketIdSevenSoft,
-                    SalePlanIdSevenSoft = c.SalePlanIdSevenSoft,
-                    SubscriberId = c.SubscriberId,
-                    VehicleModelIdSevensoft = c.VehicleModelIdSevensoft,
-                    VehicleModelName = c.VehicleName,
-                    VinNumber = c.VinNumber,
-                }).ToList() : new()
+                //VehicleModels = subscriber.VehicleModels.Any() ? subscriber.VehicleModels.Select(c => new VehicleModelDto
+                //{
+                //    VehicleModelLocalizedName = c.EnglishName,
+                //    BrandId = c.BrandIdSevenSoft,
+                //    SelectedVehicleDescription = c.Description,
+                //    SaleBasketIdSevenSoft = c.SaleBasketIdSevenSoft,
+                //    SalePlanIdSevenSoft = c.SalePlanIdSevenSoft,
+                //    SubscriberId = c.SubscriberId,
+                //    VehicleModelIdSevensoft = c.VehicleModelIdSevensoft,
+                //    VehicleModelName = c.VehicleName,
+                //    VinNumber = c.VinNumber,
+                //    VehicleAttachment = c.VehicleAttachment != null ? new VehicleAttachmentDto
+                //    {
+                //        Catalog = c.VehicleAttachment?.Catalog,
+                //        Guidanc = c.VehicleAttachment?.Guidanc,
+                //        Id = c.VehicleAttachment?.Id??0,
+                //        ImagePath = c.VehicleAttachment?.ImagePath,
+                //        ThumbnailPath = c.VehicleAttachment?.ThumbnailPath,
+                //        VehicleModelId = c.VehicleAttachment?.VehicleModelId??0
+                //    } : new VehicleAttachmentDto()
+                //}).ToList() 
+                
+               // : new()
             };
             return new ResultDto<SubscriberDto>(
-      "",
-      true,
+      ""
+    , true,
       customerInfo);
         }
 

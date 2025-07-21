@@ -58,12 +58,12 @@ public class ChassisInformationByVinNumberResponse
     public string PDIStatusTypeName { get; set; }
     public int PercentOrAmountTypeEnum { get; set; }
     public float Discount { get; set; }
-    public object DamagedDescription { get; set; }
+    public string? DamagedDescription { get; set; }
     public bool NotAllocatable { get; set; }
     public bool DoneDestroyedProcess { get; set; }
     public object ChassisAllocationStatusId { get; set; }
     public object NumberChassisInfoDestroyedProcess { get; set; }
-    public object ChassisAllocationStatusLocalizedName { get; set; }
+    public string? ChassisAllocationStatusLocalizedName { get; set; }
     public float Price { get; set; }
     public object RackId { get; set; }
     public bool IsVisited { get; set; }
@@ -76,15 +76,15 @@ public class ChassisInformationByVinNumberResponse
     public object ReliefSubscriptionCode { get; set; }
     public bool ChassisAllocationAutomattic { get; set; }
     public object UpholsteryMaterialId { get; set; }
-    public object VehicleCommonName { get; set; }
-    public object VehicleModelLocalizedName { get; set; }
-    public object VehicleLocalizedName { get; set; }
-    public object VehicleTypeLocalizedName { get; set; }
+    public string? VehicleCommonName { get; set; }
+    public string? VehicleModelLocalizedName { get; set; }
+    public string? VehicleLocalizedName { get; set; }
+    public string? VehicleTypeLocalizedName { get; set; }
     public object PartSerialId { get; set; }
     public object PartId { get; set; }
     public object Serial { get; set; }
     public object ProviderId { get; set; }
-    public object BrandId { get; set; }
+    public Guid? BrandId { get; set; }
     public DateTime? PDICahngeDate { get; set; }
     public object SecondMotorNumber { get; set; }
     public bool LicenseOfSaleFromWarehouse { get; set; }

@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace NamiCustomers.Infrastucture.ExternalServices.Email.Dtos
+namespace NamiCustomers.Infrastucture.ExternalServices.Email.Dtos;
+
+public class MailRequest
 {
-    public class MailRequest
-    {
-        public string ToEmail { get; set; }
-        public string Subject { get; set; }
-        public string Body { get; set; }
-        public List<IFormFile> Attachments { get; set; }
-    }
+    public string ToEmail { get; set; }
+    public string Subject { get; set; }
+    public string Body { get; set; }
+    public List<IFormFile> Attachments { get; set; }
 }
