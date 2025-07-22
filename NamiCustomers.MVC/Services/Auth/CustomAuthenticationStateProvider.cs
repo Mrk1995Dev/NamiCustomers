@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -8,10 +9,12 @@ namespace NamiCustomers.MVC.Services.Auth
     public class CustomAuthenticationStateProvider : ServerAuthenticationStateProvider//AuthenticationStateProvider
     {
         private readonly ITokenSessionService tokenService;
-
-        public CustomAuthenticationStateProvider(ITokenSessionService tokenService)
+        private readonly NavigationManager _navigationManager;
+        public CustomAuthenticationStateProvider(ITokenSessionService tokenService,NavigationManager navigationManager)
         {
+            _navigationManager = navigationManager;
             this.tokenService = tokenService;
+
         }
         
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -20,6 +23,7 @@ namespace NamiCustomers.MVC.Services.Auth
 
             if (string.IsNullOrEmpty(token))
             {
+                _navigationManager.NavigateTo("/Account/LoginByMobile", forceLoad: true);
                 //کاربر لاگین نیست
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             }
