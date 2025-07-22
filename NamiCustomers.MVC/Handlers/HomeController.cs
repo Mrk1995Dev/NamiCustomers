@@ -1,29 +1,32 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NamiCustomers.MVC.Services.Auth;
 using NuGet.Common;
 using System.Diagnostics;
 
 namespace NamiCustomers.MVC.Handlers;
 
-[Authorize]
+
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly ITokenSessionService _tokenSessionService;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, ITokenSessionService  tokenSessionService)
     {
         _logger = logger;
+        this._tokenSessionService = tokenSessionService;
     }
-		[Authorize]
+		 
 		public IActionResult Index()
     {
+        if (_tokenSessionService.IsExpired)
+        {
+            return RedirectToAction("LogOut","Account");
+        }
         return View();
     }
-    [Authorize]
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+
  
     [AllowAnonymous]
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

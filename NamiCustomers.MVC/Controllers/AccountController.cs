@@ -141,7 +141,7 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         HttpContext.Session.Clear();
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("LoginByMobile");
     }
     [HttpGet]
     public IActionResult ForgotPassword()
