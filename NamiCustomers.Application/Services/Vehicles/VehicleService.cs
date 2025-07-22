@@ -90,6 +90,15 @@ public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftS
     public async Task<ResultDto<List<VehicleModelDto>>> GetAllAsync(int subscriberId)
     {
         var data = await dbContext.VehicleModels.Where(c => c.SubscriberId == subscriberId).ToListAsync();
+
+        foreach (var item in data)
+        {
+            var relatedAttach = dbContext.VehicleAttachments.FirstOrDefault(c => c.VehicleModelIdSevenSoft == item.VehicleModelIdSevenSoft);
+            if (relatedAttach != null)
+            {
+                item.VehicleAttachment = relatedAttach;
+            }
+        }
         var models = mapper.Map<List<VehicleModelDto>>(data);
         return new ResultDto<List<VehicleModelDto>>(Infrastucture.Properties.Resources.msgFound, true, models);
     }

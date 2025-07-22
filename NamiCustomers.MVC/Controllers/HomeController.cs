@@ -4,7 +4,7 @@ using NamiCustomers.MVC.Services.Auth;
 using NuGet.Common;
 using System.Diagnostics;
 
-namespace NamiCustomers.MVC.Handlers;
+namespace NamiCustomers.MVC.Controllers;
 
 
 public class HomeController : Controller
@@ -15,7 +15,7 @@ public class HomeController : Controller
     public HomeController(ILogger<HomeController> logger, ITokenSessionService  tokenSessionService)
     {
         _logger = logger;
-        this._tokenSessionService = tokenSessionService;
+        _tokenSessionService = tokenSessionService;
     }
 		 
 		public IActionResult Index()
