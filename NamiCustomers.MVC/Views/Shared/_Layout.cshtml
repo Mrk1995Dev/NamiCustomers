@@ -103,14 +103,14 @@
                     </li>
                     <li>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Subscriber" asp-action="Profile">
-                            <i class="bi bi-heart"></i> پروفایل
+                            <i class="bi bi-person"></i> پروفایل
 
                         </a>
                     </li>
 
                     <li>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Vehicle" asp-action="Index">
-                            <i class="bi bi-heart"></i> خودرو
+                            <i class="bi bi-car-front"></i> خودروهای من
 
                         </a>
                     </li>
@@ -129,11 +129,16 @@
                         </li>
                     }
 
-
+                    <li>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">
+                            <i class="bi bi-geo-alt"></i>
+                            <span>تماس با ما</span>
+                        </a>
+                    </li>
 
                     <li>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">
-                            <i class="bi bi-heart"></i> حریم خصوصی
+                            <i class="bi bi-shield-check"></i> حریم خصوصی
                             @*                                 <span class="badge bg-danger rounded-pill ms-2">220+</span>
  *@                            </a>
                     </li>
@@ -247,21 +252,21 @@
 
                     <li>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Subscriber" asp-action="Profile">
-                            <i class="bi bi-folder2-open"></i>
+                            <i class="bi bi-person"></i>
                             <span>پروفایل</span>
                         </a>
                     </li>
 
                     <li>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Vehicle" asp-action="Index">
-                            <i class="bi bi-heart"></i>
+                            <i class="bi bi-car-front"></i>
                             <span>خودروهای من</span>
                         </a>
                     </li>
 
                     <li>
-                        <a href="chat-users.html">
-                            <i class="bi bi-chat-dots"></i>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">
+                            <i class="bi bi-geo-alt"></i>
                             <span>تماس با ما</span>
                         </a>
                     </li>
