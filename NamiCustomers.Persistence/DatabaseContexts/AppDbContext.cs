@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NamiCustomers.Domain.Entities.Account;
-using NamiCustomers.Domain.Entities.Dealers;
 using NamiCustomers.Domain.Entities.Subscribers;
 using System.Data;
 using System.Reflection;
@@ -18,7 +17,6 @@ public class AppDbContext : IdentityDbContext<Domain.Entities.Account.Applicatio
     public DbSet<Domain.Entities.Account.ApplicationUser> Users { get; set; }
     public DbSet<Appointment> Appointments { get; set; }
     public DbSet<VehicleModel> VehicleModels { get; set; }
-    public DbSet<Dealer> Dealers { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
