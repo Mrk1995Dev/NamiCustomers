@@ -1,5 +1,4 @@
-﻿ 
-using NamiCustomers.Domain.Entities.Dealers;
+﻿
 
 namespace NamiCustomers.Domain.Entities.Subscribers;
 
@@ -11,6 +10,6 @@ public class Appointment : IBaseEntity<int>
     public DateTime ReservedDate { get; set; }
     public int DealerId { get; set; }
     public int ReservedNumber { get; set; }
-    public Dealer Dealer { get; set; }
+    public string DealerName { get; set; }
     public Subscriber? Subscriber { get; set; }
 }

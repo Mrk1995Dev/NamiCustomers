@@ -1,0 +1,242 @@
+﻿@model IEnumerable<DealerResponse>
+
+@{
+    ViewData["Title"] = "Dealers";
+}
+
+<h1>Dealers</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<div style="overflow:auto;">
+<table class="table">
+    <thead>
+        <tr>
+           
+            <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UniqueId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DealerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DealerNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ManagerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyIsOwner)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DealerStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Financialsituation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WeekDayPresenceStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HolidayPresenceStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WeekDayStartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrWeekDayStartTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WeekDayEndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrWeekDayEndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ServicePercent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsCentralDealer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NationalId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsLegal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LegalEnum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AreaCategoryId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RepairShopAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RepairShopPhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Latitude)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Longitude)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubCountry)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BrancheName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BranchGrade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EconomicOrNationalCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyIsBranchOwner)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BranchActivitys)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActiveBooking)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClientId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsDirty)
+            </th>
+                <th>
+                    index
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var (item, index) in Model.Select((item, index) => (item, index)))
+        {
+            <tr>
+               
+                <td>
+                    @Html.DisplayFor(modelItem => item.Code)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UniqueId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DealerName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DealerNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ManagerName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyIsOwner)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DealerStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Financialsituation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WeekDayPresenceStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HolidayPresenceStatus)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WeekDayStartTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StrWeekDayStartTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WeekDayEndTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StrWeekDayEndTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ServicePercent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsCentralDealer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NationalId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsLegal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LegalEnum)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AreaCategoryId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RepairShopAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RepairShopPhoneNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Latitude)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Longitude)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubCountry)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BrancheName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BranchGrade)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EconomicOrNationalCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyIsBranchOwner)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BranchActivitys)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsActiveBooking)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClientId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsDirty)
+                </td>
+                    <td>
+                        @index
+                    </td>
+                <td>
+                    @Html.ActionLink("Details", "DealerInfo", item) |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>

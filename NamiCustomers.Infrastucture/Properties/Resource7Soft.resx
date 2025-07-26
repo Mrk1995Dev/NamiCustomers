@@ -132,4 +132,10 @@
   <data name="BaseUrl" xml:space="preserve">
     <value>http://7soft.namikhodro.com:8088/</value>
   </data>
+  <data name="GetDealers" xml:space="preserve">
+    <value>api/Dealer/GetDealers</value>
+  </data>
+  <data name="GetSpecificCases" xml:space="preserve">
+    <value>api/VINInformation/GetSpecificCases</value>
+  </data>
 </root>

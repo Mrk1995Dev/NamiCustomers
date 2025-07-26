@@ -8,6 +8,20 @@ namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 public interface ISevenSoftService
 {
     /// <summary>
+    /// فراخوان ها
+    /// </summary>
+    /// <param name="chassisVinNumber"></param>
+    /// <param name="nationalCodeOrEconomicCode"></param>
+    /// <param name="mobile"></param>
+    /// <returns></returns>
+    Task<string> GetSpecificCases(string chassisVinNumber,string nationalCodeOrEconomicCode,string mobile);
+
+    /// <summary>
+    /// لیست نمایندگی ها
+    /// </summary>
+    /// <returns></returns>
+    Task<DealerResponse[]> GetDealers();
+    /// <summary>
     /// بر قرار بودن ارتباط شاسی با کد ملی
     /// </summary>
     /// <param name="vinNumber"></param>
@@ -40,7 +54,10 @@ public interface ISevenSoftService
 
 public class SevenSoftService : ISevenSoftService
 {
-
+    public async Task<DealerResponse[]> GetDealers()
+    {
+        return await GetData<DealerResponse[]>(Resource7Soft.GetDealers,"");
+    }
     public async Task<ActiveMainChassisGuaranteeResponse> GetActiveMainChassisGuarantee(string vinNumber)
     {
         return await GetData<ActiveMainChassisGuaranteeResponse>(Resource7Soft.GetActiveMainChassisGuarantee, vinNumber);
@@ -58,6 +75,12 @@ public class SevenSoftService : ISevenSoftService
     {
         string qStr = $"?ChassisVinNumber={chassisVinNumber}&NationalCodeOrEconomicCode={nationalCodeOrEconomicCode}&Mobile={mobile}";
         return await GetData<string>(Resource7Soft.RelationCustomerInfoByVinNumber, qStr);
+    }
+
+    public async Task<string> GetSpecificCases(string chassisVinNumber, string nationalCodeOrEconomicCode, string mobile)
+    {
+        string qStr = $"?ChassisVinNumber={chassisVinNumber}&NationalCodeOrEconomicCode={nationalCodeOrEconomicCode}&Mobile={mobile}";
+        return await GetData<string>(Resource7Soft.GetSpecificCases, qStr);
     }
 
     #region Privates
@@ -84,8 +107,6 @@ public class SevenSoftService : ISevenSoftService
         string responseContent = await response.Content.ReadAsStringAsync();
         return await Task.FromResult(JsonSerializer.Deserialize<T>(responseContent));
     }
-
-
     #endregion
 
 

@@ -1,34 +1,37 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Operations;
+
+using NamiCustomers.MVC.Services;
+
+
 using NamiCustomers.MVC.Services.Auth;
 using NuGet.Common;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace NamiCustomers.MVC.Controllers;
 
 
-public class HomeController : Controller
+public class HomeController(ILogger<HomeController> logger, ITokenSessionService tokenSessionService, IVehicleService vehicleService) : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-    private readonly ITokenSessionService _tokenSessionService;
-
-    public HomeController(ILogger<HomeController> logger, ITokenSessionService  tokenSessionService)
+    public IActionResult Index()
     {
-        _logger = logger;
-        _tokenSessionService = tokenSessionService;
-    }
-		 
-		public IActionResult Index()
-    {
-        if (_tokenSessionService.IsExpired)
+        if (tokenSessionService.IsExpired)
         {
-            return RedirectToAction("LogOut","Account");
+            return RedirectToAction("LogOut", "Account");
         }
         return View();
     }
+    public async Task<IActionResult> Dealers()
+    {
+        var data =await   vehicleService.GetDealersAsync();
+        return View(data.Data);
+    }
+    public async Task<IActionResult> DealerInfo(DealerResponse dealerResponse)
+    {
+        return View(dealerResponse);
+    }
 
- 
     [AllowAnonymous]
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

@@ -88,6 +88,24 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/Dealer/GetDealers.
+        /// </summary>
+        public static string GetDealers {
+            get {
+                return ResourceManager.GetString("GetDealers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/VINInformation/GetSpecificCases.
+        /// </summary>
+        public static string GetSpecificCases {
+            get {
+                return ResourceManager.GetString("GetSpecificCases", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to api/Subscriber/GetSubscriberByNationalCode?NationalCode=.
         /// </summary>
         public static string GetSubscriberByNationalCode {

@@ -56,7 +56,7 @@ public class AppointmentService(IAppDbContext dbContext,IMapper mapper) : IAppoi
     }
     public async Task<ResultDto<AppointmentDto>> GetAsync(int id)
     {
-        var data = await dbContext.Appointments.Include(c => c.Subscriber).Include(c => c.Dealer).FirstOrDefaultAsync(cu => cu.Id == id);
+        var data = await dbContext.Appointments.Include(c => c.Subscriber).FirstOrDefaultAsync(cu => cu.Id == id);
         if (data == null) return new ResultDto<AppointmentDto>(
            Infrastucture.Properties.Resources.errNotFound,false
            );
@@ -68,7 +68,7 @@ public class AppointmentService(IAppDbContext dbContext,IMapper mapper) : IAppoi
      
     public async Task<ResultDto<AppointmentDto>> Reserve(int appointmentId, int subscriberId)
     {
-        var appointment = dbContext.Appointments.Include(c => c.Dealer).FirstOrDefault(c => c.Id == appointmentId);
+        var appointment = dbContext.Appointments.FirstOrDefault(c => c.Id == appointmentId);
         if (appointment != null)
         {
             appointment.SubscriberId = subscriberId;
