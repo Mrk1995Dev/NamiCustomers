@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Operations;
 using NamiCustomers.MVC.Services.Auth;
 using NuGet.Common;
 using System.Diagnostics;
@@ -34,4 +35,12 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
+    public IActionResult Privacy()
+    {
+        return View();
+    }
+
+    public IActionResult Contact()
+    { return View(); }
 }

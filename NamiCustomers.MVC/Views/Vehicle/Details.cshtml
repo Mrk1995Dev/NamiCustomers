@@ -36,7 +36,7 @@
                     <div class="tns-liveregion tns-visually-hidden" aria-live="polite" aria-atomic="true">slide <span class="current">3</span>  of 3</div><div id="tns1-mw" class="tns-ovh">
                         <div class="tns-inner" id="tns1-iw">
                             <div class="product-gallery gallery-img  tns-slider tns-carousel tns-subpixel tns-calc tns-horizontal" id="tns1" style="transform: translate3d(-40%, 0px, 0px);">
-                                <img class="rounded" src="/Vehicle/Img/@Model.VehicleAttachment.ImagePath" alt="@Model.SelectedVehicleDescription">
+                                <img class="rounded" src="/Vehicle/@Model.VehicleAttachment.ImagePath" alt="@Model.SelectedVehicleDescription">
 
                               
 
@@ -90,7 +90,7 @@
 
         </div>
         <br />
-        <a class="btn btn-sm btn-primary me-2" href="@Model.VehicleAttachment.Guidanc" download>
+        <a class="btn btn-sm btn-primary me-2" type="button" href="/Vehicle/@Model.VehicleAttachment.ImagePath" download>
         
             
             <i class="bi bi-file-earmark-pdf"></i> دانلود راهنمای مالک
