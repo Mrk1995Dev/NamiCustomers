@@ -138,4 +138,10 @@
   <data name="GetSpecificCases" xml:space="preserve">
     <value>api/VINInformation/GetSpecificCases</value>
   </data>
+  <data name="GetReceptionsInformationByVinNumber" xml:space="preserve">
+    <value>api/ReceptionInformaion/GetReceptionsInformationByVinNumber?ChassisVinNumber=</value>
+  </data>
+  <data name="GetBranchesByDealer" xml:space="preserve">
+    <value>api/Dealer/GetBranchesByDealer?DealerId=</value>
+  </data>
 </root>

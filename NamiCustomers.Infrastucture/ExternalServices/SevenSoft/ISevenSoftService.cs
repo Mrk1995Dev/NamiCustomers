@@ -8,6 +8,19 @@ namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 public interface ISevenSoftService
 {
     /// <summary>
+    /// لیست شعب
+    /// </summary>
+    /// <param name="dealerId"></param>
+    /// <returns></returns>
+    Task<GetBranchesByDealerResponse[]> GetBranchesByDealer(Guid dealerId);
+
+    /// <summary>
+    /// سوابق تعمیراتی
+    /// </summary>
+    /// <param name="chassisVinNumber"></param>
+    /// <returns></returns>
+    Task<GetReceptionsInformationByVinNumberResponse[]> GetReceptionsInformationByVinNumber(string chassisVinNumber);
+    /// <summary>
     /// فراخوان ها
     /// </summary>
     /// <param name="chassisVinNumber"></param>
@@ -54,6 +67,14 @@ public interface ISevenSoftService
 
 public class SevenSoftService : ISevenSoftService
 {
+    public async Task<GetBranchesByDealerResponse[]> GetBranchesByDealer(Guid dealerId)
+    {
+        return await GetData<GetBranchesByDealerResponse[]>(Resource7Soft.GetBranchesByDealer, dealerId);
+    }
+    public async Task<GetReceptionsInformationByVinNumberResponse[]> GetReceptionsInformationByVinNumber(string chassisVinNumber)
+    {
+        return await GetData<GetReceptionsInformationByVinNumberResponse[]>(Resource7Soft.GetReceptionsInformationByVinNumber, chassisVinNumber);
+    }
     public async Task<DealerResponse[]> GetDealers()
     {
         return await GetData<DealerResponse[]>(Resource7Soft.GetDealers,"");

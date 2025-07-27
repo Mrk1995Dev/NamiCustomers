@@ -7,7 +7,7 @@ namespace NamiCustomers.MVC.Controllers;
 
 [Authorize(Policy =nameof(MyPloicies.SubscriberAccess))]
 public class SubscriberController(
-    ISubscriberService  subscriberService) : Controller
+    ISubscriberService  subscriberService) : MyBaseController
 {
    [AllowAnonymous]
     public IActionResult CheckMyClaims()
@@ -18,13 +18,19 @@ public class SubscriberController(
 
     public async Task<IActionResult> Details(int id)
     {
-        var data = await subscriberService.GetAsync(id);
-        return View(data.Data);  
+        var result = await subscriberService.GetAsync(id);
+        if (result.Succeeded)
+            return View(result.Data);
+
+        return MyError(result.Errors);
     }
     public async Task<IActionResult> Profile()
     {
-        var data = await subscriberService.GetByNationalCodeAsync();
-        return View(data.Data);
+        var result = await subscriberService.GetByNationalCodeAsync();
+        if (result.Succeeded)
+            return View(result.Data);
+
+        return MyError(result.Errors);
     }
  
     public async Task<IActionResult> List()
@@ -44,25 +50,32 @@ public class SubscriberController(
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
-        var data = await subscriberService.GetAsync(id);
-        return View(data.Data);
+        var result = await subscriberService.GetAsync(id);
+        if (result.Succeeded)
+            return View(result.Data);
+
+        return MyError(result.Errors);
     }
     [HttpPost]
     public async Task<IActionResult> Edit(SubscriberDto subscriberDto)
     {
         if (!ModelState.IsValid) return BadRequest("اطلاعات مربوطه ناقص می باشد.");
-        var data = await subscriberService.EditAsync(subscriberDto);
-        if (data.Succeeded) return RedirectToAction("Profile");
+        var result = await subscriberService.EditAsync(subscriberDto);
+        
+        if (result.Succeeded)
+            return RedirectToAction("Profile");
 
-        return BadRequest(data);
+        return MyError(new List<string> { result.Message});
     }
 
     public async Task<IActionResult> Delete([FromQuery] int id)
     {
-        var data = await subscriberService.RemoveAsync(id);
-        if (data.Succeeded) RedirectToAction("List");
+        var result = await subscriberService.RemoveAsync(id);
+       
+        if (result.Succeeded)
+            RedirectToAction("List");
 
-        return NotFound(data);
+        return MyError(new List<string> { result.Message });
     }
 
 }
