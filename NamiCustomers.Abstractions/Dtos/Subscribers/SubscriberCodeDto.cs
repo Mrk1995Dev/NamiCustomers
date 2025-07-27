@@ -1,9 +1,13 @@
-﻿namespace NamiCustomers.Abstractions.Dtos.Subscribers;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace NamiCustomers.Abstractions.Dtos.Subscribers;
 
 public class SubscriberCodeDto
 {
     public string AuthCode { get; set; }
-    public string Mobile { get; set; }
-    public string NationalCode { get; set; }
+	[Display(Name = "موبایل")]
+	public string Mobile { get; set; }
+	[Display(Name = "کد ملی")]
+	public string NationalCode { get; set; }
 }
 

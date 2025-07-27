@@ -70,12 +70,12 @@ namespace NamiCustomers.Infrastucture.ExternalServices.SmsServices
         {
             var accessToken = "";
 
-            var client = new RestClient("https://sms.jiring.ir:8085/connect/");
+            var client = new RestClient("https://sms.jiring.ir:9095/connect/");
             var req = new RestRequest("token", Method.Post);
             req.AddHeader("Content-Type", "application/x-www-form-urlencoded");
             req.AddParameter("scope", "ApiAccess", ParameterType.GetOrPost);
             req.AddParameter("username", "namikhodro", ParameterType.GetOrPost);
-            req.AddParameter("password", "N@mikhodro!263", ParameterType.GetOrPost);
+            req.AddParameter("password", "H6uK?$3@EnBX", ParameterType.GetOrPost);
 
             RestResponse response = client.Execute(req);
             Console.WriteLine(response);

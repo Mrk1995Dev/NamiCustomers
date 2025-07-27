@@ -4,6 +4,103 @@
     ViewData["Title"] = "Dealers";
 }
 
+<br />
+
+<div class="container direction-rtl">
+    <div class="card">
+        <div class="card-body p-2">
+            <div class="d-flex align-items-center justify-content-between">
+                <small class="ms-1">لیست عاملیت ها </small>
+                <form action="#">
+                    <a title="بازگشت" href="/"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></a>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+<div class="container">
+    <div class="row g-3">
+
+        @foreach (var (item, index) in Model.Select((item, index) => (item, index)).OrderBy(x => x.item.SubCountry))
+        {
+            <!-- Single Top Product Card -->
+            <div class="col-12 ">
+                <div class="card single-product-card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+        @*                 <div class="card-side-img">
+                            <!-- Product Thumbnail -->
+                            <a class="product-thumbnail d-block" href="shop-details.html">
+                                <img src="img/bg-img/p1.jpg" alt="">
+                                <!-- Badge -->
+                                <span class="badge bg-primary">Sale</span>
+                            </a>
+                        </div> *@
+
+                        <div class="card-content px-4 py-2">
+                            <!-- Dealers Name -->
+                                <a class="product-title d-block text-truncate mt-0" href="#"> @Html.DisplayFor(modelItem => item.DealerName) (@Html.DisplayFor(modelItem => item.DealerNo))</a>
+                                <!--  DealerStatus -->
+                                <a class="product-title d-block text-truncate mt-0" href="#">وضعیت عاملیت: @Html.DisplayFor(modelItem => item.DealerStatus)</a>
+                            
+                                <a class="product-title d-block text-truncate mt-0" href="#">استان : @Html.DisplayFor(modelItem => item.City)</a>
+                                <a class="product-title d-block text-truncate mt-0" href="#">شهر: @Html.DisplayFor(modelItem => item.SubCountry)</a>
+@*                                 <p class="sale-price">وضعیت عاملیت:<span>@Html.DisplayFor(modelItem => item.DealerStatus)</span></p>
+ *@                            <!-- Add To Cart Button -->
+                            <a class="btn btn-primary rounded-pill btn-sm" href="#">مشاهده جزئیات</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    </div>
+</div>
+
+<<br />
+
+<div class="shop-pagination pt-3">
+    <div class="container">
+        <div class="card">
+            <div class="card-body py-3">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination pagination-two justify-content-center">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+                        <li class="page-item active">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">2</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">3</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">...</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">9</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
 <h1>Dealers</h1>
 
 <p>
@@ -123,7 +220,7 @@
         </tr>
     </thead>
     <tbody>
-            @foreach (var (item, index) in Model.Select((item, index) => (item, index)))
+            @foreach (var (item, index) in Model.Select((item, index) => (item, index)).OrderBy(x=>x.item.SubCountry))
         {
             <tr>
                
