@@ -79,6 +79,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/Dealer/GetBranchesByDealer?DealerId=.
+        /// </summary>
+        public static string GetBranchesByDealer {
+            get {
+                return ResourceManager.GetString("GetBranchesByDealer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to api/VINInformation/GetChassisInformationByVinNumber?VinNumber=.
         /// </summary>
         public static string GetChassisInformationByVinNumber {
@@ -93,6 +102,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         public static string GetDealers {
             get {
                 return ResourceManager.GetString("GetDealers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/ReceptionInformaion/GetReceptionsInformationByVinNumber?ChassisVinNumber=.
+        /// </summary>
+        public static string GetReceptionsInformationByVinNumber {
+            get {
+                return ResourceManager.GetString("GetReceptionsInformationByVinNumber", resourceCulture);
             }
         }
         

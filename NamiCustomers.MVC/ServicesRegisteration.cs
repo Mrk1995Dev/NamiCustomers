@@ -150,6 +150,12 @@ public static class ServicesRegisteration
             var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
             return new UserService(httpClient);
         });
+        services.AddScoped<IDealerService, DealerService>(sp =>
+        {
+            var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
+            var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+            return new DealerService(httpClient, httpContextAccessor);
+        });
 
 
 

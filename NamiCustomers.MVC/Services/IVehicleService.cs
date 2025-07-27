@@ -14,35 +14,23 @@ public interface IVehicleService
     Task<ResultDto> EditAsync(VehicleModelDto updateCustomer);
     Task<ResultDto<VehicleModelDto>> GetChassisInformationByVinNumber(string vinNumber);
     Task<ResultDto<ActiveMainChassisGuaranteeResponse>> GetActiveMainChassisGuarantee(string vinNumber);
-    Task<ResultDto<List<DealerResponse>>>   GetDealersAsync();
 }
 
 
-public class VehicleService : IVehicleService
+public class VehicleService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, ISubscriberService subscriberService) : IVehicleService
 {
-    private readonly HttpClient _httpClient;
-    private readonly IHttpContextAccessor httpContextAccessor;
-    private readonly ISubscriberService subscriberService;
-
-    public VehicleService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, ISubscriberService subscriberService)
-    {
-        _httpClient = httpClient;
-        this.httpContextAccessor = httpContextAccessor;
-        this.subscriberService = subscriberService;
-    }
-
     private async Task GetToken()
     {
         var mobile = httpContextAccessor.GetClaimValue(MyClaims.Mobile);
-        var myToken = await _httpClient.GetFromJsonAsync<MyToken>($"Account/GetToken?mobile={mobile}");
+        var myToken = await httpClient.GetFromJsonAsync<MyToken>($"Account/GetToken?mobile={mobile}");
 
-        _httpClient.DefaultRequestHeaders.Add("accept", "*/*");
-        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {myToken.token}");
+        httpClient.DefaultRequestHeaders.Add("accept", "*/*");
+        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {myToken.token}");
     }
 
     public async Task<ResultDto> EditAsync(VehicleModelDto vehicleModelDto)
     {
-        var response = await _httpClient.PutAsJsonAsync($"Vehicle/edit", vehicleModelDto);
+        var response = await httpClient.PutAsJsonAsync($"Vehicle/edit", vehicleModelDto);
         if (response.IsSuccessStatusCode)
         {
             return new ResultDto(Infrastucture.Properties.Resources.msgEdited, true);
@@ -53,7 +41,7 @@ public class VehicleService : IVehicleService
 
     public async Task<ResultDto> RemoveAsync(int id)
     {
-        var response = await _httpClient.DeleteAsync($"Vehicle/remove?id={id}");
+        var response = await httpClient.DeleteAsync($"Vehicle/remove?id={id}");
         if (response.IsSuccessStatusCode)
         {
             return new ResultDto(Infrastucture.Properties.Resources.msgDeleted, true);
@@ -64,7 +52,7 @@ public class VehicleService : IVehicleService
 
     public async Task<ResultDto<VehicleModelDto>> GetAsync(int id)
     {
-        var response = await _httpClient.GetFromJsonAsync<ResultDto<VehicleModelDto>>($"Vehicle/Get?id={id}");
+        var response = await httpClient.GetFromJsonAsync<ResultDto<VehicleModelDto>>($"Vehicle/Get?id={id}");
         if (response.Data != null)
         {
             return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.msgFound
@@ -72,19 +60,10 @@ public class VehicleService : IVehicleService
         }
         return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errNotFound, false);
     }
-    public async Task<ResultDto<List<DealerResponse>>> GetDealersAsync()
-    {
-        var response = await _httpClient.GetFromJsonAsync<ResultDto<List<DealerResponse>>>($"Dealer/GetDealers");
-        if (response.Data != null)
-        {
-            return new ResultDto<List<DealerResponse>>(Infrastucture.Properties.Resources.msgFound
-           , true, response.Data);
-        }
-        return new ResultDto<List<DealerResponse>>(Infrastucture.Properties.Resources.errNotFound, false);
-    }
+   
     public async Task<ResultDto<VehicleModelDto>> GetChassisInformationByVinNumber(string vinNumber)
     {
-        var response = await _httpClient.GetFromJsonAsync<ResultDto<VehicleModelDto>>($"Vehicle/GetChassisInformationByVinNumber?vinNumber={vinNumber}");
+        var response = await httpClient.GetFromJsonAsync<ResultDto<VehicleModelDto>>($"Vehicle/GetChassisInformationByVinNumber?vinNumber={vinNumber}");
         if (response.Data != null)
         {
             return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.msgFound, true,
@@ -98,7 +77,7 @@ public class VehicleService : IVehicleService
 
     public async Task<ResultDto<List<VehicleModelDto>>> GetAllAsync(int subscriberId)
     {
-        var response = await _httpClient.GetFromJsonAsync<ResultDto<List<VehicleModelDto>>>($"Vehicle/GetAll?subscriberId={subscriberId}");
+        var response = await httpClient.GetFromJsonAsync<ResultDto<List<VehicleModelDto>>>($"Vehicle/GetAll?subscriberId={subscriberId}");
         if (response.Succeeded)
         {
             return response;
@@ -116,7 +95,7 @@ public class VehicleService : IVehicleService
 
         vehicleRegisterDto.SubscriberId = subscriberService.CurrentSubscriber.Id;
 
-        var response = await _httpClient.PostAsJsonAsync($"Vehicle/Register", vehicleRegisterDto);
+        var response = await httpClient.PostAsJsonAsync($"Vehicle/Register", vehicleRegisterDto);
 
         if (response.IsSuccessStatusCode)
         {
@@ -149,7 +128,7 @@ public class VehicleService : IVehicleService
 
     public async Task<ResultDto<ActiveMainChassisGuaranteeResponse>> GetActiveMainChassisGuarantee(string vinNumber)
     {
-        var response = await _httpClient.GetFromJsonAsync<ResultDto<ActiveMainChassisGuaranteeResponse>>($"Vehicle/GetActiveMainChassisGuarantee?vinNumber={vinNumber}");
+        var response = await httpClient.GetFromJsonAsync<ResultDto<ActiveMainChassisGuaranteeResponse>>($"Vehicle/GetActiveMainChassisGuarantee?vinNumber={vinNumber}");
         if (response.Succeeded)
         {
             return response;

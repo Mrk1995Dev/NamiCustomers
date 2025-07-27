@@ -103,9 +103,6 @@
 
 <h1>Dealers</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <div style="overflow:auto;">
 <table class="table">
     <thead>
@@ -327,7 +324,7 @@
                     @Html.DisplayFor(modelItem => item.IsDirty)
                 </td>
                     <td>
-                        @index
+                        ++@index
                     </td>
                 <td>
                     @Html.ActionLink("Details", "DealerInfo", item) |

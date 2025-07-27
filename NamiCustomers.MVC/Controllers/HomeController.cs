@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace NamiCustomers.MVC.Controllers;
 
 
-public class HomeController(ILogger<HomeController> logger, ITokenSessionService tokenSessionService, IVehicleService vehicleService) : Controller
+public class HomeController(ILogger<HomeController> logger, ITokenSessionService tokenSessionService) : Controller
 {
     public IActionResult Index()
     {
@@ -21,15 +21,6 @@ public class HomeController(ILogger<HomeController> logger, ITokenSessionService
             return RedirectToAction("LogOut", "Account");
         }
         return View();
-    }
-    public async Task<IActionResult> Dealers()
-    {
-        var data =await   vehicleService.GetDealersAsync();
-        return View(data.Data);
-    }
-    public async Task<IActionResult> DealerInfo(DealerResponse dealerResponse)
-    {
-        return View(dealerResponse);
     }
 
     [AllowAnonymous]
