@@ -1,0 +1,14 @@
+﻿@using NamiCustomers.Abstractions.Dtos.Vehicles
+
+@model VehicleModelDto?
+@{
+    Layout = null;
+}
+@if (Model!=null)
+{
+    <div class="setting-trigger-btn" id="settingTriggerBtn">
+        <b>@Model.VinNumber </b>
+        <i class="bi bi-caret-down-fill"></i>
+
+    </div>
+}

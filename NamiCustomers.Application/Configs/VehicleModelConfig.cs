@@ -1,6 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using NamiCustomers.Domain.Entities.Subscribers;
+using NamiCustomers.Domain.Entities.Vehicles;
 
 namespace NamiCustomers.Application.Configs;
 

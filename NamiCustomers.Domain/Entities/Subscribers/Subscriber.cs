@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using NamiCustomers.Domain.Entities.Vehicles;
+using System.ComponentModel.DataAnnotations;
 
 namespace NamiCustomers.Domain.Entities.Subscribers
 {

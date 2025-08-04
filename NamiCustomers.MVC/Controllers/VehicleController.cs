@@ -43,7 +43,7 @@ public class VehicleController(
         var data = await vehicleService.SetDefaultAsync(id);
         if (data.Succeeded)
         {
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Home");
         }
         return MyError(data.Errors);
     }

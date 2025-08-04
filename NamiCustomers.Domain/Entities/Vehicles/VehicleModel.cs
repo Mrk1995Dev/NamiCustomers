@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NamiCustomers.Domain.Entities.Subscribers;
+namespace NamiCustomers.Domain.Entities.Vehicles;
 [Auditable]
 public class VehicleModel :IBaseEntity<int>
 {
@@ -24,17 +24,4 @@ public class VehicleModel :IBaseEntity<int>
     //public Guid? BrandIdSevenSoft { get; set; }
     public VehicleAttachment?  VehicleAttachment { get; set; }
 	public bool IsDefault { get; set; } = false;
-}
-
-
-public class VehicleAttachment:IBaseEntity<int>
-{
-    public int Id { get; set; }
-    public Guid? VehicleModelIdSevenSoft { get; set; }
-    public string? ThumbnailPath { get; set; }
-	public string? ImagePath { get; set; }
-	public string? Guidanc { get; set; }
-	public string? Catalog { get; set; }
-
- 
 }

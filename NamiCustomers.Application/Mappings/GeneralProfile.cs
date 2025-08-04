@@ -1,6 +1,7 @@
 ﻿using NamiCustomers.Abstractions.Dtos.Appointments;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Domain.Entities.Subscribers;
+using NamiCustomers.Domain.Entities.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
 namespace NamiCustomers.Application.Mappings;

@@ -1,6 +1,6 @@
 ﻿using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Application.Services.Subscribers;
-using NamiCustomers.Domain.Entities.Subscribers;
+using NamiCustomers.Domain.Entities.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 
 
