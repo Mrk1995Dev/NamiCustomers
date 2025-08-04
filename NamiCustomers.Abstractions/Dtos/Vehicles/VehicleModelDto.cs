@@ -23,8 +23,9 @@ public class VehicleModelDto
 	public string? FullSystem { get;set; }
     public Guid? VehicleModelIdSevenSoft { get; set; }
     public string? ChassisUsageTypeName { get; set; }
+	public bool IsDefault { get; set; }
 
-		public string? SelectedVehicleCommonName { get;set; }
+    public string? SelectedVehicleCommonName { get;set; }
 
 	/// <summary>
 	/// شماره شاسی 

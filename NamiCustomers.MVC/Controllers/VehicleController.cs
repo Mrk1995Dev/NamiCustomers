@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.MVC.Services;
-using System.Numerics;
 
 namespace NamiCustomers.MVC.Controllers;
 
@@ -15,8 +13,8 @@ public class VehicleController(
     public async Task<IActionResult> ActiveMainChassisGuarantee(string? VinNumber)
     {
 
-        var relatedVins= await vehicleService.GetAllAsync(subscriberService.CurrentSubscriber.Id);
-        ViewBag.relatedVins=relatedVins.Data.Select(c=>new KeyValuePair<string, string>(c.VinNumber,c.VinNumber)).ToList();
+        var relatedVins = await vehicleService.GetAllAsync(subscriberService.CurrentSubscriber.Id);
+        ViewBag.relatedVins = relatedVins.Data.Select(c => new KeyValuePair<string, string>(c.VinNumber, c.VinNumber)).ToList();
         if (VinNumber != null)
         {
             var data = await vehicleService.GetActiveMainChassisGuarantee(VinNumber);
@@ -30,17 +28,35 @@ public class VehicleController(
         return View(new ActiveMainChassisGuaranteeResponse());
     }
 
-   
+
     public async Task<IActionResult> Details(int id)
     {
         var data = await vehicleService.GetAsync(id);
-        return View(data.Data);
+        if (data.Succeeded)
+        {
+            return View(data.Data);
+        }
+        return MyError(data.Errors);
     }
+    public async Task<IActionResult> Default(int id)
+    {
+        var data = await vehicleService.SetDefaultAsync(id);
+        if (data.Succeeded)
+        {
+            return RedirectToAction("Index");
+        }
+        return MyError(data.Errors);
+    }
+
 
     public async Task<IActionResult> Index()
     {
         var data = await vehicleService.GetAllAsync(subscriberService.CurrentSubscriber.Id);
-        return View(data.Data);
+        if (data.Succeeded)
+        {
+            return View(data.Data);
+        }
+        return MyError(data.Errors);
     }
     [HttpGet]
     public async Task<IActionResult> Create(VehicleModelDto? vehicleModelDto)
@@ -57,7 +73,7 @@ public class VehicleController(
     [HttpGet]
     public async Task<IActionResult> ChassisInformationByVinNumber()
     {
-        return View(new VehicleModelDto { SubscriberId = subscriberService.CurrentSubscriber.Id, VinNumber = "LGBH9VEAXPY770511" });
+        return View(new VehicleModelDto { SubscriberId = subscriberService.CurrentSubscriber.Id, VinNumber = subscriberService.CurrentSubscriber.VehicleModels?.FirstOrDefault(c=>c.IsDefault)?.VinNumber });
     }
 
     [HttpGet]
@@ -83,29 +99,39 @@ public class VehicleController(
             return RedirectToAction("Index");
 
         return MyError(result.Errors);
-        
+
     }
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
         var data = await vehicleService.GetAsync(id);
-        return View(data.Data);
+        if (data.Succeeded)
+        {
+            return View(data.Data);
+        }
+        return MyError(data.Errors);
     }
     [HttpPost]
     public async Task<IActionResult> Edit(VehicleModelDto vehicleModelDto)
     {
         if (!ModelState.IsValid) return BadRequest(Infrastucture.Properties.Resources.errInputInValid);
         var data = await vehicleService.EditAsync(vehicleModelDto);
-        if (data.Succeeded) return RedirectToAction("Index");
 
-        return BadRequest(data);
+        if (data.Succeeded)
+        {
+            return RedirectToAction("Index");
+        }
+        return MyError(new List<string> { data.Message });
+
     }
 
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
         var data = await vehicleService.RemoveAsync(id);
-        if (data.Succeeded) return RedirectToAction("Index");
-
-        return NotFound(data);
+        if (data.Succeeded)
+        {
+            return RedirectToAction("Index");
+        }
+        return MyError(new List<string> { data.Message });
     }
 }

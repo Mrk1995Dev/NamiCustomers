@@ -154,7 +154,8 @@ public static class ServicesRegisteration
         {
             var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
             var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
-            return new DealerService(httpClient, httpContextAccessor);
+            var subscriberService = sp.GetRequiredService<ISubscriberService>();
+            return new DealerService(httpClient, subscriberService);
         });
 
 

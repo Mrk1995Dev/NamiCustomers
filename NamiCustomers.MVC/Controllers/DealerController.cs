@@ -29,9 +29,9 @@ public class DealerController(IDealerService dealerService) : MyBaseController
         return MyError(result.Errors);
     }
    
-    public async Task<IActionResult> GetReceptionsInformationByVinNumber(string vinNumber)
+    public async Task<IActionResult> ReceptionsInformationByVinNumber()
     {
-        var result = await dealerService.GetReceptionsInformationByVinNumber(vinNumber);
+        var result = await dealerService.GetReceptionsInformationByVinNumber();
         if (result.Succeeded)
             return View(result.Data);
 

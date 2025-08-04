@@ -2,6 +2,7 @@
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 using System.Net.Http;
+using NamiCustomers.Infrastucture.Utilities;
 
 namespace NamiCustomers.MVC.Services;
 
@@ -23,9 +24,9 @@ public interface IDealerService
     /// </summary>
     /// <param name="chassisVinNumber"></param>
     /// <returns></returns>
-    Task<ResultDto<GetReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumber(string chassisVinNumber);
+    Task<ResultDto<GetReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumber();
 }
-public class DealerService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor) : IDealerService
+public class DealerService(HttpClient httpClient, ISubscriberService subscriberService ) : IDealerService
 {
     public async Task<ResultDto<DealerResponse[]>> GetDealersAsync()
     {
@@ -48,8 +49,10 @@ public class DealerService(HttpClient httpClient, IHttpContextAccessor httpConte
         }
         return new ResultDto<GetBranchesByDealerResponse[]>(Infrastucture.Properties.Resources.errNotFound, false);
     }
-    public async Task<ResultDto<GetReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumber(string chassisVinNumber)
+    public async Task<ResultDto<GetReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumber()
     {
+      var chassisVinNumber= subscriberService.CurrentSubscriber.VehicleModels.FirstOrDefault(c=>c.IsDefault)?.VinNumber;
+
         var response = await httpClient.GetFromJsonAsync<ResultDto<GetReceptionsInformationByVinNumberResponse[]>>($"Dealer/GetReceptionsInformationByVinNumber?chassisVinNumber={chassisVinNumber}");
         if (response.Data != null)
         {

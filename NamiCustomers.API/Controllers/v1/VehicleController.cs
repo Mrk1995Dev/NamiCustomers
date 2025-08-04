@@ -32,6 +32,11 @@ public class VehicleController(IVehicleService vehicleService, ISevenSoftService
     {
         return await vehicleService.RemoveAsync(id);
     }
+    [HttpPut("[action]/{id}")]
+    public async Task<ResultDto<VehicleModelDto>> SetDefault(int id)
+    {
+        return await vehicleService.SetDefaultAsync(id);
+    }
     [HttpPut("[action]")]
     public async Task<ResultDto<VehicleModelDto>> Edit(VehicleModelDto vehicleModelDto)
     {

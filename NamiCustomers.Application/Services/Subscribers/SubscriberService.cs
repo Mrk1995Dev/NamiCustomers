@@ -124,7 +124,7 @@ public class SubscriberService (IMapper mapper, IAppDbContext dbContext, ISmsSer
     {
 
         var data = await dbContext.Subscribers.Where(cu => cu.Id == id)
-            .Include(cu => cu.City).FirstOrDefaultAsync();
+            .Include(cu => cu.City).Include(cu => cu.VehicleModels).FirstOrDefaultAsync();
 
         if (data == null) return new ResultDto<SubscriberDto>(
              Infrastucture.Properties.Resources.errNotFound, false);
@@ -139,7 +139,8 @@ public class SubscriberService (IMapper mapper, IAppDbContext dbContext, ISmsSer
             //CityName = data.City.Title,
             PhoneNumber = data.Phone,
             NationalCode = data.NationalCode,
-            Mobile = data.Mobile
+            Mobile = data.Mobile,
+            VehicleModels = mapper.Map<List<VehicleModelDto>>(data.VehicleModels)
         };
 
         return new ResultDto<SubscriberDto>(
@@ -153,7 +154,7 @@ public class SubscriberService (IMapper mapper, IAppDbContext dbContext, ISmsSer
     {
 
         var data = await dbContext.Subscribers.Where(cu => cu.Mobile == mobile)
-            .Include(cu => cu.City).FirstOrDefaultAsync();
+            .Include(cu => cu.City).Include(cu => cu.VehicleModels).FirstOrDefaultAsync();
 
         if (data == null) return new ResultDto<SubscriberDto>(
            Infrastucture.Properties.Resources.errNotFound, false);
@@ -166,6 +167,9 @@ public class SubscriberService (IMapper mapper, IAppDbContext dbContext, ISmsSer
             Address = data.Address,
             CityName = data.City.Title,
             PhoneNumber = data.Mobile,
+            NationalCode = data.NationalCode,
+            Mobile = data.Mobile,
+            VehicleModels=mapper.Map<List<VehicleModelDto>>(data.VehicleModels)
         };
 
         return new ResultDto<SubscriberDto>(

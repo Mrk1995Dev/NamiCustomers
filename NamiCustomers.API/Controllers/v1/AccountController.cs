@@ -375,7 +375,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                                         new Claim("NationalCode", user.NationalCode),
                                         new Claim("Mobile", user.PhoneNumber),
                                         new  System.Security.Claims.Claim("FullName",$"{user.FirstName} {user.LastName}"),
-                                        new Claim(ClaimTypes.NameIdentifier, user.Id)
+                                        new Claim(ClaimTypes.NameIdentifier, user.Id),
                                     };
         foreach (var role in roles)
         {
