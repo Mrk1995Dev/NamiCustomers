@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "NamiCustomers.API\\NamiCustomers.API.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "NamiCustomers.MVC\\NamiCustomers.MVC.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
