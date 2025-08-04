@@ -1,0 +1,84 @@
+﻿
+@{
+    ViewData["Title"] = "faq";
+}
+
+<br />
+
+<div class="container direction-rtl">
+    <div class="card">
+        <div class="card-body p-2">
+            <div class="d-flex align-items-center justify-content-between">
+                <small class="ms-1">
+                    سوالات متداول
+                </small>
+                <form action="#">
+                    <a title="بازگشت" href="/"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></a>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="container">
+
+    <!-- Accordion Card -->
+@*     <div class="card bg-danger rounded-0 rounded-top">
+        <div class="card-body text-center py-3">
+            <h6 class="mb-0 text-white line-height-1"></h6>
+        </div>
+    </div> *@
+
+    <div class="card rounded-0 rounded-bottom">
+        <div class="card-body">
+            <div class="accordion accordion-flush accordion-style-two" id="accordionStyle22">
+                <!-- Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" id="accordionFour2">
+                        <h6 data-bs-toggle="collapse" data-bs-target="#accordionStyleFour2" aria-expanded="true" aria-controls="accordionStyleFour2">
+                            <i class="bi bi-plus-lg"></i> ثبت نام خودرو های وارداتی، چگونه انجام می پذیرد؟
+                        </h6>
+                    </div>
+                    <div class="accordion-collapse collapse show" id="accordionStyleFour2" aria-labelledby="accordionFour2" data-bs-parent="#accordionStyle22">
+                        <div class="accordion-body">
+                            <p class="mb-0">مشتری می بایست پس از افتتاح حساب وکالتی، نسبت به خرید خودرو از طریق سامانه یکپارچه عرضه خودروهای وارداتی به نشانی SaleAuto.ir اقدام نماید.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" id="accordionFive2">
+                        <h6 class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordionStyleFive2" aria-expanded="false" aria-controls="accordionStyleFive2">
+                            <i class="bi bi-plus-lg"></i> نحوه اطلاع رسانی شرکت، در صورت برنده شدن در سامانه یکپارچه به چه صورت است؟
+                        </h6>
+                    </div>
+                    <div class="accordion-collapse collapse" id="accordionStyleFive2" aria-labelledby="accordionFive2" data-bs-parent="#accordionStyle22">
+                        <div class="accordion-body">
+                            <p class="mb-0">
+                                پس از دریافت لیست مشتریان، پیامک تکمیل فرآیند خرید خودرو، به شماره همراه مشتری که در سامانه یکپارچه ثبت شده، از طرف شرکت ارسال می گردد.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" id="accordionSix3">
+                        <h6 class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordionStyleSix3" aria-expanded="false" aria-controls="accordionStyleSix3">
+                            <i class="bi bi-plus-lg"></i>در صورت انتخاب شدن در سامانه یکپارچه، پرداخت مبلغ  به چه صورت انجام می پذیرد؟
+                        </h6>
+                    </div>
+                    <div class="accordion-collapse collapse" id="accordionStyleSix3" aria-labelledby="accordionSix3" data-bs-parent="#accordionStyle22">
+                        <div class="accordion-body">
+                            <p class="mb-0">
+                                مبلغ، نحوه واریز و مهلت زمان واریز، به متقاضی اطلاع رسانی می گردد.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -202,10 +202,10 @@ public static class ServicesRegisteration
             {
                 Title = "Nami.Customers",
                 Version = "v1.0",
-                Description = "",
+                Description = "تو روحت یادمون میره برداریم",
                 Contact = new OpenApiContact
                 {
-                    Name = "Ali Moradi",
+                    Name = "Ali Moradi => تو روحت یادمون میره برداریم",
                     Email = "a.moradi@namikhodro.com",
                     Url = new Uri("https://www.linkedin.com/in/alimoradi573/")
                 }
@@ -214,14 +214,14 @@ public static class ServicesRegisteration
             {
                 Title = "Nami.Customers",
                 Version = "v2.0",
-                Description = "",
-                Contact = new OpenApiContact
-                {
-                    Name = "Ali Moradi",
-                    Email = "a.moradi@namikhodro.com",
-                    Url = new Uri("https://www.linkedin.com/in/alimoradi573/")
-                }
-            });
+				Description = "تو روحت یادمون میره برداریم",
+				Contact = new OpenApiContact
+				{
+					Name = "Ali Moradi => تو روحت یادمون میره برداریم",
+					Email = "a.moradi@namikhodro.com",
+					Url = new Uri("https://www.linkedin.com/in/alimoradi573/")
+				}
+			});
  
             c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             var securityScheme = new OpenApiSecurityScheme
