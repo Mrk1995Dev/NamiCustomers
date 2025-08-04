@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿ 
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -52,9 +54,7 @@
                 </div>
                 <div class="setting-wrapper">
                     <div class="setting-trigger-btn" id="settingTriggerBtn">
-                        <b>LGBH9VEAXPY770511 </b>
-                        <i class="bi bi-caret-down-fill"></i>
-                        
+                        @await Component.InvokeAsync("DefaultVin")
                     </div>
                 </div>
                 <!-- Navbar Toggler -->
@@ -230,55 +230,10 @@
         <!-- Welcome Toast -->
         <div class="card setting-popup-card shadow-lg " id="settingCard">
             <div class="card-body">
-                <div class="container">
-                    <div class="setting-heading d-flex align-items-center justify-content-between mb-3">
-                        <p class="mb-0">لیست خودروهای شما</p>
-                        <div class="btn-close" id="settingCardClose"></div>
-                    </div>
-                    <div class="single-plan-check shadow-sm active-effect">
-                        <div class="form-check mb-0">
-                            <input class="form-check-input" type="radio" name="planChoose" id="Individual">
-                            <label class="form-check-label" for="Individual">LGB00000000000511</label>
-                        </div>
-@*                         <i class="bi bi-person text-primary fz-20 ms-auto"></i>
- *@                    </div>
 
-                    <div class="single-plan-check active shadow-sm active-effect">
-                        <div class="form-check mb-0">
-                            <input class="form-check-input" type="radio" name="planChoose" id="Team" checked="">
-                            <label class="form-check-label" for="Team">LGBH9VEAXPY770511</label>
-                        </div>
-                     @*    <i class="bi bi-people text-success fz-20 ms-auto"></i> *@
-                    </div>
+                @await Component.InvokeAsync("VinMenu");
 
-                   @*  <div class="single-setting-panel">
-                        <div class="form-check form-switch mb-2">
-                            <input class="form-check-input" type="checkbox" id="availabilityStatus" checked="">
-                            <label class="form-check-label" for="availabilityStatus">Availability status</label>
-                        </div>
-                    </div>
-
-                    <div class="single-setting-panel">
-                        <div class="form-check form-switch mb-2">
-                            <input class="form-check-input" type="checkbox" id="sendMeNotifications" checked="">
-                            <label class="form-check-label" for="sendMeNotifications">Send me notifications</label>
-                        </div>
-                    </div>
-
-                    <div class="single-setting-panel">
-                        <div class="form-check form-switch mb-2">
-                            <input class="form-check-input" type="checkbox" id="darkSwitch">
-                            <label class="form-check-label" for="darkSwitch">Dark mode</label>
-                        </div>
-                    </div>
-
-                    <div class="single-setting-panel">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="rtlSwitch">
-                            <label class="form-check-label" for="rtlSwitch">RTL mode</label>
-                        </div>
-                    </div> *@
-                </div>
+       
             </div>
         </div>
     </div>
