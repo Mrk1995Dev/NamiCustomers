@@ -3,6 +3,7 @@ using NamiCustomers.Abstractions.Dtos.Subscribers;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Domain.Entities.Account;
 using NamiCustomers.Domain.Entities.Subscribers;
+using NamiCustomers.Domain.Entities.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 using NamiCustomers.Infrastucture.Utilities;
 using System.Text;
