@@ -23,6 +23,7 @@ public class VehicleModel :IBaseEntity<int>
     //public Guid? SaleBasketIdSevenSoft { get; set; }
     //public Guid? BrandIdSevenSoft { get; set; }
     public VehicleAttachment?  VehicleAttachment { get; set; }
+	public bool IsDefault { get; set; } = false;
 }
 
 

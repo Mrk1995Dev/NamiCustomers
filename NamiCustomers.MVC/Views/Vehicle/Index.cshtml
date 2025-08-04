@@ -61,7 +61,12 @@
                                         <p class="product-title d-block text-truncate mt-0">  @Html.DisplayFor(modelItem => item.BodyColor)</p>
                                     <!-- Add To Cart Button -->
                                    
-                                        <a class="btn btn-primary btn-sm" href="Vehicle/Details/@item.Id">مشاهده جزئیات</a>  
+                                        <a class="btn btn-primary btn-sm" href="Vehicle/Details/@item.Id">مشاهده جزئیات</a>
+                                        @if (!item.IsDefault)
+                                        {
+                                            <a class="btn btn-primary btn-sm" href="Vehicle/Default/@item.Id">پیش فرض</a>
+                                        }
+                                        
                                 </div>
                                   @*   @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                                     @Html.ActionLink("Details", "Details", new { id = item.Id }) |

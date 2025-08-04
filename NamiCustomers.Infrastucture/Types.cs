@@ -6,7 +6,7 @@ public enum MyClaims
     NationalCode,
     FullName,
     Role,
-    PersianRole
+    PersianRole 
 }
 
 public static class MyRoles

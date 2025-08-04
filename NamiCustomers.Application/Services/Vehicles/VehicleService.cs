@@ -14,6 +14,7 @@ public interface IVehicleService
     Task<ResultDto<List<VehicleModelDto>>> GetAllAsync(int subscriberId);
     Task<ResultDto<VehicleModelDto>> RegisterAsync(VehicleModelDto vehicleRegisterDto);
     Task<ResultDto<VehicleModelDto>> EditAsync(VehicleModelDto model);
+    Task<ResultDto<VehicleModelDto>> SetDefaultAsync(int id);
 }
 public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftService sevenSoftService, ISubscriberService subscriberService) : IVehicleService
 {
@@ -124,7 +125,30 @@ public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftS
             , true, editedEntity);
     }
 
+    public async Task<ResultDto<VehicleModelDto>> SetDefaultAsync(int id)
+    {
+        var entity = await dbContext.VehicleModels.FindAsync(id);
+        if (entity is null)
+            return new ResultDto<VehicleModelDto>(
+               Infrastucture.Properties.Resources.errNotFound, false
+               );
+        
+        var hisVehicles = await dbContext.VehicleModels.Where(c =>c.SubscriberId == entity.SubscriberId).ToListAsync();
+        hisVehicles.ForEach(c => { c.IsDefault = false; });
+        entity.IsDefault = true;
 
+        dbContext.VehicleModels.UpdateRange(hisVehicles);
+         
+        var editedEntity = mapper.Map<VehicleModelDto>(entity);
+        if (await dbContext.SaveChangesAsync() < 1)
+            return new ResultDto<VehicleModelDto>(
+                Infrastucture.Properties.Resources.errEdited, false
+               );
+        return new ResultDto<VehicleModelDto>(
+            Infrastucture.Properties.Resources.msgEdited
+
+            , true, editedEntity);
+    }
 
 
     public async Task<ResultDto<VehicleModelDto>> GetAsync(int id)
