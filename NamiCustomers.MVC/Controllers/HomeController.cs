@@ -42,4 +42,9 @@ public class HomeController(ILogger<HomeController> logger, ITokenSessionService
     {
         return View();
     }
+
+	public IActionResult faq()
+	{
+		return View();
+	}
 }
