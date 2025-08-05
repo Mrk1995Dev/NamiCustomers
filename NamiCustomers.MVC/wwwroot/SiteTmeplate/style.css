@@ -6752,14 +6752,14 @@ form .btn-lg {
   color: var(--white);
   background-color: var(--primary-950);
 }
-.cart-table .table tbody td,
-.cart-table .table tbody th {
-  vertical-align: middle;
-  color: var(--text);
-  font-size: 12px;
-  padding: 0.75rem 0.25rem;
-  border: 0;
-}
+    .cart-table .table tbody td,
+    .cart-table .table tbody th {
+        vertical-align: middle;
+        color: #bdbdbd;
+        font-size: 14px;
+        padding: 0.75rem 0.25rem;
+        border: 0;
+    }
 .cart-table .table tbody td h6,
 .cart-table .table tbody th h6 {
   font-size: 14px;
