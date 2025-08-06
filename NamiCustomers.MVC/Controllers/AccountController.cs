@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using NamiCustomers.MVC.Services;
 using NamiCustomers.MVC.Services.Auth;
+using Newtonsoft.Json;
+using System.Reflection;
 using System.Security.Claims;
 
 namespace NamiCustomers.MVC.Controllers;
 
 
-public class AccountController(IAuthService authService, IUrlHelperFactory urlHelperFactory, IUserService userService) : Controller
+public class AccountController(IAuthService authService, IUrlHelperFactory urlHelperFactory, IUserService userService) : MyBaseController
 {
     [Authorize]
     public async Task<IActionResult> Index()
@@ -73,22 +75,21 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
         }
         var code = await authService.GetOtpAsync(mobile, nationalcode);
 
-        TempData["mobile"] = mobile;
-        return RedirectToAction("LoginByOtp");
+
+        return View("~/Views/Account/LoginByOtp.cshtml",new ResultDto<LoginResponseDto>("",true, new LoginResponseDto { Mobile=mobile}));
     }
     [HttpGet]
-    public async Task<IActionResult> LoginByOtp()
+    public async Task<IActionResult> LoginByOtp(string mobile)
     {
-        return View();
+        return View("LoginByMobile.cshtml", new LoginResponseDto() {Mobile=mobile });
     }
     [HttpPost]
-    public async Task<IActionResult> LoginByOtp(string otp)
+    public async Task<IActionResult> CheckOtp(string otp)
     {
         var result = await authService.LoginByOtpAsync(otp);
         if (!result.Succeeded)
         {
-            TempData["otpError"] = result.Message;
-            return View();
+            return View("~/Views/Account/LoginByOtp.cshtml", new ResultDto<LoginResponseDto>(result.Message, false,result.Data));
         }
         var user = result.Data;
         var userRoles = (await userService.GetRolesAsync(user.Id)).Data;
@@ -101,15 +102,12 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
             new  System.Security.Claims.Claim("Mobile",user.Mobile),
             new  System.Security.Claims.Claim("UserId",user.Id),
             new  System.Security.Claims.Claim("FullName",$"{user.FirstName} {user.LastName}"),
-
-
         };
             foreach (var role in userRoles.Roles)
             {
                 claims.Add(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, role.Name));
                 claims.Add(new System.Security.Claims.Claim("PersianRole", role.Description));
             }
-
 
             var claimsIdentity = new ClaimsIdentity(
             claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -129,7 +127,7 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
 
             return RedirectToAction("Index", "Home");
         }
-        TempData["otpError"] = "Login  Error";
+        //TempData["otpError"] = "Login  Error";
         return View();
     }
 

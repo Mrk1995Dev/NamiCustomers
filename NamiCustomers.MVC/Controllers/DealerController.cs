@@ -7,13 +7,15 @@ public class DealerController(IDealerService dealerService) : MyBaseController
 {
     public async Task<IActionResult> Dealers()
     {
-        var result = await   dealerService.GetDealersAsync();
+        SetError(new List<string> { "vf..phojoi" });
 
-        if (result.Succeeded)
-            return View(result.Data);
-
-        return MyError(result.Errors);
- 
+        var result = await dealerService.GetDealersAsync();
+        return View(result.Data);
+        if (!result.Succeeded)
+        {
+            SetError(result.Errors);
+        }
+        return View(result.Data);
     }
     public async Task<IActionResult> DealerInfo(DealerResponse dealerResponse)
     {
@@ -23,19 +25,20 @@ public class DealerController(IDealerService dealerService) : MyBaseController
     public async Task<IActionResult> GetBranches(Guid dealerId)
     {
         var result = await dealerService.GetBranchesByDealerAsync(dealerId);
-        if (result.Succeeded)
-            return View(result.Data);
-
-        return MyError(result.Errors);
+        if (!result.Succeeded)
+        {
+            SetError(result.Errors);
+        }
+        return View(result.Data);
     }
-   
+
     public async Task<IActionResult> ReceptionsInformationByVinNumber()
     {
         var result = await dealerService.GetReceptionsInformationByVinNumber();
-        if (result.Succeeded)
-            return View(result.Data);
-
-        return MyError(result.Errors);
-        
+        if (!result.Succeeded)
+        {
+            SetError(result.Errors);
+        }
+        return View(result.Data);
     }
 }

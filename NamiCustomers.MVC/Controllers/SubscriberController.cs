@@ -19,18 +19,20 @@ public class SubscriberController(
     public async Task<IActionResult> Details(int id)
     {
         var result = await subscriberService.GetAsync(id);
-        if (result.Succeeded)
-            return View(result.Data);
-
-        return MyError(result.Errors);
+        if (!result.Succeeded)
+        {
+            SetError(result.Errors);
+        }
+        return View(result.Data);
     }
     public async Task<IActionResult> Profile()
     {
         var result = await subscriberService.GetByNationalCodeAsync();
-        if (result.Succeeded)
-            return View(result.Data);
-
-        return MyError(result.Errors);
+        if (!result.Succeeded)
+        {
+            SetError(result.Errors);
+        }
+        return View(result.Data);
     }
  
     public async Task<IActionResult> List()
@@ -51,31 +53,37 @@ public class SubscriberController(
     public async Task<IActionResult> Edit(int id)
     {
         var result = await subscriberService.GetAsync(id);
-        if (result.Succeeded)
-            return View(result.Data);
-
-        return MyError(result.Errors);
+        if (!result.Succeeded)
+        {
+            SetError(result.Errors);
+        }
+        return View(result.Data);
     }
     [HttpPost]
     public async Task<IActionResult> Edit(SubscriberDto subscriberDto)
     {
-        if (!ModelState.IsValid) return BadRequest("اطلاعات مربوطه ناقص می باشد.");
-        var result = await subscriberService.EditAsync(subscriberDto);
-        
-        if (result.Succeeded)
+        if (!ModelState.IsValid) { 
+            SetError(new List<string> { "اطلاعات مربوطه ناقص می باشد." });
             return RedirectToAction("Profile");
+        }
+        var result = await subscriberService.EditAsync(subscriberDto);
 
-        return MyError(new List<string> { result.Message});
+        if (!result.Succeeded)
+        {
+            SetError(new List<string> { result.Message });
+        }
+        return RedirectToAction("Profile");
     }
 
     public async Task<IActionResult> Delete([FromQuery] int id)
     {
         var result = await subscriberService.RemoveAsync(id);
        
-        if (result.Succeeded)
-            RedirectToAction("List");
-
-        return MyError(new List<string> { result.Message });
+        if (!result.Succeeded)
+        {
+            SetError(new List<string> { result.Message });
+        }
+        return RedirectToAction("List");
     }
 
 }

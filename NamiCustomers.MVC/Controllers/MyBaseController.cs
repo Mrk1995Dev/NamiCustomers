@@ -1,15 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Text;
 
 namespace NamiCustomers.MVC.Controllers
 {
     public class MyBaseController: Controller
     {
-        public IActionResult MyError(List<string>  errorResponse)
+        public void SetError(List<string>  errorResponse)
         {
              
             TempData["ErrorMessage"] = errorResponse;
-            return RedirectToAction("Error", "Home");
         }
+
+        
     }
 }

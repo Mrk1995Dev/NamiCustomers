@@ -31,32 +31,33 @@ public class VehicleController(
 
     public async Task<IActionResult> Details(int id)
     {
-        var data = await vehicleService.GetAsync(id);
-        if (data.Succeeded)
+        var result = await vehicleService.GetAsync(id);
+
+        if (!result.Succeeded)
         {
-            return View(data.Data);
+            SetError(result.Errors);
         }
-        return MyError(data.Errors);
+        return View(result.Data);
     }
     public async Task<IActionResult> Default(int id)
     {
-        var data = await vehicleService.SetDefaultAsync(id);
-        if (data.Succeeded)
+        var result = await vehicleService.SetDefaultAsync(id);
+        if (!result.Succeeded)
         {
-            return RedirectToAction("Index","Home");
+            SetError(result.Errors);
         }
-        return MyError(data.Errors);
+        return RedirectToAction("Index", "Home");
     }
 
 
     public async Task<IActionResult> Index()
     {
-        var data = await vehicleService.GetAllAsync(subscriberService.CurrentSubscriber.Id);
-        if (data.Succeeded)
+        var result = await vehicleService.GetAllAsync(subscriberService.CurrentSubscriber.Id);
+        if (!result.Succeeded)
         {
-            return View(data.Data);
+            SetError(result.Errors);
         }
-        return MyError(data.Errors);
+        return View(result.Data);
     }
     [HttpGet]
     public async Task<IActionResult> Create(VehicleModelDto? vehicleModelDto)
@@ -68,7 +69,6 @@ public class VehicleController(
 
         return View(vehicleModelDto);
     }
-
 
     [HttpGet]
     public async Task<IActionResult> ChassisInformationByVinNumber()
@@ -87,51 +87,56 @@ public class VehicleController(
         return View(new VehicleModelDto { SubscriberId = subscriberService.CurrentSubscriber.Id });
     }
 
-
-
     [HttpPost]
     public async Task<IActionResult> CreateVehicle(VehicleModelDto vehicleModelDto)
     {
-        if (!ModelState.IsValid) return BadRequest(Infrastucture.Properties.Resources.errInputInValid);
+        if (!ModelState.IsValid)
+        {
+            SetError(new List<string> { Infrastucture.Properties.Resources.errInputInValid });
+            return RedirectToAction("Index");
+        }
         var result = await vehicleService.RegisterAsync(vehicleModelDto);
 
-        if (result.Succeeded)
-            return RedirectToAction("Index");
-
-        return MyError(result.Errors);
-
+        if (!result.Succeeded)
+        {
+            SetError(result.Errors);
+        }
+        return RedirectToAction("Index");
     }
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
-        var data = await vehicleService.GetAsync(id);
-        if (data.Succeeded)
+        var result = await vehicleService.GetAsync(id);
+        if (!result.Succeeded)
         {
-            return View(data.Data);
+            SetError(result.Errors);
         }
-        return MyError(data.Errors);
+        return View(result.Data);
     }
     [HttpPost]
     public async Task<IActionResult> Edit(VehicleModelDto vehicleModelDto)
     {
-        if (!ModelState.IsValid) return BadRequest(Infrastucture.Properties.Resources.errInputInValid);
-        var data = await vehicleService.EditAsync(vehicleModelDto);
-
-        if (data.Succeeded)
+        if (!ModelState.IsValid)
         {
+            SetError(new List<string> { Infrastucture.Properties.Resources.errInputInValid });
             return RedirectToAction("Index");
         }
-        return MyError(new List<string> { data.Message });
 
+        var result = await vehicleService.EditAsync(vehicleModelDto);
+        if (!result.Succeeded)
+        {
+            SetError(new List<string> { result.Message });
+        }
+        return RedirectToAction("Index");
     }
 
     public async Task<IActionResult> Delete([FromRoute] int id)
     {
-        var data = await vehicleService.RemoveAsync(id);
-        if (data.Succeeded)
+        var result = await vehicleService.RemoveAsync(id);
+        if (!result.Succeeded)
         {
-            return RedirectToAction("Index");
+            SetError(new List<string> { result.Message });
         }
-        return MyError(new List<string> { data.Message });
+        return RedirectToAction("Index");
     }
 }
