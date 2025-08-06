@@ -7,10 +7,7 @@ public class DealerController(IDealerService dealerService) : MyBaseController
 {
     public async Task<IActionResult> Dealers()
     {
-        SetError(new List<string> { "vf..phojoi" });
-
         var result = await dealerService.GetDealersAsync();
-        return View(result.Data);
         if (!result.Succeeded)
         {
             SetError(result.Errors);

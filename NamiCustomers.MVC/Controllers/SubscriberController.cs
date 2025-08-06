@@ -63,7 +63,7 @@ public class SubscriberController(
     public async Task<IActionResult> Edit(SubscriberDto subscriberDto)
     {
         if (!ModelState.IsValid) { 
-            SetError(new List<string> { "اطلاعات مربوطه ناقص می باشد." });
+            SetError(new List<string> { Infrastucture.Properties.Resources.errInputInValid });
             return RedirectToAction("Profile");
         }
         var result = await subscriberService.EditAsync(subscriberDto);
