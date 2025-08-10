@@ -233,7 +233,7 @@ public class SubscriberService (IMapper mapper, IAppDbContext dbContext, ISmsSer
         var newOtp = new SubscriberCode { AuthCode = passnew, Mobile = mobile, NationalCode = nationalCode };
         await dbContext.SubscriberCodes.AddAsync(newOtp);
         await dbContext.SaveChangesAsync();
-        var result = await smsService.SendSms(newOtp.Mobile, $"{newOtp.AuthCode}\n لغو11");
+        var result = await smsService.SendSms(newOtp.Mobile, $"کد یکبار مصرف ورود به نامی من: {newOtp.AuthCode} \n @my.namikhodro.com #{newOtp.AuthCode} \n لغو11");
         return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto { AuthCode = newOtp.AuthCode, Mobile = newOtp.Mobile, NationalCode = newOtp.NationalCode });
     }
 

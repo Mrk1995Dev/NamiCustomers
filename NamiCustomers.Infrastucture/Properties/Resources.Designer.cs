@@ -233,6 +233,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to کد ارسال شده را وارد نمایید..
+        /// </summary>
+        public static string errOtpIsNotNull {
+            get {
+                return ResourceManager.GetString("errOtpIsNotNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to خطا ذخیره.
         /// </summary>
         public static string errSave {

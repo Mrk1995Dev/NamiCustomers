@@ -215,4 +215,7 @@
   <data name="errExistedSubscriber" xml:space="preserve">
     <value>شماره شاسی به نام مشترک دیگری ثبت شده است</value>
   </data>
+  <data name="errOtpIsNotNull" xml:space="preserve">
+    <value>کد ارسال شده را وارد نمایید.</value>
+  </data>
 </root>
