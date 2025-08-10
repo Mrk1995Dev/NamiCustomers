@@ -6,7 +6,7 @@ namespace NamiCustomers.MVC.Controllers
 {
     public class MyBaseController: Controller
     {
-        public void SetError(List<string>  errorResponse)
+        public void SetError(string errorResponse)
         {
              
             TempData["ErrorMessage"] = errorResponse;

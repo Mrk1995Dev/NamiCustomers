@@ -113,7 +113,10 @@ public class SevenSoftService : ISevenSoftService
         request.Headers.Add("Accept", "application/json");
         var response = await client.SendAsync(request);
         string content = await response.Content.ReadAsStringAsync();
-        return await Task.FromResult(JsonSerializer.Deserialize<T>(content));
+
+            return await Task.FromResult(JsonSerializer.Deserialize<T>(content));
+
+        
     }
 
     private async Task<T> PostData<T>(string apiAddress, dynamic queryModel)
