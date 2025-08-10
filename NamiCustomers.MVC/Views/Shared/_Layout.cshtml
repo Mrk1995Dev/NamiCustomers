@@ -147,12 +147,13 @@
                             تماس با ما
                         </a>
                     </li>
-                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "about" && ViewContext.RouteData.Values["controller"].ToString() == "Home" ? "active" : "")">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="about">
-                            <i class="bi bi-telephone"></i>
+                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "About" && ViewContext.RouteData.Values["controller"].ToString() == "Home" ? "active" : "")">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">
+                            <i class="bi bi-building"></i>
                              درباره ما
                         </a>
                     </li>
+              
 
                     <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Privacy" && ViewContext.RouteData.Values["controller"].ToString() == "Home" ? "active" : "")">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">
