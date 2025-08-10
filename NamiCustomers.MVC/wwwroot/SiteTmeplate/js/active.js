@@ -237,7 +237,9 @@ document.addEventListener('DOMContentLoaded', function () {
             mouseDrag: true,
             controls: false,
             nav: true,
-            navPosition: 'bottom'
+            navPosition: 'bottom',
+            ltr: true, // İÚÇá ˜ÑÏä ÍÇáÊ ÑÇÓÊ Èå 
+
         });
     }
 
@@ -265,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (document.querySelectorAll('.partner-logo-slide-wrapper-2').length > 0) {
         tns({
             container: '.partner-slide2',
-            items: 3,
+            items: 5,
             gutter: 12,
             slideBy: 'page',
             autoplay: true,

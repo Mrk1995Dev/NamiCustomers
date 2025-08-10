@@ -159,22 +159,22 @@
                         </a>
                     </li>
 
-                    <li>
+             @*        <li>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="" style="text-align: right;">
                             <i class="bi bi-shield-check"></i> قانون و آیین نامه حمایت از حقوق مصرف کننده
                         </a>
-                    </li>
+                    </li> *@
 
-                    <li>
+          @*           <li>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="">
                             <i class="bi"><img src="~/sitetmeplate/img/icon set/svg/faq.svg" alt="سوالات متداول"></i> لیست قطعات و عیوب ایمنی خودرو
                         </a>
-                    </li>
-                    <li>
+                    </li> *@
+             @*        <li>
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="faq">
                             <i class="bi bi-shield-check"></i> سوالات متداول
                         </a>
-                    </li>
+                    </li> *@
 
 
                     @if (User.Identity.IsAuthenticated)
@@ -247,8 +247,8 @@
             <!-- Footer Content -->
             <div class="footer-nav position-relative">
                 <ul class="h-100 d-flex align-items-center justify-content-between ps-0">
-                    <li class="active">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Index" && ViewContext.RouteData.Values["controller"].ToString() == "Home" ? "active" : "")">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index" >
                             <i class="bi bi-house-door"></i>
                             <span>خانه </span>
                         </a>
@@ -256,21 +256,21 @@
 
                     </li>
 
-                    <li>
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Subscriber" asp-action="Profile">
+                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Profile" && ViewContext.RouteData.Values["controller"].ToString() == "Subscriber" ? "active" : "")">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Subscriber" asp-action="Profile" >
                             <i class="bi bi-person"></i>
                             <span>پروفایل</span>
                         </a>
                     </li>
 
-                    <li>
+                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Index" && ViewContext.RouteData.Values["controller"].ToString() == "Vehicle" ? "active" : "")">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Vehicle" asp-action="Index">
                             <i class="bi bi-car-front"></i>
                             <span>خودروهای من</span>
                         </a>
                     </li>
 
-                    <li>
+                    <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Contact" && ViewContext.RouteData.Values["controller"].ToString() == "Home" ? "active" : "")">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contact">
                             <i class="bi bi-telephone"></i>
                             <span>تماس با ما</span>
