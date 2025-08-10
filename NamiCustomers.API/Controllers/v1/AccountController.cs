@@ -159,7 +159,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
             }
             return new ResultDto<LoginResponseDto>(Infrastucture.Properties.Resources.errOtpInvalid, false);
         }
-        return new ResultDto<LoginResponseDto>(Infrastucture.Properties.Resources.errOtpInvalid, false);
+        return new ResultDto<LoginResponseDto>(Infrastucture.Properties.Resources.errOtpIsNotNull, false);
     }
 
     [HttpPost("[action]")]
