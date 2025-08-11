@@ -13,9 +13,11 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+ 
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
+using NamiCustomers.Infrastucture;
+using System.Text.Json.Serialization;
 
 
 namespace NamiCustomers.API.Extensions;
@@ -42,7 +44,6 @@ public static class ServicesRegisteration
             .ConfigureMemoryCache()
             .ConfigureOther()
             ;
-
         services.ConfigurationApplicationServices(configuration);
 
         return services;

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using NamiCustomers.Infrastucture.ExternalServices.Email.Dtos;
+using NamiCustomers.Infrastucture.ExternalServices.Nami;
 using NamiCustomers.MVC.Handlers;
 using NamiCustomers.MVC.Services;
 using NamiCustomers.MVC.Services.Auth;
@@ -27,6 +28,7 @@ public static class ServicesRegisteration
             .ConfigureMemoryCache()
             .ConfigureOther()
             .AddApplicationServices(configuration)
+     
             .AddAuthentication(configuration)
             .AddAuthorization(configuration)
             .ConfigureCookies()
@@ -158,7 +160,7 @@ public static class ServicesRegisteration
             return new DealerService(httpClient, subscriberService);
         });
 
-
+        services.AddScoped<INamiKhodroService, NamiKhodroService>();
 
 
         return services;

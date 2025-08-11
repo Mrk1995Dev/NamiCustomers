@@ -8,6 +8,7 @@ using NamiCustomers.Application.Services.Facades;
 using NamiCustomers.Application.Services.Subscribers;
 using NamiCustomers.Application.Services.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.Email;
+using NamiCustomers.Infrastucture.ExternalServices.Nami;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 
 
@@ -18,14 +19,13 @@ namespace NamiCustomers.Application
         public static IServiceCollection ConfigurationApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<ISettingsFacadeService, SettingsFacadeService>();
-            services.AddTransient<ISevenSoftService, SevenSoftService>();
             services.AddScoped<ISubscriberService, SubscriberService>();
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IDealerService, DealerService>();
             services.AddScoped<IAppointmentService, AppointmentService>();
-            services.AddScoped<IMailService, MailService>();
             services.AddScoped<IPermissionService, PermissionService>();
-            
+            services.AddTransient<ISevenSoftService, SevenSoftService>();
+            services.AddScoped<IMailService, MailService>();
 
             #region SmsService
 
@@ -43,6 +43,7 @@ namespace NamiCustomers.Application
                 };
             });
             #endregion
+
 
             return services;
         }
