@@ -23,7 +23,7 @@ public class VinFilter(IHttpContextAccessor httpContextAccessor, ISubscriberServ
         {
             var subscriber = subscriberService.CurrentSubscriber;
 
-            if (!allewedActions.Contains(actionName))
+            if (!allewedActions.Contains(actionName) && subscriber!=null)
             {
                 if (controllerName!= "Vehicle" && (subscriber.VehicleModels==null || subscriber.VehicleModels.All(c=>c.IsDefault!=true)))
                 {
