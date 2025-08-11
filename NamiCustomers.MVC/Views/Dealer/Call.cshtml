@@ -4,14 +4,36 @@
     ViewData["Title"] = "Call";
 }
 
-<h1>Call</h1>
+<br />
 
-<ul>
- @foreach (var item in Model)
-{
-    <li>
+<div class="container direction-rtl">
+    <div class="card">
+        <div class="card-body p-2">
+            <div class="d-flex align-items-center justify-content-between">
+                <small class="ms-1">اطلاعیه و فراخوان </small>
+                <form action="#">
+                    <a title="بازگشت" href="/"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></a>
 
-        <p>@item</p>
-    </li>
-}
-</ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+     
+             @foreach (var (item, index) in Model.Select((item, index) => (item, index)))
+        {
+            <div class="alert custom-alert-one alert-dark alert-dismissible fade show mb-0" role="alert">
+                <i class="bi bi-check-circle"></i>
+                     @Html.DisplayFor(modelItem => item)
+              @*   <button class="btn btn-close position-relative p-1 ms-auto" type="button" data-bs-dismiss="alert" aria-label="Close"></button> *@
+            </div>
+            <br />
+        }
+        </div>
+    </div>
+</div>
