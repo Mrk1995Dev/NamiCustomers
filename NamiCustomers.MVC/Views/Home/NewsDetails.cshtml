@@ -9,7 +9,7 @@
     <div class="card">
         <div class="card-body p-2">
             <div class="d-flex align-items-center justify-content-between">
-                <small class="ms-1"> @Html.DisplayFor(model => model.title.rendered)</small>
+                <small class="ms-1"> @Html.Raw(Model.title.rendered)</small>
                 <form action="#">
                     <a title="بازگشت" href="/Home/naminews"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></a>
 
@@ -40,7 +40,7 @@
     <div class="blog-description py-3">
         <div class="container">
                     <a class="badge bg-primary mb-2 d-inline-block" target="_blank" href=" @Html.DisplayFor(model => model.link)">مشاهده خبر در وب سایت نامی خودرو</a>
-                    <h3 class="mb-3">@Html.DisplayFor(model => model.title.rendered)</h3>
+                    <h3 class="mb-3">@Html.Raw(Model.title.rendered)</h3>
 
             <div class="d-flex align-items-center mb-4">
                 <a class="badge-avater" href="#">
