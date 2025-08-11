@@ -218,4 +218,7 @@
   <data name="errOtpIsNotNull" xml:space="preserve">
     <value>کد ارسال شده را وارد نمایید.</value>
   </data>
+  <data name="msgNotFoundAnyResult" xml:space="preserve">
+    <value>هیچ رکوردی وجود ندارد</value>
+  </data>
 </root>

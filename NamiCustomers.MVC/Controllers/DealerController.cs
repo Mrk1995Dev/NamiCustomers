@@ -3,13 +3,13 @@ using NamiCustomers.MVC.Services;
 
 namespace NamiCustomers.MVC.Controllers;
 
-public class DealerController(IDealerService dealerService) : MyBaseController
+public class DealerController(IDealerService dealerService,IVehicleService vehicleService) : MyBaseController
 {
 
 
     public async Task<IActionResult> Call()
     {
-        var result = await dealerService.GetReceptionsInformationByVinNumberAsync();
+        var result = await vehicleService.GetSpecificCases();
         if (!result.Succeeded)
         {
             SetError(result.Errors.FirstOrDefault());

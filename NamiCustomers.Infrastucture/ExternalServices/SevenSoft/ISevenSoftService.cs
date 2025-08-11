@@ -27,7 +27,7 @@ public interface ISevenSoftService
     /// <param name="nationalCodeOrEconomicCode"></param>
     /// <param name="mobile"></param>
     /// <returns></returns>
-    Task<string> GetSpecificCases(string chassisVinNumber, string nationalCodeOrEconomicCode, string mobile);
+    Task<string[]> GetSpecificCases(string chassisVinNumber, string nationalCodeOrEconomicCode, string mobile);
 
     /// <summary>
     /// لیست نمایندگی ها
@@ -99,10 +99,10 @@ public class SevenSoftService : ISevenSoftService
         return await RestUtility.GetData<string>(_baseUrl, Resource7Soft.RelationCustomerInfoByVinNumber, qStr);
     }
 
-    public async Task<string> GetSpecificCases(string chassisVinNumber, string nationalCodeOrEconomicCode, string mobile)
+    public async Task<string[]> GetSpecificCases(string chassisVinNumber, string nationalCodeOrEconomicCode, string mobile)
     {
         string qStr = $"?ChassisVinNumber={chassisVinNumber}&NationalCodeOrEconomicCode={nationalCodeOrEconomicCode}&Mobile={mobile}";
-        return await RestUtility.GetData<string>(_baseUrl, Resource7Soft.GetSpecificCases, qStr);
+        return await RestUtility.GetData<string[]>(_baseUrl, Resource7Soft.GetSpecificCases, qStr);
     }
 
 

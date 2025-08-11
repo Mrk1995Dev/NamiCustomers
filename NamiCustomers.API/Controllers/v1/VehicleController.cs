@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Application.Services.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
+using System.Reflection;
 
 namespace NamiCustomers.API.Controllers.v1;
 
@@ -59,6 +60,22 @@ public class VehicleController(IVehicleService vehicleService, ISevenSoftService
 
     }
 
+
+    [HttpGet("[action]")]
+    public async Task<ResultDto<string[]>> GetSpecificCases(string vinNumber,string nationalCodeOrEconomicCode, string mobile)
+    {
+        var result = await sevenSoftService.GetSpecificCases(vinNumber,nationalCodeOrEconomicCode,mobile);
+        if (result == null) return new ResultDto<string[]>(
+       Infrastucture.Properties.Resources.errNotFound, false
+       );
+
+        return new ResultDto<string[]>(
+      Infrastucture.Properties.Resources.msgFound
+     , true
+     , mapper.Map<string[]>(result)
+       );
+
+    }
     [HttpGet("[action]")]
     public async Task<ResultDto<ActiveMainChassisGuaranteeResponse>> GetActiveMainChassisGuarantee(string vinNumber)
     {
