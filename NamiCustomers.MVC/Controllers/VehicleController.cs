@@ -1,15 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
+using NamiCustomers.MVC.Filters;
 using NamiCustomers.MVC.Services;
 using System.ComponentModel.DataAnnotations;
 
 namespace NamiCustomers.MVC.Controllers;
 
 [Authorize(Policy = nameof(MyPloicies.SubscriberAccess))]
+
 public class VehicleController(
     ISubscriberService subscriberService, IVehicleService vehicleService) : MyBaseController
 {
+    [ServiceFilter(typeof(VinFilter))]
     [HttpGet]
     public async Task<IActionResult> ActiveMainChassisGuarantee(string? VinNumber)
     {
@@ -29,7 +32,7 @@ public class VehicleController(
         return View(new ActiveMainChassisGuaranteeResponse());
     }
 
-
+    [ServiceFilter(typeof(VinFilter))]
     public async Task<IActionResult> Details(int id)
     {
         var result = await vehicleService.GetAsync(id);

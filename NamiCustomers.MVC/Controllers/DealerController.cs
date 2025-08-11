@@ -5,6 +5,19 @@ namespace NamiCustomers.MVC.Controllers;
 
 public class DealerController(IDealerService dealerService) : MyBaseController
 {
+
+
+    public async Task<IActionResult> Call()
+    {
+        var result = await dealerService.GetReceptionsInformationByVinNumberAsync();
+        if (!result.Succeeded)
+        {
+            SetError(result.Errors.FirstOrDefault());
+            return RedirectToAction("Index", "Home");
+        }
+        return View(result.Data);
+    }
+
     public async Task<IActionResult> Dealers()
     {
         var result = await dealerService.GetDealersAsync();

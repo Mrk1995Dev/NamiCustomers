@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using NamiCustomers.Infrastucture.ExternalServices.Email.Dtos;
 using NamiCustomers.Infrastucture.ExternalServices.Nami;
+using NamiCustomers.MVC.Filters;
 using NamiCustomers.MVC.Handlers;
 using NamiCustomers.MVC.Services;
 using NamiCustomers.MVC.Services.Auth;
@@ -27,6 +28,7 @@ public static class ServicesRegisteration
             .ConfigureCurrentUser()
             .ConfigureMemoryCache()
             .ConfigureOther()
+            .ConfigurationActionFilters()
             .AddApplicationServices(configuration)
      
             .AddAuthentication(configuration)
@@ -34,6 +36,11 @@ public static class ServicesRegisteration
             .ConfigureCookies()
             ;
 
+        return services;
+    }
+    public static IServiceCollection ConfigurationActionFilters(this IServiceCollection services)
+    {
+        services.AddScoped<VinFilter>(); // Add the   filter Globaly 
         return services;
     }
 
