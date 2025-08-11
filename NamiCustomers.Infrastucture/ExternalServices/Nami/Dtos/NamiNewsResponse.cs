@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NamiCustomers.Infrastucture.Utilities;
+using Org.BouncyCastle.Utilities.Date;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +12,7 @@ public class NamiNewsResponse
 {
     public int id { get; set; }
     public DateTime date { get; set; }
+    public string PersianDate => PersianDateUtility.GetPersianDateString(this.date);
     public DateTime date_gmt { get; set; }
     public Guid guid { get; set; }
 
