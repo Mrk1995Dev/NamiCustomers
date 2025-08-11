@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.IdentityModel.Tokens;
 using NamiCustomers.Abstractions.Dtos.Account;
@@ -9,11 +8,9 @@ using NamiCustomers.Domain.Entities.Account;
 using NamiCustomers.Infrastucture.ExternalServices.Email;
 using NamiCustomers.Infrastucture.ExternalServices.SmsServices;
 using NamiCustomers.Infrastucture.Utilities;
-using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NamiCustomers.API.Controllers.v1;
 
@@ -105,8 +102,8 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
 
         return new ResultDto(
             Infrastucture.Properties.Resources.errSave
-            ,  false//todo moradi
-            //  new ApiErrorResponse(createResult.Errors.Select(c => new ApiError(c.Code, c.Description)).ToList())
+            , false//todo moradi
+                   //  new ApiErrorResponse(createResult.Errors.Select(c => new ApiError(c.Code, c.Description)).ToList())
             );
     }
 
@@ -131,7 +128,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                 {
                     var token = $"{GenerateJwtToken(user)}";
                     var refreshToken = $"{GenerateJwtToken(user)}";
-                    return new ResultDto<LoginResponseDto>("",true ,new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, NationalCode = user.NationalCode, Mobile = user.PhoneNumber, Id = user.Id, FirstName = user.FirstName, LastName = user.LastName });
+                    return new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, NationalCode = user.NationalCode, Mobile = user.PhoneNumber, Id = user.Id, FirstName = user.FirstName, LastName = user.LastName });
                 }
                 else
                 {

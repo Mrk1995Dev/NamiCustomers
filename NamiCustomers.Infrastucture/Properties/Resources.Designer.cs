@@ -341,6 +341,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to هیچ رکوردی وجود ندارد.
+        /// </summary>
+        public static string msgNotFoundAnyResult {
+            get {
+                return ResourceManager.GetString("msgNotFoundAnyResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to دیتا با موفقیت بازگشت داده شد.
         /// </summary>
         public static string msgReturnDataSuccess {

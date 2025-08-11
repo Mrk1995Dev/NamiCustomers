@@ -24,7 +24,7 @@ namespace NamiCustomers.Web.Services.Auth
             }
 
             var claimsPrincipal = CreateClaimsPrincipalFromJwt(token);
-             return new AuthenticationState(claimsPrincipal);
+            return new AuthenticationState(claimsPrincipal);
 
         }
 
@@ -41,7 +41,7 @@ namespace NamiCustomers.Web.Services.Auth
 
             var claims = jwtToken.Claims;
 
-            var identity = new ClaimsIdentity(claims,"jwt");
+            var identity = new ClaimsIdentity(claims, "jwt");
 
             return new ClaimsPrincipal(identity);
         }
@@ -51,6 +51,6 @@ namespace NamiCustomers.Web.Services.Auth
         {
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
-  
-    } 
+
+    }
 }

@@ -1,18 +1,15 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NamiCustomers.Infrastucture.ExternalServices.Nami;
-using NamiCustomers.MVC.Services;
 
 
 using NamiCustomers.MVC.Services.Auth;
-using NuGet.Common;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace NamiCustomers.MVC.Controllers;
 
 
-public class HomeController(ITokenSessionService tokenSessionService,INamiKhodroService namiKhodroService) : Controller
+public class HomeController(ITokenSessionService tokenSessionService, INamiKhodroService namiKhodroService) : Controller
 {
     public IActionResult Index()
     {
@@ -44,31 +41,31 @@ public class HomeController(ITokenSessionService tokenSessionService,INamiKhodro
     }
     public async Task<IActionResult> NamiNews()
     {
-        var data=await  namiKhodroService.GetNamiNews();
+        var data = await namiKhodroService.GetNamiNews();
         data = data.OrderByDescending(c => c.date).ToArray();
         return View(data);
-       // return View();
+        // return View();
     }
 
     public async Task<IActionResult> NewsDetails(int id)
     {
         var data = await namiKhodroService.GetNamiNews();
-        
-            var result = data.FirstOrDefault(c => c.id == id);
-       
+
+        var result = data.FirstOrDefault(c => c.id == id);
+
         return View(result);
         // return View();
     }
     public async Task<IActionResult> NamiNewsLatest()
     {
         var data = await namiKhodroService.GetNamiNews();
-        data = data.OrderByDescending(c=>c.date).Take(2).ToArray();
+        data = data.OrderByDescending(c => c.date).Take(2).ToArray();
         return View("~/Views/Home/NamiNews.cshtml", data);
         // return View();
     }
 
     public IActionResult faq()
-	{
-		return View();
-	}
+    {
+        return View();
+    }
 }

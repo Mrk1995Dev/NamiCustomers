@@ -1,6 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
-using NamiCustomers.Domain.Entities.Vehicles;
+﻿using NamiCustomers.Domain.Entities.Vehicles;
 
 namespace NamiCustomers.Application.Configs;
 

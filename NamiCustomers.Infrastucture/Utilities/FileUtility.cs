@@ -1,7 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-
-namespace NamiCustomers.Infrastucture.Utilities
+﻿namespace NamiCustomers.Infrastucture.Utilities
 {
     public static class FileUtility
     {

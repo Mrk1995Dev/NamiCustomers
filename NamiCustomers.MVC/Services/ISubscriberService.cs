@@ -1,6 +1,5 @@
 ﻿
 using NamiCustomers.Infrastucture.Utilities;
-using NamiCustomers.MVC.Services.Auth;
 
 namespace NamiCustomers.MVC.Services;
 
@@ -40,7 +39,7 @@ public class SubscriberService : ISubscriberService
     private void GetToken()
     {
         var mobile = httpContextAccessor.GetClaimValue(MyClaims.Mobile);
-        var myToken =   _httpClient.GetFromJsonAsync<MyToken>($"Account/GetToken?mobile={mobile}").Result;
+        var myToken = _httpClient.GetFromJsonAsync<MyToken>($"Account/GetToken?mobile={mobile}").Result;
 
         _httpClient.DefaultRequestHeaders.Add("accept", "*/*");
         _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {myToken.token}");
@@ -72,7 +71,7 @@ public class SubscriberService : ISubscriberService
     }
 
     public async Task<ResultDto> EditAsync(SubscriberDto updateCustomer)
-    {    
+    {
         var response = await _httpClient.PutAsJsonAsync($"Subscriber/Edit", updateCustomer);
         if (response.IsSuccessStatusCode)
         {
@@ -109,19 +108,19 @@ public class SubscriberService : ISubscriberService
                ((ResultDto<SubscriberDto>)result).Data);
             }
         }
-        
-            // Log or handle the error response
-            var errorContent = await response.Content.ReadAsStringAsync();
-           // _logger.LogError($"API Error: {response.StatusCode} - {errorContent}");
 
-            // You might want to return null or throw a custom exception
-            return new ResultDto<SubscriberDto>(Infrastucture.Properties.Resources.errNotFound, false);
-        
+        // Log or handle the error response
+        var errorContent = await response.Content.ReadAsStringAsync();
+        // _logger.LogError($"API Error: {response.StatusCode} - {errorContent}");
 
+        // You might want to return null or throw a custom exception
+        return new ResultDto<SubscriberDto>(Infrastucture.Properties.Resources.errNotFound, false);
 
 
 
-        
-        
+
+
+
+
     }
 }

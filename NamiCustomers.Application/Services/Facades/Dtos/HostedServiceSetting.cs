@@ -4,7 +4,7 @@ public class HostedServiceSetting
 {
     public HostedServiceItem SevenSoft { get; set; }
     public HostedServiceItem IranFava { get; set; }
-    
+
 }
 
 public record HostedServiceItem
@@ -14,4 +14,3 @@ public record HostedServiceItem
 }
 
 
- 

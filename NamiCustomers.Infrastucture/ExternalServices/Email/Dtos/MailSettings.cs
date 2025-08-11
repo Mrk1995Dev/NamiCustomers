@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace NamiCustomers.Infrastucture.ExternalServices.Email.Dtos
+﻿namespace NamiCustomers.Infrastucture.ExternalServices.Email.Dtos
 {
     public class MailSettings
     {

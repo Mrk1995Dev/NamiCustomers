@@ -35,7 +35,7 @@ public class UsersController(IUserService userService, IRoleService roleService)
     }
 
 
-   
+
     [HttpGet]
     public async Task<IActionResult> Details(string id)
     {
@@ -131,7 +131,7 @@ public class UsersController(IUserService userService, IRoleService roleService)
         return View("AddUserRole", new AddUserRoleDto
         {
             Id = Id,
-            Roles = allRoles.Data.Select(c => new RoleDto {Id=c.Id,Description=c.Description,Name=c.Name }).ToList(),
+            Roles = allRoles.Data.Select(c => new RoleDto { Id = c.Id, Description = c.Description, Name = c.Name }).ToList(),
             Email = user.Data.Email,
             FullName = $"{user.Data.FirstName}  {user.Data.LastName}"
         });
@@ -142,22 +142,22 @@ public class UsersController(IUserService userService, IRoleService roleService)
     {
         //var userId = httpContextAccessor.GetClaimValue(MyClaims.UserId);
         //var user = await userService.GetAsync(userId);
-        var user = await userService.GetAsync(newRole.Id); 
+        var user = await userService.GetAsync(newRole.Id);
         var result = await userService.AddUserRole(newRole);
         return RedirectToAction("UserRoles", "Users", new { user.Data.Id, area = "admin" });
     }
 
     [HttpGet]
-    public async Task<IActionResult> DeleteUserRole(string userid,string rolename)
+    public async Task<IActionResult> DeleteUserRole(string userid, string rolename)
     {
         var user = await userService.GetAsync(userid);
 
-        AddUserRoleDto userDelete = new  AddUserRoleDto()
+        AddUserRoleDto userDelete = new AddUserRoleDto()
         {
             Email = user.Data.Email,
             FullName = $"{user.Data.FirstName}  {user.Data.LastName}",
             Id = user.Data.Id,
-            Role=rolename
+            Role = rolename
         };
         return View(userDelete);
     }
@@ -170,14 +170,14 @@ public class UsersController(IUserService userService, IRoleService roleService)
         return RedirectToAction("UserRoles", "Users", new { user.Data.Id, area = "admin" });
     }
 
-    
+
 
     public async Task<IActionResult> UserRoles(string Id)
     {
         var user = await userService.GetAsync(Id);
-        var roles =(await userService.GetRolesAsync(Id)).Data.Roles.Select(c=>c.Name).ToList();
+        var roles = (await userService.GetRolesAsync(Id)).Data.Roles.Select(c => c.Name).ToList();
         ViewBag.UserInfo = $"Name : {user.Data.FirstName} {user.Data.LastName} Email:{user.Data.Email}";
-        return View(new KeyValuePair<string,List<string>>(Id, roles));
+        return View(new KeyValuePair<string, List<string>>(Id, roles));
     }
 
 

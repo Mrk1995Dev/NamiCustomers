@@ -1,7 +1,6 @@
-﻿using NamiCustomers.Abstractions.Dtos.Vehicles;
+﻿using Microsoft.CodeAnalysis;
+using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Infrastucture.Utilities;
-using System.Net.Http.Json;
-using System.Numerics;
 using System.Text.Json;
 
 namespace NamiCustomers.MVC.Services;
@@ -16,6 +15,7 @@ public interface IVehicleService
     Task<ResultDto> EditAsync(VehicleModelDto updateCustomer);
     Task<ResultDto<VehicleModelDto>> GetChassisInformationByVinNumber(string vinNumber);
     Task<ResultDto<ActiveMainChassisGuaranteeResponse>> GetActiveMainChassisGuarantee(string vinNumber);
+    Task<ResultDto<List<string>>> GetSpecificCases();
 }
 
 
@@ -64,16 +64,16 @@ public class VehicleService(HttpClient httpClient, IHttpContextAccessor httpCont
     }
     public async Task<ResultDto<VehicleModelDto>> SetDefaultAsync(int id)
     {
-        var response = await httpClient.PutAsJsonAsync($"Vehicle/SetDefault/{id}", new {id = id } );
+        var response = await httpClient.PutAsJsonAsync($"Vehicle/SetDefault/{id}", new { id = id });
         if (response.IsSuccessStatusCode)
         {
-            var dto =await response.Content.ReadFromJsonAsync<ResultDto<VehicleModelDto>>();
+            var dto = await response.Content.ReadFromJsonAsync<ResultDto<VehicleModelDto>>();
             return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.msgEdited
            , true, dto.Data);
         }
         return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errEdited, false);
     }
-    
+
 
     public async Task<ResultDto<VehicleModelDto>> GetChassisInformationByVinNumber(string vinNumber)
     {
@@ -84,6 +84,24 @@ public class VehicleService(HttpClient httpClient, IHttpContextAccessor httpCont
             response.Data);
         }
         return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errNotFound, false);
+    }
+
+    public async Task<ResultDto<List<string>>> GetSpecificCases()
+    {
+        string vinNumber = subscriberService.CurrentSubscriber.VehicleModels.FirstOrDefault(c => c.IsDefault)?.VinNumber;
+        string nationalCodeOrEconomicCode = subscriberService.CurrentSubscriber.NationalCode;
+        string mobile=subscriberService.CurrentSubscriber.Mobile;
+        var response = await httpClient.GetFromJsonAsync<ResultDto<string[]>>($"Vehicle/GetSpecificCases?vinNumber={vinNumber}&nationalCodeOrEconomicCode={nationalCodeOrEconomicCode}&mobile={mobile}");
+        if (response != null)
+        {
+            if (!response.Data.Any())
+            {
+                return new ResultDto<List<string>>(Infrastucture.Properties.Resources.errNotFound, true, new List<string> { Infrastucture.Properties.Resources.msgNotFoundAnyResult });
+            }
+            return new ResultDto<List<string>>(Infrastucture.Properties.Resources.msgFound, true,
+            response.Data.ToList());
+        }
+        return new ResultDto<List<string>>(Infrastucture.Properties.Resources.errNotFound, false);
     }
 
 
@@ -129,7 +147,7 @@ public class VehicleService(HttpClient httpClient, IHttpContextAccessor httpCont
            false,
            null
            ,
-           errors:new List<string> { result.Message}
+           errors: new List<string> { result.Message }
            );
             }
 

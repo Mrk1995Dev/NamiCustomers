@@ -8,7 +8,7 @@ namespace NamiCustomers.API.Controllers.v1;
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
 [Authorize]
-public class DealerController(IDealerService  dealerService) : ControllerBase
+public class DealerController(IDealerService dealerService) : ControllerBase
 {
     [HttpGet("[action]")]
     public async Task<ResultDto<DealerResponse[]>> GetDealersAsync()
@@ -26,5 +26,5 @@ public class DealerController(IDealerService  dealerService) : ControllerBase
     {
         return await dealerService.GetBranchesByDealerAsync(dealerId);
     }
-    
+
 }

@@ -10,16 +10,16 @@ namespace NamiCustomers.MVC.Services.Auth
     {
         private readonly ITokenSessionService tokenService;
         private readonly NavigationManager _navigationManager;
-        public CustomAuthenticationStateProvider(ITokenSessionService tokenService,NavigationManager navigationManager)
+        public CustomAuthenticationStateProvider(ITokenSessionService tokenService, NavigationManager navigationManager)
         {
             _navigationManager = navigationManager;
             this.tokenService = tokenService;
 
         }
-        
+
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var token =  tokenService.GetAuthToken();
+            var token = tokenService.GetAuthToken();
 
             if (string.IsNullOrEmpty(token))
             {
@@ -29,7 +29,7 @@ namespace NamiCustomers.MVC.Services.Auth
             }
 
             var claimsPrincipal = CreateClaimsPrincipalFromJwt(token);
-             return new AuthenticationState(claimsPrincipal);
+            return new AuthenticationState(claimsPrincipal);
 
         }
 
@@ -46,7 +46,7 @@ namespace NamiCustomers.MVC.Services.Auth
 
             var claims = jwtToken.Claims;
 
-            var identity = new ClaimsIdentity(claims,"jwt");
+            var identity = new ClaimsIdentity(claims, "jwt");
 
             return new ClaimsPrincipal(identity);
         }
@@ -56,6 +56,6 @@ namespace NamiCustomers.MVC.Services.Auth
         {
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
-  
-    } 
+
+    }
 }

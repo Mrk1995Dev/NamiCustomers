@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Options;
 using MudBlazor;
 using MudBlazor.Services;
 using NamiCustomers.Web;
@@ -46,10 +44,10 @@ builder.Services.AddAuthorizationCore(options =>
     //        policy.RequireClaim("Permission", "users.delete"));
     //}
 
-} );
+});
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
- 
+
 builder.Services.AddApplicationServices();
 //builder.Services.AddMudServices();
 builder.Services.AddMudServices(config =>

@@ -23,7 +23,7 @@ namespace NamiCustomers.Web.Services.LocalStorage
 
         public async Task SetItemAsync(string key, string value)
         {
-           await jSRuntime.InvokeVoidAsync("localStorage.setItem", key, value);
+            await jSRuntime.InvokeVoidAsync("localStorage.setItem", key, value);
         }
     }
 }

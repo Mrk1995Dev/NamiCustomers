@@ -1,8 +1,4 @@
-﻿
-
-using NamiCustomers.API.Controllers.v1;
-
-namespace NamiCustomers.API.Tests.v1
+﻿namespace NamiCustomers.API.Tests.v1
 {
     public class SAMPLEControllerTest
     {

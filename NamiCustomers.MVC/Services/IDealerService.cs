@@ -1,8 +1,4 @@
-﻿
-using NamiCustomers.Abstractions.Dtos.Vehicles;
-using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
-using System.Net.Http;
-using NamiCustomers.Infrastucture.Utilities;
+﻿using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
 namespace NamiCustomers.MVC.Services;
 

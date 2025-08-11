@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NamiCustomers.Abstractions.Dtos.Subscribers;
 using NamiCustomers.MVC.Services;
 
 namespace NamiCustomers.MVC.Controllers;
 
-[Authorize(Policy =nameof(MyPloicies.SubscriberAccess))]
+[Authorize(Policy = nameof(MyPloicies.SubscriberAccess))]
 public class SubscriberController(
-    ISubscriberService  subscriberService) : MyBaseController
+    ISubscriberService subscriberService) : MyBaseController
 {
-   [AllowAnonymous]
+    [AllowAnonymous]
     public IActionResult CheckMyClaims()
     {
         var a = nameof(MyPloicies.SubscriberAccess);
@@ -34,7 +33,7 @@ public class SubscriberController(
         }
         return View(result.Data);
     }
- 
+
     public async Task<IActionResult> List()
     {
         var data = await subscriberService.GetAsync();
@@ -62,15 +61,16 @@ public class SubscriberController(
     [HttpPost]
     public async Task<IActionResult> Edit(SubscriberDto subscriberDto)
     {
-        if (!ModelState.IsValid) { 
-            SetError( Infrastucture.Properties.Resources.errInputInValid );
+        if (!ModelState.IsValid)
+        {
+            SetError(Infrastucture.Properties.Resources.errInputInValid);
             return RedirectToAction("Profile");
         }
         var result = await subscriberService.EditAsync(subscriberDto);
 
         if (!result.Succeeded)
         {
-            SetError( result.Message );
+            SetError(result.Message);
         }
         return RedirectToAction("Profile");
     }
@@ -78,10 +78,10 @@ public class SubscriberController(
     public async Task<IActionResult> Delete([FromQuery] int id)
     {
         var result = await subscriberService.RemoveAsync(id);
-       
+
         if (!result.Succeeded)
         {
-            SetError(result.Message );
+            SetError(result.Message);
         }
         return RedirectToAction("List");
     }

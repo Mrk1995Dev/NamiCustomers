@@ -2,6 +2,7 @@
 using NamiCustomers.Application.Services.Subscribers;
 using NamiCustomers.Domain.Entities.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
+using static Dapper.SqlMapper;
 
 
 
@@ -64,6 +65,12 @@ public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftS
         {
             newEntity.VehicleAttachment = new VehicleAttachment() { VehicleModelIdSevenSoft = newEntity.VehicleModelIdSevenSoft };
         }
+
+        var hisVehicles = await dbContext.VehicleModels.Where(c => c.SubscriberId == newEntity.SubscriberId).ToListAsync();
+        hisVehicles.ForEach(c => { c.IsDefault = false; });
+        newEntity.IsDefault = true;
+
+        dbContext.VehicleModels.UpdateRange(hisVehicles);
 
         await dbContext.VehicleModels.AddAsync(newEntity);
         var result = await dbContext.SaveChangesAsync();
@@ -132,13 +139,13 @@ public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftS
             return new ResultDto<VehicleModelDto>(
                Infrastucture.Properties.Resources.errNotFound, false
                );
-        
-        var hisVehicles = await dbContext.VehicleModels.Where(c =>c.SubscriberId == entity.SubscriberId).ToListAsync();
+
+        var hisVehicles = await dbContext.VehicleModels.Where(c => c.SubscriberId == entity.SubscriberId).ToListAsync();
         hisVehicles.ForEach(c => { c.IsDefault = false; });
         entity.IsDefault = true;
 
         dbContext.VehicleModels.UpdateRange(hisVehicles);
-         
+
         var editedEntity = mapper.Map<VehicleModelDto>(entity);
         if (await dbContext.SaveChangesAsync() < 1)
             return new ResultDto<VehicleModelDto>(
@@ -158,7 +165,7 @@ public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftS
            Infrastucture.Properties.Resources.errNotFound, false
            );
         var relatedAttach = dbContext.VehicleAttachments.FirstOrDefault(c => c.VehicleModelIdSevenSoft == data.VehicleModelIdSevenSoft);
-        if (relatedAttach!=null)
+        if (relatedAttach != null)
         {
             data.VehicleAttachment = relatedAttach;
         }

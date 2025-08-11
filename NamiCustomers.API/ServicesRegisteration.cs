@@ -1,14 +1,11 @@
-﻿using System.Reflection;
-using System.Text;
-using Asp.Versioning;
-using AspNetCoreRateLimit;
+﻿using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog;
-
 using Serilog;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Reflection;
+using System.Text;
 
 namespace NamiCustomers.API
 {

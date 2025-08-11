@@ -8,10 +8,10 @@ namespace NamiCustomers.Abstractions.Dtos.Security.Dto.Roles
 
         public string Email { get; set; }
         public string Id { get; set; }
-        [Display(Name ="نقش")]
+        [Display(Name = "نقش")]
         public string Role { get; set; }
         public List<RoleDto> Roles { get; set; }
     }
- 
+
 
 }

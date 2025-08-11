@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.MVC.Filters;
 using NamiCustomers.MVC.Services;
-using System.ComponentModel.DataAnnotations;
 
 namespace NamiCustomers.MVC.Controllers;
 
@@ -59,7 +58,7 @@ public class VehicleController(
         var result = await vehicleService.GetAllAsync(subscriberService.CurrentSubscriber.Id);
         if (!result.Succeeded)
         {
-            SetError(   result.Errors.FirstOrDefault());
+            SetError(result.Errors.FirstOrDefault());
         }
         return View(result.Data);
     }
@@ -77,7 +76,7 @@ public class VehicleController(
     [HttpGet]
     public async Task<IActionResult> ChassisInformationByVinNumber()
     {
-        return View(new VehicleModelDto { SubscriberId = subscriberService.CurrentSubscriber.Id, VinNumber = subscriberService.CurrentSubscriber.VehicleModels?.FirstOrDefault(c=>c.IsDefault)?.VinNumber });
+        return View(new VehicleModelDto { SubscriberId = subscriberService.CurrentSubscriber.Id, VinNumber = subscriberService.CurrentSubscriber.VehicleModels?.FirstOrDefault(c => c.IsDefault)?.VinNumber });
     }
 
     [HttpGet]
@@ -85,7 +84,7 @@ public class VehicleController(
     {
         if (string.IsNullOrEmpty(vinNumber))
         {
-            SetError( "شماره شاسی را وارد نمایید");
+            SetError("شماره شاسی را وارد نمایید");
             return RedirectToAction("ChassisInformationByVinNumber");
         }
         var data = await vehicleService.GetChassisInformationByVinNumber(vinNumber);

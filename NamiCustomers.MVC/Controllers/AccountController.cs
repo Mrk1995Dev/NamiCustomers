@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using NamiCustomers.MVC.Services;
 using NamiCustomers.MVC.Services.Auth;
-using Newtonsoft.Json;
-using System.Reflection;
 using System.Security.Claims;
 
 namespace NamiCustomers.MVC.Controllers;
@@ -76,12 +74,12 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
         var code = await authService.GetOtpAsync(mobile, nationalcode);
 
 
-        return View("~/Views/Account/LoginByOtp.cshtml",new ResultDto<LoginResponseDto>("",true, new LoginResponseDto { Mobile=mobile}));
+        return View("~/Views/Account/LoginByOtp.cshtml", new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { Mobile = mobile }));
     }
     [HttpGet]
     public async Task<IActionResult> LoginByOtp(string mobile)
     {
-        return View("LoginByMobile.cshtml", new LoginResponseDto() {Mobile=mobile });
+        return View("LoginByMobile.cshtml", new LoginResponseDto() { Mobile = mobile });
     }
     [HttpPost]
     public async Task<IActionResult> CheckOtp(string otp)
@@ -89,7 +87,7 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
         var result = await authService.LoginByOtpAsync(otp);
         if (!result.Succeeded)
         {
-            return View("~/Views/Account/LoginByOtp.cshtml", new ResultDto<LoginResponseDto>(result.Message, false,result.Data));
+            return View("~/Views/Account/LoginByOtp.cshtml", new ResultDto<LoginResponseDto>(result.Message, false, result.Data));
         }
         var user = result.Data;
         var userRoles = (await userService.GetRolesAsync(user.Id)).Data;
@@ -302,7 +300,7 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
         });
     }
 
- 
+
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> VerifyPhoneNumber(VerifyPhoneNumberDto verify)

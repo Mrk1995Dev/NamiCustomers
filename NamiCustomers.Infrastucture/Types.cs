@@ -6,7 +6,7 @@ public enum MyClaims
     NationalCode,
     FullName,
     Role,
-    PersianRole 
+    PersianRole
 }
 
 public static class MyRoles
@@ -15,9 +15,9 @@ public static class MyRoles
     public static string Operator => "Operator";
     public static string Subscriber => "Subscriber";
 }
-public  class MyPloicies
+public class MyPloicies
 {
     public static string AdminAccess => "AdminAccess";
     public static string OperatorAccess => "OperatorAccess";
-    public static string SubscriberAccess=> "SubscriberAccess";
+    public static string SubscriberAccess => "SubscriberAccess";
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace NamiCustomers.Abstractions.Dtos.Account
 {
@@ -13,9 +8,9 @@ namespace NamiCustomers.Abstractions.Dtos.Account
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-       [Required]
-       [DataType(DataType.Password)]
-       [Compare(nameof(Password))]
+        [Required]
+        [DataType(DataType.Password)]
+        [Compare(nameof(Password))]
         public string ConfirmPassword { get; set; }
         public string UserId { get; set; }
         public string Token { get; set; }

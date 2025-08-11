@@ -1,8 +1,4 @@
-﻿using MailKit.Security;
-using Microsoft.Extensions.Options;
-using MimeKit;
-using NamiCustomers.Infrastucture.ExternalServices.Email.Dtos;
-using Org.BouncyCastle.Asn1.Ocsp;
+﻿using MimeKit;
 
 namespace NamiCustomers.Infrastucture.ExternalServices.Email
 {

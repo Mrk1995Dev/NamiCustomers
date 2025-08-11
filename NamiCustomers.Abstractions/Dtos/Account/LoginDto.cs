@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace NamiCustomers.Abstractions.Dtos.Account;
 
@@ -17,7 +13,7 @@ public class LoginDto
     [Display(Name = "رمز")]
     public string Password { get; set; }
 
-    [Display(Name ="مرا به خاطر بسپار")]
+    [Display(Name = "مرا به خاطر بسپار")]
     public bool IsPersistent { get; set; } = false;
 
     public string? ReturnUrl { get; set; }

@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using NamiCustomers.Web.Models.Auth;
-using NamiCustomers.Web.Services.Auth;
 using NamiCustomers.Web.Services.Auth.TokenServices;
-using System.Net.Http;
 using System.Net.Http.Json;
 
 namespace NamiCustomers.Web.Services.Auth.AuthServices

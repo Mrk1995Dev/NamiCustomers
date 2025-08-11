@@ -15,9 +15,9 @@ namespace NamiCustomers.API.Controllers.v1;
 public class RolesController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager) : ControllerBase
 {
     [HttpGet("[action]")]
-    public async Task<ResultDto<List<RoleDto>>>  GetAllAsync()
+    public async Task<ResultDto<List<RoleDto>>> GetAllAsync()
     {
-        var roles =await  roleManager.Roles
+        var roles = await roleManager.Roles
             .Select(p =>
              new RoleDto
              {
@@ -32,7 +32,7 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
     [HttpGet("[action]")]
     public async Task<ResultDto<RoleDto>> GetAsync(string id)
     {
-        var role = await roleManager.Roles.Where(c=>c.Id==id)
+        var role = await roleManager.Roles.Where(c => c.Id == id)
             .Select(p =>
              new RoleDto
              {
@@ -44,7 +44,7 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
         return new ResultDto<RoleDto>(Infrastucture.Properties.Resources.msgFound, true, role);
     }
 
- 
+
 
     [HttpPost("[action]")]
     public async Task<ResultDto> Register(AddNewRoleDto newRole)
@@ -53,7 +53,7 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
         {
             Description = newRole.Description,
             Name = newRole.Name,
-            Id=Guid.NewGuid().ToString()
+            Id = Guid.NewGuid().ToString()
         };
         var result = roleManager.CreateAsync(role).Result;
 
@@ -74,9 +74,9 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
     public async Task<ResultDto> Edit(RoleDto roleEdit)
     {
         var role = await roleManager.FindByIdAsync(roleEdit.Id);
-        
-        role.Description=roleEdit.Description;
-        role.Name=roleEdit.Name;
+
+        role.Description = roleEdit.Description;
+        role.Name = roleEdit.Name;
 
         var result = await roleManager.UpdateAsync(role);
 
@@ -100,9 +100,9 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
     [HttpGet("[action]")]
     public async Task<ResultDto<List<UserDto>>> GetUsersInRole(string Name)
     {
-        var usersInRole =await userManager.GetUsersInRoleAsync(Name);
+        var usersInRole = await userManager.GetUsersInRoleAsync(Name);
 
-        var users= usersInRole.Select(p => new UserDto
+        var users = usersInRole.Select(p => new UserDto
         {
             FirstName = p.FirstName,
             LastName = p.LastName,

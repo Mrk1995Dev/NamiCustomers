@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace NamiCustomers.Domain.Entities.Subscribers
 {
     [Auditable]
-    public class Subscriber: IBaseEntity<int>
+    public class Subscriber : IBaseEntity<int>
     {
         public int Id { get; set; }
         public int? CityId { get; set; }
@@ -36,7 +36,7 @@ namespace NamiCustomers.Domain.Entities.Subscribers
         [Display(Name = "تلفن همراه")]
         [StringLength(maximumLength: 11, ErrorMessage = "طول {0} میبایست  {1} کاراکتر باشد", MinimumLength = 12)]
         public string? Mobile { get; set; }
-        
+
         [Display(Name = "تلفن")]
         [StringLength(maximumLength: 15, ErrorMessage = "طول {0} میبایست  {1} کاراکتر باشد", MinimumLength = 2)]
         public string? Phone { get; set; }
@@ -49,9 +49,9 @@ namespace NamiCustomers.Domain.Entities.Subscribers
         [StringLength(maximumLength: 17, ErrorMessage = "طول {0} میبایست  {1} کاراکتر باشد", MinimumLength = 2)]
         public string? EconomicCode { get; set; }
         public string? Sex { get; set; }
-        public ICollection<VehicleModel>? VehicleModels { get; set; } 
+        public ICollection<VehicleModel>? VehicleModels { get; set; }
 
         public ICollection<SubscriberCode>? SubscriberCodes { get; set; }
-        
+
     }
 }
