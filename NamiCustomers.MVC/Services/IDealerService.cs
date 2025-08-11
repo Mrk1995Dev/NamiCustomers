@@ -8,6 +8,13 @@ namespace NamiCustomers.MVC.Services;
 
 public interface IDealerService
 {
+
+
+    /// <summary>
+    /// فراخوان
+    /// </summary>
+    /// <returns></returns>
+    Task<ResultDto<GetReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumberAsync();
     /// <summary>
     /// لیست نمایندگی ها
     /// </summary>
@@ -26,8 +33,25 @@ public interface IDealerService
     /// <returns></returns>
     Task<ResultDto<GetReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumber();
 }
-public class DealerService(HttpClient httpClient, ISubscriberService subscriberService ) : IDealerService
+public class DealerService(HttpClient httpClient, ISubscriberService subscriberService) : IDealerService
 {
+
+    public async Task<ResultDto<GetReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumberAsync()
+    {
+        var chassisVinNumber = subscriberService.CurrentSubscriber.VehicleModels.FirstOrDefault(c => c.IsDefault)?.VinNumber;
+        if (string.IsNullOrEmpty(chassisVinNumber))
+        {
+            return new ResultDto<GetReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.errNotFound, false, null, new List<string> { Infrastucture.Properties.Resources.errNotFound });
+        }
+
+        var response = await httpClient.GetFromJsonAsync<ResultDto<GetReceptionsInformationByVinNumberResponse[]>>($"Dealer/GetReceptionsInformationByVinNumber?chassisVinNumber={chassisVinNumber}");
+        if (response.Data != null)
+        {
+            return new ResultDto<GetReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.msgFound
+           , true, response.Data);
+        }
+        return new ResultDto<GetReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.errNotFound, false);
+    }
     public async Task<ResultDto<DealerResponse[]>> GetDealersAsync()
     {
         var response = await httpClient.GetFromJsonAsync<ResultDto<DealerResponse[]>>($"Dealer/GetDealers");
@@ -51,10 +75,10 @@ public class DealerService(HttpClient httpClient, ISubscriberService subscriberS
     }
     public async Task<ResultDto<GetReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumber()
     {
-      var chassisVinNumber= subscriberService.CurrentSubscriber.VehicleModels.FirstOrDefault(c=>c.IsDefault)?.VinNumber;
+        var chassisVinNumber = subscriberService.CurrentSubscriber.VehicleModels.FirstOrDefault(c => c.IsDefault)?.VinNumber;
         if (string.IsNullOrEmpty(chassisVinNumber))
         {
-            return new ResultDto<GetReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.errNotFound, false, null, new List<string>{ Infrastucture.Properties.Resources.errNotFound });
+            return new ResultDto<GetReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.errNotFound, false, null, new List<string> { Infrastucture.Properties.Resources.errNotFound });
         }
         var response = await httpClient.GetFromJsonAsync<ResultDto<GetReceptionsInformationByVinNumberResponse[]>>($"Dealer/GetReceptionsInformationByVinNumber?chassisVinNumber={chassisVinNumber}");
         if (response.Data != null)
