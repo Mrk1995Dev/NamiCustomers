@@ -1,6 +1,7 @@
 ﻿using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 using NamiCustomers.Infrastucture.Properties;
+using NamiCustomers.Infrastucture.Utilities;
 using System.Text.Json;
 
 namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
@@ -67,71 +68,45 @@ public interface ISevenSoftService
 
 public class SevenSoftService : ISevenSoftService
 {
+    private   string _baseUrl = Infrastucture.Properties.Resource7Soft.BaseUrl;
     public async Task<GetBranchesByDealerResponse[]> GetBranchesByDealer(Guid dealerId)
     {
-        return await GetData<GetBranchesByDealerResponse[]>(Resource7Soft.GetBranchesByDealer, dealerId);
+        return await  RestUtility.GetData<GetBranchesByDealerResponse[]>(_baseUrl, Resource7Soft.GetBranchesByDealer, dealerId);
     }
     public async Task<GetReceptionsInformationByVinNumberResponse[]> GetReceptionsInformationByVinNumber(string chassisVinNumber)
     {
-        return await GetData<GetReceptionsInformationByVinNumberResponse[]>(Resource7Soft.GetReceptionsInformationByVinNumber, chassisVinNumber);
+        return await RestUtility.GetData<GetReceptionsInformationByVinNumberResponse[]>(_baseUrl, Resource7Soft.GetReceptionsInformationByVinNumber, chassisVinNumber);
     }
     public async Task<DealerResponse[]> GetDealers()
     {
-        return await GetData<DealerResponse[]>(Resource7Soft.GetDealers,"");
+        return await RestUtility.GetData<DealerResponse[]>(_baseUrl, Resource7Soft.GetDealers,"");
     }
     public async Task<ActiveMainChassisGuaranteeResponse> GetActiveMainChassisGuarantee(string vinNumber)
     {
-        return await GetData<ActiveMainChassisGuaranteeResponse>(Resource7Soft.GetActiveMainChassisGuarantee, vinNumber);
+        return await RestUtility.GetData<ActiveMainChassisGuaranteeResponse>(_baseUrl, Resource7Soft.GetActiveMainChassisGuarantee, vinNumber);
     }
     public async Task<SevenSubscriberResponse> GetSubscriberByNationalCode(string nationalCode)
     {
-        return await GetData<SevenSubscriberResponse>(Resource7Soft.GetSubscriberByNationalCode, nationalCode);
+        return await RestUtility.GetData<SevenSubscriberResponse>(_baseUrl, Resource7Soft.GetSubscriberByNationalCode, nationalCode);
     }
 
     public async Task<ChassisInformationByVinNumberResponse> GetChassisInformationByVinNumber(string vinNumber)
     {
-        return await GetData<ChassisInformationByVinNumberResponse>(Resource7Soft.GetChassisInformationByVinNumber, vinNumber);
+        return await RestUtility.GetData<ChassisInformationByVinNumberResponse>(_baseUrl, Resource7Soft.GetChassisInformationByVinNumber, vinNumber);
     }
     public async Task<string> GetRelationCustomerInfoByVinNumber(string chassisVinNumber, string nationalCodeOrEconomicCode, string mobile)
     {
         string qStr = $"?ChassisVinNumber={chassisVinNumber}&NationalCodeOrEconomicCode={nationalCodeOrEconomicCode}&Mobile={mobile}";
-        return await GetData<string>(Resource7Soft.RelationCustomerInfoByVinNumber, qStr);
+        return await RestUtility.GetData<string>(_baseUrl, Resource7Soft.RelationCustomerInfoByVinNumber, qStr);
     }
 
     public async Task<string> GetSpecificCases(string chassisVinNumber, string nationalCodeOrEconomicCode, string mobile)
     {
         string qStr = $"?ChassisVinNumber={chassisVinNumber}&NationalCodeOrEconomicCode={nationalCodeOrEconomicCode}&Mobile={mobile}";
-        return await GetData<string>(Resource7Soft.GetSpecificCases, qStr);
+        return await RestUtility.GetData<string>(_baseUrl, Resource7Soft.GetSpecificCases, qStr);
     }
 
-    #region Privates
-    private async Task<T> GetData<T>(string apiAddress, dynamic queryString)
-    {
-        string baseUrl = Infrastucture.Properties.Resource7Soft.BaseUrl;
-        using HttpClient client = new HttpClient();
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{baseUrl}/{apiAddress}{queryString}");
-        request.Headers.Add("Accept", "application/json");
-        var response = await client.SendAsync(request);
-        string content = await response.Content.ReadAsStringAsync();
-
-            return await Task.FromResult(JsonSerializer.Deserialize<T>(content));
-
-        
-    }
-
-    private async Task<T> PostData<T>(string apiAddress, dynamic queryModel)
-    {
-        string baseUrl = Infrastucture.Properties.Resource7Soft.BaseUrl;
-        using HttpClient client = new HttpClient();
-        var request = new HttpRequestMessage(HttpMethod.Post, $"{baseUrl}/{apiAddress}");
-        request.Headers.Add("Accept", "application/json");
-        var content = new StringContent(JsonSerializer.Serialize(queryModel), null, "application/json");
-        request.Content = content;
-        var response = await client.SendAsync(request);
-        string responseContent = await response.Content.ReadAsStringAsync();
-        return await Task.FromResult(JsonSerializer.Deserialize<T>(responseContent));
-    }
-    #endregion
+     
 
 
 

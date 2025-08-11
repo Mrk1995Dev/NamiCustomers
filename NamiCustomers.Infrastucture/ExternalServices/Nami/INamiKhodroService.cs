@@ -1,6 +1,7 @@
 ﻿using NamiCustomers.Infrastucture.ExternalServices.Nami.Dtos;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 using NamiCustomers.Infrastucture.Properties;
+using NamiCustomers.Infrastucture.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,18 +19,9 @@ public class NamiKhodroService : INamiKhodroService
 {
     public async Task<NamiNewsResponse[]> GetNamiNews()
     {
-        return await GetData<NamiNewsResponse[]>(Infrastucture.Properties.NamiKhodroResource.NamiNews, null);
+        return await RestUtility. GetData<NamiNewsResponse[]>(string.Empty,Infrastucture.Properties.NamiKhodroResource.NamiNews, null);
     }
-    private async Task<T> GetData<T>(string apiAddress, dynamic queryString)
-    {
-        using HttpClient client = new HttpClient();
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{apiAddress}{queryString}");
-        request.Headers.Add("Accept", "application/json");
-        var response = await client.SendAsync(request);
-        string content = await response.Content.ReadAsStringAsync();
-
-        return await Task.FromResult(JsonSerializer.Deserialize<T>(content));
-    }
+    
 }
 
 
