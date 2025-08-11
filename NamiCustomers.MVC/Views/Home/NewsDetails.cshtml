@@ -3,8 +3,23 @@
 @{
     ViewData["Title"] = "NewsDetails";
 }
+<br />
 
-<h1>NewsDetails</h1>
+<div class="container direction-rtl">
+    <div class="card">
+        <div class="card-body p-2">
+            <div class="d-flex align-items-center justify-content-between">
+                <small class="ms-1"> @Html.DisplayFor(model => model.title.rendered)</small>
+                <form action="#">
+                    <a title="بازگشت" href="/Home/naminews"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></a>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
 
 <div>
     <h4>NamiNewsResponse</h4>
@@ -14,7 +29,7 @@
             @Html.DisplayNameFor(model => model.id)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.id)
+            @Html.DisplayFor(model => model.yoast_head_json.og_image[0].url)
         </dd>
         <dt class = "col-sm-2">
             @Html.Raw(Model.content.rendered)
@@ -44,7 +59,7 @@
             @Html.DisplayNameFor(model => model.type)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.type)
+            @Html.DisplayFor(model => model.content.rendered)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.link)
