@@ -42,15 +42,21 @@ public class HomeController(ITokenSessionService tokenSessionService,INamiKhodro
     {
         return View();
     }
-    public async Task<IActionResult> NamiNews(int? id)
+    public async Task<IActionResult> NamiNews()
     {
         var data=await  namiKhodroService.GetNamiNews();
-        if (id.HasValue)
-        {
-            data = data.Where(c => c.id == id.Value).ToArray ();
-        }
         return View(data);
        // return View();
+    }
+
+    public async Task<IActionResult> NewsDetails(int id)
+    {
+        var data = await namiKhodroService.GetNamiNews();
+        
+            var result = data.FirstOrDefault(c => c.id == id);
+       
+        return View(result);
+        // return View();
     }
     public async Task<IActionResult> NamiNewsLatest()
     {

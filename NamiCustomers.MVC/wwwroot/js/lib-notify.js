@@ -6,7 +6,7 @@ function showWarning(message) {
             "debug": false,
             "newestOnTop": true,
             "progressBar": true,
-            "positionClass": "toast-bottom-right",
+            "positionClass": "toast-top-right",
             "preventDuplicates": false,
             "onclick": null,
             "showDuration": "300",
@@ -27,7 +27,7 @@ function showSuccess(message) {
         "debug": false,
         "newestOnTop": true,
         "progressBar": true,
-        "positionClass": "toast-bottom-right",
+        "positionClass": "toast-top-right",
         "preventDuplicates": false,
         "onclick": null,
         "showDuration": "300",
@@ -50,7 +50,7 @@ function showError(message) {
         "debug": false,
         "newestOnTop": true,
         "progressBar": true,
-        "positionClass": "toast-bottom-right",
+        "positionClass": "toast-top-right",
         "preventDuplicates": false,
         "onclick": null,
         "showDuration": "300",
@@ -62,6 +62,7 @@ function showError(message) {
         "showMethod": "slideDown",
         "hideMethod": "slideUp",
         "closeMethod": "slideUp"
-    }; toastr.options.rtl = true;
+    };
+    toastr.options.rtl = true;
     toastr["error"](message);
 }

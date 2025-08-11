@@ -13,6 +13,7 @@ public class DealerController(IDealerService dealerService) : MyBaseController
         if (!result.Succeeded)
         {
             SetError(result.Errors.FirstOrDefault());
+            return RedirectToAction("Index", "Home");
         }
         return View(result.Data);
     }
