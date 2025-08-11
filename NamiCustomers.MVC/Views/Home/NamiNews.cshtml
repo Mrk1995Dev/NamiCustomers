@@ -12,7 +12,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <small class="ms-1"> اخبار و اطلاعیه ها</small>
                     <form action="#">
-                        <a title="بازگشت" href="/Home/naminews"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></a>
+                        <a title="بازگشت" href="/Home/index"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></a>
 
                     </form>
                 </div>
@@ -21,55 +21,27 @@
     </div>
     <br />
 
+<div class="container direction-rtl">
+    <div class="row g-3">
+        @foreach (var item in Model)
+        {
+            <!-- Single Blog Card -->
+            <div class="col-6 col-sm-6 col-md-6">
+                <div class="card position-relative shadow-sm">
+                    <img class="card-img-top" src="@item.yoast_head_json.og_image[0].url" alt="">
+              @*   <span class="badge bg-warning text-dark position-absolute card-badge">Business</span> *@
+                <div class="card-body">
+                    <span class="badge bg-danger rounded-pill mb-2 d-inline-block">@item.PersianDate</span>
+                        <a class="blog-title d-block mb-3 text-dark" href="/Home/NewsDetails/@item.id">
+                           
+                            @Html.Raw(item.title.rendered)
+                    </a>
+                        <a class="btn btn-primary btn-sm" href="/Home/NewsDetails/@item.id">مشاهده</a>
+                </div>
+            </div>
+        </div>
+        }
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.date_gmt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.link)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.date_gmt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.link)
-            </td>
-           
-        </tr>
-}
-    </tbody>
-</table>
+    </div>
+</div>
