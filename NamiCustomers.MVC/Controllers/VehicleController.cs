@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.MVC.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace NamiCustomers.MVC.Controllers;
 
@@ -35,7 +36,7 @@ public class VehicleController(
 
         if (!result.Succeeded)
         {
-            SetError(result.Errors);
+            SetError(result.Errors.FirstOrDefault());
         }
         return View(result.Data);
     }
@@ -44,7 +45,7 @@ public class VehicleController(
         var result = await vehicleService.SetDefaultAsync(id);
         if (!result.Succeeded)
         {
-            SetError(result.Errors);
+            SetError(result.Errors.FirstOrDefault());
         }
         return RedirectToAction("Index", "Home");
     }
@@ -55,7 +56,7 @@ public class VehicleController(
         var result = await vehicleService.GetAllAsync(subscriberService.CurrentSubscriber.Id);
         if (!result.Succeeded)
         {
-            SetError(result.Errors);
+            SetError(   result.Errors.FirstOrDefault());
         }
         return View(result.Data);
     }
@@ -79,6 +80,11 @@ public class VehicleController(
     [HttpGet]
     public async Task<IActionResult> GetChassisInformationByVinNumber(string vinNumber)
     {
+        if (string.IsNullOrEmpty(vinNumber))
+        {
+            SetError( "شماره شاسی را وارد نمایید");
+            return RedirectToAction("ChassisInformationByVinNumber");
+        }
         var data = await vehicleService.GetChassisInformationByVinNumber(vinNumber);
         if (data != null)
         {
@@ -92,14 +98,14 @@ public class VehicleController(
     {
         if (!ModelState.IsValid)
         {
-            SetError(new List<string> { Infrastucture.Properties.Resources.errInputInValid });
+            SetError(Infrastucture.Properties.Resources.errInputInValid);
             return RedirectToAction("Index");
         }
         var result = await vehicleService.RegisterAsync(vehicleModelDto);
 
         if (!result.Succeeded)
         {
-            SetError(result.Errors);
+            SetError(result.Errors.FirstOrDefault());
         }
         return RedirectToAction("Index");
     }
@@ -109,7 +115,7 @@ public class VehicleController(
         var result = await vehicleService.GetAsync(id);
         if (!result.Succeeded)
         {
-            SetError(result.Errors);
+            SetError(result.Errors.FirstOrDefault());
         }
         return View(result.Data);
     }
@@ -118,14 +124,14 @@ public class VehicleController(
     {
         if (!ModelState.IsValid)
         {
-            SetError(new List<string> { Infrastucture.Properties.Resources.errInputInValid });
+            SetError(Infrastucture.Properties.Resources.errInputInValid);
             return RedirectToAction("Index");
         }
 
         var result = await vehicleService.EditAsync(vehicleModelDto);
         if (!result.Succeeded)
         {
-            SetError(new List<string> { result.Message });
+            SetError(result.Message);
         }
         return RedirectToAction("Index");
     }
@@ -135,7 +141,7 @@ public class VehicleController(
         var result = await vehicleService.RemoveAsync(id);
         if (!result.Succeeded)
         {
-            SetError(new List<string> { result.Message });
+            SetError(result.Message);
         }
         return RedirectToAction("Index");
     }

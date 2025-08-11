@@ -9,15 +9,13 @@
 <h4 class="text-danger">هنگام پردازش درخواست شما خطایی رخ داد.</h4>
 @if (User.IsInRole(MyRoles.Subscriber) && environment.IsProduction())
 {
-    var errorResponse = (string[])TempData["ErrorMessage"];
+    var errorResponse = TempData["ErrorMessage"];
     <ul style="text-decoration:none">
         خطا :
-        @foreach (var error in errorResponse)
-        {
-            <li>
-                <p>@error</p>
-            </li>
-        }
+
+        <li>
+            <p>@errorResponse</p>
+        </li>
 
     </ul>
 }
@@ -25,8 +23,8 @@
 
 
 @if (User.IsInRole(MyRoles.Admin) || environment.IsDevelopment())
-{ 
-      @*   @if (Model.ShowRequestId)
+{
+    @*   @if (Model.ShowRequestId)
         {
             <p>
                 <strong>Request ID:</strong> <code>@Model.RequestId</code>
@@ -34,33 +32,31 @@
         }
  *@
 
-        @if (Model.Errors.Any())
-        {
-            <ul style="text-decoration:none">
-                خطا :
-                @foreach (var error in Model.Errors)
-                {
-                    <li>
-                        <p>@error</p>
-                    </li>
-                }
+    @if (Model.Errors.Any())
+    {
+        <ul style="text-decoration:none">
+            خطا :
+            @foreach (var error in Model.Errors)
+            {
+                <li>
+                    <p>@error</p>
+                </li>
+            }
 
-            </ul>
-        }
-        @if (TempData["ErrorMessage"] != null)
-        {
-            var errorResponse = (string[])TempData["ErrorMessage"];
-            <ul style="text-decoration:none">
-                خطا :
-                @foreach (var error in errorResponse)
-                {
-                    <li>
-                        <p>@error</p>
-                    </li>
-                }
+        </ul>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        var errorResponse = TempData["ErrorMessage"];
+        <ul style="text-decoration:none">
+            خطا :
 
-            </ul>
+            <li>
+                <p>@errorResponse</p>
+            </li>
 
-        }
-    
+        </ul>
+
+    }
+
 }

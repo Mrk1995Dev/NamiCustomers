@@ -312,12 +312,11 @@
 
     @if (TempData["ErrorMessage"] != null)
     {
-        foreach (var error in ((string[])TempData["ErrorMessage"]))
-        {
+         
             <script>
-                showError('@error');
+            showError('@TempData["ErrorMessage"]');
             </script>
-        }
+        
 
     }
 

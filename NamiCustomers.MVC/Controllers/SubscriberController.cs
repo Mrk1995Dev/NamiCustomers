@@ -21,7 +21,7 @@ public class SubscriberController(
         var result = await subscriberService.GetAsync(id);
         if (!result.Succeeded)
         {
-            SetError(result.Errors);
+            SetError(result.Errors.FirstOrDefault());
         }
         return View(result.Data);
     }
@@ -30,7 +30,7 @@ public class SubscriberController(
         var result = await subscriberService.GetByNationalCodeAsync();
         if (!result.Succeeded)
         {
-            SetError(result.Errors);
+            SetError(result.Errors.FirstOrDefault());
         }
         return View(result.Data);
     }
@@ -55,7 +55,7 @@ public class SubscriberController(
         var result = await subscriberService.GetAsync(id);
         if (!result.Succeeded)
         {
-            SetError(result.Errors);
+            SetError(result.Errors.FirstOrDefault());
         }
         return View(result.Data);
     }
@@ -63,14 +63,14 @@ public class SubscriberController(
     public async Task<IActionResult> Edit(SubscriberDto subscriberDto)
     {
         if (!ModelState.IsValid) { 
-            SetError(new List<string> { Infrastucture.Properties.Resources.errInputInValid });
+            SetError( Infrastucture.Properties.Resources.errInputInValid );
             return RedirectToAction("Profile");
         }
         var result = await subscriberService.EditAsync(subscriberDto);
 
         if (!result.Succeeded)
         {
-            SetError(new List<string> { result.Message });
+            SetError( result.Message );
         }
         return RedirectToAction("Profile");
     }
@@ -81,7 +81,7 @@ public class SubscriberController(
        
         if (!result.Succeeded)
         {
-            SetError(new List<string> { result.Message });
+            SetError(result.Message );
         }
         return RedirectToAction("List");
     }

@@ -1,0 +1,75 @@
+﻿@model IEnumerable<NamiCustomers.Infrastucture.ExternalServices.Nami.Dtos.NamiNewsResponse>
+
+@{
+    ViewData["Title"] = "NamiNews";
+}
+
+<br />
+
+    <div class="container direction-rtl">
+        <div class="card">
+            <div class="card-body p-2">
+                <div class="d-flex align-items-center justify-content-between">
+                    <small class="ms-1"> اخبار و اطلاعیه ها</small>
+                    <form action="#">
+                        <a title="بازگشت" href="/Home/naminews"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></a>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.date_gmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.link)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.date_gmt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.link)
+            </td>
+           
+        </tr>
+}
+    </tbody>
+</table>

@@ -10,7 +10,7 @@ public class DealerController(IDealerService dealerService) : MyBaseController
         var result = await dealerService.GetDealersAsync();
         if (!result.Succeeded)
         {
-            SetError(result.Errors);
+            SetError(result.Errors.FirstOrDefault());
         }
         return View(result.Data);
     }
@@ -24,7 +24,7 @@ public class DealerController(IDealerService dealerService) : MyBaseController
         var result = await dealerService.GetBranchesByDealerAsync(dealerId);
         if (!result.Succeeded)
         {
-            SetError(result.Errors);
+            SetError(result.Errors.FirstOrDefault());
         }
         return View(result.Data);
     }
@@ -34,8 +34,8 @@ public class DealerController(IDealerService dealerService) : MyBaseController
         var result = await dealerService.GetReceptionsInformationByVinNumber();
         if (!result.Succeeded)
         {
-            SetError(result.Errors);
+            SetError(result.Errors.FirstOrDefault());
         }
-        return View(result.Data);
+        return View(result);
     }
 }

@@ -1,5 +1,5 @@
-﻿@model IEnumerable<NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos.GetReceptionsInformationByVinNumberResponse>
-
+﻿@using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos
+@model ResultDto<GetReceptionsInformationByVinNumberResponse[]>
 @{
     ViewData["Title"] = "ReceptionsInformationByVinNumber";
 }
@@ -12,7 +12,11 @@
             <div class="d-flex align-items-center justify-content-between">
                 <small class="ms-1">سوابق تعمیراتی </small>
                 <form action="#">
-                    <a title="بازگشت" href="/"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></a>
+                    @if (Model.Data is   null)
+                    {
+                        <a class="btn m-1 btn-primary btn-sm" href="/Vehicle/ChassisInformationByVinNumber">  <i class="bi bi-plus"></i> افزودن خودرو</a>
+                    }
+  <a title="بازگشت" href="/"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></a>
 
                 </form>
             </div>
@@ -21,114 +25,116 @@
 </div>
 <br />
 <div class="container direction-rtl">
-
-      @foreach (var item in Model)
+    @if (Model.Data is not null)
     {
-        <div class="cart-wrapper-area">
+        foreach (var item in Model.Data)
+        {
+            <div class="cart-wrapper-area">
 
 
-            <div class="cart-table card mb-3">
-                <div class="table-responsive card-body">
-                    <table class="table mb-0">
-                        <thead class="thead-light">
-                            <tr style="text-align:center">
-                                <th colspan="2">تاریخ پذیرش   @Html.DisplayFor(modelItem => item.StrRecDate)</th>
+                <div class="cart-table card mb-3">
+                    <div class="table-responsive card-body">
+                        <table class="table mb-0">
+                            <thead class="thead-light">
+                                <tr style="text-align:center">
+                                    <th colspan="2">تاریخ پذیرش   @Html.DisplayFor(modelItem => item.StrRecDate)</th>
 
 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>    @Html.DisplayNameFor(model => model.ReceptionCode)</th>
-                                <td>   @Html.DisplayFor(modelItem => item.ReceptionCode)</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>    @Html.DisplayNameFor(model => item.ReceptionCode)</th>
+                                    <td>   @Html.DisplayFor(modelItem => item.ReceptionCode)</td>
 
-                            </tr>
-                            <tr>
-                                <th>    @Html.DisplayNameFor(model => model.DealerName) -</th>
-                                <td>   @Html.DisplayFor(modelItem => item.DealerName)-  @Html.DisplayFor(modelItem => item.BranchName) ( @Html.DisplayFor(modelItem => item.DealerNo)- @Html.DisplayFor(modelItem => item.BranchNo))</td>
+                                </tr>
+                                <tr>
+                                    <th>    @Html.DisplayNameFor(model => item.DealerName) -</th>
+                                    <td>   @Html.DisplayFor(modelItem => item.DealerName)-  @Html.DisplayFor(modelItem => item.BranchName) ( @Html.DisplayFor(modelItem => item.DealerNo)- @Html.DisplayFor(modelItem => item.BranchNo))</td>
 
-                            </tr>
-                            @* <tr>
+                                </tr>
+                                @* <tr>
                                 <th>    @Html.DisplayNameFor(model => model.ReceptionStateOrder)</th>
                                 <td>   @Html.DisplayFor(modelItem => item.ReceptionStateOrder)</td>
 
                             </tr> *@
-                            <tr>
-                                <th>    @Html.DisplayNameFor(model => model.ReceptionType)</th>
-                                <td>   @Html.DisplayFor(modelItem => item.ReceptionType)</td>
+                                <tr>
+                                    <th>    @Html.DisplayNameFor(model => item.ReceptionType)</th>
+                                    <td>   @Html.DisplayFor(modelItem => item.ReceptionType)</td>
 
-                            </tr>
-                            <tr>
-                                <th>    @Html.DisplayNameFor(model => model.ReceptionStatus)</th>
-                                <td>   @Html.DisplayFor(modelItem => item.ReceptionStatus)</td>
+                                </tr>
+                                <tr>
+                                    <th>    @Html.DisplayNameFor(model => item.ReceptionStatus)</th>
+                                    <td>   @Html.DisplayFor(modelItem => item.ReceptionStatus)</td>
 
-                            </tr>
-                            <tr>
-                                <th>    @Html.DisplayNameFor(model => model.RecKilometer)</th>
-                                <td> @string.Format("{0:#,##0}", item.RecKilometer)  کیلومتر </td>
+                                </tr>
+                                <tr>
+                                    <th>    @Html.DisplayNameFor(model => item.RecKilometer)</th>
+                                    <td> @string.Format("{0:#,##0}", item.RecKilometer)  کیلومتر </td>
 
-                            </tr>
-                            <tr>
-                                <th>    @Html.DisplayNameFor(model => model.EstimatedDeliver)</th>
-                                <td>   @Html.DisplayFor(modelItem => item.StrEstimatedDeliverDate) - @Html.DisplayFor(modelItem => item.StrEstimatedDeliverTime)</td>
+                                </tr>
+                                <tr>
+                                    <th>    @Html.DisplayNameFor(model => item.EstimatedDeliver)</th>
+                                    <td>   @Html.DisplayFor(modelItem => item.StrEstimatedDeliverDate) - @Html.DisplayFor(modelItem => item.StrEstimatedDeliverTime)</td>
 
-                            </tr>
-                            <tr>
-                                <th>    @Html.DisplayNameFor(model => model.ReceptionControlDate)</th>
-                                <td>   @Html.DisplayFor(modelItem => item.StrReceptionControlDate) - @Html.DisplayFor(modelItem => item.StrReceptionControlTime)</td>
-                            </tr>
-                            <tr>
-                                <th>    @Html.DisplayNameFor(model => model.InvoiceDate)</th>
-                                <td>   @Html.DisplayFor(modelItem => item.StrInvoiceDate) - @Html.DisplayFor(modelItem => item.StrInvoiceTime)</td>
+                                </tr>
+                                <tr>
+                                    <th>    @Html.DisplayNameFor(model => item.ReceptionControlDate)</th>
+                                    <td>   @Html.DisplayFor(modelItem => item.StrReceptionControlDate) - @Html.DisplayFor(modelItem => item.StrReceptionControlTime)</td>
+                                </tr>
+                                <tr>
+                                    <th>    @Html.DisplayNameFor(model => item.InvoiceDate)</th>
+                                    <td>   @Html.DisplayFor(modelItem => item.StrInvoiceDate) - @Html.DisplayFor(modelItem => item.StrInvoiceTime)</td>
 
-                            </tr>
-                            <tr>
-                                <th>    @Html.DisplayNameFor(model => model.EndAmount)</th>
-                                <td> @string.Format("{0:#,##0}", item.EndAmount)  ریال </td>
+                                </tr>
+                                <tr>
+                                    <th>    @Html.DisplayNameFor(model => item.EndAmount)</th>
+                                    <td> @string.Format("{0:#,##0}", item.EndAmount)  ریال </td>
 
-                            </tr>
-                            <tr>
-                                <th>    @Html.DisplayNameFor(model => model.FuelStatusLocalizedName)</th>
-                                <td>   @Html.DisplayFor(modelItem => item.FuelStatusLocalizedName)</td>
+                                </tr>
+                                <tr>
+                                    <th>    @Html.DisplayNameFor(model => item.FuelStatusLocalizedName)</th>
+                                    <td>   @Html.DisplayFor(modelItem => item.FuelStatusLocalizedName)</td>
 
-                            </tr>
-                            <tr>
-                                <th> @Html.DisplayNameFor(model => model.WarrantyStatus)</th>
+                                </tr>
+                                <tr>
+                                    <th> @Html.DisplayNameFor(model => item.WarrantyStatus)</th>
 
-                                <td>   @Html.DisplayFor(modelItem => item.WarrantyStatus)</td>
-                            </tr>
+                                    <td>   @Html.DisplayFor(modelItem => item.WarrantyStatus)</td>
+                                </tr>
 
-                        </tbody>
-                    </table>
-                </div>
+                            </tbody>
+                        </table>
+                    </div>
 
-                <div class="card-body border-top">
-                    <div class="apply-coupon">
-                       @*  <h6 class="mb-0">Have a coupon?</h6>
+                    <div class="card-body border-top">
+                        <div class="apply-coupon">
+                            @*  <h6 class="mb-0">Have a coupon?</h6>
                         <p class="mb-2">Enter your coupon code here &amp; get awesome discounts!</p> *@
-                        <!-- Coupon Form -->
-                        <div class="coupon-form">
-                            <form action="#">
-                           @*      <div class="form-group">
+                            <!-- Coupon Form -->
+                            <div class="coupon-form">
+                                <form action="#">
+                                    @*      <div class="form-group">
                                     <div class="input-group">
                                         <input class="form-control input-group-text text-start form-control-clicked" type="text" placeholder="OFFER30">
                                         <button class="btn btn-primary" type="submit">Apply</button>
                                     </div>
                                 </div> *@
-                                <!-- Checkout -->
-                                <button class="btn btn-primary w-100 mt-3" href="checkout.html">مشاهده لیست خدمات قطعات </button>
-                            </form>
+                                    <!-- Checkout -->
+                                    <button class="btn btn-danger w-100 mt-3" href="checkout.html">مشاهده لیست خدمات قطعات </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        }
     }
-        </div>
-   
+</div>
 
 
-        <br />
+
+<br />
 
 
 @*     <div style="overflow-x:auto;">

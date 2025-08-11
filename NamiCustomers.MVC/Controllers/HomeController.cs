@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using NamiCustomers.Infrastucture.ExternalServices.Nami;
 using NamiCustomers.MVC.Services;
 
 
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace NamiCustomers.MVC.Controllers;
 
 
-public class HomeController(ILogger<HomeController> logger, ITokenSessionService tokenSessionService) : Controller
+public class HomeController(ITokenSessionService tokenSessionService,INamiKhodroService namiKhodroService) : Controller
 {
     public IActionResult Index()
     {
@@ -42,8 +42,25 @@ public class HomeController(ILogger<HomeController> logger, ITokenSessionService
     {
         return View();
     }
+    public async Task<IActionResult> NamiNews(int? id)
+    {
+        var data=await  namiKhodroService.GetNamiNews();
+        if (id.HasValue)
+        {
+            data = data.Where(c => c.id == id.Value).ToArray ();
+        }
+        return View(data);
+       // return View();
+    }
+    public async Task<IActionResult> NamiNewsLatest()
+    {
+        var data = await namiKhodroService.GetNamiNews();
+        data = data.Take(2).ToArray();
+        return View("~/Views/Home/NamiNews.cshtml", data);
+        // return View();
+    }
 
-	public IActionResult faq()
+    public IActionResult faq()
 	{
 		return View();
 	}

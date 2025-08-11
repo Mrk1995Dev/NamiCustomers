@@ -52,7 +52,10 @@ public class DealerService(HttpClient httpClient, ISubscriberService subscriberS
     public async Task<ResultDto<GetReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumber()
     {
       var chassisVinNumber= subscriberService.CurrentSubscriber.VehicleModels.FirstOrDefault(c=>c.IsDefault)?.VinNumber;
-
+        if (string.IsNullOrEmpty(chassisVinNumber))
+        {
+            return new ResultDto<GetReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.errNotFound, false, null, new List<string>{ Infrastucture.Properties.Resources.errNotFound });
+        }
         var response = await httpClient.GetFromJsonAsync<ResultDto<GetReceptionsInformationByVinNumberResponse[]>>($"Dealer/GetReceptionsInformationByVinNumber?chassisVinNumber={chassisVinNumber}");
         if (response.Data != null)
         {

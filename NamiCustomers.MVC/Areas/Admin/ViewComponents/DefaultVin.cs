@@ -9,7 +9,7 @@ namespace NamiCustomers.MVC.Areas.Admin.ViewComponents
         {
             var data =   vehicleService.GetAllAsync(subscriberService.CurrentSubscriber.Id).Result;
 
-            return View(viewName: "DefaultVin", data.Data.FirstOrDefault(c=>c.IsDefault));
+            return View(viewName: "DefaultVin", data?.Data?.FirstOrDefault(c=>c.IsDefault));
         }
     }
 }
