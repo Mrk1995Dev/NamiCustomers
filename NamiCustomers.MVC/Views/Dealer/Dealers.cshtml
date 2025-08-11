@@ -44,19 +44,24 @@
                             <!-- Dealers Name -->
                                 <a class="product-title d-block text-truncate mt-0" href="#"> @Html.DisplayFor(modelItem => item.DealerName) (@Html.DisplayFor(modelItem => item.DealerNo))</a>
                                 <!--  DealerStatus -->
+                                <hr />
                                 <a class="product-title d-block text-truncate mt-0" href="#">وضعیت عاملیت: @Html.DisplayFor(modelItem => item.DealerStatus)</a>
                             
                                 <a class="product-title d-block text-truncate mt-0" href="#">استان : @Html.DisplayFor(modelItem => item.City)</a>
                                 <a class="product-title d-block text-truncate mt-0" href="#">شهر: @Html.DisplayFor(modelItem => item.SubCountry)</a>
 @*                                 <p class="sale-price">وضعیت عاملیت:<span>@Html.DisplayFor(modelItem => item.DealerStatus)</span></p>
  *@                            <!-- Add To Cart Button -->
-                            <a class="btn btn-primary rounded-pill btn-sm" href="#">مشاهده جزئیات</a>
+ <br />
+                                <a class="btn btn-primary btn-sm" href="#">مشاهده جزئیات</a>
                         </div>
                     </div>
+                       
                 </div>
-            </div>
+@*                     <a class="btn btn-primary btn-sm" href="#">مشاهده جزئیات</a>
+ *@            </div>
+             
         </div>
-
+          
     }
     </div>
 </div>
