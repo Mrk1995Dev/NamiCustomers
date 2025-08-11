@@ -45,6 +45,7 @@ public class HomeController(ITokenSessionService tokenSessionService,INamiKhodro
     public async Task<IActionResult> NamiNews()
     {
         var data=await  namiKhodroService.GetNamiNews();
+        data = data.OrderByDescending(c => c.date).ToArray();
         return View(data);
        // return View();
     }
@@ -61,7 +62,7 @@ public class HomeController(ITokenSessionService tokenSessionService,INamiKhodro
     public async Task<IActionResult> NamiNewsLatest()
     {
         var data = await namiKhodroService.GetNamiNews();
-        data = data.Take(2).ToArray();
+        data = data.OrderByDescending(c=>c.date).Take(2).ToArray();
         return View("~/Views/Home/NamiNews.cshtml", data);
         // return View();
     }
