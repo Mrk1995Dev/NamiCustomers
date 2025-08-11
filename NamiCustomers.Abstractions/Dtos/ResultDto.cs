@@ -1,13 +1,13 @@
 ﻿namespace NamiCustomers.Abstractions.Dtos;
 public class ResultDto<T> where T : class
 {
-    public ResultDto(string? message, bool succeeded, T data=null, List<string> errors = null)
+    public ResultDto(string? message, bool succeeded, T data = null, List<string> errors = null)
     {
         this.Message = message;
         this.Succeeded = succeeded;
         this.Data = data;
         this.Errors = errors;
-        
+
     }
 
     public bool Succeeded { get; set; }
@@ -26,6 +26,5 @@ public class ResultDto
     public bool Succeeded { get; set; }
 }
 
- 
 
- 
+

@@ -1,23 +1,22 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NamiCustomers.Abstractions.Dtos.Security.Dto;
 using NamiCustomers.Abstractions.Dtos.Security.Dto.Roles;
 using NamiCustomers.MVC.Services;
 
 namespace NamiCustomers.MVC.Areas.Admin.Controllers;
 
-[Authorize(Policy =nameof(MyPloicies.AdminAccess))]
+[Authorize(Policy = nameof(MyPloicies.AdminAccess))]
 [Area("Admin")]
 public class RolesController(IRoleService roleService) : Controller
 {
     public async Task<IActionResult> Index()
     {
-       var roles = await roleService.GetAllAsync();
+        var roles = await roleService.GetAllAsync();
         return View(roles.Data);
     }
 
     [HttpGet]
-    public IActionResult Create ()
+    public IActionResult Create()
     {
         return View();
     }
@@ -25,11 +24,12 @@ public class RolesController(IRoleService roleService) : Controller
     [HttpPost]
     public async Task<IActionResult> Create(AddNewRoleDto newRole)
     {
-         var result=await roleService.RegisterAsync(newRole);
-        if(result.Succeeded)
+        var result = await roleService.RegisterAsync(newRole);
+        if (result.Succeeded)
         {
             return RedirectToAction("Index", "Roles", new { area = "Admin" });
-        };
+        }
+        ;
         ViewBag.Errors = result.Message;
         return View(newRole);
 
@@ -37,7 +37,7 @@ public class RolesController(IRoleService roleService) : Controller
     [HttpGet]
     public async Task<IActionResult> UserInRole(string Name)
     {
-       var result=await roleService.GetUsersInRole(Name);
+        var result = await roleService.GetUsersInRole(Name);
 
         return View(result.Data);
     }
@@ -57,7 +57,7 @@ public class RolesController(IRoleService roleService) : Controller
 
     }
     [HttpPost]
-    public async Task<IActionResult> Edit(RoleDto  role)
+    public async Task<IActionResult> Edit(RoleDto role)
     {
 
         var result = await roleService.Edit(role);

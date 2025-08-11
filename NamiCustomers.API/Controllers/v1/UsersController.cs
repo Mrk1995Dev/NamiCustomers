@@ -33,8 +33,13 @@ public class UsersController : ControllerBase
         var user = await userManager.Users.SingleOrDefaultAsync(c => c.Id == userId);
         var roles = await userManager.GetRolesAsync(user);
 
-        var rolesDtos = roleManager.Roles.Where(c => roles.Contains(c.Name)).Select(c => new RoleDto{Id= c.Id,Name= c.Name
-            ,Description= c.Description }).ToList();
+        var rolesDtos = roleManager.Roles.Where(c => roles.Contains(c.Name)).Select(c => new RoleDto
+        {
+            Id = c.Id,
+            Name = c.Name
+            ,
+            Description = c.Description
+        }).ToList();
 
         var result = new AddUserRoleDto
         {
@@ -45,7 +50,7 @@ public class UsersController : ControllerBase
         };
 
 
-        return new ResultDto<AddUserRoleDto>(Infrastucture.Properties.Resources.msgFound,true,result);
+        return new ResultDto<AddUserRoleDto>(Infrastucture.Properties.Resources.msgFound, true, result);
     }
 
     [HttpGet("[action]")]

@@ -10,7 +10,7 @@ namespace NamiCustomers.API.Controllers.v1;
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
 [Authorize]
-public class AppointmentController(IAppointmentService appointmentService, IDealerService  dealerService) : ControllerBase
+public class AppointmentController(IAppointmentService appointmentService, IDealerService dealerService) : ControllerBase
 {
     [HttpGet("{id}")]
     public async Task<ResultDto<AppointmentDto>> Get(int id)
@@ -23,7 +23,7 @@ public class AppointmentController(IAppointmentService appointmentService, IDeal
         return await appointmentService.GetAllAsync();
     }
     [HttpPost]
-    public async Task<ResultDto<List<AppointmentDto>>> Post(DefineAppointmentDto  defineAppointmentDto)
+    public async Task<ResultDto<List<AppointmentDto>>> Post(DefineAppointmentDto defineAppointmentDto)
     {
         return await appointmentService.DefineAppointments(defineAppointmentDto);
     }

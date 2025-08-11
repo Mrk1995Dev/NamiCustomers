@@ -1,5 +1,5 @@
 ﻿namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
- 
+
 public class ChassisInformationByVinNumberResponse
 {
     public int Code { get; set; }

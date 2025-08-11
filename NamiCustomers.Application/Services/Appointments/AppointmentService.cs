@@ -15,7 +15,7 @@ public interface IAppointmentService
     Task<ResultDto<AppointmentDto>> Reserve(int appointmentId, int subscriberId);
 }
 
-public class AppointmentService(IAppDbContext dbContext,IMapper mapper) : IAppointmentService
+public class AppointmentService(IAppDbContext dbContext, IMapper mapper) : IAppointmentService
 {
     public async Task<ResultDto<AppointmentDto>> RemoveAsync(int id)
     {
@@ -25,7 +25,7 @@ public class AppointmentService(IAppDbContext dbContext,IMapper mapper) : IAppoi
         var model = mapper.Map<AppointmentDto>(entity);
         dbContext.Appointments.Remove(entity);
         if (await dbContext.SaveChangesAsync() < 1) return new ResultDto<AppointmentDto>(Infrastucture.Properties.Resources.errDelete, false);
-        return new ResultDto<AppointmentDto>(Infrastucture.Properties.Resources.msgDeleted,true ,model);
+        return new ResultDto<AppointmentDto>(Infrastucture.Properties.Resources.msgDeleted, true, model);
     }
 
     public async Task<ResultDto<AppointmentDto>> EditAsync(AppointmentDto model)
@@ -33,14 +33,14 @@ public class AppointmentService(IAppDbContext dbContext,IMapper mapper) : IAppoi
         var entity = await dbContext.Appointments.FindAsync(model.Id);
         if (entity is null)
             return new ResultDto<AppointmentDto>(
-               Infrastucture.Properties.Resources.errNotFound,false
+               Infrastucture.Properties.Resources.errNotFound, false
                );
         mapper.Map(model, entity);
         dbContext.Appointments.Update(entity);
         var editedEntity = mapper.Map<AppointmentDto>(entity);
         if (await dbContext.SaveChangesAsync() < 1)
             return new ResultDto<AppointmentDto>(
-                Infrastucture.Properties.Resources.errEdited,false
+                Infrastucture.Properties.Resources.errEdited, false
                );
         return new ResultDto<AppointmentDto>(
             Infrastucture.Properties.Resources.msgEdited
@@ -58,14 +58,14 @@ public class AppointmentService(IAppDbContext dbContext,IMapper mapper) : IAppoi
     {
         var data = await dbContext.Appointments.Include(c => c.Subscriber).FirstOrDefaultAsync(cu => cu.Id == id);
         if (data == null) return new ResultDto<AppointmentDto>(
-           Infrastucture.Properties.Resources.errNotFound,false
+           Infrastucture.Properties.Resources.errNotFound, false
            );
         var model = mapper.Map<AppointmentDto>(data);
         return new ResultDto<AppointmentDto>(
             Infrastucture.Properties.Resources.msgFound,
             true, model);
     }
-     
+
     public async Task<ResultDto<AppointmentDto>> Reserve(int appointmentId, int subscriberId)
     {
         var appointment = dbContext.Appointments.FirstOrDefault(c => c.Id == appointmentId);
@@ -75,7 +75,7 @@ public class AppointmentService(IAppDbContext dbContext,IMapper mapper) : IAppoi
             dbContext.SaveChanges();
         }
 
-       return await GetAsync(appointmentId);
+        return await GetAsync(appointmentId);
     }
 
     public async Task<ResultDto<List<AppointmentDto>>> DefineAppointments(DefineAppointmentDto defineAppointmentDto)
@@ -113,6 +113,6 @@ public class AppointmentService(IAppDbContext dbContext,IMapper mapper) : IAppoi
         }
         dbContext.Appointments.AddRange(appointments);
         dbContext.SaveChanges();
-        return await  GetAllAsync();
+        return await GetAllAsync();
     }
 }

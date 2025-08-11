@@ -30,7 +30,7 @@ public static class ServicesRegisteration
             .ConfigureOther()
             .ConfigurationActionFilters()
             .AddApplicationServices(configuration)
-     
+
             .AddAuthentication(configuration)
             .AddAuthorization(configuration)
             .ConfigureCookies()
@@ -54,15 +54,16 @@ public static class ServicesRegisteration
         services.AddAuthorization(options =>
 {
     options.AddPolicy(MyPloicies.AdminAccess, policy => policy.RequireRole(MyRoles.Admin));
- 
+
     options.AddPolicy(MyPloicies.OperatorAccess, policy =>
     {
         policy.RequireRole(MyRoles.Admin);
         policy.RequireRole(MyRoles.Operator);
     }
        );
- 
-    options.AddPolicy(MyPloicies.SubscriberAccess, policy => {
+
+    options.AddPolicy(MyPloicies.SubscriberAccess, policy =>
+    {
         policy.RequireRole(MyRoles.Subscriber);
     }
               );
@@ -102,7 +103,7 @@ public static class ServicesRegisteration
         options.LoginPath = "/Account/LoginByMobile";
         options.AccessDeniedPath = "/Account/AccessDenied";
         options.SlidingExpiration = true;
-    }) ;
+    });
         return services;
     }
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)

@@ -1,22 +1,14 @@
 ﻿using AspNetCoreRateLimit;
-using k8s.KubeConfigModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NamiCustomers.Application.Mappings;
 using NamiCustomers.Domain.Entities.Account;
-using NamiCustomers.Persistence.Migrations;
 using Serilog;
-using System.Data;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
- 
-using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
-using NamiCustomers.Infrastucture;
 using System.Text.Json.Serialization;
 
 
@@ -53,7 +45,7 @@ public static class ServicesRegisteration
 
     private static IServiceCollection ConfigureOther(this IServiceCollection services)
     {
-       services.AddAutoMapper(c => { c.AddProfile(typeof(GeneralProfile)); },AppDomain.CurrentDomain.GetAssemblies());
+        services.AddAutoMapper(c => { c.AddProfile(typeof(GeneralProfile)); }, AppDomain.CurrentDomain.GetAssemblies());
 
         services.AddHttpClient();
         services.AddHttpLogging(o => { });
@@ -87,7 +79,7 @@ public static class ServicesRegisteration
         services.AddControllers(options =>
         {
             //options.ModelBinderProviders.Insert(0, new EnumDisplayNameModelBinderProvider());
-        }) 
+        })
             .AddJsonOptions(options =>
            {
                options.JsonSerializerOptions.PropertyNamingPolicy = null; // PascalCase
@@ -144,7 +136,7 @@ public static class ServicesRegisteration
             .AddDefaultTokenProviders()
             .AddRoles<ApplicationRole>()
         ;
- 
+
         //services.Configure<IdentityOptions>(option =>
         //{
         //    //UserSetting
@@ -215,15 +207,15 @@ public static class ServicesRegisteration
             {
                 Title = "Nami.Customers",
                 Version = "v2.0",
-				//Description = "تو روحت یادمون میره برداریم",
-				//Contact = new OpenApiContact
-				//{
-				//	Name = "Ali Moradi => تو روحت یادمون میره برداریم",
-				//	Email = "a.moradi@namikhodro.com",
-				//	Url = new Uri("https://www.linkedin.com/in/alimoradi573/")
-				//}
-			});
- 
+                //Description = "تو روحت یادمون میره برداریم",
+                //Contact = new OpenApiContact
+                //{
+                //	Name = "Ali Moradi => تو روحت یادمون میره برداریم",
+                //	Email = "a.moradi@namikhodro.com",
+                //	Url = new Uri("https://www.linkedin.com/in/alimoradi573/")
+                //}
+            });
+
             c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
             var securityScheme = new OpenApiSecurityScheme
             {

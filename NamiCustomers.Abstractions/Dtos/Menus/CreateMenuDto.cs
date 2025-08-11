@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NamiCustomers.Abstractions.Dtos.Menus
+﻿namespace NamiCustomers.Abstractions.Dtos.Menus
 {
 
     public class CreateMenuDto

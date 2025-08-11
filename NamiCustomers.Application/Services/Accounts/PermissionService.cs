@@ -116,5 +116,5 @@ public class PermissionService : IPermissionService
         return permissions.Contains(permission);
     }
 
-    
+
 }

@@ -2,7 +2,6 @@
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 using NamiCustomers.Infrastucture.Properties;
 using NamiCustomers.Infrastucture.Utilities;
-using System.Text.Json;
 
 namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 
@@ -28,7 +27,7 @@ public interface ISevenSoftService
     /// <param name="nationalCodeOrEconomicCode"></param>
     /// <param name="mobile"></param>
     /// <returns></returns>
-    Task<string> GetSpecificCases(string chassisVinNumber,string nationalCodeOrEconomicCode,string mobile);
+    Task<string> GetSpecificCases(string chassisVinNumber, string nationalCodeOrEconomicCode, string mobile);
 
     /// <summary>
     /// لیست نمایندگی ها
@@ -68,10 +67,10 @@ public interface ISevenSoftService
 
 public class SevenSoftService : ISevenSoftService
 {
-    private   string _baseUrl = Infrastucture.Properties.Resource7Soft.BaseUrl;
+    private string _baseUrl = Infrastucture.Properties.Resource7Soft.BaseUrl;
     public async Task<GetBranchesByDealerResponse[]> GetBranchesByDealer(Guid dealerId)
     {
-        return await  RestUtility.GetData<GetBranchesByDealerResponse[]>(_baseUrl, Resource7Soft.GetBranchesByDealer, dealerId);
+        return await RestUtility.GetData<GetBranchesByDealerResponse[]>(_baseUrl, Resource7Soft.GetBranchesByDealer, dealerId);
     }
     public async Task<GetReceptionsInformationByVinNumberResponse[]> GetReceptionsInformationByVinNumber(string chassisVinNumber)
     {
@@ -79,7 +78,7 @@ public class SevenSoftService : ISevenSoftService
     }
     public async Task<DealerResponse[]> GetDealers()
     {
-        return await RestUtility.GetData<DealerResponse[]>(_baseUrl, Resource7Soft.GetDealers,"");
+        return await RestUtility.GetData<DealerResponse[]>(_baseUrl, Resource7Soft.GetDealers, "");
     }
     public async Task<ActiveMainChassisGuaranteeResponse> GetActiveMainChassisGuarantee(string vinNumber)
     {
@@ -106,7 +105,7 @@ public class SevenSoftService : ISevenSoftService
         return await RestUtility.GetData<string>(_baseUrl, Resource7Soft.GetSpecificCases, qStr);
     }
 
-     
+
 
 
 
@@ -115,4 +114,4 @@ public class SevenSoftService : ISevenSoftService
 
 
 
- 
+

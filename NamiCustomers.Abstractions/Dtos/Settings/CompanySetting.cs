@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace NamiCustomers.Abstractions.Dtos.Settings;
 
 public class CompanySetting
 {
-	[Display(Name = "نام شرکت")]
-	public string? CompanyName { get; set; }
+    [Display(Name = "نام شرکت")]
+    public string? CompanyName { get; set; }
     public string? Accountnumber { get; set; }
     public string? Shebanumber { get; set; }
     public string? BankName { get; set; }

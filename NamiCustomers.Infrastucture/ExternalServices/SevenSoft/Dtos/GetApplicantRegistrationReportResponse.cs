@@ -6,7 +6,7 @@ public class GetApplicantRegistrationReportResponse
     public Accounting[] Accounting { get; set; }
 }
 
- 
+
 
 public class ApplicantRegistrationRootobject
 {
@@ -14,7 +14,7 @@ public class ApplicantRegistrationRootobject
     public Vehiclesale VehicleSale { get; set; }
     public Vehiclesalecontentpattern VehicleSaleContentPattern { get; set; }
     public Branchcontactinfo[] BranchContactInfo { get; set; }
- 
+
     public Textofprinteddetail TextOfPrintedDetail { get; set; }
     public Signaturemodel SignatureModel { get; set; }
     public Accounting[] Accounting { get; set; }
@@ -492,7 +492,7 @@ public class Branchcontactinfo
     public bool IsDirty { get; set; }
 }
 
- 
+
 
 public class Accounting
 {
@@ -536,7 +536,7 @@ public class Accounting
     public object DebitFeeWord { get; set; }
     public float AccountingFee { get; set; }
     public string AccountingFeeAsString => AccountingFee.ToString("000,0.");
-    public string AccountingFeeAsTomanString => (AccountingFee/10).ToString("000,0.");
+    public string AccountingFeeAsTomanString => (AccountingFee / 10).ToString("000,0.");
     public string FollowUpCode { get; set; }
     public string DesctinationBankAccountNumberId { get; set; }
     public string DesctinationBankAccountNumber { get; set; }

@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace NamiCustomers.Web.Pages.Utilities
 {
-    public class MudJalaliDatePicker: MudDatePicker
+    public class MudJalaliDatePicker : MudDatePicker
     {
         public MudJalaliDatePicker()
         {
@@ -41,14 +41,14 @@ namespace NamiCustomers.Web.Pages.Utilities
                 int m = pc.GetMonth(date);
                 int d = pc.GetDayOfMonth(date);
 
-                if(SolarHolidays.Contains((m,d)))
+                if (SolarHolidays.Contains((m, d)))
                     return "red-text text-accent-4";
 
-                if (date.DayOfWeek ==  DayOfWeek.Friday)
+                if (date.DayOfWeek == DayOfWeek.Friday)
                 {
                     return "red-text text-accent-4";
                 }
-                return  null;
+                return null;
             };
 
         }

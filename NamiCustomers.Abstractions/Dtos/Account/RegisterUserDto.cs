@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace NamiCustomers.Abstractions.Dtos.Account;
 
 public class RegisterUserDto
 {
     [Required]
-    [Display(Name ="نام")]
+    [Display(Name = "نام")]
     public string FirstName { get; set; }
     [Display(Name = "نام خانوادگی")]
     [Required]
@@ -24,7 +20,7 @@ public class RegisterUserDto
     public string Password { get; set; }
     [Required]
     [DataType(DataType.Password)]
-    [Compare( nameof(Password))]
+    [Compare(nameof(Password))]
     [Display(Name = "تکرارگذر واژه")]
     public string ConfirmPassword { get; set; }
     public string CallbakUrl { get; set; }

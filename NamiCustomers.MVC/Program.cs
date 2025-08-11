@@ -1,8 +1,5 @@
-using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.Extensions.Options;
 using NamiCustomers.MVC;
 using NamiCustomers.MVC.Filters;
-using NamiCustomers.MVC.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,4 +41,3 @@ app.MapControllerRoute(
 
 app.Run();
 
- 

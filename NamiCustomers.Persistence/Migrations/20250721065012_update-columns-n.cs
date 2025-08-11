@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -15,7 +14,7 @@ namespace NamiCustomers.Persistence.Migrations
                 name: "FK_VehicleModels_Subscribers_SubscriberId",
                 table: "VehicleModels");
 
- 
+
 
             migrationBuilder.RenameColumn(
                 name: "VehicleModelIdSevensoft",

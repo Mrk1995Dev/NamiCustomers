@@ -6,6 +6,6 @@ namespace NamiCustomers.Abstractions.Dtos
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
-        public List<string> Errors { get; set;} = new List<string>();
+        public List<string> Errors { get; set; } = new List<string>();
     }
 }

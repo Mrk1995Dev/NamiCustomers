@@ -21,7 +21,7 @@ public class RoleService : IRoleService
         _httpClient = httpClient;
     }
 
-    public async Task<ResultDto> Edit(RoleDto  roleEdit)
+    public async Task<ResultDto> Edit(RoleDto roleEdit)
     {
         var response = await _httpClient.PutAsJsonAsync($"roles/edit", roleEdit);
         if (response.IsSuccessStatusCode)
@@ -40,7 +40,7 @@ public class RoleService : IRoleService
         {
             return new ResultDto<List<RoleDto>>(
                  Infrastucture.Properties.Resources.msgFound
-               ,true, 
+               , true,
                 response.Data)
             {
 
@@ -51,7 +51,7 @@ public class RoleService : IRoleService
            Infrastucture.Properties.Resources.errNotFound, false);
     }
 
-    public async  Task<ResultDto<RoleDto>> GetAsync(string id)
+    public async Task<ResultDto<RoleDto>> GetAsync(string id)
     {
         var response = await _httpClient.GetFromJsonAsync<ResultDto<RoleDto>>($"Roles/Get?id={id}");
 

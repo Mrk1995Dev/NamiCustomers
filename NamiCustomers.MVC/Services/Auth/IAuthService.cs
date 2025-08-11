@@ -116,7 +116,7 @@ public class AuthService(HttpClient httpClient, ITokenSessionService tokenServic
                 return result;
             }
         }
-        return new ResultDto( Infrastucture.Properties.Resources.errSave,false);
+        return new ResultDto(Infrastucture.Properties.Resources.errSave, false);
     }
 
 
@@ -128,7 +128,7 @@ public class AuthService(HttpClient httpClient, ITokenSessionService tokenServic
         {
             return response.Data.AuthCode;
         }
-        return Infrastucture.Properties.Resources.errGetOtp; 
+        return Infrastucture.Properties.Resources.errGetOtp;
     }
 
     public async Task<ResultDto<LoginResponseDto>> LoginByOtpAsync(string otp)

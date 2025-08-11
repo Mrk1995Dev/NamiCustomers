@@ -8,7 +8,6 @@ using NamiCustomers.Application.Services.Facades;
 using NamiCustomers.Application.Services.Subscribers;
 using NamiCustomers.Application.Services.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.Email;
-using NamiCustomers.Infrastucture.ExternalServices.Nami;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 
 

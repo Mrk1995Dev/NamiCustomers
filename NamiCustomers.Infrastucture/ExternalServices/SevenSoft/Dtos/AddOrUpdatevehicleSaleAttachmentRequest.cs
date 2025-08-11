@@ -66,4 +66,3 @@ public class Uploadeditem
     public string FilePath { get; set; }
     public string UserId { get; set; }
 }
- 

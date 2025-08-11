@@ -33,9 +33,9 @@ namespace NamiCustomers.Web
             {
                 var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
                 return new CustomerService(httpClient);
-            });      
- 
- 
+            });
+
+
 
             return services;
         }

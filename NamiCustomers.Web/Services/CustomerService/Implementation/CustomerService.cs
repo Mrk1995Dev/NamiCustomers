@@ -7,7 +7,7 @@ namespace NamiCustomers.Web.Services.CustomerService.Implementation
     public record MyToken(string token);
 
 
-    public class CustomerService: ICustomerService
+    public class CustomerService : ICustomerService
     {
         private readonly HttpClient _httpClient;
         public CustomerService(HttpClient httpClient)
@@ -25,7 +25,7 @@ namespace NamiCustomers.Web.Services.CustomerService.Implementation
             return result;
         }
 
-		public async Task GetToken(string mobile)
+        public async Task GetToken(string mobile)
         {
             var myToken = await _httpClient.GetFromJsonAsync<MyToken>($"/api/Account/GetToken?mobile={mobile}");
 

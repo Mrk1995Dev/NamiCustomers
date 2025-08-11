@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using NamiCustomers.Abstractions.Dtos.Security.Dto;
+﻿using NamiCustomers.Abstractions.Dtos.Security.Dto;
 using NamiCustomers.Abstractions.Dtos.Security.Dto.Roles;
-using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace NamiCustomers.MVC.Services;
@@ -17,18 +15,18 @@ public interface IUserService
     Task<Microsoft.AspNetCore.Identity.SignInResult> PasswordSignInAsync(MyAccountinfoDto myAccountinfoDto);
     Task<ResultDto<UserDto>> GetAsync(string id);
     Task<ResultDto<AddUserRoleDto>> GetRolesAsync(string userId);
-    
+
     Task<ResultDto> RemoveUserRole(AddUserRoleDto newRole);
 }
 public class UserService : IUserService
 {
     private readonly HttpClient _httpClient;
-    
-    public UserService(HttpClient httpClient )
+
+    public UserService(HttpClient httpClient)
     {
         _httpClient = httpClient;
     }
- 
+
 
     public async Task<ResultDto> Edit(UserEditDto userEdit)
     {
@@ -69,7 +67,7 @@ public class UserService : IUserService
         return JsonSerializer.Deserialize<Microsoft.AspNetCore.Identity.SignInResult>(res.Content.ReadAsStream());
     }
 
-    public async  Task<ResultDto> RegisterAsync(RegisterUserDto register)
+    public async Task<ResultDto> RegisterAsync(RegisterUserDto register)
     {
         var response = await _httpClient.PostAsJsonAsync($"users/register", register);
         if (response.IsSuccessStatusCode)
@@ -95,7 +93,7 @@ public class UserService : IUserService
         return new ResultDto(Infrastucture.Properties.Resources.errDelete, false);
     }
 
-    public async Task<ResultDto> AddUserRole(AddUserRoleDto  addUserRoleDto)
+    public async Task<ResultDto> AddUserRole(AddUserRoleDto addUserRoleDto)
     {
         var response = await _httpClient.PostAsJsonAsync($"users/AddUserRole", addUserRoleDto);
         if (response.IsSuccessStatusCode)
@@ -120,9 +118,9 @@ public class UserService : IUserService
         return new ResultDto<AddUserRoleDto>(Infrastucture.Properties.Resources.errNotFound, false);
     }
 
-    public async  Task<ResultDto> RemoveUserRole(AddUserRoleDto newRole)
+    public async Task<ResultDto> RemoveUserRole(AddUserRoleDto newRole)
     {
-        var response = await _httpClient.PostAsJsonAsync($"users/RemoveUserRole",newRole);
+        var response = await _httpClient.PostAsJsonAsync($"users/RemoveUserRole", newRole);
         if (response.IsSuccessStatusCode)
         {
             return new ResultDto(Infrastucture.Properties.Resources.msgDeleted, true);

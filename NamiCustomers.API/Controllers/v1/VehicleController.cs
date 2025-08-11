@@ -48,13 +48,13 @@ public class VehicleController(IVehicleService vehicleService, ISevenSoftService
     {
         var result = await sevenSoftService.GetChassisInformationByVinNumber(vinNumber);
         if (result == null) return new ResultDto<VehicleModelDto>(
-       Infrastucture.Properties.Resources.errNotFound,false
+       Infrastucture.Properties.Resources.errNotFound, false
        );
 
         return new ResultDto<VehicleModelDto>(
       Infrastucture.Properties.Resources.msgFound
-     ,true
-     ,mapper.Map<VehicleModelDto>(result)
+     , true
+     , mapper.Map<VehicleModelDto>(result)
        );
 
     }
@@ -65,7 +65,7 @@ public class VehicleController(IVehicleService vehicleService, ISevenSoftService
         var result = await sevenSoftService.GetActiveMainChassisGuarantee(vinNumber);
         if (result == null) return new ResultDto<ActiveMainChassisGuaranteeResponse>(
         Infrastucture.Properties.Resources.errNotFound
-        ,false
+        , false
         );
 
 
