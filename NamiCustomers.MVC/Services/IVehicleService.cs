@@ -96,7 +96,8 @@ public class VehicleService(HttpClient httpClient, IHttpContextAccessor httpCont
         {
             if (!response.Data.Any())
             {
-                return new ResultDto<List<string>>(Infrastucture.Properties.Resources.errNotFound, true, new List<string> { Infrastucture.Properties.Resources.msgNotFoundAnyResult });
+                //diablo حالت خاص 
+                return new ResultDto<List<string>>(Infrastucture.Properties.Resources.msgNotFoundAnyResult, true, new List<string> { Infrastucture.Properties.Resources.msgNotFoundAnyResult });
             }
             return new ResultDto<List<string>>(Infrastucture.Properties.Resources.msgFound, true,
             response.Data.ToList());
