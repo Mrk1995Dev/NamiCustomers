@@ -13,19 +13,21 @@ public class VehicleController(
 {
     [ServiceFilter(typeof(VinFilter))]
     [HttpGet]
-    public async Task<IActionResult> ActiveMainChassisGuarantee(string? VinNumber)
+    public async Task<IActionResult> ActiveMainChassisGuarantee()//string? VinNumber
     {
 
-        var relatedVins = await vehicleService.GetAllAsync(subscriberService.CurrentSubscriber.Id);
-        ViewBag.relatedVins = relatedVins.Data.Select(c => new KeyValuePair<string, string>(c.VinNumber, c.VinNumber)).ToList();
-        if (VinNumber != null)
+        //var relatedVins = await vehicleService.GetAllAsync(subscriberService.CurrentSubscriber.Id);
+       // ViewBag.relatedVins = relatedVins.Data.Select(c => new KeyValuePair<string, string>(c.VinNumber, c.VinNumber)).ToList();
+
+        var vinNumber = subscriberService.CurrentSubscriber.VehicleModels?.FirstOrDefault(c => c.IsDefault)?.VinNumber;
+        if (vinNumber != null)
         {
-            var data = await vehicleService.GetActiveMainChassisGuarantee(VinNumber);
+            var data = await vehicleService.GetActiveMainChassisGuarantee(vinNumber);
             if (!data.Succeeded)
             {
-                return View(new ActiveMainChassisGuaranteeResponse() { VinNumber = VinNumber });
+                return View(new ActiveMainChassisGuaranteeResponse() { VinNumber = vinNumber });
             }
-            data.Data.VinNumber = VinNumber;
+            data.Data.VinNumber = vinNumber;
             return View(data.Data);
         }
         return View(new ActiveMainChassisGuaranteeResponse());
