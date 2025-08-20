@@ -1,0 +1,193 @@
+﻿@model IEnumerable<NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos.GetReceptionCustomerStatementInformationByReceptionCodeResponse>
+
+@{
+    ViewData["Title"] = "ReceptionCustomerStatementInformation";
+}
+
+<h1>ReceptionCustomerStatementInformation</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UniqueId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceptionId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PresentReceptionDealerSystemCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReturnReceptionCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerStatementsTypeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DefaultCustomerDescriptionId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DefaultCustomerDescriptionLocalizedName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerStatementsTypeLocalizedName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatementsTypeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatementsTypeLocalizedName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpertTheory)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Approved)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PropblemFinderPersonnelName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceptionRowVersion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceptionCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecKilometer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrRecDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceptionCustomerStatementServerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Safety)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EstimatedTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CheckingSafety)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrSafetyApprovedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReluctanceToReceiveAlternateVehicle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClientId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsDirty)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UniqueId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceptionId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PresentReceptionDealerSystemCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReturnReceptionCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerStatementsTypeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DefaultCustomerDescriptionId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DefaultCustomerDescriptionLocalizedName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerStatementsTypeLocalizedName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatementsTypeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatementsTypeLocalizedName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExpertTheory)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Approved)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PropblemFinderPersonnelName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceptionRowVersion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceptionCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecKilometer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrRecDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceptionCustomerStatementServerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Safety)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EstimatedTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CheckingSafety)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrSafetyApprovedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReluctanceToReceiveAlternateVehicle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClientId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsDirty)
+            </td>
+           
+        </tr>
+}
+    </tbody>
+</table>

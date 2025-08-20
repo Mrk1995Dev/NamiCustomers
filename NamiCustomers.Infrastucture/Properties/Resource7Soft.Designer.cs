@@ -106,11 +106,56 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/ReceptionInformaionHistory/GetReceptionCustomerStatementInformationByReceptionCode .
+        /// </summary>
+        public static string GetReceptionCustomerStatementInformationByReceptionCode {
+            get {
+                return ResourceManager.GetString("GetReceptionCustomerStatementInformationByReceptionCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/ReceptionInvoiceReport/getReceptionsInformationByReceptionID.
+        /// </summary>
+        public static string getReceptionsInformationByReceptionID {
+            get {
+                return ResourceManager.GetString("getReceptionsInformationByReceptionID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to api/ReceptionInformaion/GetReceptionsInformationByVinNumber?ChassisVinNumber=.
         /// </summary>
         public static string GetReceptionsInformationByVinNumber {
             get {
                 return ResourceManager.GetString("GetReceptionsInformationByVinNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/ReceptionInformaionHistory/GetReceptionsInServicesInformationByReceptionCode.
+        /// </summary>
+        public static string GetReceptionsInServicesInformationByReceptionCode {
+            get {
+                return ResourceManager.GetString("GetReceptionsInServicesInformationByReceptionCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/ReceptionInformaionHistory/GetReceptionsOutServicesInformationByReceptionCode.
+        /// </summary>
+        public static string GetReceptionsOutServicesInformationByReceptionCode {
+            get {
+                return ResourceManager.GetString("GetReceptionsOutServicesInformationByReceptionCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/ReceptionInformaionHistory/GetReceptionsPartsInformationByReceptionCode.
+        /// </summary>
+        public static string GetReceptionsPartsInformationByReceptionCode {
+            get {
+                return ResourceManager.GetString("GetReceptionsPartsInformationByReceptionCode", resourceCulture);
             }
         }
         

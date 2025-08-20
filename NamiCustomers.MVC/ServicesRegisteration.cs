@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using NamiCustomers.Infrastucture.ExternalServices.Email.Dtos;
 using NamiCustomers.Infrastucture.ExternalServices.Nami;
+using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 using NamiCustomers.MVC.Filters;
 using NamiCustomers.MVC.Handlers;
 using NamiCustomers.MVC.Services;
@@ -129,6 +130,7 @@ public static class ServicesRegisteration
         });
 
         services.AddScoped<ITokenSessionService, TokenSessionService>();
+        services.AddScoped<ISevenSoftService, SevenSoftService>();
         services.AddScoped<ISubscriberService, SubscriberService>(sp =>
         {
             var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");

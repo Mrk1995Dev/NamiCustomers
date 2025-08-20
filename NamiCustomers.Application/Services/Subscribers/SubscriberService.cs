@@ -23,6 +23,13 @@ public interface ISubscriberService
     Task<List<CityDto>> GetCitiesAsync();
     Task<ResultDto<SubscriberCodeDto>> SendOtpAsync(string mobile);
     Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string mobile, string nationalCode);
+
+
+
+
+
+
+
 }
 public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsService smsService, ISevenSoftService sevenSoftService, UserManager<ApplicationUser> userManager) : ISubscriberService
 {

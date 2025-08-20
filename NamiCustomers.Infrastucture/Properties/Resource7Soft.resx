@@ -144,4 +144,19 @@
   <data name="GetBranchesByDealer" xml:space="preserve">
     <value>api/Dealer/GetBranchesByDealer?DealerId=</value>
   </data>
+  <data name="GetReceptionsPartsInformationByReceptionCode" xml:space="preserve">
+    <value>api/ReceptionInformaionHistory/GetReceptionsPartsInformationByReceptionCode</value>
+  </data>
+  <data name="GetReceptionsInServicesInformationByReceptionCode" xml:space="preserve">
+    <value>api/ReceptionInformaionHistory/GetReceptionsInServicesInformationByReceptionCode</value>
+  </data>
+  <data name="GetReceptionsOutServicesInformationByReceptionCode" xml:space="preserve">
+    <value>api/ReceptionInformaionHistory/GetReceptionsOutServicesInformationByReceptionCode</value>
+  </data>
+  <data name="GetReceptionCustomerStatementInformationByReceptionCode" xml:space="preserve">
+    <value>api/ReceptionInformaionHistory/GetReceptionCustomerStatementInformationByReceptionCode </value>
+  </data>
+  <data name="getReceptionsInformationByReceptionID" xml:space="preserve">
+    <value>api/ReceptionInvoiceReport/getReceptionsInformationByReceptionID</value>
+  </data>
 </root>

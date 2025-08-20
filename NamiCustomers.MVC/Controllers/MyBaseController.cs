@@ -4,10 +4,12 @@ namespace NamiCustomers.MVC.Controllers
 {
     public class MyBaseController : Controller
     {
-        public void SetError(string errorResponse)
+        public IActionResult SetError(string errorResponse)
         {
 
             TempData["ErrorMessage"] = errorResponse;
+
+            return RedirectToAction("Index", "Home");   
         }
 
 

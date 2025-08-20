@@ -1,0 +1,340 @@
+﻿@model IEnumerable<NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos.GetReceptionsPartsInformationByReceptionCodeResponse>
+
+@{
+    ViewData["Title"] = "ReceptionsPartsInformation";
+}
+
+<h1>ReceptionsPartsInformation</h1>
+ 
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UniqueId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceptionId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceptionSystemDealerCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceptionDealerNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceptionBranchNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartProviderLocalizedCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Part)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartTypeEnumCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExtraPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Discount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DiscountValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DiscountPercent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HasWarranty)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CostCenterId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CostCenterName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CostCenter)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartUnit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceptionRowVersion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsPayableForCustomer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartIsNonCompany)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tax)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Toll)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AutomaticClaimRegister)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceptionCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrRecDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RecKilometer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceptionPartsShippingTypeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrExitDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DontFailureLicense)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FromReceptionTask)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TaxForShow)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TollForShow)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsNotEditable)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SafetyPart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartGroupName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartTypeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartTypeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CostCenterCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartCatalog)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CountingUnitCatalog)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartGroupNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WarehouseId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ServicePack)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClientId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsDirty)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UniqueId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceptionId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceptionSystemDealerCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceptionDealerNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceptionBranchNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartProviderLocalizedCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Part)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartTypeEnumCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExtraPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Discount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DiscountValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DiscountPercent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HasWarranty)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CostCenterId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CostCenterName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CostCenter)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartUnit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceptionRowVersion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsPayableForCustomer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartIsNonCompany)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tax)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Toll)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AutomaticClaimRegister)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceptionCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrRecDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RecKilometer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceptionPartsShippingTypeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrExitDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DontFailureLicense)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FromReceptionTask)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaxForShow)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TollForShow)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsNotEditable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SafetyPart)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartGroupName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartTypeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartTypeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CostCenterCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartCatalog)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CountingUnitCatalog)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartGroupNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WarehouseId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServicePack)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClientId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsDirty)
+            </td>
+            
+        </tr>
+}
+    </tbody>
+</table>

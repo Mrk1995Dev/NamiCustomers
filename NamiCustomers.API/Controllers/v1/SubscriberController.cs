@@ -79,5 +79,17 @@ namespace NamiCustomers.API.Controllers.v1
 
             return File(data.Data, "text/palin", "CustomerInfoReport.txt");
         }
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

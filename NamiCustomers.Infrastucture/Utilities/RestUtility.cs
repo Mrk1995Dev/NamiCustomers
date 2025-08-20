@@ -41,6 +41,11 @@ public static class RestUtility
         {
             return await Task.FromResult(JsonSerializer.Deserialize<T>(responseContent));
         }
-        return Activator.CreateInstance<T>();
+        else
+        {
+            return Activator.CreateInstance<T>()
+            ;//TODO moradi
+        }
+            
     }
 }
