@@ -6617,8 +6617,9 @@ form .btn-lg {
 }
 
 .colorful-tab .nav {
-  border-radius: 20rem;
-  background-color: rgba(255, 255, 255, 0.125);
+    /*    border-radius: 20rem;*/
+    border-radius: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.125);
 }
 .colorful-tab .nav .nav-item {
   -webkit-box-flex: 1;
@@ -6626,12 +6627,15 @@ form .btn-lg {
           flex-grow: 1;
 }
 .colorful-tab .btn {
-  border-radius: 5rem;
-  width: 100%;
-  background-color: transparent;
-  border: 0;
-  color: rgba(255, 255, 255, 0.5);
-  font-weight: 500;
+    /*  border-radius: 5rem;
+
+*/
+    border-radius: 0.5rem;
+    width: 100%;
+    background-color: transparent;
+    border: 0;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 500;
 }
 .colorful-tab .btn:focus {
   -webkit-box-shadow: none;
@@ -6642,9 +6646,9 @@ form .btn-lg {
   color: var(--white);
 }
 .colorful-tab .tab-content {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 1rem;
-  border: 0;
+/*  background-color: rgba(255, 255, 255, 0.1);
+*/  border-radius: 1rem;
+  border: 1px solid;
 }
 
 /* :: Blog */
