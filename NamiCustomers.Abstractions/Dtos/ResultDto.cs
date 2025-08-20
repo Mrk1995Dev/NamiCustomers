@@ -10,10 +10,10 @@ public class ResultDto<T> where T : class
 
     }
 
-    public bool Succeeded { get; set; }
-    public string? Message { get; set; }
-    public T? Data { get; set; }
-    public List<string> Errors { get; set; }
+    public bool Succeeded { get; private set; }
+    public string? Message { get; private set; }
+    public T? Data { get; private set; }
+    public List<string> Errors { get; private set; }
 }
 public class ResultDto
 {
@@ -22,8 +22,8 @@ public class ResultDto
         Message = message;
         this.Succeeded = succeeded;
     }
-    public string Message { get; set; }
-    public bool Succeeded { get; set; }
+    public string Message { get; private set; }
+    public bool Succeeded { get; private set; }
 }
 
 
