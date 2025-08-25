@@ -4,7 +4,7 @@ namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
 
 
-public class GetReceptionsInformationByVinNumberResponse
+public class ReceptionsInformationByVinNumberResponse
 {
     public int Code { get; set; }
     public string UniqueId { get; set; }

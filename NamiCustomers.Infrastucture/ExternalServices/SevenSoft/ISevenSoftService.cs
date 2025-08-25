@@ -16,14 +16,13 @@ public interface ISevenSoftService
     /// </summary>
     /// <param name="dealerId"></param>
     /// <returns></returns>
-    Task<GetBranchesByDealerResponse[]> GetBranchesByDealer(Guid dealerId);
-
+    Task<BranchesByDealerResponse[]> GetBranchesByDealer(Guid dealerId);
     /// <summary>
     /// سوابق تعمیراتی
     /// </summary>
     /// <param name="chassisVinNumber"></param>
     /// <returns></returns>
-    Task<GetReceptionsInformationByVinNumberResponse[]> GetReceptionsInformationByVinNumber(string chassisVinNumber);
+    Task<ReceptionsInformationByVinNumberResponse[]> GetReceptionsInformationByVinNumber(string chassisVinNumber);
     /// <summary>
     /// فراخوان ها
     /// </summary>
@@ -32,7 +31,6 @@ public interface ISevenSoftService
     /// <param name="mobile"></param>
     /// <returns></returns>
     Task<string[]> GetSpecificCases(string chassisVinNumber, string nationalCodeOrEconomicCode, string mobile);
-
     /// <summary>
     /// لیست نمایندگی ها
     /// </summary>
@@ -44,7 +42,6 @@ public interface ISevenSoftService
     /// <param name="vinNumber"></param>
     /// <returns></returns>
     Task<ChassisInformationByVinNumberResponse> GetChassisInformationByVinNumber(string vinNumber);
-
     /// <summary>
     /// دریافت اطلاعات شاسی
     /// </summary>
@@ -53,7 +50,6 @@ public interface ISevenSoftService
     /// <param name="mobile"></param>
     /// <returns></returns>
     Task<string> GetRelationCustomerInfoByVinNumber(string chassisVinNumber, string nationalCodeOrEconomicCode, string mobile);
-
     /// <summary>
     /// دریافت اطلاعات کد ملی
     /// </summary>
@@ -72,34 +68,34 @@ public interface ISevenSoftService
     /// <param name="ReceptionCode"></param>
     /// <param name="NationalCodeOrEconomicCode"></param>
     /// <returns></returns>
-    Task<ResultDto<GetReceptionsPartsInformationByReceptionCodeResponse[]>> GetReceptionsPartsInformationByReceptionCode(string receptionCode, string nationalCodeOrEconomicCode);
+    Task<ResultDto<ReceptionsPartsInformationByReceptionCodeResponse[]>> GetReceptionsPartsInformationByReceptionCode(string receptionCode, string nationalCodeOrEconomicCode);
     /// <summary>
     /// دریافت اطلاعات خدمات داخل تعمیرگاه پذیرش براساس کد پذیرش و کدملی
     /// </summary>
     /// <param name="ReceptionCode"></param>
     /// <param name="NationalCodeOrEconomicCode"></param>
     /// <returns></returns>
-    Task<ResultDto<GetReceptionsInServicesInformationByReceptionCodeResponse[]>> GetReceptionsInServicesInformationByReceptionCode(string receptionCode, string nationalCodeOrEconomicCode);
+    Task<ResultDto<ReceptionsInServicesInformationByReceptionCodeResponse[]>> GetReceptionsInServicesInformationByReceptionCode(string receptionCode, string nationalCodeOrEconomicCode);
     /// <summary>
     /// دریافت اطلاعات خدمات خارج از تعمیرگاه پذیرش ها براساس کد پذیرش و کدملی
     /// </summary>
     /// <param name="ReceptionCode"></param>
     /// <param name="NationalCodeOrEconomicCode"></param>
     /// <returns></returns>
-    Task<ResultDto<GetReceptionsOutServicesInformationByReceptionCodeResponse[]>> GetReceptionsOutServicesInformationByReceptionCode(string receptionCode, string nationalCodeOrEconomicCode);
+    Task<ResultDto<ReceptionsOutServicesInformationByReceptionCodeResponse[]>> GetReceptionsOutServicesInformationByReceptionCode(string receptionCode, string nationalCodeOrEconomicCode);
     /// <summary>
     /// دریافت اطلاعات اظهارات مشتری براساس کد پذیرش و کدملی
     /// </summary>
     /// <param name="ReceptionCode"></param>
     /// <param name="NationalCodeOrEconomicCode"></param>
     /// <returns></returns>
-    Task<ResultDto<GetReceptionCustomerStatementInformationByReceptionCodeResponse[]>> GetReceptionCustomerStatementInformationByReceptionCode(string receptionCode, string nationalCodeOrEconomicCode);
+    Task<ResultDto<ReceptionCustomerStatementInformationByReceptionCodeResponse[]>> GetReceptionCustomerStatementInformationByReceptionCode(string receptionCode, string nationalCodeOrEconomicCode);
     /// <summary>
     /// فاکتور پذیرش
     /// </summary>
     /// <param name="ReceptionCode"></param>
     /// <returns></returns>
-    Task<ResultDto<GetReceptionsInformationByReceptionIDResponse>> GetReceptionsInformationByReceptionID(string receptionCode);
+    Task<ResultDto<ReceptionsInformationByReceptionIDResponse>> GetReceptionsInformationByReceptionID(string receptionCode);
     /// <summary>
     /// مشاهده لیست استان ها
     /// </summary>
@@ -129,21 +125,21 @@ public interface ISevenSoftService
     /// </summary>
     /// <param name="branchId"></param>
     /// <returns></returns>
-    Task<ResultDto<GetAllServerGroupResponse[]>> GetAllServerGroup(Guid branchId);
+    Task<ResultDto<AllServerGroupResponse[]>> GetAllServerGroup(Guid branchId);
     /// <summary>
     /// لیست تاریخ های موجود از دو وب سرویس قبلی میاد
     /// </summary>
     /// <param name="ServerGroupId"></param>
     /// <param name="BranchId"></param>
     /// <returns></returns>
-    Task<ResultDto<GetAllServerGroupDateResponse[]>> GetAllServerGroupDate(Guid serverGroupId, Guid branchId);
+    Task<ResultDto<AllServerGroupDateResponse[]>> GetAllServerGroupDate(Guid serverGroupId, Guid branchId);
     /// <summary>
     /// لیست ساعت های موجود
     /// </summary>
     /// <param name="WorkShopTimeTableId"></param>
     /// <param name="ServerGroupId"></param>
     /// <returns></returns>
-    Task<ResultDto<GetAllServerGroupTimeResponse[]>> GetAllServerGroupTime(Guid workShopTimeTableId, Guid serverGroupId);
+    Task<ResultDto<AllServerGroupTimeResponse[]>> GetAllServerGroupTime(Guid workShopTimeTableId, Guid serverGroupId);
     /// <summary>
     /// بررسی رزرو باز برای این شاسی وجود دارد یا ندارد در صفحه اولیه نمایش داده شود
     /// </summary>
@@ -155,7 +151,7 @@ public interface ISevenSoftService
     /// </summary>
     /// <param name="VinNumber"></param>
     /// <returns></returns>
-    Task<ResultDto<GetSubscriberChassisAllocationResponse[]>> GetSubscriberChassisAllocation(string vinNumber);
+    Task<ResultDto<SubscriberChassisAllocationResponse[]>> GetSubscriberChassisAllocation(string vinNumber);
     /// <summary>
     /// بررسی اینکه ایا کلیومتر پذیرش ثبت شده درست است یا خیر نمایش داده میشود در صورت اینکه کیلومتر وارد شده از اطلاعات ثبت شده در سیستم کمتر باشد false  بر میگردونه
     /// </summary>
@@ -168,13 +164,13 @@ public interface ISevenSoftService
 public class SevenSoftService : ISevenSoftService
 {
     private string _baseUrl = Infrastucture.Properties.Resource7Soft.BaseUrl;
-    public async Task<GetBranchesByDealerResponse[]> GetBranchesByDealer(Guid dealerId)
+    public async Task<BranchesByDealerResponse[]> GetBranchesByDealer(Guid dealerId)
     {
-        return await RestUtility.GetData<GetBranchesByDealerResponse[]>(_baseUrl, Resource7Soft.GetBranchesByDealer, dealerId);
+        return await RestUtility.GetData<BranchesByDealerResponse[]>(_baseUrl, Resource7Soft.GetBranchesByDealer, dealerId);
     }
-    public async Task<GetReceptionsInformationByVinNumberResponse[]> GetReceptionsInformationByVinNumber(string chassisVinNumber)
+    public async Task<ReceptionsInformationByVinNumberResponse[]> GetReceptionsInformationByVinNumber(string chassisVinNumber)
     {
-        return await RestUtility.GetData<GetReceptionsInformationByVinNumberResponse[]>(_baseUrl, Resource7Soft.GetReceptionsInformationByVinNumber, chassisVinNumber);
+        return await RestUtility.GetData<ReceptionsInformationByVinNumberResponse[]>(_baseUrl, Resource7Soft.GetReceptionsInformationByVinNumber, chassisVinNumber);
     }
     public async Task<DealerResponse[]> GetDealers()
     {
@@ -205,76 +201,76 @@ public class SevenSoftService : ISevenSoftService
         return await RestUtility.GetData<string[]>(_baseUrl, Resource7Soft.GetSpecificCases, qStr);
     }
 
-    public async Task<ResultDto<GetReceptionsPartsInformationByReceptionCodeResponse[]>> GetReceptionsPartsInformationByReceptionCode(string ReceptionCode, string NationalCodeOrEconomicCode)
+    public async Task<ResultDto<ReceptionsPartsInformationByReceptionCodeResponse[]>> GetReceptionsPartsInformationByReceptionCode(string ReceptionCode, string NationalCodeOrEconomicCode)
     {
         try
         {
-            var data = await RestUtility.GetData<GetReceptionsPartsInformationByReceptionCodeResponse[]>(_baseUrl, Resource7Soft.GetReceptionsPartsInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
-            return new ResultDto<GetReceptionsPartsInformationByReceptionCodeResponse[]>("", true, data);
+            var data = await RestUtility.GetData<ReceptionsPartsInformationByReceptionCodeResponse[]>(_baseUrl, Resource7Soft.GetReceptionsPartsInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
+            return new ResultDto<ReceptionsPartsInformationByReceptionCodeResponse[]>("", true, data);
         }
         catch (Exception ex)
         {
 
-            return new ResultDto<GetReceptionsPartsInformationByReceptionCodeResponse[]>(ex.Message, false);
+            return new ResultDto<ReceptionsPartsInformationByReceptionCodeResponse[]>(ex.Message, false);
         }
 
     }
 
-    public async Task<ResultDto<GetReceptionsInServicesInformationByReceptionCodeResponse[]>> GetReceptionsInServicesInformationByReceptionCode(string ReceptionCode, string NationalCodeOrEconomicCode)
+    public async Task<ResultDto<ReceptionsInServicesInformationByReceptionCodeResponse[]>> GetReceptionsInServicesInformationByReceptionCode(string ReceptionCode, string NationalCodeOrEconomicCode)
     {
         try
         {
-            var data = await RestUtility.GetData<GetReceptionsInServicesInformationByReceptionCodeResponse[]>(_baseUrl, Resource7Soft.GetReceptionsInServicesInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
+            var data = await RestUtility.GetData<ReceptionsInServicesInformationByReceptionCodeResponse[]>(_baseUrl, Resource7Soft.GetReceptionsInServicesInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
 
-            return new ResultDto<GetReceptionsInServicesInformationByReceptionCodeResponse[]>("", true, data);
+            return new ResultDto<ReceptionsInServicesInformationByReceptionCodeResponse[]>("", true, data);
         }
         catch (Exception ex)
         {
 
-            return new ResultDto<GetReceptionsInServicesInformationByReceptionCodeResponse[]>(ex.Message, false);
+            return new ResultDto<ReceptionsInServicesInformationByReceptionCodeResponse[]>(ex.Message, false);
         }
 
     }
 
-    public async Task<ResultDto<GetReceptionsOutServicesInformationByReceptionCodeResponse[]>> GetReceptionsOutServicesInformationByReceptionCode(string ReceptionCode, string NationalCodeOrEconomicCode)
+    public async Task<ResultDto<ReceptionsOutServicesInformationByReceptionCodeResponse[]>> GetReceptionsOutServicesInformationByReceptionCode(string ReceptionCode, string NationalCodeOrEconomicCode)
     {
         try
         {
-            var data = await RestUtility.GetData<GetReceptionsOutServicesInformationByReceptionCodeResponse[]>(_baseUrl, Resource7Soft.GetReceptionsOutServicesInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
+            var data = await RestUtility.GetData<ReceptionsOutServicesInformationByReceptionCodeResponse[]>(_baseUrl, Resource7Soft.GetReceptionsOutServicesInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
 
-            return new ResultDto<GetReceptionsOutServicesInformationByReceptionCodeResponse[]>("", true, data);
+            return new ResultDto<ReceptionsOutServicesInformationByReceptionCodeResponse[]>("", true, data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<GetReceptionsOutServicesInformationByReceptionCodeResponse[]>(ex.Message, false);
+            return new ResultDto<ReceptionsOutServicesInformationByReceptionCodeResponse[]>(ex.Message, false);
         }
     }
 
-    public async Task<ResultDto<GetReceptionCustomerStatementInformationByReceptionCodeResponse[]>> GetReceptionCustomerStatementInformationByReceptionCode(string ReceptionCode, string NationalCodeOrEconomicCode)
+    public async Task<ResultDto<ReceptionCustomerStatementInformationByReceptionCodeResponse[]>> GetReceptionCustomerStatementInformationByReceptionCode(string ReceptionCode, string NationalCodeOrEconomicCode)
     {
         try
         {
-            var data = await RestUtility.GetData<GetReceptionCustomerStatementInformationByReceptionCodeResponse[]>(_baseUrl, Resource7Soft.GetReceptionCustomerStatementInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
-            return new ResultDto<GetReceptionCustomerStatementInformationByReceptionCodeResponse[]>("", true, data);
+            var data = await RestUtility.GetData<ReceptionCustomerStatementInformationByReceptionCodeResponse[]>(_baseUrl, Resource7Soft.GetReceptionCustomerStatementInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
+            return new ResultDto<ReceptionCustomerStatementInformationByReceptionCodeResponse[]>("", true, data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<GetReceptionCustomerStatementInformationByReceptionCodeResponse[]>(ex.Message, false);
+            return new ResultDto<ReceptionCustomerStatementInformationByReceptionCodeResponse[]>(ex.Message, false);
         }
 
     }
 
 
-    public async Task<ResultDto<GetReceptionsInformationByReceptionIDResponse>> GetReceptionsInformationByReceptionID(string ReceptionCode)
+    public async Task<ResultDto<ReceptionsInformationByReceptionIDResponse>> GetReceptionsInformationByReceptionID(string ReceptionCode)
     {
         try
         {
-            var data = await RestUtility.PostData<GetReceptionsInformationByReceptionIDResponse>(_baseUrl, Resource7Soft.getReceptionsInformationByReceptionID, ReceptionCode);
-            return new ResultDto<GetReceptionsInformationByReceptionIDResponse>("", true, data);
+            var data = await RestUtility.PostData<ReceptionsInformationByReceptionIDResponse>(_baseUrl, Resource7Soft.getReceptionsInformationByReceptionID, ReceptionCode);
+            return new ResultDto<ReceptionsInformationByReceptionIDResponse>("", true, data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<GetReceptionsInformationByReceptionIDResponse>(ex.Message, false);
+            return new ResultDto<ReceptionsInformationByReceptionIDResponse>(ex.Message, false);
         }
     }
 
@@ -304,16 +300,16 @@ public class SevenSoftService : ISevenSoftService
         }
     }
 
-    public async Task<ResultDto<GetSubscriberChassisAllocationResponse[]>> GetSubscriberChassisAllocation(string VinNumber)
+    public async Task<ResultDto<SubscriberChassisAllocationResponse[]>> GetSubscriberChassisAllocation(string VinNumber)
     {
         try
         {
-            var data = await RestUtility.GetData<GetSubscriberChassisAllocationResponse[]>(_baseUrl, Resource7Soft.GetSubscriberChassisAllocation, $"?VinNumber={VinNumber}");
-            return new ResultDto<GetSubscriberChassisAllocationResponse[]>("", true, data);
+            var data = await RestUtility.GetData<SubscriberChassisAllocationResponse[]>(_baseUrl, Resource7Soft.GetSubscriberChassisAllocation, $"?VinNumber={VinNumber}");
+            return new ResultDto<SubscriberChassisAllocationResponse[]>("", true, data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<GetSubscriberChassisAllocationResponse[]>(ex.Message, false);
+            return new ResultDto<SubscriberChassisAllocationResponse[]>(ex.Message, false);
         }
     }
     public async Task<(bool,string)> CheckExistsReserveVinNumber(string VinNumber)
@@ -343,40 +339,40 @@ public class SevenSoftService : ISevenSoftService
 
     
 
-    public async Task<ResultDto<GetAllServerGroupTimeResponse[]>> GetAllServerGroupTime(Guid WorkShopTimeTableId,Guid ServerGroupId)
+    public async Task<ResultDto<AllServerGroupTimeResponse[]>> GetAllServerGroupTime(Guid WorkShopTimeTableId,Guid ServerGroupId)
     {
         try
         {
-            var data = await RestUtility.GetData<GetAllServerGroupTimeResponse[]>(_baseUrl, Resource7Soft.GetAllServerGroupTime, $"?WorkShopTimeTableId={WorkShopTimeTableId}&ServerGroupId={ServerGroupId}");
-            return new ResultDto<GetAllServerGroupTimeResponse[]>("", true, data);
+            var data = await RestUtility.GetData<AllServerGroupTimeResponse[]>(_baseUrl, Resource7Soft.GetAllServerGroupTime, $"?WorkShopTimeTableId={WorkShopTimeTableId}&ServerGroupId={ServerGroupId}");
+            return new ResultDto<AllServerGroupTimeResponse[]>("", true, data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<GetAllServerGroupTimeResponse[]>(ex.Message, false);
+            return new ResultDto<AllServerGroupTimeResponse[]>(ex.Message, false);
         }
     }
-    public async Task<ResultDto<GetAllServerGroupDateResponse[]>> GetAllServerGroupDate(Guid ServerGroupId,Guid BranchId)
+    public async Task<ResultDto<AllServerGroupDateResponse[]>> GetAllServerGroupDate(Guid ServerGroupId,Guid BranchId)
     {
         try
         {
-            var data = await RestUtility.GetData<GetAllServerGroupDateResponse[]>(_baseUrl, Resource7Soft.GetAllServerGroupDate, $"?ServerGroupId={ServerGroupId}&BranchId={BranchId}");
-            return new ResultDto<GetAllServerGroupDateResponse[]>("", true, data);
+            var data = await RestUtility.GetData<AllServerGroupDateResponse[]>(_baseUrl, Resource7Soft.GetAllServerGroupDate, $"?ServerGroupId={ServerGroupId}&BranchId={BranchId}");
+            return new ResultDto<AllServerGroupDateResponse[]>("", true, data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<GetAllServerGroupDateResponse[]>(ex.Message, false);
+            return new ResultDto<AllServerGroupDateResponse[]>(ex.Message, false);
         }
     }
-    public async Task<ResultDto<GetAllServerGroupResponse[]>> GetAllServerGroup(Guid branchId)
+    public async Task<ResultDto<AllServerGroupResponse[]>> GetAllServerGroup(Guid branchId)
     {
         try
         {
-            var data = await RestUtility.GetData<GetAllServerGroupResponse[]>(_baseUrl, Resource7Soft.GetAllServerGroup, $"?branchId={branchId}");
-            return new ResultDto<GetAllServerGroupResponse[]>("", true, data);
+            var data = await RestUtility.GetData<AllServerGroupResponse[]>(_baseUrl, Resource7Soft.GetAllServerGroup, $"?branchId={branchId}");
+            return new ResultDto<AllServerGroupResponse[]>("", true, data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<GetAllServerGroupResponse[]>(ex.Message, false);
+            return new ResultDto<AllServerGroupResponse[]>(ex.Message, false);
         }
     }
     public async Task<ResultDto<BranchResponse[]>> GetAllBranch(Guid DealerId)

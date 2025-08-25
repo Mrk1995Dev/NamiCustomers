@@ -5,17 +5,17 @@ namespace NamiCustomers.Application.Services.Dealers;
 
 public interface IDealerService
 {
-    Task<ResultDto<GetBranchesByDealerResponse[]>> GetBranchesByDealerAsync(Guid dealerId);
+    Task<ResultDto<BranchesByDealerResponse[]>> GetBranchesByDealerAsync(Guid dealerId);
     Task<ResultDto<DealerResponse[]>> GetDealersAsync();
-    Task<ResultDto<GetReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumber(string chassisVinNumber);
+    Task<ResultDto<ReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumber(string chassisVinNumber);
 }
 public class DealerService(IMapper mapper, ISevenSoftService sevenSoftService) : IDealerService
 {
-    public async Task<ResultDto<GetBranchesByDealerResponse[]>> GetBranchesByDealerAsync(Guid dealerId)
+    public async Task<ResultDto<BranchesByDealerResponse[]>> GetBranchesByDealerAsync(Guid dealerId)
     {
         var data = await sevenSoftService.GetBranchesByDealer(dealerId);
-        var models = mapper.Map<GetBranchesByDealerResponse[]>(data);
-        return new ResultDto<GetBranchesByDealerResponse[]>(Infrastucture.Properties.Resources.msgFound, true, models);
+        var models = mapper.Map<BranchesByDealerResponse[]>(data);
+        return new ResultDto<BranchesByDealerResponse[]>(Infrastucture.Properties.Resources.msgFound, true, models);
     }
 
     public async Task<ResultDto<DealerResponse[]>> GetDealersAsync()
@@ -25,10 +25,10 @@ public class DealerService(IMapper mapper, ISevenSoftService sevenSoftService) :
         return new ResultDto<DealerResponse[]>(Infrastucture.Properties.Resources.msgFound, true, models);
     }
 
-    public async Task<ResultDto<GetReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumber(string chassisVinNumber)
+    public async Task<ResultDto<ReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumber(string chassisVinNumber)
     {
         var data = await sevenSoftService.GetReceptionsInformationByVinNumber(chassisVinNumber);
-        var models = mapper.Map<GetReceptionsInformationByVinNumberResponse[]>(data);
-        return new ResultDto<GetReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.msgFound, true, models);
+        var models = mapper.Map<ReceptionsInformationByVinNumberResponse[]>(data);
+        return new ResultDto<ReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.msgFound, true, models);
     }
 }

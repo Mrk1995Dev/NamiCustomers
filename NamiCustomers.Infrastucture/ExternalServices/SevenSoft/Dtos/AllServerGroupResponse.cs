@@ -1,6 +1,6 @@
 ﻿namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
-public class GetAllServerGroupResponse
+public class AllServerGroupResponse
 {
     public int Code { get; set; }
     public string UniqueId { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
-public class GetApplicantRegistrationReportResponse
+public class ApplicantRegistrationReportResponse
 {
     public Vehiclesale? VehicleSale { get; set; }
     public Accounting[] Accounting { get; set; }

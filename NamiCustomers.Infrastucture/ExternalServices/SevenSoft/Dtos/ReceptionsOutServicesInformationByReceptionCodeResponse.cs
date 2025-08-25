@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
-public class GetReceptionsOutServicesInformationByReceptionCodeResponse
+public class ReceptionsOutServicesInformationByReceptionCodeResponse
 {
     public string UniqueId { get; set; }
     public int Code { get; set; }

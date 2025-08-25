@@ -1,7 +1,7 @@
 ﻿namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
 
-public class GetAllRequiredAttachmentRequirementsResponse
+public class AllRequiredAttachmentRequirementsResponse
 {
     public string UniqueId { get; set; }
     public int Code { get; set; }

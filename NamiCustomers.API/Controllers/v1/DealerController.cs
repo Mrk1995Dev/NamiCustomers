@@ -17,12 +17,12 @@ public class DealerController(IDealerService dealerService) : ControllerBase
     }
 
     [HttpGet("[action]")]
-    public async Task<ResultDto<GetReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumberAsync(string chassisVinNumber)
+    public async Task<ResultDto<ReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumberAsync(string chassisVinNumber)
     {
         return await dealerService.GetReceptionsInformationByVinNumber(chassisVinNumber);
     }
     [HttpGet("[action]")]
-    public async Task<ResultDto<GetBranchesByDealerResponse[]>> GetBranchesByDealerAsync(Guid dealerId)
+    public async Task<ResultDto<BranchesByDealerResponse[]>> GetBranchesByDealerAsync(Guid dealerId)
     {
         return await dealerService.GetBranchesByDealerAsync(dealerId);
     }

@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
-public class GetAllServerGroupDateResponse
+public class AllServerGroupTimeResponse
 {
     public string Value { get; set; }
     public string Text { get; set; }
     public object ImageFileId { get; set; }
     public object[] DataAttributes { get; set; }
 }
+

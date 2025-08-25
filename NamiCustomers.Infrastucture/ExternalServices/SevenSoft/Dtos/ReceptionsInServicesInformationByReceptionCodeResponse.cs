@@ -1,7 +1,7 @@
 ﻿namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
 
-public class GetReceptionsInServicesInformationByReceptionCodeResponse
+public class ReceptionsInServicesInformationByReceptionCodeResponse
 {
     public string UniqueId { get; set; }
     public int Code { get; set; }

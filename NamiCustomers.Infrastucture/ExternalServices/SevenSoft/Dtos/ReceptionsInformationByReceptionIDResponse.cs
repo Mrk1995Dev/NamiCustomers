@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
 
-public class GetReceptionsInformationByReceptionIDResponse
+public class ReceptionsInformationByReceptionIDResponse
 {
     public SubscriberOfSevenResponse subscriber { get; set; }
     public WarrantyOfSevenResponse warranty { get; set; }

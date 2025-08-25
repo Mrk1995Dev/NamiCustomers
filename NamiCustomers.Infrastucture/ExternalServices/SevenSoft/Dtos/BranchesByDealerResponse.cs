@@ -1,7 +1,7 @@
 ﻿namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
 
-public class GetBranchesByDealerResponse
+public class BranchesByDealerResponse
 {
     public int Code { get; set; }
     public string UniqueId { get; set; }
