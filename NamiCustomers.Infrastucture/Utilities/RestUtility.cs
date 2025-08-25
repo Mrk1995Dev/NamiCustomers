@@ -8,7 +8,7 @@ public static class RestUtility
     {
         if (!string.IsNullOrEmpty(baseUrl))
         {
-            apiAddress = $"{baseUrl}/{apiAddress}";
+            apiAddress = $"{baseUrl}{apiAddress}";
         }
         using HttpClient client = new HttpClient();
         var request = new HttpRequestMessage(HttpMethod.Get, $"{apiAddress}{queryString}");

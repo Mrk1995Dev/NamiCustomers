@@ -187,7 +187,7 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to api/ReceptionInformaionHistory/GetReceptionCustomerStatementInformationByReceptionCode .
+        ///   Looks up a localized string similar to api/ReceptionInformaionHistory/GetReceptionCustomerStatementInformationByReceptionCode.
         /// </summary>
         public static string GetReceptionCustomerStatementInformationByReceptionCode {
             get {

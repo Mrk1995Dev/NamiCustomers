@@ -11,7 +11,7 @@ public class ReceptionsPartsInformationByReceptionCodeResponse
     public string ReceptionBranchNo { get; set; }
     public string PartId { get; set; }
     public string PartNo { get; set; }
-    public object OldPartNo { get; set; }
+    public string OldPartNo { get; set; }
     public string PartProviderLocalizedCode { get; set; }
     public string Part { get; set; }
     public string PartName { get; set; }
@@ -31,40 +31,40 @@ public class ReceptionsPartsInformationByReceptionCodeResponse
     public string ReceptionRowVersion { get; set; }
     public bool IsPayableForCustomer { get; set; }
     public bool PartIsNonCompany { get; set; }
-    public object ParentPartId { get; set; }
+    public string ParentPartId { get; set; }
     public float Tax { get; set; }
     public float Toll { get; set; }
-    public object ValidGuarantyCostCenter { get; set; }
+    public string ValidGuarantyCostCenter { get; set; }
     public bool AutomaticClaimRegister { get; set; }
     public string ReceptionCode { get; set; }
     public DateTime RecDate { get; set; }
     public string StrRecDate { get; set; }
     public int RecKilometer { get; set; }
-    public object RecClock { get; set; }
+    public string RecClock { get; set; }
     public string ReceptionPartsShippingTypeId { get; set; }
-    public object ExitDate { get; set; }
+    public string ExitDate { get; set; }
     public string StrExitDate { get; set; }
-    public object SpOrderingCode { get; set; }
-    public object StrCreatedOn { get; set; }
-    public object PackageId { get; set; }
+    public string SpOrderingCode { get; set; }
+    public string StrCreatedOn { get; set; }
+    public string PackageId { get; set; }
     public bool DontFailureLicense { get; set; }
-    public object Description { get; set; }
+    public string Description { get; set; }
     public bool FromReceptionTask { get; set; }
     public float TaxForShow { get; set; }
     public float TollForShow { get; set; }
     public bool IsNotEditable { get; set; }
-    public object PartName_En { get; set; }
+    public string PartName_En { get; set; }
     public bool SafetyPart { get; set; }
-    public object[] Discounts { get; set; }
+    public string[] Discounts { get; set; }
     public string PartGroupName { get; set; }
     public string PartTypeName { get; set; }
     public string PartTypeId { get; set; }
     public int CostCenterCode { get; set; }
-    public object PartSerialId { get; set; }
-    public object PartSerial { get; set; }
-    public object ClaimProblemReasonId { get; set; }
+    public string PartSerialId { get; set; }
+    public string PartSerial { get; set; }
+    public string ClaimProblemReasonId { get; set; }
     public string PartCatalog { get; set; }
-    public object IDCode { get; set; }
+    public string IDCode { get; set; }
     public string CountingUnitCatalog { get; set; }
     public string PartGroupNo { get; set; }
     public string WarehouseId { get; set; }

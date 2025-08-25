@@ -154,7 +154,7 @@
     <value>api/ReceptionInformaionHistory/GetReceptionsOutServicesInformationByReceptionCode</value>
   </data>
   <data name="GetReceptionCustomerStatementInformationByReceptionCode" xml:space="preserve">
-    <value>api/ReceptionInformaionHistory/GetReceptionCustomerStatementInformationByReceptionCode </value>
+    <value>api/ReceptionInformaionHistory/GetReceptionCustomerStatementInformationByReceptionCode</value>
   </data>
   <data name="getReceptionsInformationByReceptionID" xml:space="preserve">
     <value>api/ReceptionInvoiceReport/getReceptionsInformationByReceptionID</value>
