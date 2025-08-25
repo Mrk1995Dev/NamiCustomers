@@ -215,7 +215,15 @@ public class SevenSoftService : ISevenSoftService
     }
 }
 
+    //public async Task<ResultDto<>> getAllSubCountries();
+    //public async Task<ResultDto<>> getAllCity();
+    //public async Task<ResultDto<>> GetAllDealer();
+    //public async Task<ResultDto<>> getAllBranch();
+    //public async Task<ResultDto<>> getAllServerGroup();
+    //public async Task<ResultDto<>> getAllServerGroupDate();
+    //public async Task<ResultDto<>> getAllServerGroupTime();
+    //public async Task<ResultDto<>> CheckExistsReserveVinNumber();
+    //public async Task<ResultDto<>> getSubscriberChassisAllocation();
+    //public async Task<ResultDto<>>();
 
-
-
-
+ 

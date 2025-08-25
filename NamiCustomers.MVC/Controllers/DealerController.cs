@@ -42,13 +42,5 @@ public class DealerController(IDealerService dealerService,IVehicleService vehic
         return View(result.Data);
     }
 
-    public async Task<IActionResult> ReceptionsInformationByVinNumber()
-    {
-        var result = await dealerService.GetReceptionsInformationByVinNumber();
-        if (!result.Succeeded)
-        {
-            SetError(result.Errors.FirstOrDefault());
-        }
-        return View(result);
-    }
+    
 }
