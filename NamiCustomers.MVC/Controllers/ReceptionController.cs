@@ -13,7 +13,7 @@ public class ReceptionController(ISevenSoftService sevenSoftService) : MyBaseCon
     /// <param name="ReceptionCode"></param>
     /// <param name="NationalCodeOrEconomicCode"></param>
     /// <returns></returns>
-    public async Task<IActionResult> ReceptionsPartsInformation(string ReceptionCode= "701-200-250", string NationalCodeOrEconomicCode = "0082425639")
+    public async Task<IActionResult> ReceptionsPartsInformation(string ReceptionCode, string NationalCodeOrEconomicCode = "0082425639")
     {
         var result = await sevenSoftService.GetReceptionsPartsInformationByReceptionCode(ReceptionCode, NationalCodeOrEconomicCode);
         if (!result.Succeeded)
