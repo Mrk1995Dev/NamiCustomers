@@ -159,4 +159,34 @@
   <data name="getReceptionsInformationByReceptionID" xml:space="preserve">
     <value>api/ReceptionInvoiceReport/getReceptionsInformationByReceptionID</value>
   </data>
+  <data name="GetAllSubCountries" xml:space="preserve">
+    <value>api/Booking/getAllSubCountries</value>
+  </data>
+  <data name="GetAllCity" xml:space="preserve">
+    <value>api/Booking/getAllCity</value>
+  </data>
+  <data name="GetAllDealer" xml:space="preserve">
+    <value>api/Booking/GetAllDealer</value>
+  </data>
+  <data name="GetAllBranch" xml:space="preserve">
+    <value>api/Booking/getAllBranch</value>
+  </data>
+  <data name="GetAllServerGroup" xml:space="preserve">
+    <value>api/Booking/getAllServerGroup</value>
+  </data>
+  <data name="GetAllServerGroupDate" xml:space="preserve">
+    <value>api/Booking/getAllServerGroupDate</value>
+  </data>
+  <data name="GetAllServerGroupTime" xml:space="preserve">
+    <value>api/Booking/getAllServerGroupTime</value>
+  </data>
+  <data name="CheckExistsReserveVinNumber" xml:space="preserve">
+    <value>api/Booking/CheckExistsReserveVinNumber</value>
+  </data>
+  <data name="GetSubscriberChassisAllocation" xml:space="preserve">
+    <value>api/Booking/getSubscriberChassisAllocation</value>
+  </data>
+  <data name="CheckIsValidKilometer" xml:space="preserve">
+    <value>api/Booking/CheckIsValidKilometer</value>
+  </data>
 </root>

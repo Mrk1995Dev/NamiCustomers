@@ -70,11 +70,92 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/Booking/CheckExistsReserveVinNumber.
+        /// </summary>
+        public static string CheckExistsReserveVinNumber {
+            get {
+                return ResourceManager.GetString("CheckExistsReserveVinNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/Booking/CheckIsValidKilometer.
+        /// </summary>
+        public static string CheckIsValidKilometer {
+            get {
+                return ResourceManager.GetString("CheckIsValidKilometer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to api/Guaranty/GetActiveMainChassisGuarantee?vinNumber=.
         /// </summary>
         public static string GetActiveMainChassisGuarantee {
             get {
                 return ResourceManager.GetString("GetActiveMainChassisGuarantee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/Booking/getAllBranch.
+        /// </summary>
+        public static string GetAllBranch {
+            get {
+                return ResourceManager.GetString("GetAllBranch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/Booking/getAllCity.
+        /// </summary>
+        public static string GetAllCity {
+            get {
+                return ResourceManager.GetString("GetAllCity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/Booking/GetAllDealer.
+        /// </summary>
+        public static string GetAllDealer {
+            get {
+                return ResourceManager.GetString("GetAllDealer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/Booking/getAllServerGroup.
+        /// </summary>
+        public static string GetAllServerGroup {
+            get {
+                return ResourceManager.GetString("GetAllServerGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/Booking/getAllServerGroupDate.
+        /// </summary>
+        public static string GetAllServerGroupDate {
+            get {
+                return ResourceManager.GetString("GetAllServerGroupDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/Booking/getAllServerGroupTime.
+        /// </summary>
+        public static string GetAllServerGroupTime {
+            get {
+                return ResourceManager.GetString("GetAllServerGroupTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/Booking/getAllSubCountries.
+        /// </summary>
+        public static string GetAllSubCountries {
+            get {
+                return ResourceManager.GetString("GetAllSubCountries", resourceCulture);
             }
         }
         
@@ -174,6 +255,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         public static string GetSubscriberByNationalCode {
             get {
                 return ResourceManager.GetString("GetSubscriberByNationalCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/Booking/getSubscriberChassisAllocation.
+        /// </summary>
+        public static string GetSubscriberChassisAllocation {
+            get {
+                return ResourceManager.GetString("GetSubscriberChassisAllocation", resourceCulture);
             }
         }
         
