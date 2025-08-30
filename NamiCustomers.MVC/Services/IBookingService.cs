@@ -142,6 +142,7 @@ public class BookingTurnResponse
     public Guid? ServerGroupId { get; set; }
     public Guid? ServerGroupDateId { get; set; }
     public Guid? ServerGroupTimeId { get; set; }
+    public int Kilometer { get; set; }
 
 }
 public class BookingTurnOptionDto : SelectListItem

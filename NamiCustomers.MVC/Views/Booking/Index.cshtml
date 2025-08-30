@@ -127,7 +127,9 @@
 
                                 <select onchange="refresh()" asp-for="@Model.ServerGroupTimeId" asp-items="@Model.ServerGroupTimes" class="form-control"></select>
                             </div>
-
+                            <div class="col-md-12">
+                                <input name="@Model.Kilometer" placeholder="کارکرد (کیلومتر)"/>
+                                </div>
                         </div>
                         <div class="tab-pane fade" id="modern" role="tabpanel" aria-labelledby="modern-tab">
                             <h6 class="text-white">Modern trends.</h6>
