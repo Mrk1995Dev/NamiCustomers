@@ -151,6 +151,12 @@ public static class ServicesRegisteration
             var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
             return new AccountService(httpClient);
         });
+        services.AddScoped<IBookingService, BookingService>(sp =>
+        {
+            var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
+            var sevenSoftService = sp.GetRequiredService<ISevenSoftService>();
+            return new BookingService(httpClient,sevenSoftService);
+        });
         services.AddScoped<IRoleService, RoleService>(sp =>
         {
             var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
