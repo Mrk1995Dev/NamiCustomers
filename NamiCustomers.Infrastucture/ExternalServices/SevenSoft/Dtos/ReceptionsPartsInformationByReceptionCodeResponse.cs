@@ -1,4 +1,7 @@
-﻿ 
+﻿
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
 namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
  
 public class ReceptionsPartsInformationByReceptionCodeResponse
@@ -10,29 +13,45 @@ public class ReceptionsPartsInformationByReceptionCodeResponse
     public string ReceptionDealerNo { get; set; }
     public string ReceptionBranchNo { get; set; }
     public string PartId { get; set; }
+    [DisplayName("کد قطعه")]
     public string PartNo { get; set; }
     public string OldPartNo { get; set; }
     public string PartProviderLocalizedCode { get; set; }
-    public string Part { get; set; }
-    public string PartName { get; set; }
+	[DisplayName("نام لاتین قطعه")]
+	public string Part { get; set; }
+	[DisplayName("نام قطعه ")]
+	public string PartName { get; set; }
     public int? PartTypeEnumCode { get; set; }
-    public float UnitPrice { get; set; }
+	[DisplayName("مبلغ واحد")]
+	[DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
+	public float UnitPrice { get; set; }
     public float ExtraPrice { get; set; }
-    public float Discount { get; set; }
+	[DisplayName("تخفیف")]
+	[DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
+	public float Discount { get; set; }
     public float DiscountValue { get; set; }
     public float DiscountPercent { get; set; }
-    public float Number { get; set; }
-    public float TotalPrice { get; set; }
+	[DisplayName("مقدار")]
+	[DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
+	public float Number { get; set; }
+	[DisplayName("مبلغ کل")]
+	[DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
+	public float TotalPrice { get; set; }
     public bool HasWarranty { get; set; }
     public string CostCenterId { get; set; }
-    public string CostCenterName { get; set; }
+	[DisplayName("مرکز هزینه")]
+	public string CostCenterName { get; set; }
     public string CostCenter { get; set; }
-    public string PartUnit { get; set; }
+	[DisplayName("تعداد")]
+	public string PartUnit { get; set; }
     public string ReceptionRowVersion { get; set; }
     public bool IsPayableForCustomer { get; set; }
     public bool PartIsNonCompany { get; set; }
     public string ParentPartId { get; set; }
-    public float Tax { get; set; }
+
+	[DisplayName("جمع مالیات و عوارض")]
+	[DisplayFormat(DataFormatString = "{0:N0}", ApplyFormatInEditMode = true)]
+	public float Tax { get; set; }
     public float Toll { get; set; }
     public string ValidGuarantyCostCenter { get; set; }
     public bool AutomaticClaimRegister { get; set; }

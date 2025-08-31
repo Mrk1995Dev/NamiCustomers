@@ -1,5 +1,8 @@
 ﻿
 
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
 namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
 
@@ -9,6 +12,8 @@ public class ReceptionsInformationByVinNumberResponse
     public int Code { get; set; }
     public string UniqueId { get; set; }
     public int DealerSystemCode { get; set; }
+
+    [DisplayName("کد پذیرش")]
     public string ReceptionCode { get; set; }
     public object RelatedCode { get; set; }
     public object RelatedName { get; set; }
@@ -43,7 +48,8 @@ public class ReceptionsInformationByVinNumberResponse
     public object ReferenceBranchName { get; set; }
     public object ReferenceBranchId { get; set; }
     public string DealerNo { get; set; }
-    public string DealerName { get; set; }
+	[DisplayName("عاملیت")]
+	public string DealerName { get; set; }
     public string BranchName { get; set; }
     public string BranchId { get; set; }
     public object BranchEditLogId { get; set; }
@@ -51,7 +57,8 @@ public class ReceptionsInformationByVinNumberResponse
     public DateTime RecDate { get; set; }
     public string StrRecDate { get; set; }
     public string StrRecTime { get; set; }
-    public int RecKilometer { get; set; }
+	[DisplayName("کیلومتر پذیرش")]
+	public int RecKilometer { get; set; }
     public int RecClock { get; set; }
     public object Description { get; set; }
     public string RepairAdviserId { get; set; }
@@ -68,7 +75,8 @@ public class ReceptionsInformationByVinNumberResponse
     public object StrEstimatedDaysToDeliver { get; set; }
     public object TotalWarrantyAmount { get; set; }
     public float EstimatedAmount { get; set; }
-    public DateTime EstimatedDeliver { get; set; }
+	[DisplayName("تاریخ تقریبی تحویل")]
+	public DateTime EstimatedDeliver { get; set; }
     public string StrEstimatedDeliverDate { get; set; }
     public string StrEstimatedDeliverTime { get; set; }
     public object FirstCreatedUserEstimatedDeliver { get; set; }
@@ -96,6 +104,7 @@ public class ReceptionsInformationByVinNumberResponse
     public int BranchCollectiveInvoiceNumberByYear { get; set; }
     public int DealerInvoiceNumber { get; set; }
     public int BranchInvoiceNumber { get; set; }
+    [DisplayName("تاریخ فاکتور")]
     public DateTime InvoiceDate { get; set; }
     public string StrInvoiceDate { get; set; }
     public string StrInvoiceTime { get; set; }
@@ -106,6 +115,7 @@ public class ReceptionsInformationByVinNumberResponse
     public string StrPreInvoiceTime { get; set; }
     public int FuelStatusId { get; set; }
     public int BatteryStatusId { get; set; }
+    [DisplayName("وضعیت سوخت")]
     public string FuelStatusLocalizedName { get; set; }
     public string BatteryStatusLocalizedName { get; set; }
     public float TotalAmount { get; set; }
@@ -120,6 +130,7 @@ public class ReceptionsInformationByVinNumberResponse
     public object InServicesToll { get; set; }
     public object OutServicesToll { get; set; }
     public object PartsToll { get; set; }
+    [DisplayName("مبلغ قابل پرداخت")]
     public float EndAmount { get; set; }
     public float ParkingAmount { get; set; }
     public int ParkingDay { get; set; }
@@ -135,17 +146,21 @@ public class ReceptionsInformationByVinNumberResponse
     public int ReceptionStateOrderId { get; set; }
     public string ReceptionStateOrder { get; set; }
     public string RowVersion { get; set; }
-    public string ReceptionType { get; set; }
+	[DisplayName("نوع پذیرش")]
+	public string ReceptionType { get; set; }
     public object KilometerModificationDescription { get; set; }
-    public string ReceptionStatus { get; set; }
+	[DisplayName("وضعیت پذیرش")]
+	public string ReceptionStatus { get; set; }
     public string DealerBranchNo { get; set; }
     public string VehicleFullName { get; set; }
+    [DisplayName("وضعیت گارانتی")]
     public string WarrantyStatus { get; set; }
     public object LastDraftResultCode { get; set; }
     public float PartAmount { get; set; }
     public float InServiceAmount { get; set; }
     public float OutServiceAmount { get; set; }
     public string ReceptionControlDescription { get; set; }
+    [DisplayName("تاریخ کنترل نهایی")]
     public DateTime ReceptionControlDate { get; set; }
     public string StrReceptionControlDate { get; set; }
     public string StrReceptionControlTime { get; set; }

@@ -1,6 +1,34 @@
 ﻿@model string
 
+
+<br />
+
+<div class="container direction-rtl">
+    <div class="card">
+        <div class="card-body p-2">
+            <div class="d-flex align-items-center justify-content-between">
+                <small class="ms-1">جزئیات پذیرش   </small>
+                <form action="#">
+                    <a title="بازگشت" href="/Reception/ReceptionsInformationByVinNumber"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></a>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+
 @await Component.InvokeAsync("ReceptionCustomerStatementInformation", new { ReceptionCode = Model })
+<br />
+
 @await Component.InvokeAsync("ReceptionsInServicesInformation", new { ReceptionCode = Model })
-@await Component.InvokeAsync("ReceptionsOutServicesInformation", new { ReceptionCode = "719-200-42" })@*hamed todo*@
+<br />
+
 @await Component.InvokeAsync("ReceptionsPartsInformation", new { ReceptionCode = Model })
+<br />
+@await Component.InvokeAsync("ReceptionsOutServicesInformation", new { ReceptionCode = Model })@*hamed todo*@
+<br />
+
+
+

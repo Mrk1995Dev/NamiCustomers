@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,16 +13,25 @@ public class ReceptionCustomerStatementInformationByReceptionCodeResponse
     public string UniqueId { get; set; }
     public string ReceptionId { get; set; }
     public int PresentReceptionDealerSystemCode { get; set; }
+    [DisplayName("کد پذیرش قبلی ( کار برگشتی )")]
     public string ReturnReceptionCode { get; set; }
     public object ReturnReceptionId { get; set; }
     public string CustomerStatementsTypeId { get; set; }
     public string DefaultCustomerDescriptionId { get; set; }
+    [DisplayName("اظهارات پیش فرض")]
     public string DefaultCustomerDescriptionLocalizedName { get; set; }
+    [DisplayName("نوع اظهار")]
     public string CustomerStatementsTypeLocalizedName { get; set; }
     public int StatementsTypeId { get; set; }
-    public string StatementsTypeLocalizedName { get; set; }
+
+	[DisplayName("اظهار کننده")]
+
+	public string StatementsTypeLocalizedName { get; set; }
+    [DisplayName("توضحیات مشتری")]
     public string CustomerDescription { get; set; }
+    [DisplayName("نظریه کارشناس فنی")]
     public string ExpertTheory { get; set; }
+    [DisplayName("تایید شده")]
     public bool Approved { get; set; }
     public object ReceptionDealerSystemCode { get; set; }
     public object PropblemFinderPersonnelId { get; set; }

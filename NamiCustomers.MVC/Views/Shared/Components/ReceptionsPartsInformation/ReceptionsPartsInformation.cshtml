@@ -4,8 +4,115 @@
     ViewData["Title"] = "ReceptionsPartsInformation";
 }
 
-<h1>ReceptionsPartsInformation</h1>
- 
+<div class="container">
+    <div class="element-heading mt-3">
+        <h6>لیست قطعات مصرفت شده در پذیرش</h6>
+    </div>
+</div>
+
+
+
+<br />
+@if (Model == null || !Model.Any())
+{
+    <div class="container">
+        <div class="card" style="border-left:0.5rem solid var(--danger-500) !important">
+            <div class="card-body">
+                <div class="accordion" id="basicaccordion">
+                    <p style="direction:rtl !important">
+                        موردی برای نمایش وجود ندارد.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+else
+{
+
+<div class="container">
+    <div class="card" style="border-left:0.5rem solid var(--primary-950) !important">
+        <div class="card-body">
+            <div class="accordion" id="basicaccordion">
+                @foreach (var (item, index) in Model.Select((item, index) => (item, index)))
+                {
+                <!-- Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@item.PartNo" aria-expanded="false" aria-controls="@item.PartNo">@(index + 1) ) &nbsp;&nbsp; @* @Html.DisplayNameFor(model => model.PartNo) *@<span style="direction:ltr !important;text-align:right !important">@item.PartName</span></button>
+                    </div>
+                    <div class="accordion-collapse collapse" id="@item.PartNo" aria-labelledby="headingOne" data-bs-parent="#basicaccordion" style="">
+                        <div class="accordion-body">
+                                <table class="table mb-0">
+
+                                    <tbody>
+                                        <tr>
+                                            <th > @Html.DisplayNameFor(model => model.PartNo)</th>
+                                            <td style="font-family: Inter, sans-serif !important"> @item.PartNo</td>
+
+                                        </tr>
+                                        <tr>
+                                            <th> @Html.DisplayNameFor(model => model.Number)</th>
+                                            <td> @Html.DisplayFor(model => item.Number) @item.PartUnit</td>
+
+                                        </tr>
+                                        <tr>
+                                            <th> @Html.DisplayNameFor(model => model.UnitPrice)</th>
+                                            <td> @Html.DisplayFor(model => item.UnitPrice) ریال</td>
+
+                                        </tr>
+                                        <tr>
+                                            
+                                            <th> @Html.DisplayNameFor(model => model.TotalPrice)</th>
+                                            <td> @Html.DisplayFor(model => item.TotalPrice) ریال</td>
+                                        </tr>
+                                        <tr>
+                                            <th> @Html.DisplayNameFor(model => model.Discount)</th>
+                                            <td> @Html.DisplayFor(model => item.Discount) ریال</td>
+
+                                        </tr>
+                                        <tr>
+                                            <th> مبلغ کل پس از کسر تخفیف	</th>
+                                            <td> @((item.TotalPrice - item.Discount).ToString("N0")) ریال</td>
+
+                                        </tr>
+                                        <tr>
+                                            <th> @Html.DisplayNameFor(model => model.Tax)</th>
+                                            <td> @Html.DisplayFor(model => item.Tax) ریال</td>
+
+                                        </tr>
+                                        <tr>
+                                            <th> جمع کل + مالیات و عوارض	</th>
+                                            <td> @(((item.TotalPrice - item.Discount) + item.Tax).ToString("N0")) ریال</td>
+
+                                        </tr>
+                                  <tr>
+                                            <th> @Html.DisplayNameFor(model => model.CostCenterName)</th>
+                                            <td> @Html.DisplayFor(model => item.CostCenterName) </td>
+                                  </tr>
+                                        @* <tr>
+                                            <th> گارانتی خودرو فعال است؟</th>
+
+                                            <td><i class="text-success bi bi-check-lg fz-16"></i></td>
+
+
+                                        </tr> *@
+
+                                    </tbody>
+                                </table>
+                        </div>
+                    </div>
+                </div>
+                }
+
+           
+            </div>
+        </div>
+    </div>
+</div>
+}
+@*  
 <table class="table">
     <thead>
         <tr>
@@ -337,4 +444,4 @@
         </tr>
 }
     </tbody>
-</table>
+</table> *@
