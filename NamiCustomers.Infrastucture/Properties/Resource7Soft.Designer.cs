@@ -70,6 +70,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to http://7soft.nami.local:8087/.
+        /// </summary>
+        public static string BaseUrlBooking {
+            get {
+                return ResourceManager.GetString("BaseUrlBooking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to api/Booking/CheckExistsReserveVinNumber.
         /// </summary>
         public static string CheckExistsReserveVinNumber {

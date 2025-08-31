@@ -1,6 +1,8 @@
-﻿
+﻿@using NamiCustomers.MVC.Services
+@model BookingTurnResponse
 @{
     ViewData["Title"] = "Index";
+   
 }
 
 <br />
@@ -24,88 +26,133 @@
 <div class="container">
     <div class="card " style="background-color:var(--dark-secondary) !important;">
         <div class="card-body">
-            <div class="colorful-tab">
-                <ul class="nav p-1 mb-3 shadow-sm" id="affanTab3" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="btn btn-primary active" id="Start-tab" data-bs-toggle="tab" data-bs-target="#Start" type="button" role="tab" aria-controls="Start" aria-selected="false" tabindex="-1">شروع</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="btn btn-primary" id="creative-tab" data-bs-toggle="tab" data-bs-target="#creative" type="button" role="tab" aria-controls="creative" aria-selected="false" tabindex="-1">انتخاب نوبت</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="btn btn-primary" id="modern-tab" data-bs-toggle="tab" data-bs-target="#modern" type="button" role="tab" aria-controls="modern" aria-selected="false" tabindex="-1">بررسی نهایی</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="btn btn-primary " id="latest-tab" data-bs-toggle="tab" data-bs-target="#latest" type="button" role="tab" aria-controls="latest" aria-selected="true">کد رهگیری</button>
-                    </li>
-                
-                </ul>
+            <form action="Index">
+                <div class="colorful-tab">
+                    <ul class="nav p-1 mb-3 shadow-sm" id="affanTab3" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="btn btn-primary" id="Start-tab" data-bs-toggle="tab" data-bs-target="#Start" type="button" role="tab" aria-controls="Start" aria-selected="false" tabindex="-1">شروع</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="btn btn-primary active" id="creative-tab" data-bs-toggle="tab" data-bs-target="#creative" type="button" role="tab" aria-controls="creative" aria-selected="false" tabindex="-1">انتخاب نوبت</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="btn btn-primary" id="modern-tab" data-bs-toggle="tab" data-bs-target="#modern" type="button" role="tab" aria-controls="modern" aria-selected="false" tabindex="-1">بررسی نهایی</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="btn btn-primary " id="latest-tab" data-bs-toggle="tab" data-bs-target="#latest" type="button" role="tab" aria-controls="latest" aria-selected="true">کد رهگیری</button>
+                        </li>
 
-                <div class="tab-content shadow-sm p-3" id="affanTab3Content">
-                    <div class="tab-pane fade active show" id="Start" role="tabpanel" aria-labelledby="Start-tab">
-                        <h6 class="text-white">
-                            راهنمایی و شروع
-                        </h6>
-                        <p class="mb-0 text-white" style="text-align:justify">
-                            به سیستم نوبت دهی مراکز خدمات پس از فروش شرکت نامی خودرو پیشرو خوش آمدید. در این قسمت شما می توانید براساس خدمت مورد نظر خود نسبت به انتخاب نمایندگی خدمات پس از فروش سرویس دهنده خدمت و همچنین زمان انجام خدمات اقدام نمایید. برای ثبت نوبت در سامانه نوبت دهی شرکت نامی خودور پیشرو، لازم است اطلاعات خودرو و اطلاعات مالک یا آورنده خودرو را در سیستم ثبت نمایید. در پایان فرآیند نوبت دهی، سیستم برای شما کد رهگیری تولید نموده و آن را برای شما پیامک خواهد کرد. که باید در هنگام مراجعه به مرکز ارائه کننده سرویس کد پیگیری مربوطه را ارائه نمایید
-                        </p>
-                        <br />
-                        <h6>
-                            مشتری محترم لطفا به نکات زیر توجه فرمایید :
-                        </h6>
-                        <br />
-                        <p class="mb-0 text-white" style="text-align:justify">
-                            1- خواهشمند است قبل از تحویل خودرو به تعمیرگاه، نسبت به خارج نمودن لوازم شخصی خود اقدام نمایید. تعمیرگاه هیچ گونه مسئولیتی در قبال وسایل شخصی شما نخواهد داشت .
+                    </ul>
 
-                        </p>
-                        <p class="mb-0 text-white" style="text-align:justify">
-                            2-جهت رویت بهتر بدنه و جلوگیری از مشكلات آتی، خواهشمند است ترتیبی اتخاذ فرمایید تا در هنگام تحویل خودرو به تعمیرگاه، خودرو تمیز و فاقد هرگونه آلودگی بوده تا امكان شناسایی ایرادات و خط و خش بدنه میسر باشد .
+                    <div class="tab-content shadow-sm p-3" id="affanTab3Content">
+                        <div class="tab-pane fade  " id="Start" role="tabpanel" aria-labelledby="Start-tab">
+                            <h6 class="text-white">
+                                راهنمایی و شروع
+                            </h6>
+                            <p class="mb-0 text-white" style="text-align:justify">
+                                به سیستم نوبت دهی مراکز خدمات پس از فروش شرکت نامی خودرو پیشرو خوش آمدید. در این قسمت شما می توانید براساس خدمت مورد نظر خود نسبت به انتخاب نمایندگی خدمات پس از فروش سرویس دهنده خدمت و همچنین زمان انجام خدمات اقدام نمایید. برای ثبت نوبت در سامانه نوبت دهی شرکت نامی خودور پیشرو، لازم است اطلاعات خودرو و اطلاعات مالک یا آورنده خودرو را در سیستم ثبت نمایید. در پایان فرآیند نوبت دهی، سیستم برای شما کد رهگیری تولید نموده و آن را برای شما پیامک خواهد کرد. که باید در هنگام مراجعه به مرکز ارائه کننده سرویس کد پیگیری مربوطه را ارائه نمایید
+                            </p>
+                            <br />
+                            <h6>
+                                مشتری محترم لطفا به نکات زیر توجه فرمایید :
+                            </h6>
+                            <br />
+                            <p class="mb-0 text-white" style="text-align:justify">
+                                1- خواهشمند است قبل از تحویل خودرو به تعمیرگاه، نسبت به خارج نمودن لوازم شخصی خود اقدام نمایید. تعمیرگاه هیچ گونه مسئولیتی در قبال وسایل شخصی شما نخواهد داشت .
 
-                        </p>
-                        <p class="mb-0 text-white" style="text-align:justify">
-                            3-جهت پذیرش و جلوگیری از آسیب احتمالی به سیستم سوخت رسانی خودرو، می بایست قبل از تحویل خودرو به تعمیرگاه حداقل 10 لیتر بنزین داخل مخزن سوخت موجود باشد .
+                            </p>
+                            <p class="mb-0 text-white" style="text-align:justify">
+                                2-جهت رویت بهتر بدنه و جلوگیری از مشكلات آتی، خواهشمند است ترتیبی اتخاذ فرمایید تا در هنگام تحویل خودرو به تعمیرگاه، خودرو تمیز و فاقد هرگونه آلودگی بوده تا امكان شناسایی ایرادات و خط و خش بدنه میسر باشد .
 
-                        </p>
-                        <p class="mb-0 text-white" style="text-align:justify">
-                            4-زمان احتمالی تحویل خودرو، متناسب با نوع سرویس درخواستی و پس از کارشناسی انجام شده توسط کارشناس تعمیرگاه در هنگام پذیرش حضوری از طریق مشاور سرویس به شما اعلام خواهد شد .
+                            </p>
+                            <p class="mb-0 text-white" style="text-align:justify">
+                                3-جهت پذیرش و جلوگیری از آسیب احتمالی به سیستم سوخت رسانی خودرو، می بایست قبل از تحویل خودرو به تعمیرگاه حداقل 10 لیتر بنزین داخل مخزن سوخت موجود باشد .
 
-                        </p>
-                        <p class="mb-0 text-white" style="text-align:justify">
-                            5-ارائه کارت شناسایی خودرو و همچنین کارت شناسایی آورنده و یا مالک درهنگام پذیرش و ترخیص الزامی می باشد .
+                            </p>
+                            <p class="mb-0 text-white" style="text-align:justify">
+                                4-زمان احتمالی تحویل خودرو، متناسب با نوع سرویس درخواستی و پس از کارشناسی انجام شده توسط کارشناس تعمیرگاه در هنگام پذیرش حضوری از طریق مشاور سرویس به شما اعلام خواهد شد .
 
-                        </p>
-                        <p class="mb-0 text-white" style="text-align:justify">
-                            6-در صورت محرز شدن مغایرت بین نوع سرویس انتخابی مشتری در نوبت دهی اینترنتی با نیاز واقعی خودرو در زمان مراجعه، شرکت مسئولیتی در قبال پذیرش خودرو در تاریخ اخذ نوبت نخواهد داشت و نسبت به نوبت دهی مجدد برای مشتری اقدام خواهد شد .
-                            .
-                        </p>
-                        <hr />
-                        <div class="d-flex align-items-center justify-content-between direction-rtl">
-                            <!-- Form -->
-                            <div class="goto-page-form">
-                                <a class="btn m-1 btn-outline-secondary" style="text-align:right;width:100px;border:1px solid #8696a7;background-color:#8696a7;color:#fff" href="#">مرحله قبل</a>
+                            </p>
+                            <p class="mb-0 text-white" style="text-align:justify">
+                                5-ارائه کارت شناسایی خودرو و همچنین کارت شناسایی آورنده و یا مالک درهنگام پذیرش و ترخیص الزامی می باشد .
+
+                            </p>
+                            <p class="mb-0 text-white" style="text-align:justify">
+                                6-در صورت محرز شدن مغایرت بین نوع سرویس انتخابی مشتری در نوبت دهی اینترنتی با نیاز واقعی خودرو در زمان مراجعه، شرکت مسئولیتی در قبال پذیرش خودرو در تاریخ اخذ نوبت نخواهد داشت و نسبت به نوبت دهی مجدد برای مشتری اقدام خواهد شد .
+                                .
+                            </p>
+                            <hr />
+                            <div class="d-flex align-items-center justify-content-between direction-rtl">
+                                <!-- Form -->
+                                <div class="goto-page-form">
+                                    <a class="btn m-1 btn-outline-secondary" style="text-align:right;width:100px;border:1px solid #8696a7;background-color:#8696a7;color:#fff" href="#">مرحله قبل</a>
+                                </div>
+
+                                <nav aria-label="Page navigation example">
+                                    <a class="btn m-1 btn-danger" style="width:100px;border:1px solid #c50a26;color:#fff;background-color:#c50a26" href="#">مرحله بعد</a>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade show active" id="creative" role="tabpanel" aria-labelledby="creative-tab">
+
+                            <div class="col-md-12">
+
+                                <select onchange="refresh()" asp-for="@Model.SubCountryId" asp-items="@Model.SubCountries" class="form-control"></select>
+                            </div>
+                            <div class="col-md-12">
+
+                                <select onchange="refresh()" asp-for="@Model.CityId" asp-items="@Model.Cities" class="form-control"></select>
                             </div>
 
-                            <nav aria-label="Page navigation example">
-                                <a class="btn m-1 btn-danger" style="width:100px;border:1px solid #c50a26;color:#fff;background-color:#c50a26" href="#">مرحله بعد</a>
-                            </nav>
+                            <div class="col-md-12">
+
+                                <select onchange="refresh()" asp-for="@Model.DealerId" asp-items="@Model.Dealers" class="form-control"></select>
+                            </div>
+                            <div class="col-md-12">
+
+                                <select onchange="refresh()" asp-for="@Model.BranchId" asp-items="@Model.Branches" class="form-control"></select>
+                            </div>
+
+                            <div class="col-md-12">
+
+                                <select onchange="refresh()" asp-for="@Model.ServerGroupId" asp-items="@Model.ServerGroups" class="form-control"></select>
+                            </div>
+
+                            <div class="col-md-12">
+
+                                <select onchange="refresh()" asp-for="@Model.ServerGroupDateId" asp-items="@Model.ServerGroupDates" class="form-control"></select>
+                            </div>
+
+                            <div class="col-md-12">
+
+                                <select onchange="refresh()" asp-for="@Model.ServerGroupTimeId" asp-items="@Model.ServerGroupTimes" class="form-control"></select>
+                            </div>
+                            <div class="col-md-12">
+                                <input name="@Model.Kilometer" placeholder="کارکرد (کیلومتر)"/>
+                                </div>
+                        </div>
+                        <div class="tab-pane fade" id="modern" role="tabpanel" aria-labelledby="modern-tab">
+                            <h6 class="text-white">Modern trends.</h6>
+                            <p class="mb-0 text-white">Lorem ipsum, dolor sit amet consectetur adipisicing elit.</p>
+                        </div>
+                        <div class="tab-pane fade " id="latest" role="tabpanel" aria-labelledby="latest-tab">
+                            <h6 class="text-white">Latest technology.</h6>
+                            <p class="mb-0 text-white">Lorem ipsum, dolor sit amet consectetur adipisicing elit.</p>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="creative" role="tabpanel" aria-labelledby="creative-tab">
-                        <h6 class="text-white">creative trends.</h6>
-                        <p class="mb-0 text-white">Lorem ipsum, dolor sit amet consectetur adipisicing elit.</p>
-                    </div>
-                    <div class="tab-pane fade" id="modern" role="tabpanel" aria-labelledby="modern-tab">
-                        <h6 class="text-white">Modern trends.</h6>
-                        <p class="mb-0 text-white">Lorem ipsum, dolor sit amet consectetur adipisicing elit.</p>
-                    </div>
-                    <div class="tab-pane fade " id="latest" role="tabpanel" aria-labelledby="latest-tab">
-                        <h6 class="text-white">Latest technology.</h6>
-                        <p class="mb-0 text-white">Lorem ipsum, dolor sit amet consectetur adipisicing elit.</p>
-                    </div>
                 </div>
-            </div>
+                @* <input type="text" name="@Model.CountryId"/> *@
+                <button id="btnrefresh" type="submit"></button>
+            </form>
         </div>
     </div>
 </div>
 
-
+@section Scripts {
+    <script>
+        function refresh()
+        {
+           $('#btnrefresh').click();
+        }
+    </script>
+}
