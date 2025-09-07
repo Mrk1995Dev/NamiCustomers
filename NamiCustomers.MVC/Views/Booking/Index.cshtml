@@ -26,7 +26,8 @@
 <div class="container">
     <div class="card " style="background-color:var(--dark-secondary) !important;">
         <div class="card-body">
-            <form action="Index">
+            @* <form action="Index"> *@
+            <form id="refreshForm">
                 <div class="colorful-tab">
                     <ul class="nav p-1 mb-3 shadow-sm" id="affanTab3" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -130,12 +131,12 @@
                             <div class="form-group">
                                 <label class="form-label" for="defaultSelect">ساعت</label>
 
-                                <select onchange="refresh()" asp-for="@Model.ServerGroupTimeId" asp-items="@Model.ServerGroupTimes" class="form-select form-control-clicked"></select>
+                                <select   asp-for="@Model.ServerGroupTimeId" asp-items="@Model.ServerGroupTimes" class="form-select form-control-clicked"></select>
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label" for="exampleInputnumber"> کیلومتر</label>
-                                <input class="form-control form-control-clicked" name="@Model.Kilometer" placeholder="کارکرد (کیلومتر)" type="number">
+                                <input min="1" class="form-control form-control-clicked" name="@Model.Kilometer" placeholder="کارکرد (کیلومتر)" type="number">
                             </div>
 
                             <div class="form-group">
@@ -145,12 +146,12 @@
                             </div>
 
                             <hr />
-                            <button id="btnrefresh" type="submit" >یییی</button>
+                            <button id="btnrefresh" style="display:none;" type="submit"></button>
 
                         </div>
 
 
-                                 <div class="tab-pane fade" id="modern" role="tabpanel" aria-labelledby="modern-tab">
+                        <div class="tab-pane fade" id="modern" role="tabpanel" aria-labelledby="modern-tab">
                             <h6 class="text-white">Modern trends.</h6>
                             <p class="mb-0 text-white">Lorem ipsum, dolor sit amet consectetur adipisicing elit.</p>
                         </div>
@@ -173,5 +174,90 @@
         {
            $('#btnrefresh').click();
         }
+
+        // Wait for the document to be fully loaded
+        $(document).ready(function () {
+            // 3. Intercept the form's submit event
+            $('#refreshForm').on('submit', function (event) {
+                // 4. Prevent the default form submission (which causes the reload)
+                event.preventDefault();
+
+                // 5. Perform an AJAX POST request
+                $.ajax({
+                    url: '@Url.Action("Refresh", "Booking")', // Builds the correct URL
+                    type: 'POST', // or 'GET', use the same type your controller expects
+                    data: $(this).serialize(), // Serializes the form data
+                    success: function (result) {
+                        
+
+                        const responseData=result.data;
+                        console.log(responseData);
+                        const cities=responseData.cities;
+                        const $cities = $('#CityId');
+                        $cities.empty();
+                        $.each(cities, function(index, item) {
+                        var seleted=item.selected?'selected':'';
+                        $cities.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                        });
+
+
+                        const dealers=responseData.dealers;
+                        const $dealers = $('#DealerId');
+                        $dealers.empty();
+                        $.each(dealers, function(index, item) {
+                        var seleted=item.selected?'selected':'';
+                        $dealers.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                        });
+
+                        const branchs=responseData.branches;
+                        const $branchs = $('#BranchId');
+                        $branchs.empty();
+                        $.each(branchs, function(index, item) {
+                        var seleted=item.selected?'selected':'';
+                        $branchs.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                        });
+
+                        const servergroups=responseData.serverGroups;
+                        const $servergroups = $('#ServerGroupId');
+                        $servergroups.empty();
+                        $.each(servergroups, function(index, item) {
+                        var seleted=item.selected?'selected':'';
+                        $servergroups.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                        });
+
+                        const serverGroupDates=responseData.serverGroupDates;
+                        const $serverGroupDates = $('#ServerGroupDateId');
+                        $serverGroupDates.empty();
+                        $.each(serverGroupDates, function(index, item) {
+                        var seleted=item.selected?'selected':'';
+                        $serverGroupDates.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                        });
+
+                        const serverGroupTimes=responseData.serverGroupTimes;
+                        const $serverGroupTimes = $('#ServerGroupTimeId');
+                        $serverGroupTimes.empty();
+                        $.each(serverGroupTimes, function(index, item) {
+                        var seleted=item.selected?'selected':'';
+                        $serverGroupTimes.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                        });
+
+
+                        
+
+
+
+                        // 6. This function runs on successful response
+                        console.log("Form submitted successfully!", result);
+                        // You can update parts of the page here instead of reloading
+                        // For example: $('#resultDiv').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        // 7. This function runs if there was an error
+                        console.error("An error occurred:", error);
+                    }
+                });
+            });
+        });
+
     </script>
 }
