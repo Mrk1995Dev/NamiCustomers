@@ -2,7 +2,7 @@
 @model BookingTurnResponse
 @{
     ViewData["Title"] = "Index";
-   
+
 }
 
 <br />
@@ -94,44 +94,63 @@
                             </div>
                         </div>
                         <div class="tab-pane fade show active" id="creative" role="tabpanel" aria-labelledby="creative-tab">
+                            <div class="form-group">
+                                <label class="form-label" for="defaultSelect">استان</label>
 
-                            <div class="col-md-12">
-
-                                <select onchange="refresh()" asp-for="@Model.SubCountryId" asp-items="@Model.SubCountries" class="form-control"></select>
+                                <select onchange="refresh()" asp-for="@Model.SubCountryId" asp-items="@Model.SubCountries" class="form-select form-control-clicked"></select>
                             </div>
-                            <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label" for="defaultSelect">شهر</label>
 
-                                <select onchange="refresh()" asp-for="@Model.CityId" asp-items="@Model.Cities" class="form-control"></select>
-                            </div>
-
-                            <div class="col-md-12">
-
-                                <select onchange="refresh()" asp-for="@Model.DealerId" asp-items="@Model.Dealers" class="form-control"></select>
-                            </div>
-                            <div class="col-md-12">
-
-                                <select onchange="refresh()" asp-for="@Model.BranchId" asp-items="@Model.Branches" class="form-control"></select>
+                                <select onchange="refresh()" asp-for="@Model.CityId" asp-items="@Model.Cities" class="form-select form-control-clicked"></select>
                             </div>
 
-                            <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label" for="defaultSelect">عاملیت</label>
 
-                                <select onchange="refresh()" asp-for="@Model.ServerGroupId" asp-items="@Model.ServerGroups" class="form-control"></select>
+                                <select onchange="refresh()" asp-for="@Model.DealerId" asp-items="@Model.Dealers" class="form-select form-control-clicked"></select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="defaultSelect">شعبه</label>
+
+                                <select onchange="refresh()" asp-for="@Model.BranchId" asp-items="@Model.Branches" class="form-select form-control-clicked"></select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="defaultSelect">جایگاه</label>
+
+                                <select onchange="refresh()" asp-for="@Model.ServerGroupId" asp-items="@Model.ServerGroups" class="form-select form-control-clicked"></select>
                             </div>
 
-                            <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label" for="defaultSelect">تاریخ</label>
 
-                                <select onchange="refresh()" asp-for="@Model.ServerGroupDateId" asp-items="@Model.ServerGroupDates" class="form-control"></select>
+                                <select onchange="refresh()" asp-for="@Model.ServerGroupDateId" asp-items="@Model.ServerGroupDates" class="form-select form-control-clicked"></select>
                             </div>
 
-                            <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="form-label" for="defaultSelect">ساعت</label>
 
-                                <select onchange="refresh()" asp-for="@Model.ServerGroupTimeId" asp-items="@Model.ServerGroupTimes" class="form-control"></select>
+                                <select onchange="refresh()" asp-for="@Model.ServerGroupTimeId" asp-items="@Model.ServerGroupTimes" class="form-select form-control-clicked"></select>
                             </div>
-                            <div class="col-md-12">
-                                <input name="@Model.Kilometer" placeholder="کارکرد (کیلومتر)"/>
-                                </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="exampleInputnumber"> کیلومتر</label>
+                                <input class="form-control form-control-clicked" name="@Model.Kilometer" placeholder="کارکرد (کیلومتر)" type="number">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="exampleInputnumber"> توضیحات</label>
+                                <textarea class="form-control form-control-clicked" name="desc" placeholder="کارکرد (کیلومتر)" type="number">
+                                    </textarea>
+                            </div>
+
+                            <hr />
+                            <button id="btnrefresh" type="submit" >یییی</button>
+
                         </div>
-                        <div class="tab-pane fade" id="modern" role="tabpanel" aria-labelledby="modern-tab">
+
+
+                                 <div class="tab-pane fade" id="modern" role="tabpanel" aria-labelledby="modern-tab">
                             <h6 class="text-white">Modern trends.</h6>
                             <p class="mb-0 text-white">Lorem ipsum, dolor sit amet consectetur adipisicing elit.</p>
                         </div>
@@ -142,7 +161,7 @@
                     </div>
                 </div>
                 @* <input type="text" name="@Model.CountryId"/> *@
-                <button id="btnrefresh" type="submit"></button>
+
             </form>
         </div>
     </div>

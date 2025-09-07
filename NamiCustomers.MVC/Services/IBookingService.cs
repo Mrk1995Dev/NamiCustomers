@@ -113,13 +113,13 @@ public class BookingTurnResponse
    
     public BookingTurnResponse()
     {
-        this.SubCountries.Add(new BookingTurnOptionDto { Selected = false ,Text="استان",Value=Guid.Empty.ToString()});
-        this.Cities.Add(new BookingTurnOptionDto { Selected = false, Text = "شهر", Value = Guid.Empty.ToString() });
-        this.Dealers.Add(new BookingTurnOptionDto { Selected = false, Text = "نمایندگی", Value = Guid.Empty.ToString() });
-        this.Branches.Add(new BookingTurnOptionDto { Selected = false, Text = "شعبه", Value = Guid.Empty.ToString() });
-        this.ServerGroups.Add(new BookingTurnOptionDto { Selected = false, Text = "خدمت", Value = Guid.Empty.ToString() });
-        this.ServerGroupDates.Add(new BookingTurnOptionDto { Selected = false, Text = "تاریخ", Value = Guid.Empty.ToString() });
-        this.ServerGroupTimes.Add(new BookingTurnOptionDto { Selected = false, Text = "ساعت", Value = Guid.Empty.ToString() });
+        this.SubCountries.Add(new BookingTurnOptionDto { Selected = false ,Text="لطفا  استان را انتخاب نمایید",Value=Guid.Empty.ToString()});
+        this.Cities.Add(new BookingTurnOptionDto { Selected = false, Text = "لطفا شهر را انتخاب نمایید", Value = Guid.Empty.ToString() });
+        this.Dealers.Add(new BookingTurnOptionDto { Selected = false, Text = "لطفا عاملیت را انتخاب نمایید", Value = Guid.Empty.ToString() });
+        this.Branches.Add(new BookingTurnOptionDto { Selected = false, Text = "لطفا شعبه را انتخاب نمایید", Value = Guid.Empty.ToString() });
+        this.ServerGroups.Add(new BookingTurnOptionDto { Selected = false, Text = "لطفا نوع خدمت را انتخاب نمایید", Value = Guid.Empty.ToString() });
+        this.ServerGroupDates.Add(new BookingTurnOptionDto { Selected = false, Text = "لطفا  تاریخ را انتخاب نمایید", Value = Guid.Empty.ToString() });
+        this.ServerGroupTimes.Add(new BookingTurnOptionDto { Selected = false, Text = "لطفا  زمان را انتخاب نمایید", Value = Guid.Empty.ToString() });
     }
     /// <summary>
     /// استان ها
