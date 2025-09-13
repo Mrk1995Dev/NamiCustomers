@@ -190,6 +190,6 @@
     <value>api/Booking/CheckIsValidKilometer</value>
   </data>
   <data name="BaseUrlBooking" xml:space="preserve">
-    <value>http://7soft.nami.local:8087/</value>
+    <value>http://7soft.namikhodro.com:8087/</value>
   </data>
 </root>
