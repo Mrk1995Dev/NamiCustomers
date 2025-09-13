@@ -1,5 +1,6 @@
 using NamiCustomers.MVC;
 using NamiCustomers.MVC.Filters;
+using NamiCustomers.MVC.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ builder.Services.BaseConfigures(builder);
 //builder.Services.AddScoped<CustomAuthorizeAttribute>();
 var app = builder.Build();
 
+// Exception middleware should be at the TOP of the pipeline Your custom middleware
+app.UseMiddleware<ExceptionMiddleware>();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -25,6 +28,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+// Add session middleware HERE (after UseRouting and before MapControllerRoute)
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();

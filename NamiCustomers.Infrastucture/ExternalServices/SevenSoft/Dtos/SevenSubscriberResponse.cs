@@ -37,7 +37,7 @@ public class SevenSubscriberResponse
     public string BranchId { get; set; }
     public string BranchName { get; set; }
     public string BranchNo { get; set; }
-    public object VinNumber { get; set; }
+    public string? VinNumber { get; set; }
     public object MotorNumber { get; set; }
     public object BodyColor { get; set; }
     public object SubscriberMorality { get; set; }

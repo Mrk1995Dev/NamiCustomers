@@ -29,7 +29,7 @@ namespace NamiCustomers.API.Middlewares
             //    ErrorData = exception.StackTrace
             //}.ToString());
             logger.LogError($"شرح خطا :{Environment.NewLine} {exception.StackTrace}");
-
+            
         }
     }
 }

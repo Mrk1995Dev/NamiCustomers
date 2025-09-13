@@ -1,34 +1,35 @@
-﻿using System.Net;
+﻿
 
-namespace NamiCustomers.MVC.Middlewares;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
-public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+namespace NamiCustomers.MVC.Middlewares
 {
-    public async Task InvokeAsync(HttpContext httpContext)
+    public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
     {
-        try
+        public async Task InvokeAsync(HttpContext httpContext)
         {
-            await next(httpContext);
+            try
+            {
+                await next(httpContext);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"خطا در سامانه رخ داده است  :{Environment.NewLine} {ex} {Environment.NewLine}");
+                await HandleExceptionAsync(httpContext, ex);
+            }
         }
-        catch (Exception ex)
+
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            logger.LogError($"خطا در سامانه رخ داده است  :{Environment.NewLine} {ex} {Environment.NewLine}");
-            await HandleExceptionAsync(httpContext, ex);
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            await context.Response.WriteAsync(new ResultDto(
+             exception.Message,
+             false
+            ).ToString());
+            logger.LogError($"شرح خطا :{Environment.NewLine} {exception.StackTrace}");
+            //context.Session.SetString("Error", exception.Message);
         }
-    }
-
-    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
-    {
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-        //await context.Response.WriteAsync(new ResultDto<object>()
-        //{
-        //    IsSuccess = false,
-        //    StatusCode = StatusCodes.Status500InternalServerError,
-        //    Data = exception.Message,
-        //    ErrorData = exception.StackTrace
-        //}.ToString());
-        logger.LogError($"شرح خطا :{Environment.NewLine} {exception.StackTrace}");
-
     }
 }

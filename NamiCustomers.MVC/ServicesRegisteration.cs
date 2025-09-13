@@ -24,6 +24,7 @@ public static class ServicesRegisteration
     {
         var configuration = webApplicationBuilder.Configuration;
         services
+            .ConsolEnvironment()
             //.ConfigureAppSettings(configuration)
             .ConfigureCors()
             .ConfigureCurrentUser()
@@ -37,6 +38,12 @@ public static class ServicesRegisteration
             .ConfigureCookies()
             ;
 
+        return services;
+    }
+    private static IServiceCollection ConsolEnvironment(this IServiceCollection services)
+    {
+        var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        Console.WriteLine(environmentName);
         return services;
     }
     public static IServiceCollection ConfigurationActionFilters(this IServiceCollection services)
@@ -130,6 +137,7 @@ public static class ServicesRegisteration
         });
 
         services.AddScoped<ITokenSessionService, TokenSessionService>();
+        services.AddScoped<ICookieService, CookieService>();
         services.AddScoped<ISevenSoftService, SevenSoftService>();
         services.AddScoped<ISubscriberService, SubscriberService>(sp =>
         {
@@ -186,6 +194,7 @@ public static class ServicesRegisteration
     {
         services.AddHttpClient();
         services.AddHttpLogging(o => { });
+        services.AddSession();
         services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
         services.AddScoped<ServerAuthenticationStateProvider, CustomAuthenticationStateProvider>();
         return services;
@@ -200,8 +209,8 @@ public static class ServicesRegisteration
     {
         services.AddHttpContextAccessor();
         services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
-        services.AddSession();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddSession();
         //services.AddSingleton<ICurrentUser, CurrentUser>();
 
         return services;

@@ -5,7 +5,9 @@ using NamiCustomers.Domain.Entities.Account;
 using NamiCustomers.Domain.Entities.Subscribers;
 using NamiCustomers.Domain.Entities.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
+using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 using NamiCustomers.Infrastucture.Utilities;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 
 namespace NamiCustomers.Application.Services.Subscribers;
@@ -40,7 +42,7 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
         {
             Name = addCustomerInfoDto.Name,
             Family = addCustomerInfoDto.Family,
-            Mobile = addCustomerInfoDto.PhoneNumber,
+            Mobile = addCustomerInfoDto.Phone,
             NationalCode = addCustomerInfoDto.NationalCode,
         };
 
@@ -77,7 +79,7 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
             Family = c.Family,
             Address = c.Address,
             CityName = c.City.Title,
-            PhoneNumber = c.Mobile
+            Phone = c.Mobile
         }).ToListAsync();
 
         return new ResultDto<List<SubscriberDto>>(
@@ -102,7 +104,7 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
         subscriber.Address = subscriberDto.Address;
         subscriber.Mobile = subscriberDto.Mobile;
         subscriber.CityId = subscriberDto.CityId;
-        subscriber.Phone = subscriberDto.PhoneNumber;
+        subscriber.Phone = subscriberDto.Phone;
 
         dbContext.Subscribers.Update(subscriber);
 
@@ -145,7 +147,7 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
 
             Address = data.Address,
             //CityName = data.City.Title,
-            PhoneNumber = data.Phone,
+            Phone = data.Phone,
             NationalCode = data.NationalCode,
             Mobile = data.Mobile,
             VehicleModels = mapper.Map<List<VehicleModelDto>>(data.VehicleModels)
@@ -174,7 +176,7 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
             Family = data.Family,
             Address = data.Address,
             CityName = data.City.Title,
-            PhoneNumber = data.Mobile,
+            Phone = data.Mobile,
             NationalCode = data.NationalCode,
             Mobile = data.Mobile,
             VehicleModels = mapper.Map<List<VehicleModelDto>>(data.VehicleModels)
@@ -248,62 +250,59 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
     {
         var subscriber = dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
            .Include(cu => cu.VehicleModels).FirstOrDefault();
-
-        if (subscriber is null)
+        var sevenMember = await sevenSoftService.GetSubscriberByNationalCode(nationalCode);
+        var sevenChassi = await sevenSoftService.GetChassisInformationByVinNumber(sevenMember.VinNumber);
+        if (string.IsNullOrEmpty(sevenChassi.UniqueId))
         {
-            var sevenMember = await sevenSoftService.GetSubscriberByNationalCode(nationalCode);
-            if (sevenMember is null)
-            {
-                return new ResultDto<SubscriberDto>(
-            "کاربر مربوطه یافت نشد.", false);
-            }
-            else
-            {
-                var newSubscriber = new Subscriber
-                {
-                    Name = sevenMember.Name,
-                    Address = sevenMember.Address,
-                    BrithDate = sevenMember.BirthDate,
-                    BrithDatePersian = sevenMember.StrBirthDate,
-                    FathersName = sevenMember.FatherName,
-                    IdNumber = sevenMember.IdNumber,
-                    EconomicCode = sevenMember.EconomicCode?.ToString(),
-                    Phone = sevenMember.Tel,
-                    NationalCode = sevenMember.NationalCode,
-                    Family = sevenMember.LastName,
-                    Mobile = sevenMember.Mobile,
-                    Sex = sevenMember.Gender == 1 ? "زن" : "مرد",
-                };
-                if (sevenMember.VinNumber != null)
-                {
-                    var chassisInformation = await sevenSoftService.GetChassisInformationByVinNumber(sevenMember.VinNumber.ToString());
+            sevenChassi = null;
+        }
+        if (string.IsNullOrEmpty(sevenMember.UniqueId))
+        {
+            sevenMember = null;
+        }
 
-                    if (chassisInformation != null)
-                    {
-                        var vehicleDto = mapper.Map<VehicleModelDto>(chassisInformation);
-                        newSubscriber.VehicleModels = new List<VehicleModel> {
-                            mapper.Map<VehicleModel>(vehicleDto)};
-                    }
+        if (subscriber is null && sevenMember != null)
+        {
 
-                    dbContext.Subscribers.Add(newSubscriber);
-                    await dbContext.SaveChangesAsync();
-                }
-            }
-            var data = await dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
-               .Include(cu => cu.City).FirstOrDefaultAsync();
-            var subscriberDto = new SubscriberDto
+            var newSubscriber = new Subscriber
             {
-                Id = data.Id,
-                Name = data.Name,
-                Address = data.Address,
-                PhoneNumber = data.Phone,
-                NationalCode = data.NationalCode,
-                Family = data.Family,
-                Mobile = data.Mobile,
-                Sex = data.Sex,
-                VehicleModels = mapper.Map<List<VehicleModelDto>>(subscriber.VehicleModels)
-
+                Name = sevenMember.Name,
+                Address = sevenMember.Address,
+                BrithDate = sevenMember.BirthDate,
+                BrithDatePersian = sevenMember.StrBirthDate,
+                FathersName = sevenMember.FatherName,
+                IdNumber = sevenMember.IdNumber,
+                EconomicCode = sevenMember.EconomicCode?.ToString(),
+                Phone = sevenMember.Tel,
+                NationalCode = sevenMember.NationalCode,
+                Family = sevenMember.LastName,
+                Mobile = sevenMember.Mobile,
+                Sex = sevenMember.Gender == 1 ? "زن" : "مرد",
             };
+            if (sevenChassi != null)
+            {
+                var newVehicle = mapper.Map<VehicleModel>(sevenChassi);
+                newSubscriber.VehicleModels.Add(newVehicle);
+
+                dbContext.Subscribers.Add(newSubscriber);
+                await dbContext.SaveChangesAsync();
+            }
+            var registredSubscriber = await dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
+               .Include(cu => cu.VehicleModels).Include(cu => cu.City).FirstOrDefaultAsync();
+            var subscriberDto = mapper.Map<SubscriberDto>(registredSubscriber);
+
+            //var subscriberDto = new SubscriberDto
+            //{
+            //    Id = registredSubscriber.Id,
+            //    Name = registredSubscriber.Name,
+            //    Address = registredSubscriber.Address,
+            //    Phone = registredSubscriber.Phone,
+            //    NationalCode = registredSubscriber.NationalCode,
+            //    Family = registredSubscriber.Family,
+            //    Mobile = registredSubscriber.Mobile,
+            //    Sex = registredSubscriber.Sex,
+            //    VehicleModels = mapper.Map<List<VehicleModelDto>>(registredSubscriber.VehicleModels)
+            //};
 
             return new ResultDto<SubscriberDto>(
                 "",
@@ -311,18 +310,54 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
         }
         else
         {
-            var existedSubscriber = new SubscriberDto
+            if (sevenChassi is null)
             {
-                Id = subscriber.Id,
-                Name = subscriber.Name,
-                Address = subscriber.Address,
-                PhoneNumber = subscriber.Phone,
-                NationalCode = subscriber.NationalCode,
-                Family = subscriber.Family,
-                Mobile = subscriber.Mobile,
-                Sex = subscriber.Sex,
-                VehicleModels = mapper.Map<List<VehicleModelDto>>(subscriber.VehicleModels)
-            };
+                subscriber.VehicleModels.ToList().ForEach(c =>
+                {
+                    dbContext.VehicleModels.Remove(c);
+                });
+                 
+                await dbContext.SaveChangesAsync();
+            }
+            else if (!subscriber.VehicleModels.Any(c => c.VinNumber == sevenChassi.VinNumber))
+            {
+                VehicleModel newVehicle = mapper.Map<VehicleModel>(sevenChassi);
+                subscriber.VehicleModels.Add(newVehicle);
+
+                await dbContext.SaveChangesAsync();
+            }
+
+            var vModels=dbContext.VehicleModels.Where(c=>c.SubscriberId==subscriber.Id).ToList();
+            bool hasTras = false;
+            foreach (var item in vModels)
+            {
+                var chassi = await sevenSoftService.GetChassisInformationByVinNumber(item.VinNumber);
+                if (chassi is null)
+                {
+                    dbContext.VehicleModels.Remove(item);
+                    hasTras = true;
+                }
+            }
+            if (hasTras)
+            {
+                await dbContext.SaveChangesAsync();
+            }
+
+
+            var existedSubscriber = mapper.Map<SubscriberDto>(subscriber);
+
+            //var existedSubscriber = new SubscriberDto
+            //{
+            //    Id = subscriber.Id,
+            //    Name = subscriber.Name,
+            //    Address = subscriber.Address,
+            //    Phone = subscriber.Phone,
+            //    NationalCode = subscriber.NationalCode,
+            //    Family = subscriber.Family,
+            //    Mobile = subscriber.Mobile,
+            //    Sex = subscriber.Sex,
+            //    VehicleModels = mapper.Map<List<VehicleModelDto>>(subscriber.VehicleModels)
+            //};
             return new ResultDto<SubscriberDto>(
       ""
     , true,

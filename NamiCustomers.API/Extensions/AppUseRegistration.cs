@@ -7,10 +7,11 @@ namespace NamiCustomers.API.Extensions
     {
         public static IApplicationBuilder BaseAppUse(this IApplicationBuilder app)
         {
+           
             app.UsingSwagger();
             app.UsingCors();
             app.UsingEndPoints();
-            app.UsingMiddlewares();
+           
 
             app.UseHttpLogging();
             app.UseHttpsRedirection();
@@ -22,7 +23,7 @@ namespace NamiCustomers.API.Extensions
             return app;
         }
 
-        private static IApplicationBuilder UsingMiddlewares(this IApplicationBuilder app)
+        public static IApplicationBuilder UsingMiddlewares(this IApplicationBuilder app)
         {
             app.UseMiddleware<ExceptionMiddleware>();
             return app;

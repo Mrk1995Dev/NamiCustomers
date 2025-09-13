@@ -4,14 +4,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using NamiCustomers.Infrastucture.ExternalServices.IranFava.Dtos;
 using NamiCustomers.MVC.Services;
 using NamiCustomers.MVC.Services.Auth;
+using Newtonsoft.Json;
 using System.Security.Claims;
 
 namespace NamiCustomers.MVC.Controllers;
 
 
-public class AccountController(IAuthService authService, IUrlHelperFactory urlHelperFactory, IUserService userService) : MyBaseController
+public class AccountController(IAuthService authService, IUrlHelperFactory urlHelperFactory, IUserService userService,ICookieService cookieService) : MyBaseController
 {
     [Authorize]
     public async Task<IActionResult> Index()
@@ -84,6 +86,7 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
     [HttpPost]
     public async Task<IActionResult> CheckOtp(string otp)
     {
+
         var result = await authService.LoginByOtpAsync(otp);
         if (!result.Succeeded)
         {
@@ -123,6 +126,8 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
             // 2. Sign in with the modified principal
             // await HttpContext.SignInAsync(claimsPrincipal);
 
+            // Save multiple data in cookies
+
             return RedirectToAction("Index", "Home");
         }
         //TempData["otpError"] = "Login  Error";
@@ -137,6 +142,7 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         HttpContext.Session.Clear();
+
         return RedirectToAction("LoginByMobile");
     }
     [HttpGet]

@@ -1,6 +1,6 @@
 ﻿
 @using NamiCustomers.Abstractions.Dtos.Account
-
+@inject IHttpContextAccessor httpContextAccessor
 @model LoginDto
 
 @{
@@ -90,7 +90,16 @@
 </div>
 
 
-
+@if (httpContextAccessor.HttpContext.Session.GetString("Error") != null)
+    {
+        var error = httpContextAccessor.HttpContext.Session.GetString("Error");
+<script>
+    showError('@error');
+    @{
+                             httpContextAccessor.HttpContext.Session.Remove("Error");
+    }
+</script>
+    }
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

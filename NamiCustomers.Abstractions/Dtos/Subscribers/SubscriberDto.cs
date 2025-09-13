@@ -15,7 +15,7 @@ namespace NamiCustomers.Abstractions.Dtos.Subscribers
         public int? CityId { get; set; }
         public string? CityName { get; set; }
         [Display(Name = "تلفن")]
-        public string? PhoneNumber { get; set; }
+        public string? Phone { get; set; }
         [Display(Name = "کد ملی")]
         public string? NationalCode { get; set; }
         [Display(Name = "موبایل")]

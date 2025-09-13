@@ -39,7 +39,7 @@ else
         </div>
         <div class="mb-3">
             <label>تلفن</label>
-            <InputText class="form-control" @bind-Value="customer.PhoneNumber" />
+            <InputText class="form-control" @bind-Value="customer.Phone" />
         </div>
          
 
@@ -67,7 +67,7 @@ else
                 Id = customer.Id,
                 Name = customer.Name,
                 CityId = customer.CityId,
-                PhoneNumber = customer.PhoneNumber,
+                Phone = customer.Phone,
                 Address = customer.Address,
             };
         var response = await customerService.UpdateAsync(modifiedCustomer);

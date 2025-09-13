@@ -293,7 +293,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                 Family = user.LastName,
                 Mobile = user.PhoneNumber,
                 NationalCode = user.NationalCode,
-                PhoneNumber = user.PhoneNumber,
+                Phone = user.PhoneNumber,
 
             });
 
@@ -391,7 +391,21 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
+        var tokenString = tokenHandler.WriteToken(token);
+
+        // Save custom data in cookie
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Expires = DateTime.Now.AddHours(2)
+        };
+
+        Response.Cookies.Append("UserData", "YourCustomDataHere", cookieOptions);
+        Response.Cookies.Append("AuthToken", tokenString, cookieOptions);
+
+        return tokenString;
     }
 
 }
