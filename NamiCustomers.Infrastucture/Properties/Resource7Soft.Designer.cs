@@ -70,7 +70,7 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://7soft.nami.local:8087/.
+        ///   Looks up a localized string similar to http://7soft.namikhodro.com:8087/.
         /// </summary>
         public static string BaseUrlBooking {
             get {
