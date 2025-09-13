@@ -175,17 +175,17 @@
            $('#btnrefresh').click();
         }
 
-        // Wait for the document to be fully loaded
+         
         $(document).ready(function () {
-            // 3. Intercept the form's submit event
+           
             $('#refreshForm').on('submit', function (event) {
-                // 4. Prevent the default form submission (which causes the reload)
+                //  Prevent the default form submission (which causes the reload)
                 event.preventDefault();
 
-                // 5. Perform an AJAX POST request
+                
                 $.ajax({
-                    url: '@Url.Action("Refresh", "Booking")', // Builds the correct URL
-                    type: 'POST', // or 'GET', use the same type your controller expects
+                    url: '@Url.Action("Refresh", "Booking")', 
+                    type: 'POST',  
                     data: $(this).serialize(), // Serializes the form data
                     success: function (result) {
                         
@@ -246,13 +246,13 @@
 
 
 
-                        // 6. This function runs on successful response
+                        
                         console.log("Form submitted successfully!", result);
                         // You can update parts of the page here instead of reloading
                         // For example: $('#resultDiv').html(result);
                     },
                     error: function (xhr, status, error) {
-                        // 7. This function runs if there was an error
+                         
                         console.error("An error occurred:", error);
                     }
                 });
