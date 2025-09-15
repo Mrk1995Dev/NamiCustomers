@@ -20,16 +20,22 @@ namespace NamiCustomers.MVC.Middlewares
             }
         }
 
+
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            await context.Response.WriteAsync(new ResultDto(
-             exception.Message,
-             false
-            ).ToString());
+            //await context.Response.WriteAsync(new ResultDto(
+            // exception.Message,
+            // false
+            //).ToString());
             logger.LogError($"شرح خطا :{Environment.NewLine} {exception.StackTrace}");
-            //context.Session.SetString("Error", exception.Message);
+            if (exception is NullReferenceException)
+            {
+                exception = new Exception("اطلاعات دریافتی ناقص است");
+            }
+            context.Session.SetString("Error", exception.Message);
+            //await context.Response.WriteAsync(exception.Message);
         }
     }
 }

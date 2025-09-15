@@ -1,5 +1,5 @@
 ﻿@using NamiCustomers.Abstractions.Dtos.Account
- 
+@inject IHttpContextAccessor httpContextAccessor
 @model GetOtpDto
 @{
     Layout = null;
@@ -109,5 +109,14 @@
     <script src="~/SiteTmeplate/js/active.js"></script>
     <script src="~/SiteTmeplate/js/pwa.js"></script>
 </body>
-
+@if(httpContextAccessor.HttpContext.Session.GetString("Error") != null)
+    {
+            var error = httpContextAccessor.HttpContext.Session.GetString("Error");
+    <script>
+        showError('@error');
+        @{
+                                     httpContextAccessor.HttpContext.Session.Remove("Error");
+        }
+    </script>
+    }
 </html>

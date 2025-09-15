@@ -35,10 +35,10 @@ public class VehicleService(HttpClient httpClient, IHttpContextAccessor httpCont
         var response = await httpClient.PutAsJsonAsync($"Vehicle/edit", vehicleModelDto);
         if (response.IsSuccessStatusCode)
         {
-            return new ResultDto(Infrastucture.Properties.Resources.msgEdited, true);
+            return   ResultDto.Success (Infrastucture.Properties.Resources.msgEdited);
         }
 
-        return new ResultDto(Infrastucture.Properties.Resources.errEdited, false);
+        return  ResultDto.Failure(Infrastucture.Properties.Resources.errEdited);
     }
 
     public async Task<ResultDto> RemoveAsync(int id)
@@ -46,10 +46,10 @@ public class VehicleService(HttpClient httpClient, IHttpContextAccessor httpCont
         var response = await httpClient.DeleteAsync($"Vehicle/remove?id={id}");
         if (response.IsSuccessStatusCode)
         {
-            return new ResultDto(Infrastucture.Properties.Resources.msgDeleted, true);
+            return   ResultDto.Success(Infrastucture.Properties.Resources.msgDeleted);
         }
 
-        return new ResultDto(Infrastucture.Properties.Resources.errDelete, false);
+        return  ResultDto.Failure(Infrastucture.Properties.Resources.errDelete);
     }
 
     public async Task<ResultDto<VehicleModelDto>> GetAsync(int id)

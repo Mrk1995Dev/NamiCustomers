@@ -61,11 +61,11 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
         //_roleManager.DeleteAsync()
         if (result.Succeeded)
         {
-            return new ResultDto(Infrastucture.Properties.Resources.msgFound, true);
+            return  ResultDto.Success(Infrastucture.Properties.Resources.msgFound);
         }
         ;
         //ViewBag.Errors = result.Errors.ToList();
-        return new ResultDto(Infrastucture.Properties.Resources.errSave, false);
+        return   ResultDto.Failure(Infrastucture.Properties.Resources.errSave);
 
     }
 
@@ -82,7 +82,7 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
 
         if (result.Succeeded)
         {
-            return new ResultDto(Infrastucture.Properties.Resources.msgEdited, true);
+            return ResultDto.Success(Infrastucture.Properties.Resources.msgEdited);
         }
         string message = "";
         foreach (var item in result.Errors.ToList())
@@ -90,7 +90,7 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
             message += item.Description + Environment.NewLine;
         }
         //TempData["Message"] = message;
-        return new ResultDto(Infrastucture.Properties.Resources.errEdited, false);
+        return   ResultDto.Failure(Infrastucture.Properties.Resources.errEdited);
     }
 
 

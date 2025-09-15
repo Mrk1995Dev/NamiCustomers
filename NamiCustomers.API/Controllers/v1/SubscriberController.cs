@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using NamiCustomers.Abstractions.Dtos.Subscribers;
 using NamiCustomers.Application.Services.Subscribers;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NamiCustomers.API.Controllers.v1
 {
@@ -20,9 +21,15 @@ namespace NamiCustomers.API.Controllers.v1
         public async Task<ResultDto<SubscriberDto>> Info([FromQuery] int id)
             => await subscriberService.GetAsync(id);
         [HttpGet("[action]")]
-        public async Task<ResultDto<SubscriberDto>> InfoByNationalCode([FromQuery] string nationalCode)
+        public async Task<IActionResult> InfoByNationalCode([FromQuery] string nationalCode)
         {
-            return await subscriberService.GetByNationalCodeAsync(nationalCode);
+            var response = await subscriberService.GetByNationalCodeAsync(nationalCode);
+            if (response.Succeeded)
+            {
+                return Ok(response);
+            }
+
+            return NotFound(response);
         }
 
 

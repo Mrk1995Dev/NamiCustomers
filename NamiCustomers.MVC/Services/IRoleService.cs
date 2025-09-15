@@ -26,10 +26,10 @@ public class RoleService : IRoleService
         var response = await _httpClient.PutAsJsonAsync($"roles/edit", roleEdit);
         if (response.IsSuccessStatusCode)
         {
-            return new ResultDto(Infrastucture.Properties.Resources.msgEdited, true);
+            return ResultDto.Success(Infrastucture.Properties.Resources.msgEdited);
         }
 
-        return new ResultDto(Infrastucture.Properties.Resources.errEdited, false);
+        return ResultDto.Failure(Infrastucture.Properties.Resources.errEdited);
     }
 
     public async Task<ResultDto<List<RoleDto>>> GetAllAsync()
@@ -92,14 +92,11 @@ public class RoleService : IRoleService
         var response = await _httpClient.PostAsJsonAsync($"Roles/register", role);
         if (response.IsSuccessStatusCode)
         {
-            return new ResultDto(
-                 Infrastucture.Properties.Resources.msgSave,
-                true);
+            return   ResultDto.Success(
+                 Infrastucture.Properties.Resources.msgSave );
         }
 
-        return new ResultDto(
-           Infrastucture.Properties.Resources.errSave,
-            false);
+        return   ResultDto.Failure( Infrastucture.Properties.Resources.errSave);
     }
 }
 

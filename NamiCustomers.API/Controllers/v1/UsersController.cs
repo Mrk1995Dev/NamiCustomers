@@ -94,7 +94,7 @@ public class UsersController : ControllerBase
     {
         if (ModelState.IsValid == false)
         {
-            return new ResultDto(Infrastucture.Properties.Resources.errSave, false);
+            return ResultDto.Failure(Infrastucture.Properties.Resources.errSave);
         }
 
         ApplicationUser newUser = new ApplicationUser()
@@ -111,7 +111,7 @@ public class UsersController : ControllerBase
         var result = await userManager.CreateAsync(newUser, register.Password);
         if (result.Succeeded)
         {
-            return new ResultDto(Infrastucture.Properties.Resources.msgSave, true);
+            return ResultDto.Success(Infrastucture.Properties.Resources.msgSave);
         }
 
         string message = "";
@@ -120,7 +120,7 @@ public class UsersController : ControllerBase
             message += item.Description + Environment.NewLine;
         }
         //TempData["Message"] = message;
-        return new ResultDto(Infrastucture.Properties.Resources.errSave, false);
+        return ResultDto.Failure(Infrastucture.Properties.Resources.errSave);
     }
 
 
@@ -139,7 +139,7 @@ public class UsersController : ControllerBase
 
         if (result.Succeeded)
         {
-            return new ResultDto(Infrastucture.Properties.Resources.msgEdited, true);
+            return ResultDto.Success(Infrastucture.Properties.Resources.msgEdited);
         }
         string message = "";
         foreach (var item in result.Errors.ToList())
@@ -147,7 +147,7 @@ public class UsersController : ControllerBase
             message += item.Description + Environment.NewLine;
         }
         //TempData["Message"] = message;
-        return new ResultDto(Infrastucture.Properties.Resources.errEdited, false);
+        return ResultDto.Failure(Infrastucture.Properties.Resources.errEdited);
     }
 
 
@@ -157,13 +157,13 @@ public class UsersController : ControllerBase
         var user = userManager.FindByIdAsync(id).Result;
         if (user is null)
         {
-            return new ResultDto(Infrastucture.Properties.Resources.msgDeleted, true);
+            return ResultDto.Success(Infrastucture.Properties.Resources.msgDeleted);
         }
         var result = userManager.DeleteAsync(user).Result;
 
         if (result.Succeeded)
         {
-            return new ResultDto(Infrastucture.Properties.Resources.msgDeleted, true);
+            return ResultDto.Success(Infrastucture.Properties.Resources.msgDeleted);
         }
 
         string message = "";
@@ -173,14 +173,14 @@ public class UsersController : ControllerBase
         }
         //TempData["Message"] = message;
 
-        return new ResultDto(Infrastucture.Properties.Resources.errDelete, false);
+        return ResultDto.Failure(Infrastucture.Properties.Resources.errDelete);
     }
     [HttpPost("[action]")]
     public async Task<ResultDto> AddUserRole(AddUserRoleDto newRole)
     {
         var user = await userManager.FindByIdAsync(newRole.Id);
         var result = await userManager.AddToRoleAsync(user, newRole.Role);
-        return new ResultDto(Infrastucture.Properties.Resources.msgSave, true);
+        return ResultDto.Success(Infrastucture.Properties.Resources.msgSave);
     }
 
     [HttpPost("[action]")]
@@ -188,6 +188,6 @@ public class UsersController : ControllerBase
     {
         var user = await userManager.FindByIdAsync(newRole.Id);
         var result = await userManager.RemoveFromRoleAsync(user, newRole.Role);
-        return new ResultDto(Infrastucture.Properties.Resources.msgSave, true);
+        return ResultDto.Success(Infrastucture.Properties.Resources.msgSave);
     }
 }

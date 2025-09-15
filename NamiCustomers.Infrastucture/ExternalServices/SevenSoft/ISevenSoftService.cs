@@ -184,7 +184,7 @@ public class SevenSoftService : ISevenSoftService
     }
     public async Task<SevenSubscriberResponse> GetSubscriberByNationalCode(string nationalCode)
     {
-        return await RestUtility.GetData<SevenSubscriberResponse>(_baseUrl, Resource7Soft.GetSubscriberByNationalCode, nationalCode);
+        return await RestUtility.GetData<SevenSubscriberResponse>(Infrastucture.Properties.Resource7Soft.BaseUrlSales, Resource7Soft.GetSubscriberByNationalCode, nationalCode);
     }
 
     public async Task<ChassisInformationByVinNumberResponse> GetChassisInformationByVinNumber(string vinNumber)

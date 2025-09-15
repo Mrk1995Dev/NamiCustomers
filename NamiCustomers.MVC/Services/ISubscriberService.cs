@@ -1,5 +1,10 @@
 ﻿
+using Azure;
+using IdentityModel.OidcClient;
+using k8s.KubeConfigModels;
+using Microsoft.AspNetCore.Mvc;
 using NamiCustomers.Infrastucture.Utilities;
+using System;
 
 namespace NamiCustomers.MVC.Services;
 
@@ -32,8 +37,9 @@ public class SubscriberService : ISubscriberService
     public async Task<List<SubscriberDto>> GetAsync()
     {
 
-        var result = await _httpClient.GetFromJsonAsync<List<SubscriberDto>>($"subscriber/subscribers");
-        return result;
+        var response = await _httpClient.GetFromJsonAsync<List<SubscriberDto>>($"subscriber/subscribers");
+
+        return response;
     }
 
     private void GetToken()
@@ -53,21 +59,22 @@ public class SubscriberService : ISubscriberService
 
     public async Task<ResultDto<SubscriberDto>> GetAsync(int id)
     {
-        return await _httpClient.GetFromJsonAsync<ResultDto<SubscriberDto>>($"subscriber/info?id={id}");
+        var response= await _httpClient.GetFromJsonAsync<ResultDto<SubscriberDto>>($"subscriber/info?id={id}");
+        if (response.Succeeded)
+        {
+            return response;
+        }
+        throw new Exception(response.Message);
     }
     public async Task<ResultDto> RegisterAsync(SubscriberDto customer)
     {
         var respone = await _httpClient.PostAsJsonAsync($"subscriber/register", customer);
         if (respone.IsSuccessStatusCode)
         {
-            return new ResultDto(
-                 Infrastucture.Properties.Resources.msgSave,
-                true);
+            return   ResultDto.Success(  Infrastucture.Properties.Resources.msgSave );
         }
 
-        return new ResultDto(
-           Infrastucture.Properties.Resources.errSave,
-            false);
+        return   ResultDto.Failure(  Infrastucture.Properties.Resources.errSave );
     }
 
     public async Task<ResultDto> EditAsync(SubscriberDto updateCustomer)
@@ -75,10 +82,10 @@ public class SubscriberService : ISubscriberService
         var response = await _httpClient.PutAsJsonAsync($"Subscriber/Edit", updateCustomer);
         if (response.IsSuccessStatusCode)
         {
-            return new ResultDto(Infrastucture.Properties.Resources.msgEdited, true);
+            return   ResultDto.Success(Infrastucture.Properties.Resources.msgEdited);
         }
 
-        return new ResultDto(Infrastucture.Properties.Resources.errEdited, false);
+        return   ResultDto.Failure(Infrastucture.Properties.Resources.errEdited);
     }
 
     public async Task<ResultDto> RemoveAsync(int id)
@@ -86,10 +93,10 @@ public class SubscriberService : ISubscriberService
         var response = await _httpClient.DeleteAsync($"subscriber/remove?id={id}");
         if (response.IsSuccessStatusCode)
         {
-            return new ResultDto(Infrastucture.Properties.Resources.msgDeleted, true);
+            return   ResultDto.Success(Infrastucture.Properties.Resources.msgDeleted);
         }
 
-        return new ResultDto(Infrastucture.Properties.Resources.errDelete, false);
+        return   ResultDto.Failure(Infrastucture.Properties.Resources.errDelete);
     }
 
     public async Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync()
@@ -108,7 +115,7 @@ public class SubscriberService : ISubscriberService
                ((ResultDto<SubscriberDto>)result).Data);
             }
         }
-
+        return new ResultDto<SubscriberDto>(response.ReasonPhrase, false);
         // Log or handle the error response
         var errorContent = await response.Content.ReadAsStringAsync();
         // _logger.LogError($"API Error: {response.StatusCode} - {errorContent}");

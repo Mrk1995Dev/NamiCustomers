@@ -7,7 +7,7 @@ namespace NamiCustomers.API.Extensions
     {
         public static IApplicationBuilder BaseAppUse(this IApplicationBuilder app)
         {
-           
+
             app.UsingSwagger();
             app.UsingCors();
             app.UsingEndPoints();

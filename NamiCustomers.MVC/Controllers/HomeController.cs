@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NamiCustomers.Infrastucture.ExternalServices.Nami;
-
-
+using NamiCustomers.MVC.Filters;
 using NamiCustomers.MVC.Services.Auth;
 using System.Diagnostics;
 
@@ -11,6 +10,7 @@ namespace NamiCustomers.MVC.Controllers;
 
 public class HomeController(ITokenSessionService tokenSessionService, INamiKhodroService namiKhodroService) : Controller
 {
+    [ServiceFilter(typeof(VinFilter))]
     public IActionResult Index()
     {
         if (tokenSessionService.IsExpired)

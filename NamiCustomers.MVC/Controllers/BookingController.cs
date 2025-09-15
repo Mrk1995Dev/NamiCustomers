@@ -8,6 +8,7 @@ namespace NamiCustomers.MVC.Controllers
     {
         public async Task<IActionResult> Index(BookingTurnRequest? bookingTurnRequest)
         {
+           
             if (bookingTurnRequest == null)
             {
                 bookingTurnRequest = new BookingTurnRequest();

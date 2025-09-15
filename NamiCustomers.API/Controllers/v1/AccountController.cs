@@ -97,13 +97,11 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
 
             string body = $"لطفا برای فعال حساب کاربری بر روی لینک زیر کلیک کنید!  <br/> <a href='{registerUserDto.CallbakUrl}'> Link </a>";
             await mailService.SendEmailAsync(new MailRequest { Body = body, Subject = "فعال سازی حساب کاربری", ToEmail = newUser.Email });
-            return new ResultDto(Infrastucture.Properties.Resources.msgSave, true); //new RegisterResponse { IsSuccess = true };
+            return   ResultDto.Success(Infrastucture.Properties.Resources.msgSave); 
         }
 
-        return new ResultDto(
+        return  ResultDto.Failure(
             Infrastucture.Properties.Resources.errSave
-            , false//todo moradi
-                   //  new ApiErrorResponse(createResult.Errors.Select(c => new ApiError(c.Code, c.Description)).ToList())
             );
     }
 

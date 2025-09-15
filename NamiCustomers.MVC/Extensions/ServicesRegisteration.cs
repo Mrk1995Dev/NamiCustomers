@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using NamiCustomers.Infrastucture.ExternalServices.Email.Dtos;
 using NamiCustomers.Infrastucture.ExternalServices.Nami;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
+using NamiCustomers.MVC.Extensions;
 using NamiCustomers.MVC.Filters;
 using NamiCustomers.MVC.Handlers;
 using NamiCustomers.MVC.Services;
@@ -14,7 +15,7 @@ using NamiCustomers.MVC.Services.Auth;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 
-namespace NamiCustomers.MVC;
+namespace NamiCustomers.MVC.Extensions;
 
 public static class ServicesRegisteration
 {
@@ -23,17 +24,18 @@ public static class ServicesRegisteration
        WebApplicationBuilder webApplicationBuilder)
     {
         var configuration = webApplicationBuilder.Configuration;
+        services.AddDistributedMemoryCache();
+        
         services
             .ConsolEnvironment()
             //.ConfigureAppSettings(configuration)
             .ConfigureCors()
             .ConfigureCurrentUser()
-            .ConfigureMemoryCache()
-            .ConfigureOther()
-            .ConfigurationActionFilters()
+            //.ConfigureMemoryCache()
             .AddApplicationServices(configuration)
-
+            .ConfigureOther()
             .AddAuthentication(configuration)
+            .ConfigurationActionFilters()
             .AddAuthorization(configuration)
             .ConfigureCookies()
             ;
@@ -186,7 +188,6 @@ public static class ServicesRegisteration
 
         services.AddScoped<INamiKhodroService, NamiKhodroService>();
 
-
         return services;
     }
 
@@ -210,7 +211,7 @@ public static class ServicesRegisteration
         services.AddHttpContextAccessor();
         services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.AddSession();
+        
         //services.AddSingleton<ICurrentUser, CurrentUser>();
 
         return services;
@@ -237,7 +238,8 @@ public static class ServicesRegisteration
             policy.AllowAnyOrigin()
             .AllowAnyMethod()
             .AllowAnyHeader()
-            .AllowCredentials());
+            //.AllowCredentials()
+            );
         });
     private static IServiceCollection ConfigureCookies(this IServiceCollection services)
     {

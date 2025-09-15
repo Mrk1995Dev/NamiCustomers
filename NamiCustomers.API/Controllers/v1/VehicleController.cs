@@ -47,6 +47,12 @@ public class VehicleController(IVehicleService vehicleService, ISevenSoftService
     [HttpGet("[action]")]
     public async Task<ResultDto<VehicleModelDto>> GetChassisInformationByVinNumber(string vinNumber)
     {
+        if (string.IsNullOrEmpty(vinNumber))
+        {
+            return new ResultDto<VehicleModelDto>(
+          Infrastucture.Properties.Resources.errNotFound, false
+          );
+        }
         var result = await sevenSoftService.GetChassisInformationByVinNumber(vinNumber);
         if (result == null) return new ResultDto<VehicleModelDto>(
        Infrastucture.Properties.Resources.errNotFound, false
@@ -62,9 +68,9 @@ public class VehicleController(IVehicleService vehicleService, ISevenSoftService
 
 
     [HttpGet("[action]")]
-    public async Task<ResultDto<string[]>> GetSpecificCases(string vinNumber,string nationalCodeOrEconomicCode, string mobile)
+    public async Task<ResultDto<string[]>> GetSpecificCases(string vinNumber, string nationalCodeOrEconomicCode, string mobile)
     {
-        var result = await sevenSoftService.GetSpecificCases(vinNumber,nationalCodeOrEconomicCode,mobile);
+        var result = await sevenSoftService.GetSpecificCases(vinNumber, nationalCodeOrEconomicCode, mobile);
         if (result == null) return new ResultDto<string[]>(
        Infrastucture.Properties.Resources.errNotFound, false
        );

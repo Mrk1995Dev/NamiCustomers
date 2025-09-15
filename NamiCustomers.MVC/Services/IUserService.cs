@@ -33,10 +33,10 @@ public class UserService : IUserService
         var response = await _httpClient.PutAsJsonAsync($"users/edit", userEdit);
         if (response.IsSuccessStatusCode)
         {
-            return new ResultDto(Infrastucture.Properties.Resources.msgEdited, true);
+            return   ResultDto.Success(Infrastucture.Properties.Resources.msgEdited);
         }
 
-        return new ResultDto(Infrastucture.Properties.Resources.errEdited, false);
+        return   ResultDto.Failure(Infrastucture.Properties.Resources.errEdited);
     }
 
     public async Task<ResultDto<List<UserDto>>> GetAllAsync()
@@ -72,14 +72,10 @@ public class UserService : IUserService
         var response = await _httpClient.PostAsJsonAsync($"users/register", register);
         if (response.IsSuccessStatusCode)
         {
-            return new ResultDto(
-                 Infrastucture.Properties.Resources.msgSave,
-                true);
+            return   ResultDto.Success(  Infrastucture.Properties.Resources.msgSave );
         }
 
-        return new ResultDto(
-           Infrastucture.Properties.Resources.errSave,
-            false);
+        return   ResultDto.Failure( Infrastucture.Properties.Resources.errSave );
     }
 
     public async Task<ResultDto> Remove(string id)
@@ -87,10 +83,10 @@ public class UserService : IUserService
         var response = await _httpClient.DeleteAsync($"users/remove?id={id}");
         if (response.IsSuccessStatusCode)
         {
-            return new ResultDto(Infrastucture.Properties.Resources.msgDeleted, true);
+            return   ResultDto.Success(Infrastucture.Properties.Resources.msgDeleted);
         }
 
-        return new ResultDto(Infrastucture.Properties.Resources.errDelete, false);
+        return   ResultDto.Failure(Infrastucture.Properties.Resources.errDelete);
     }
 
     public async Task<ResultDto> AddUserRole(AddUserRoleDto addUserRoleDto)
@@ -98,14 +94,11 @@ public class UserService : IUserService
         var response = await _httpClient.PostAsJsonAsync($"users/AddUserRole", addUserRoleDto);
         if (response.IsSuccessStatusCode)
         {
-            return new ResultDto(
-                 Infrastucture.Properties.Resources.msgSave,
-                true);
+            return   ResultDto.Success(
+                 Infrastucture.Properties.Resources.msgSave );
         }
 
-        return new ResultDto(
-           Infrastucture.Properties.Resources.errSave,
-            false);
+        return   ResultDto.Failure( Infrastucture.Properties.Resources.errSave );
     }
 
     public async Task<ResultDto<AddUserRoleDto>> GetRolesAsync(string userId)
@@ -123,10 +116,10 @@ public class UserService : IUserService
         var response = await _httpClient.PostAsJsonAsync($"users/RemoveUserRole", newRole);
         if (response.IsSuccessStatusCode)
         {
-            return new ResultDto(Infrastucture.Properties.Resources.msgDeleted, true);
+            return   ResultDto.Success(Infrastucture.Properties.Resources.msgDeleted);
         }
 
-        return new ResultDto(Infrastucture.Properties.Resources.errDelete, false);
+        return   ResultDto.Failure(Infrastucture.Properties.Resources.errDelete);
     }
 }
 

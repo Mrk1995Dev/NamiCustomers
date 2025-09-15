@@ -51,14 +51,10 @@ namespace NamiCustomers.Web.Services.CustomerService.Implementation
             var respone = await _httpClient.PostAsJsonAsync($"/api/customer/addCustomer", customer);
             if (respone.IsSuccessStatusCode)
             {
-                return new ResultDto(
-                    "مشتری جدید با موفقیت ثبت شد.",
-                    true);
+                return   ResultDto.Success( "مشتری جدید با موفقیت ثبت شد." );
             }
 
-            return new ResultDto(
-                "خطا در ثبت مشتری جدید",
-                false);
+            return   ResultDto.Failure( "خطا در ثبت مشتری جدید" );
         }
 
         public async Task<ResultDto> UpdateAsync(SubscriberDto updateCustomer)
@@ -66,14 +62,12 @@ namespace NamiCustomers.Web.Services.CustomerService.Implementation
             var response = await _httpClient.PutAsJsonAsync($"/api/customer/edit", updateCustomer);
             if (response.IsSuccessStatusCode)
             {
-                return new ResultDto(
-                    "مشتری با موفقیت ویرایش شد.",
-                    true);
+                return   ResultDto.Success(
+                    "مشتری با موفقیت ویرایش شد." );
             }
 
-            return new ResultDto(
-                "خطا در ویرایش مشتری ",
-                false);
+            return   ResultDto.Failure(
+                "خطا در ویرایش مشتری " );
         }
 
         public async Task<ResultDto> DeleteAsync(int id)
@@ -81,14 +75,12 @@ namespace NamiCustomers.Web.Services.CustomerService.Implementation
             var response = await _httpClient.DeleteAsync($"/api/customer/remove?id={id}");
             if (response.IsSuccessStatusCode)
             {
-                return new ResultDto(
-                    "مشتری با موفقیت حذف شد.",
-                    true);
+                return   ResultDto.Success(
+                    "مشتری با موفقیت حذف شد." );
             }
 
-            return new ResultDto(
-                "خطا در حذف مشتری ",
-                false);
+            return  ResultDto.Failure(
+                "خطا در حذف مشتری " );
         }
     }
 }

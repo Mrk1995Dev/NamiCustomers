@@ -1,5 +1,4 @@
-﻿
-
+﻿@inject IHttpContextAccessor httpContextAccessor
 <!DOCTYPE html>
 <html lang="en">
 
@@ -321,6 +320,18 @@
             </script>
         
 
+    }
+
+
+    @if (httpContextAccessor.HttpContext.Session.GetString("Error") != null)
+    {
+        var error = httpContextAccessor.HttpContext.Session.GetString("Error");
+        <script>
+            showError('@error');
+            @{
+              httpContextAccessor.HttpContext.Session.Remove("Error");
+            }
+        </script>
     }
 
     @await RenderSectionAsync("Scripts", required: false)

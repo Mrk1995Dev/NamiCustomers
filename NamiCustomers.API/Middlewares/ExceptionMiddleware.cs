@@ -21,14 +21,8 @@ namespace NamiCustomers.API.Middlewares
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            //await context.Response.WriteAsync(new ResultDto<object>()
-            //{
-            //    IsSuccess = false,
-            //    StatusCode = StatusCodes.Status500InternalServerError,
-            //    Data = exception.Message,
-            //    ErrorData = exception.StackTrace
-            //}.ToString());
             logger.LogError($"شرح خطا :{Environment.NewLine} {exception.StackTrace}");
+            await context.Response.WriteAsync(exception.Message);
             
         }
     }

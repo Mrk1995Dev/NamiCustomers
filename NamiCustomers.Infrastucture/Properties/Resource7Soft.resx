@@ -192,4 +192,7 @@
   <data name="BaseUrlBooking" xml:space="preserve">
     <value>http://7soft.namikhodro.com:8087/</value>
   </data>
+  <data name="BaseUrlSales" xml:space="preserve">
+    <value>http://7soft.namikhodro.com:8089/</value>
+  </data>
 </root>

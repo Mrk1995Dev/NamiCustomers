@@ -23,9 +23,9 @@ public class VinFilter(IHttpContextAccessor httpContextAccessor, ISubscriberServ
         {
             var subscriber = subscriberService.CurrentSubscriber;
 
-            if (!allewedActions.Contains(actionName) && subscriber != null)
+            if (!allewedActions.Contains(actionName) && subscriber != null )
             {
-                if (controllerName != "Vehicle" && (subscriber.VehicleModels == null || subscriber.VehicleModels.All(c => c.IsDefault != true)))
+                if (controllerName != "Vehicle" && (!subscriber.VehicleModels.Any() ||subscriber.VehicleModels == null || subscriber.VehicleModels.All(c => c.IsDefault != true)))
                 {
 
                     context.Result = new RedirectToActionResult("Index", "Vehicle", null);

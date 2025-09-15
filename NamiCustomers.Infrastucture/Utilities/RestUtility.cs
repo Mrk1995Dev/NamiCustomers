@@ -6,6 +6,10 @@ public static class RestUtility
 {
     public static async Task<T> GetData<T>(string baseUrl, string apiAddress, dynamic queryString)
     {
+        try
+        {
+
+         
         if (!string.IsNullOrEmpty(baseUrl))
         {
             apiAddress = $"{baseUrl}{apiAddress}";
@@ -19,8 +23,28 @@ public static class RestUtility
         {
             return await Task.FromResult(JsonSerializer.Deserialize<T>(responseContent));
         }
+            // Create detailed error message
+            var errorMessage = $"HTTP Error: {(int)response.StatusCode} - {response.ReasonPhrase}";
+            if (!string.IsNullOrEmpty(responseContent))
+            {
+                errorMessage += $"\nResponse: {responseContent}";
+            }
 
-        return Activator.CreateInstance<T>();//TODO moradi
+            throw new HttpRequestException(errorMessage, null, response.StatusCode);
+        }
+        catch (HttpRequestException ex)
+        {
+            // Re-throw HTTP specific exceptions
+            throw ex;
+        }
+        catch (JsonException ex)
+        {
+            throw new Exception($"Failed to deserialize response: {ex.Message}", ex);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Unexpected error: {ex.Message}", ex);
+        }
     }
 
 

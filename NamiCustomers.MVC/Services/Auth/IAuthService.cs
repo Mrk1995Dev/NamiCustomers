@@ -116,7 +116,7 @@ public class AuthService(HttpClient httpClient, ITokenSessionService tokenServic
                 return result;
             }
         }
-        return new ResultDto(Infrastucture.Properties.Resources.errSave, false);
+        return   ResultDto.Failure(Infrastucture.Properties.Resources.errSave);
     }
 
 

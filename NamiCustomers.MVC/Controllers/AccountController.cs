@@ -86,7 +86,7 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
     [HttpPost]
     public async Task<IActionResult> CheckOtp(string otp)
     {
-
+        
         var result = await authService.LoginByOtpAsync(otp);
         if (!result.Succeeded)
         {

@@ -1,6 +1,6 @@
 ﻿@using NamiCustomers.Abstractions.Dtos.Vehicles
 
-@model List<VehicleModelDto>
+@model List<VehicleModelDto>?
 @{
     Layout = null;
 }
@@ -9,20 +9,24 @@
         <p class="mb-0">لیست خودروهای شما</p>
         <div class="btn-close" id="settingCardClose"></div>
     </div>
-@foreach (var item in Model)
-{
+    @if (Model != null)
+    {
 
-   
-        <div class="single-plan-check shadow-sm active-effect">
-            <div class="form-check mb-0">
-                <input class="form-check-input" checked="@item.IsDefault" type="radio" name="planChoose" id="Individual">
-                <label class="form-check-label" for="Individual">@item.VinNumber</label>
-                @if (!item.IsDefault)
-                {
-                    <a class="btn btn-primary btn-sm" href="/Vehicle/Default/@item.Id">انتخاب</a>
-                }
+        foreach (var item in Model)
+        {
+
+
+            <div class="single-plan-check shadow-sm active-effect">
+                <div class="form-check mb-0">
+                    <input class="form-check-input" checked="@item.IsDefault" type="radio" name="planChoose" id="Individual">
+                    <label class="form-check-label" for="Individual">@item.VinNumber</label>
+                    @if (!item.IsDefault)
+                    {
+                        <a class="btn btn-primary btn-sm" href="/Vehicle/Default/@item.Id">انتخاب</a>
+                    }
+                </div>
             </div>
-        </div>
-   
-}
- </div>
+
+        }
+    }
+</div>

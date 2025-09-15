@@ -17,7 +17,19 @@ public class ResultDto<T> where T : class
 }
 public class ResultDto
 {
-    public ResultDto(string message, bool succeeded)
+    public static ResultDto Success(string message)
+    {
+        return new ResultDto(message, true);
+    }
+    public static ResultDto Failure(string message)
+    {
+        return new ResultDto(message, false);
+    }
+    public ResultDto()
+    {
+            
+    }
+    private ResultDto(string message, bool succeeded)
     {
         Message = message;
         this.Succeeded = succeeded;

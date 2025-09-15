@@ -1,5 +1,5 @@
 ﻿@model ResultDto<LoginResponseDto>
-
+@inject IHttpContextAccessor httpContextAccessor
 @{
     Layout = null;
 }
@@ -112,6 +112,16 @@
             showError('@Model.Message');
         </script>
     }
-
+    @if (httpContextAccessor.HttpContext.Session.GetString("Error") != null)
+    {
+        var error = httpContextAccessor.HttpContext.Session.GetString("Error");
+        <script>
+            showError('@error');
+            @{
+                                         httpContextAccessor.HttpContext.Session.Remove("Error");
+            }
+        </script>
+    }
+ 
 </body>
 </html>
