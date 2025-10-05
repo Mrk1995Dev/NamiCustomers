@@ -17,6 +17,7 @@ public interface IAuthService
     Task<ConfirmResponse> ConfirmEmailAsync(string userId, string token);
     Task<HttpResponseMessage> SetPhoneNumberAsync(SetPhoneNumberDto phoneNumberDto);
     Task<ConfirmResponse> VerifyPhoneNumberAsync(VerifyPhoneNumberDto verify);
+    Task<string?> GetTokenAsync(string mobile);
 }
 public class AuthService(HttpClient httpClient, ITokenSessionService tokenService
         , AuthenticationStateProvider authenticationStateProvider) : IAuthService
@@ -196,7 +197,27 @@ public class AuthService(HttpClient httpClient, ITokenSessionService tokenServic
         }
         return null;
     }
+    public async Task<string?> GetTokenAsync(string mobile)
+    {
 
+        var response = await httpClient.PostAsJsonAsync("Account/GetToken", new LoginModelDto  { Mobile = mobile });
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<ResultDto<LoginResponseDto>>();
+            if (result.Succeeded)
+            {
+                tokenService.SetToken(result.Data.Token, result.Data.RefreshToken);
+                return result.Data.Token;
+            }
+        }
+        else
+        {
+            tokenService.ClearToken();
+        }
+        return null;
+    }
+    
     public async Task<ResultDto<ForgotPasswordResponse>> ForgotPasswordAsync(ForgotPasswordRequestDto forgotPasswordRequestDto)
     {
         var result = await PostData<ResultDto<ForgotPasswordResponse>>("Account/ForgotPassword", forgotPasswordRequestDto);

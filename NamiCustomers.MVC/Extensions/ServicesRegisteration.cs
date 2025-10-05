@@ -116,6 +116,7 @@ public static class ServicesRegisteration
     });
         return services;
     }
+    //diablo
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<JwtAuthorizationMessageHandler>();
@@ -124,6 +125,7 @@ public static class ServicesRegisteration
         {
             client.BaseAddress = new Uri(configuration["EndPointSetting:BaseAddress"]);
             // client.BaseAddress = new Uri("https://localhost:7061/api/v1/");
+            //                              "https://localhost:7061/api/v1/"
             client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -159,6 +161,9 @@ public static class ServicesRegisteration
         services.AddScoped<IAccountService, AccountService>(sp =>
         {
             var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
+
+            var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+            var subscriberService = sp.GetRequiredService<ISubscriberService>();
             return new AccountService(httpClient);
         });
         services.AddScoped<IBookingService, BookingService>(sp =>

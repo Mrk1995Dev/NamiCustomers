@@ -16,9 +16,15 @@ public class JwtAuthorizationMessageHandler(ITokenSessionService tokenSessionSer
             {
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
-            //todo ali if token was null must be ?
+            else
+            { 
+                //todo ali if token was null must be ?
+               // authService.GetTokenAsync();
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+               
 
-            var response = await base.SendAsync(request, cancellationToken);
+                var response = await base.SendAsync(request, cancellationToken);
 
 
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
