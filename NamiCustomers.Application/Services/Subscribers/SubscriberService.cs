@@ -251,9 +251,9 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
         //    var result = await smsService.SendSms(newOtp.Mobile, $"کد یکبار مصرف ورود به نامی من: {newOtp.AuthCode} \n @my.namikhodro.com #{newOtp.AuthCode} \n لغو11");
         //}
 
+		var result = await smsService.SendSms(newOtp.Mobile, $"کد یکبار مصرف ورود به نامی من: {newOtp.AuthCode} \n @my.namikhodro.com #{newOtp.AuthCode} \n لغو11");
 
-
-        return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto { AuthCode = newOtp.AuthCode, Mobile = newOtp.Mobile, NationalCode = newOtp.NationalCode });
+		return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto { AuthCode = newOtp.AuthCode, Mobile = newOtp.Mobile, NationalCode = newOtp.NationalCode });
     }
 
     public async Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync(string nationalCode)
