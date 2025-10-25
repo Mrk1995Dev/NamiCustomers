@@ -237,23 +237,23 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
         string passnew = Randowmpass.RandomString(5);
         var newOtp = new SubscriberCode { AuthCode = passnew, Mobile = mobile, NationalCode = nationalCode };
 
-        if (nationalCode == "0082425639")
-        {
-            newOtp.AuthCode = "00000";
-        }
+        //if (nationalCode == "0082425639")
+        //{
+        //    newOtp.AuthCode = "00000";
+        //}
 
 
         await dbContext.SubscriberCodes.AddAsync(newOtp);
         await dbContext.SaveChangesAsync();
 
-        if (nationalCode != "0082425639")
-        {
-            var result = await smsService.SendSms(newOtp.Mobile, $"کد یکبار مصرف ورود به نامی من: {newOtp.AuthCode} \n @my.namikhodro.com #{newOtp.AuthCode} \n لغو11");
-        }
+        //if (nationalCode != "0082425639")
+        //{
+        //    var result = await smsService.SendSms(newOtp.Mobile, $"کد یکبار مصرف ورود به نامی من: {newOtp.AuthCode} \n @my.namikhodro.com #{newOtp.AuthCode} \n لغو11");
+        //}
 
+		var result = await smsService.SendSms(newOtp.Mobile, $"کد یکبار مصرف ورود به نامی من: {newOtp.AuthCode} \n @my.namikhodro.com #{newOtp.AuthCode} \n لغو11");
 
-
-        return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto { AuthCode = newOtp.AuthCode, Mobile = newOtp.Mobile, NationalCode = newOtp.NationalCode });
+		return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto { AuthCode = newOtp.AuthCode, Mobile = newOtp.Mobile, NationalCode = newOtp.NationalCode });
     }
 
     public async Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync(string nationalCode)
