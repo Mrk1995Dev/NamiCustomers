@@ -2,12 +2,6 @@
 @model BookingTurnResponse
 @{
     ViewData["Title"] = "Index";
-    InsertBookingResponse insertBookingResponse = null;
-    if (TempData["InsertBookingRResponse"]!=null)
-    {
-        insertBookingResponse = (InsertBookingResponse)TempData["InsertBookingRResponse"];
-    }
-
 }
 
 <br />
@@ -33,25 +27,48 @@
         <div class="card-body">
             @* <form action="Index"> *@
             <form id="refreshForm">
-                <div class="colorful-tab">
-                    <ul class="nav p-1 mb-3 shadow-sm" id="affanTab3" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="btn btn-primary" id="Start-tab" data-bs-toggle="tab" data-bs-target="#Start" type="button" role="tab" aria-controls="Start" aria-selected="false" tabindex="-1">شروع</button>
+
+
+                <div id="basicwizard" class="colorful-tab">
+
+
+                    <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
+                        <li class="nav-item">
+                            <a href="#Start" data-bs-toggle="tab" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2 active">
+                                <i class="mdi mdi-account-circle me-1"></i>
+                                <span class="d-none d-sm-inline">شروع</span>
+                            </a>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="btn btn-primary active" id="creative-tab" data-bs-toggle="tab" data-bs-target="#creative" type="button" role="tab" aria-controls="creative" aria-selected="false" tabindex="-1">انتخاب نوبت</button>
+                        <li class="nav-item">
+                            <a href="#creative" data-bs-toggle="tab" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                <i class="mdi mdi-face-profile me-1"></i>
+                                <span class="d-none d-sm-inline">انتخاب نوبت</span>
+                            </a>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="btn btn-primary" id="modern-tab" data-bs-toggle="tab" data-bs-target="#modern" type="button" role="tab" aria-controls="modern" aria-selected="false" tabindex="-1">بررسی نهایی</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="btn btn-primary " id="latest-tab" data-bs-toggle="tab" data-bs-target="#latest" type="button" role="tab" aria-controls="latest" aria-selected="true">کد رهگیری</button>
+                        <li class="nav-item">
+                            <a href="#modern" data-bs-toggle="tab" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                <i class="mdi mdi-face-profile me-1"></i>
+                                <span class="d-none d-sm-inline"> بررسی نهایی</span>
+                            </a>
                         </li>
 
+
+
+                        <li class="nav-item">
+                            <a href="#latest" data-bs-toggle="tab" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                                <i class="mdi mdi-checkbox-marked-circle-outline me-1"></i>
+                                <span class="d-none d-sm-inline">کد رهگیری</span>
+                            </a>
+                        </li>
                     </ul>
 
+
+
+
+
                     <div class="tab-content shadow-sm p-3" id="affanTab3Content">
-                        <div class="tab-pane fade  " id="Start" role="tabpanel" aria-labelledby="Start-tab">
+
+                        <div class="tab-pane fade show active " id="Start" role="tabpanel" aria-labelledby="Start-tab">
                             <h6 class="text-white">
                                 راهنمایی و شروع
                             </h6>
@@ -87,19 +104,9 @@
                                 6-در صورت محرز شدن مغایرت بین نوع سرویس انتخابی مشتری در نوبت دهی اینترنتی با نیاز واقعی خودرو در زمان مراجعه، شرکت مسئولیتی در قبال پذیرش خودرو در تاریخ اخذ نوبت نخواهد داشت و نسبت به نوبت دهی مجدد برای مشتری اقدام خواهد شد .
                                 .
                             </p>
-                            <hr />
-                            <div class="d-flex align-items-center justify-content-between direction-rtl">
-                                <!-- Form -->
-                                <div class="goto-page-form">
-                                    <a class="btn m-1 btn-outline-secondary" style="text-align:right;width:100px;border:1px solid #8696a7;background-color:#8696a7;color:#fff" href="#">مرحله قبل</a>
-                                </div>
 
-                                <nav aria-label="Page navigation example">
-                                    <a class="btn m-1 btn-danger" style="width:100px;border:1px solid #c50a26;color:#fff;background-color:#c50a26" href="#">مرحله بعد</a>
-                                </nav>
-                            </div>
                         </div>
-                        <div class="tab-pane fade show active" id="creative" role="tabpanel" aria-labelledby="creative-tab">
+                        <div class="tab-pane fade " id="creative" role="tabpanel" aria-labelledby="creative-tab">
                             <div class="form-group">
                                 <label class="form-label">استان</label>
 
@@ -150,9 +157,9 @@
                                     </textarea>
                             </div>
 
-                            <hr />
+
                             <button name="action" class="btnrefresh" type="submit" style="display:none;"></button>
-                            
+
                         </div>
 
 
@@ -165,35 +172,42 @@
                             <button name="action" class="insertbooking btn btn-primary" type="submit">ثبت</button>
                         </div>
                         <div class="tab-pane fade " id="latest" role="tabpanel" aria-labelledby="latest-tab">
-                            @if (insertBookingResponse!= null)
-                            {
-                                <p>
-                                    @insertBookingResponse.ReturnKey
-                                </p>
-                            }
-                            else
-                            {
-                                <h6 class="text-white">انتخاب نوبت الزامیست</h6>
-                                
-                            }
+                            <div id="insertresult">
+                            </div>
                         </div>
+                        <hr />
+                        <ul class="list-inline wizard mb-0">
+
+
+
+                            <li class="next list-inline-item">
+                                <a href="javascript: void(0);" class="btn btn-secondary">بعدی</a>
+                            </li>
+                            <li class="previous list-inline-item float-end">
+                                <a href="javascript: void(0);" class="btn btn-secondary">قبلی</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                @* <input type="text" name="@Model.CountryId"/> *@
 
             </form>
+
         </div>
     </div>
 </div>
 
 @section Scripts {
+    <script src="~/sitetmeplate/js/jquery.bootstrap.wizard.min.js"></script>
+
     <script>
         function refresh()
            {
               $('.btnrefresh').click();
            }
-                 
+
            $(document).ready(function () {
+
+               $("#basicwizard").bootstrapWizard();
 
                       // جلوگیری از ارسال پیش‌فرض فرم
            $('#refreshForm').on('submit', function(e) {
@@ -212,8 +226,9 @@
                        type: 'POST',
                           data:formData,
                        success: function (result) {
+                           console.log(result);
 
-                           console.log("Form submitted successfully!", result);
+                        $('#insertresult').html('').append("<p>"+result.returnKey+"</p>")
                        },
                        error: function (xhr, status, error) {
 
@@ -235,7 +250,7 @@
 
 
                            const responseData=result.data;
-                           console.log(responseData);
+
                            const cities=responseData.cities;
                            const $cities = $('#CityId');
                            $cities.empty();
@@ -302,7 +317,7 @@
                    });
                });
 
-         
+
 
 
            });

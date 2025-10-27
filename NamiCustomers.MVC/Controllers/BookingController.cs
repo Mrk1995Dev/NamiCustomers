@@ -13,7 +13,7 @@ namespace NamiCustomers.MVC.Controllers
         [ServiceFilter(typeof(VinFilter))]
         public async Task<IActionResult> BookingIndex(BookingTurnRequest? bookingTurnRequest)
         {
-            if (bookingTurnRequest == null)
+            if (bookingTurnRequest == null || bookingTurnRequest.CountryId==Guid.Empty)
             {
                 bookingTurnRequest = new BookingTurnRequest();
             }
@@ -71,16 +71,16 @@ namespace NamiCustomers.MVC.Controllers
                 BookingDate = DateTime.Now,
                 IsBookingFinal = true
             };
-            var result2 = await sevenSoftService.InsertBooking(bookingRequest);
+            var insertResult = await sevenSoftService.InsertBooking(bookingRequest);
 
-            if (!result2.Succeeded)
+            if (!insertResult.Succeeded)
             {
-                SetError(result2.Message);
+                SetError(insertResult.Message);
                 return RedirectToAction("BookingIndex");
             }
-            TempData["InsertBookingRResponse"] = result2.Data;
+            var insertBookingResponse = insertResult.Data;
 
-            return   RedirectToAction("BookingIndex",request);
+            return Json(insertBookingResponse);
         }
 
         public async Task<IActionResult> Index2()
