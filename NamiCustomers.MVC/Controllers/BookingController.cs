@@ -78,6 +78,7 @@ namespace NamiCustomers.MVC.Controllers
                 SetError(insertResult.Message);
                 return RedirectToAction("BookingIndex");
             }
+            
             var insertBookingResponse = insertResult.Data;
 
             return Json(insertBookingResponse);

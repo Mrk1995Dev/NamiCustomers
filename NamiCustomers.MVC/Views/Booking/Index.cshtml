@@ -129,7 +129,7 @@
                                 <select onchange="refresh()" asp-for="@Model.BranchId" asp-items="@Model.Branches" class="form-select form-control-clicked"></select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">جایگاه</label>
+                                <label class="form-label">نوع خدمت</label>
 
                                 <select onchange="refresh()" asp-for="@Model.ServerGroupId" asp-items="@Model.ServerGroups" class="form-select form-control-clicked"></select>
                             </div>
@@ -143,17 +143,17 @@
                             <div class="form-group">
                                 <label class="form-label">ساعت</label>
 
-                                <select onchange="settime()" asp-for="@Model.ServerGroupTimeId" asp-items="@Model.ServerGroupTimes" class="form-select form-control-clicked"></select>
+                                <select onchange="setFinalConfirm()" asp-for="@Model.ServerGroupTimeId" asp-items="@Model.ServerGroupTimes" class="form-select form-control-clicked"></select>
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label"> کیلومتر</label>
-                                <input min="1" class="form-control form-control-clicked" asp-for="@Model.Kilometer" placeholder="کارکرد (کیلومتر)" type="number">
+                                <input onchange="setFinalConfirm()" min="1" class="form-control form-control-clicked" asp-for="@Model.Kilometer" placeholder="کارکرد (کیلومتر)" type="number">
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label"> توضیحات</label>
-                                <textarea class="form-control form-control-clicked" asp-for="@Model.Description">
+                                <textarea  class="form-control form-control-clicked" asp-for="@Model.Description">
                                     </textarea>
                             </div>
 
@@ -208,15 +208,11 @@
 
     <script>
         function refresh()
-           { 
-               settime();
+           {
+              setFinalConfirm();
               $('.btnrefresh').click();
-             
-                           
-
-
            }
-            function settime(){
+            function setFinalConfirm(){
                             $('#lblSubCountryId').text('').text($('#SubCountryId option:selected').text());
                             $('#lblCityId').text('').text($('#CityId option:selected').text());
                             $('#lblDealerId').text('').text($('#DealerId option:selected').text());
@@ -228,7 +224,7 @@
                             $('#lblDescription').text('').text($('#Description').val());
             }
 
-           
+
 
            $(document).ready(function () {
 
@@ -241,21 +237,72 @@
 
 
                $('.insertbooking').on('click', function (event) {
+
                    //  Prevent the default form submission (which causes the reload)
                    event.preventDefault();
-                   // debugger
-                   // alert($('#ServerGroupTimeId').val());
+
+                   var emptyGuid='00000000-0000-0000-0000-000000000000';
+                   if($('#SubCountryId option:selected').val()===emptyGuid)
+                   {
+                       showError($('#SubCountryId option:selected').text());
+                       return;
+                   }
+                   if($('#CityId option:selected').val()===emptyGuid)
+                   {
+                        showError($('#CityId option:selected').text());
+                         return;
+                   }
+                   if($('#DealerId option:selected').val()===emptyGuid)
+                   {
+                        showError($('#DealerId option:selected').text());
+                         return;
+                   }
+                   if($('#BranchId option:selected').val()===emptyGuid)
+                   {
+                        showError($('#BranchId option:selected').text());
+                         return;
+                   }
+                   if($('#ServerGroupId option:selected').val()===emptyGuid)
+                   {
+                        showError($('#ServerGroupId option:selected').text());
+                         return;
+                   }
+                   if($('#ServerGroupDateId option:selected').val()===emptyGuid)
+                   {
+                        showError($('#ServerGroupDateId option:selected').text());
+                         return;
+                   }
+                   if($('#ServerGroupTimeId option:selected').val()===emptyGuid)
+                   {
+                        showError($('#ServerGroupTimeId option:selected').text());
+                         return;
+                   }
+                    if($('#Kilometer').val()<=0)
+                   {
+                        showError('کیلومتر وارد شده اشتباه است');
+                         return;
+                   }
+                   if($('#Kilometer').val()<=0)
+                   {
+                        showError('کیلومتر وارد شده اشتباه است');
+                         return;
+                   }
+
                         var formData = $('#refreshForm').serialize();
                    $.ajax({
                        url: '@Url.Action("Register", "Booking")',
                        type: 'POST',
                           data:formData,
                        success: function (result) {
-                           console.log(result);
 
+                           console.log(result);
+                        if(result.returnKey==null){
+                         showError(result.message);
+                        }else
+                        {
                         $('#insertresult').html('').append("<p>"+result.returnKey+"</p>")
                         $('#btnNext').click();
-
+                        }
 
 
                        },
