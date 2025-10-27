@@ -6,10 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>8e9bee6e-68c6-4822-a35c-425fe3a9219d</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <AssemblyVersion>1.0.0.2</AssemblyVersion>
-    <FileVersion>1.0.0.2</FileVersion>
-    <Version>1.0.0.2</Version>
-    <InformationalVersion>1.0.0.2 - 2025-08-05</InformationalVersion>
+    <AssemblyVersion>4.08.05.1</AssemblyVersion>
+    <FileVersion>4.08.05.1</FileVersion>
+    <Version>4.08.05.1</Version>
+    <InformationalVersion>4.08.05.1 - 2025-10-27</InformationalVersion>
     <AssemblyDescription>Alimoradi573@gmail.com</AssemblyDescription>
   </PropertyGroup>
   <ItemGroup>
@@ -21,15 +21,11 @@
     <PackageReference Include="Serilog" Version="4.3.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.13.1" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.8" />
-	  <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
-
-	  <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
-
-	  <PackageReference Include="AspNetCore.HealthChecks.UI" Version="9.0.0" />
-
-	  <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
-
-	  <PackageReference Include="AspNetCore.HealthChecks.UI.Core" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Core" Version="9.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NamiCustomers.Abstractions\NamiCustomers.Abstractions.csproj" />

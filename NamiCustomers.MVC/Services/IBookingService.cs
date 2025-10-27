@@ -24,6 +24,10 @@ public class BookingService(HttpClient httpClient, ISevenSoftService sevenSoftSe
 {
     public async Task<ResultDto<BookingTurnResponse>> GetBookingTurnAsync(BookingTurnRequest filter)
     {
+
+
+
+
         BookingTurnResponse response = new();
         filter.CountryId = new Guid("de5b7996-131d-44c5-88b9-fc3a511506a0");//todo
         if (filter.CountryId != null)

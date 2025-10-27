@@ -13,11 +13,20 @@ namespace NamiCustomers.MVC.Controllers
         [ServiceFilter(typeof(VinFilter))]
         public async Task<IActionResult> BookingIndex(BookingTurnRequest? bookingTurnRequest)
         {
+
+
             if (bookingTurnRequest == null || bookingTurnRequest.CountryId==Guid.Empty)
             {
                 bookingTurnRequest = new BookingTurnRequest();
             }
-
+            var subscriber = subscriberService.CurrentSubscriber;
+            var vehicle = subscriber.VehicleModels.FirstOrDefault(c => c.IsDefault);
+            var existedBooking = await sevenSoftService.CheckExistsReserveVinNumber(vehicle.VinNumber);
+            if (existedBooking.Item1==true)
+            {
+                SetError("برای شاسی شما نوبت باز وجود دارد");
+                return RedirectToAction("MyBooking");
+            }
 
             var result = await bookingService.GetBookingTurnAsync(bookingTurnRequest);
 
@@ -84,11 +93,6 @@ namespace NamiCustomers.MVC.Controllers
             return Json(insertBookingResponse);
         }
 
-        public async Task<IActionResult> Index2()
-        {
-            return View();
-        }
-
 
         public async Task<IActionResult> CancelBooking(Guid bookingId  , string vinNumber )
         {
@@ -100,14 +104,16 @@ namespace NamiCustomers.MVC.Controllers
             return RedirectToAction("BookingIndex");
         }
 
-        public async Task<IActionResult> CancelBooking(string vinNumber)
+        public async Task<IActionResult> MyBooking()
         {
+            string vinNumber = subscriberService.CurrentSubscriber.VehicleModels.FirstOrDefault(c => c.IsDefault)?.VinNumber;
             var result = await sevenSoftService.GetBooking(vinNumber);
             if (!result.Succeeded)
             {
                 SetError(result.Message);
+                return View("MyBooking", new BookingResponse());
             }
-            return RedirectToAction("BookingIndex");
+            return View("MyBooking", result.Data);
         }
 
 

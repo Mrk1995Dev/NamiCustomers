@@ -34,28 +34,27 @@
 
                     <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
                         <li class="nav-item">
-                            <a href="#Start" data-bs-toggle="tab" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2 active">
+                            <a href="#step1" data-bs-toggle="tab" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2 active">
                                 <i class="mdi mdi-account-circle me-1"></i>
                                 <span class="d-none d-sm-inline">شروع</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#creative" data-bs-toggle="tab" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                            <a href="#step2" data-bs-toggle="tab" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                 <i class="mdi mdi-face-profile me-1"></i>
                                 <span class="d-none d-sm-inline">انتخاب نوبت</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#modern" data-bs-toggle="tab" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                            <a href="#step3" data-bs-toggle="tab" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                 <i class="mdi mdi-face-profile me-1"></i>
                                 <span class="d-none d-sm-inline"> بررسی نهایی</span>
                             </a>
                         </li>
 
 
-
                         <li class="nav-item">
-                            <a href="#latest" data-bs-toggle="tab" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
+                            <a href="#step4" data-bs-toggle="tab" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2">
                                 <i class="mdi mdi-checkbox-marked-circle-outline me-1"></i>
                                 <span class="d-none d-sm-inline">کد رهگیری</span>
                             </a>
@@ -68,7 +67,7 @@
 
                     <div class="tab-content shadow-sm p-3" id="affanTab3Content">
 
-                        <div class="tab-pane fade show active " id="Start" role="tabpanel" aria-labelledby="Start-tab">
+                        <div class="tab-pane fade show active " id="step1" role="tabpanel" aria-labelledby="Start-tab">
                             <h6 class="text-white">
                                 راهنمایی و شروع
                             </h6>
@@ -106,7 +105,7 @@
                             </p>
 
                         </div>
-                        <div class="tab-pane fade " id="creative" role="tabpanel" aria-labelledby="creative-tab">
+                        <div class="tab-pane fade " id="step2" role="tabpanel" aria-labelledby="creative-tab">
                             <div class="form-group">
                                 <label class="form-label">استان</label>
 
@@ -153,7 +152,7 @@
 
                             <div class="form-group">
                                 <label class="form-label"> توضیحات</label>
-                                <textarea  class="form-control form-control-clicked" asp-for="@Model.Description">
+                                <textarea class="form-control form-control-clicked" asp-for="@Model.Description">
                                     </textarea>
                             </div>
 
@@ -163,7 +162,7 @@
                         </div>
 
 
-                        <div class="tab-pane fade" id="modern" role="tabpanel" aria-labelledby="modern-tab">
+                        <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="modern-tab">
 
                             <p id="lblSubCountryId"></p>
                             <p id="lblCityId"></p>
@@ -176,9 +175,9 @@
                             <p id="lblDescription"></p>
 
 
-                            <button name="action" class="insertbooking btn btn-primary" type="submit">ثبت</button>
+                            <button style="display:none" name="action" class="insertbooking btn btn-primary" type="submit">ثبت</button>
                         </div>
-                        <div class="tab-pane fade " id="latest" role="tabpanel" aria-labelledby="latest-tab">
+                        <div class="tab-pane fade " id="step4" role="tabpanel" aria-labelledby="latest-tab">
                             <div id="insertresult">
                             </div>
                         </div>
@@ -191,7 +190,7 @@
                                 <a id="btnNext" href="javascript: void(0);" class="btn btn-secondary">بعدی</a>
                             </li>
                             <li class="previous list-inline-item float-end">
-                                <a href="javascript: void(0);" class="btn btn-secondary">قبلی</a>
+                                <a id="btnPrevious" href="javascript: void(0);" class="btn btn-secondary">قبلی</a>
                             </li>
                         </ul>
                     </div>
@@ -207,196 +206,258 @@
     <script src="~/sitetmeplate/js/jquery.bootstrap.wizard.min.js"></script>
 
     <script>
-        function refresh()
-           {
-              setFinalConfirm();
-              $('.btnrefresh').click();
-           }
-            function setFinalConfirm(){
-                            $('#lblSubCountryId').text('').text($('#SubCountryId option:selected').text());
-                            $('#lblCityId').text('').text($('#CityId option:selected').text());
-                            $('#lblDealerId').text('').text($('#DealerId option:selected').text());
-                            $('#lblBranchId').text('').text($('#BranchId option:selected').text());
-                            $('#lblServerGroupId').text('').text($('#ServerGroupId option:selected').text());
-                            $('#lblServerGroupDateId').text('').text($('#ServerGroupDateId option:selected').text());
-                            $('#lblServerGroupTimeId').text('').text($('#ServerGroupTimeId option:selected').text());
-                            $('#lblKilometer').text('').text($('#Kilometer').val());
-                            $('#lblDescription').text('').text($('#Description').val());
+                function refresh()
+                   {
+                      setFinalConfirm();
+                      $('.btnrefresh').click();
+                   }
+                    function setFinalConfirm(){
+                                    $('#lblSubCountryId').text('').text($('#SubCountryId option:selected').text());
+                                    $('#lblCityId').text('').text($('#CityId option:selected').text());
+                                    $('#lblDealerId').text('').text($('#DealerId option:selected').text());
+                                    $('#lblBranchId').text('').text($('#BranchId option:selected').text());
+                                    $('#lblServerGroupId').text('').text($('#ServerGroupId option:selected').text());
+                                    $('#lblServerGroupDateId').text('').text($('#ServerGroupDateId option:selected').text());
+                                    $('#lblServerGroupTimeId').text('').text($('#ServerGroupTimeId option:selected').text());
+                                    $('#lblKilometer').text('').text($('#Kilometer').val());
+                                    $('#lblDescription').text('').text($('#Description').val());
+                    }
+
+
+
+                   $(document).ready(function () {
+                      $('#btnPrevious').css('display','none');
+                       $("#basicwizard").bootstrapWizard();
+
+                              // جلوگیری از ارسال پیش‌فرض فرم
+                   $('#refreshForm').on('submit', function(e) {
+                       e.preventDefault();
+                   });
+
+                   function dataIsValid()
+                   {
+                       var isValid=true;
+                       var emptyGuid='00000000-0000-0000-0000-000000000000';
+                           if($('#SubCountryId option:selected').val()===emptyGuid)
+                           {
+                               isValid=false;;
+                               showError($('#SubCountryId option:selected').text());
+
+                           }
+                           if($('#CityId option:selected').val()===emptyGuid)
+                           {
+                                  isValid=false;;
+                                showError($('#CityId option:selected').text());
+
+                           }
+                           if($('#DealerId option:selected').val()===emptyGuid)
+                           {
+                                  isValid=false;;
+                                showError($('#DealerId option:selected').text());
+
+                           }
+                           if($('#BranchId option:selected').val()===emptyGuid)
+                           {
+                                  isValid=false;
+                                showError($('#BranchId option:selected').text());
+
+                           }
+                           if($('#ServerGroupId option:selected').val()===emptyGuid)
+                           {
+                                  isValid=false;
+                                showError($('#ServerGroupId option:selected').text());
+
+                           }
+                           if($('#ServerGroupDateId option:selected').val()===emptyGuid)
+                           {
+                                  isValid=false;
+                                showError($('#ServerGroupDateId option:selected').text());
+
+                           }
+                           if($('#ServerGroupTimeId option:selected').val()===emptyGuid)
+                           {
+                                  isValid=false;
+                                showError($('#ServerGroupTimeId option:selected').text());
+                           }
+                            if($('#Kilometer').val()<=0)
+                           {
+                                  isValid=false;
+                                showError('کیلومتر وارد شده اشتباه است');
+
+                           }
+                           if($('#Description').val().length<5)
+                           {
+                                   isValid=false;
+                                showError('توضیحات وارد شده اشتباه است');
+
+                           }
+                           return isValid;
+                   }
+                    $('#btnPrevious').on('click', function (event) {
+                         if($('#step2').hasClass('active'))
+        {
+             $('#btnPrevious').css('display','none');
+        }
+                         $('#btnNext').css('display','block');
+                    });
+                   $('#btnNext').on('click', function (event) {
+                       if($('#step1').hasClass('active'))
+        {
+             $('#btnPrevious').css('display','block');
+        }
+        if($('#step2').hasClass('active'))
+        {
+             $('#btnPrevious').css('display','block');
+            if(!dataIsValid())
+            {
+                $('#btnPrevious').click();
+                return;
             }
 
 
-
-           $(document).ready(function () {
-
-               $("#basicwizard").bootstrapWizard();
-
-                      // جلوگیری از ارسال پیش‌فرض فرم
-           $('#refreshForm').on('submit', function(e) {
-               e.preventDefault();
-           });
-
-
-               $('.insertbooking').on('click', function (event) {
-
-                   //  Prevent the default form submission (which causes the reload)
-                   event.preventDefault();
-
-                   var emptyGuid='00000000-0000-0000-0000-000000000000';
-                   if($('#SubCountryId option:selected').val()===emptyGuid)
-                   {
-                       showError($('#SubCountryId option:selected').text());
-                       return;
-                   }
-                   if($('#CityId option:selected').val()===emptyGuid)
-                   {
-                        showError($('#CityId option:selected').text());
-                         return;
-                   }
-                   if($('#DealerId option:selected').val()===emptyGuid)
-                   {
-                        showError($('#DealerId option:selected').text());
-                         return;
-                   }
-                   if($('#BranchId option:selected').val()===emptyGuid)
-                   {
-                        showError($('#BranchId option:selected').text());
-                         return;
-                   }
-                   if($('#ServerGroupId option:selected').val()===emptyGuid)
-                   {
-                        showError($('#ServerGroupId option:selected').text());
-                         return;
-                   }
-                   if($('#ServerGroupDateId option:selected').val()===emptyGuid)
-                   {
-                        showError($('#ServerGroupDateId option:selected').text());
-                         return;
-                   }
-                   if($('#ServerGroupTimeId option:selected').val()===emptyGuid)
-                   {
-                        showError($('#ServerGroupTimeId option:selected').text());
-                         return;
-                   }
-                    if($('#Kilometer').val()<=0)
-                   {
-                        showError('کیلومتر وارد شده اشتباه است');
-                         return;
-                   }
-                   if($('#Kilometer').val()<=0)
-                   {
-                        showError('کیلومتر وارد شده اشتباه است');
-                         return;
-                   }
-
-                        var formData = $('#refreshForm').serialize();
-                   $.ajax({
-                       url: '@Url.Action("Register", "Booking")',
-                       type: 'POST',
-                          data:formData,
-                       success: function (result) {
-
-                           console.log(result);
-                        if(result.returnKey==null){
-                         showError(result.message);
-                        }else
-                        {
-                        $('#insertresult').html('').append("<p>"+result.returnKey+"</p>")
-                        $('#btnNext').click();
-                        }
-
-
-                       },
-                       error: function (xhr, status, error) {
-
-                           console.error("An error occurred:", error);
-                       }
+        }
+                else if($('#step3').hasClass('active'))
+                {
+                    $('.insertbooking').click();
+                }  
                    });
-               });
-
-               $('.btnrefresh').click(function (event) {
-                   //  Prevent the default form submission (which causes the reload)
-                   event.preventDefault();
-                      var formData = $('#refreshForm').serialize();
-
-                   $.ajax({
-                       url: '@Url.Action("Refresh", "Booking")',
-                       type: 'POST',
-                          data: formData, // Serializes the form data
-                       success: function (result) {
 
 
-                           const responseData=result.data;
 
-                           const cities=responseData.cities;
-                           const $cities = $('#CityId');
-                           $cities.empty();
-                           $.each(cities, function(index, item) {
-                           var seleted=item.selected?'selected':'';
-                           $cities.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+
+                       $('.insertbooking').on('click', function (event) {
+
+                           //  Prevent the default form submission (which causes the reload)
+                           event.preventDefault();
+
+                           if(!dataIsValid()){
+                               return;
+                           }
+                             $('#btnNext').css('display','none');
+                                var formData = $('#refreshForm').serialize();
+                           $.ajax({
+                               url: '@Url.Action("Register", "Booking")',
+                               type: 'POST',
+                                  data:formData,
+                               success: function (result) {
+                                if(result.returnKey==null){
+                                    $('#insertresult').html('');
+                                    $('#btnPrevious').click();
+                                 showError(result.message);
+                                }
+                                else
+                                {
+                                $('#insertresult').html('')
+                                .append("<p>"+result.returnKey+"</p>")
+                                 .append("<p>"+result.returnModel.branchName+"</p>")
+                                  .append("<p>"+result.returnModel.branchNo+"</p>")
+                                   .append("<p>"+result.returnModel.dealerAddress+"</p>")
+                                    .append("<p>"+result.returnModel.dealerCity+"</p>")
+                                      .append("<p>"+result.returnModel.dealerLatitude+"</p>")
+                                        .append("<p>"+result.returnModel.dealerLongitude+"</p>")
+                                        .append("<p>"+result.returnModel.dealerName+"</p>")
+                                        .append("<p>"+result.returnModel.dealerNo+"</p>")
+                                        .append("<p>"+result.returnModel.dealerPhone+"</p>")
+                                        .append("<p>"+result.returnModel.vinNumber+"</p>");
+
+                                        for(var i=0;i<result.returnModel.customerStatements.length();i++)
+                                        {
+                                            $('#insertresult').append("<p>"+result.returnModel.customerStatements[i].bookingCustomerStatementDescription+"</p>").append("<p>"+result.returnModel.customerStatements[i].customerStatementsTypeName+"</p>");
+                                        }
+                                $('#btnNext').click();
+                                }
+                               },
+                               error: function (xhr, status, error) {
+                                    $('#btnPrevious').click();
+                                   console.error("An error occurred:", error);
+                               }
                            });
+                       });
+
+                       $('.btnrefresh').click(function (event) {
+                           //  Prevent the default form submission (which causes the reload)
+                           event.preventDefault();
+                              var formData = $('#refreshForm').serialize();
+
+                           $.ajax({
+                               url: '@Url.Action("Refresh", "Booking")',
+                               type: 'POST',
+                                  data: formData, // Serializes the form data
+                               success: function (result) {
 
 
-                           const dealers=responseData.dealers;
-                           const $dealers = $('#DealerId');
-                           $dealers.empty();
-                           $.each(dealers, function(index, item) {
-                           var seleted=item.selected?'selected':'';
-                           $dealers.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                                   const responseData=result.data;
+
+                                   const cities=responseData.cities;
+                                   const $cities = $('#CityId');
+                                   $cities.empty();
+                                   $.each(cities, function(index, item) {
+                                   var seleted=item.selected?'selected':'';
+                                   $cities.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                                   });
+
+
+                                   const dealers=responseData.dealers;
+                                   const $dealers = $('#DealerId');
+                                   $dealers.empty();
+                                   $.each(dealers, function(index, item) {
+                                   var seleted=item.selected?'selected':'';
+                                   $dealers.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                                   });
+
+                                   const branchs=responseData.branches;
+                                   const $branchs = $('#BranchId');
+                                   $branchs.empty();
+                                   $.each(branchs, function(index, item) {
+                                   var seleted=item.selected?'selected':'';
+                                   $branchs.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                                   });
+
+                                   const servergroups=responseData.serverGroups;
+                                   const $servergroups = $('#ServerGroupId');
+                                   $servergroups.empty();
+                                   $.each(servergroups, function(index, item) {
+                                   var seleted=item.selected?'selected':'';
+                                   $servergroups.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                                   });
+
+                                   const serverGroupDates=responseData.serverGroupDates;
+                                   const $serverGroupDates = $('#ServerGroupDateId');
+                                   $serverGroupDates.empty();
+                                   $.each(serverGroupDates, function(index, item) {
+                                   var seleted=item.selected?'selected':'';
+                                   $serverGroupDates.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                                   });
+
+                                   const serverGroupTimes=responseData.serverGroupTimes;
+                                   const $serverGroupTimes = $('#ServerGroupTimeId');
+                                   $serverGroupTimes.empty();
+                                   $.each(serverGroupTimes, function(index, item) {
+                                   var seleted=item.selected?'selected':'';
+                                   $serverGroupTimes.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                                   });
+
+
+
+
+
+
+
+                                   console.log("Form submitted successfully!", result);
+                                   // You can update parts of the page here instead of reloading
+                                   // For example: $('#resultDiv').html(result);
+                               },
+                               error: function (xhr, status, error) {
+
+                                   console.error("An error occurred:", error);
+                               }
                            });
-
-                           const branchs=responseData.branches;
-                           const $branchs = $('#BranchId');
-                           $branchs.empty();
-                           $.each(branchs, function(index, item) {
-                           var seleted=item.selected?'selected':'';
-                           $branchs.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
-                           });
-
-                           const servergroups=responseData.serverGroups;
-                           const $servergroups = $('#ServerGroupId');
-                           $servergroups.empty();
-                           $.each(servergroups, function(index, item) {
-                           var seleted=item.selected?'selected':'';
-                           $servergroups.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
-                           });
-
-                           const serverGroupDates=responseData.serverGroupDates;
-                           const $serverGroupDates = $('#ServerGroupDateId');
-                           $serverGroupDates.empty();
-                           $.each(serverGroupDates, function(index, item) {
-                           var seleted=item.selected?'selected':'';
-                           $serverGroupDates.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
-                           });
-
-                           const serverGroupTimes=responseData.serverGroupTimes;
-                           const $serverGroupTimes = $('#ServerGroupTimeId');
-                           $serverGroupTimes.empty();
-                           $.each(serverGroupTimes, function(index, item) {
-                           var seleted=item.selected?'selected':'';
-                           $serverGroupTimes.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
-                           });
+                       });
 
 
 
 
-
-
-
-                           console.log("Form submitted successfully!", result);
-                           // You can update parts of the page here instead of reloading
-                           // For example: $('#resultDiv').html(result);
-                       },
-                       error: function (xhr, status, error) {
-
-                           console.error("An error occurred:", error);
-                       }
                    });
-               });
-
-
-
-
-           });
 
     </script>
 }

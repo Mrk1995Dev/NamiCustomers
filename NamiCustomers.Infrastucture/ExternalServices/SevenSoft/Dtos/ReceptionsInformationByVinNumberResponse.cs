@@ -114,7 +114,7 @@ public class ReceptionsInformationByVinNumberResponse
     public string StrPreInvoiceDate { get; set; }
     public string StrPreInvoiceTime { get; set; }
     public int FuelStatusId { get; set; }
-    public int BatteryStatusId { get; set; }
+    public int? BatteryStatusId { get; set; }
     [DisplayName("وضعیت سوخت")]
     public string FuelStatusLocalizedName { get; set; }
     public string BatteryStatusLocalizedName { get; set; }

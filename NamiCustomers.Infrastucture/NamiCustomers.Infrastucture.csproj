@@ -4,14 +4,13 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>1.0.0.2</AssemblyVersion>
-    <FileVersion>1.0.0.2</FileVersion>
-    <Version>1.0.0.2</Version>
-    <InformationalVersion>1.0.0.2 - 2025-08-05</InformationalVersion>
+    <AssemblyVersion>4.08.05.1</AssemblyVersion>
+    <FileVersion>4.08.05.1</FileVersion>
+    <Version>4.08.05.1</Version>
+    <InformationalVersion>4.08.05.1 - 2025-10-27</InformationalVersion>
     <AssemblyDescription>Alimoradi573@gmail.com</AssemblyDescription>
   </PropertyGroup>
   <ItemGroup>
-
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.8" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.8" />
