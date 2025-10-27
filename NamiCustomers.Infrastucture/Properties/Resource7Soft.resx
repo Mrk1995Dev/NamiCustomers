@@ -195,4 +195,19 @@
   <data name="BaseUrlSales" xml:space="preserve">
     <value>http://7soft.namikhodro.com:8089/</value>
   </data>
+  <data name="InsertBooking" xml:space="preserve">
+    <value>api/Booking/InsertBooking</value>
+  </data>
+  <data name="GetAllServerGroupRepairAdvisers" xml:space="preserve">
+    <value>api/Booking/getAllServerGroupRepairAdvisers?WorkShopTimeTableId={0}&amp;ServerGroupId={1}</value>
+  </data>
+  <data name="CancelBooking" xml:space="preserve">
+    <value>api/Booking/CancelBooking?BookingId={0}&amp;VinNumber={1}</value>
+  </data>
+  <data name="GetBooking" xml:space="preserve">
+    <value>api/Booking/GetBooking?VinNumber={0}</value>
+  </data>
+  <data name="GetAllChassisInformation" xml:space="preserve">
+    <value>api/VINInformation/GetAllChassisInformation?NationalCodeOrEconomicCode={0}</value>
+  </data>
 </root>

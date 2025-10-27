@@ -17,6 +17,8 @@ public interface IBookingService
     /// <returns></returns>
     Task<ResultDto<BookingTurnResponse>> GetBookingTurnAsync(BookingTurnRequest filter);
 
+
+
 }
 public class BookingService(HttpClient httpClient, ISevenSoftService sevenSoftService) : IBookingService
 {
@@ -106,11 +108,12 @@ public class BookingTurnRequest
 
     public Guid? ServerGroupId { get; set; }
     public Guid? ServerGroupDateId { get; set; }
-    public Guid? ServerGroupTimeId { get; set; }
+    public string? ServerGroupTimeId { get; set; }
+    public int Kilometer { get; set; }
+    public string? Description { get; set; }
 }
 public class BookingTurnResponse
 {
-   
     public BookingTurnResponse()
     {
         this.SubCountries.Add(new BookingTurnOptionDto { Selected = false ,Text="لطفا  استان را انتخاب نمایید",Value=Guid.Empty.ToString()});
@@ -143,6 +146,9 @@ public class BookingTurnResponse
     public Guid? ServerGroupDateId { get; set; }
     public Guid? ServerGroupTimeId { get; set; }
     public int Kilometer { get; set; }
+
+
+    public string? Description { get; set; }
 
 }
 public class BookingTurnOptionDto : SelectListItem

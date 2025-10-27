@@ -17,26 +17,26 @@ public interface IVehicleService
     Task<ResultDto<VehicleModelDto>> EditAsync(VehicleModelDto model);
     Task<ResultDto<VehicleModelDto>> SetDefaultAsync(int id);
 }
-public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftService sevenSoftService, ISubscriberService subscriberService) : IVehicleService
+public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftService sevenSoftService) : IVehicleService
 {
     public async Task<ResultDto<VehicleModelDto>> RegisterAsync(VehicleModelDto vehicleModelDto)
     {
-        var subscriber = subscriberService.GetAsync(vehicleModelDto.SubscriberId.Value).Result.Data;
+      //  var subscriber = subscriberService.GetAsync(vehicleModelDto.SubscriberId.Value).Result.Data;
 
-        if (dbContext.VehicleModels.Any(c => c.SubscriberId == subscriber.Id && c.VinNumber == vehicleModelDto.VinNumber))
+        if (dbContext.VehicleModels.Any(c => c.SubscriberId == vehicleModelDto.SubscriberId && c.VinNumber == vehicleModelDto.VinNumber))
         {
             return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errDuplicateSubscriberVin, false);
         }
-        if (dbContext.VehicleModels.Any(c => c.SubscriberId != subscriber.Id && c.VinNumber == vehicleModelDto.VinNumber))
+        if (dbContext.VehicleModels.Any(c => c.SubscriberId != vehicleModelDto.SubscriberId && c.VinNumber == vehicleModelDto.VinNumber))
         {
             return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errExistedSubscriber, false);
         }
 
 
-        var response = await sevenSoftService.GetRelationCustomerInfoByVinNumber(vehicleModelDto.VinNumber, subscriber.NationalCode, subscriber.Mobile);
+        var response = await sevenSoftService.GetRelationCustomerInfoByVinNumber(vehicleModelDto.VinNumber, vehicleModelDto.NationalCode, vehicleModelDto.Mobile);
         if (response != "OK")
         {
-            return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errSave, false);
+            return new ResultDto<VehicleModelDto>(response, false);
         }
 
 

@@ -221,4 +221,7 @@
   <data name="msgNotFoundAnyResult" xml:space="preserve">
     <value>هیچ رکوردی وجود ندارد</value>
   </data>
+  <data name="errFailed" xml:space="preserve">
+    <value>انجام درخواست امکان پذیر نیست</value>
+  </data>
 </root>

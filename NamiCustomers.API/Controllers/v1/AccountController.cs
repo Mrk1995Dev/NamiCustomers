@@ -134,7 +134,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                     {
                         Email = $"{otpResult.Data.Mobile}@namikhodro.com",
                         FirstName = $"{otpResult.Data.Mobile}",
-
+                        
                         LastName = $"{otpResult.Data.Mobile}",
                         Mobile = otpResult.Data.Mobile,
                         Password = $"Nn@{otpResult.Data.Mobile}",
@@ -146,7 +146,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                         var newUser = await userManager.Users.WhereIf(true, c => c.PhoneNumber == otpResult.Data.Mobile).SingleOrDefaultAsync();
                         var token = $"{GenerateJwtToken(newUser)}";
                         var refreshToken = $"{GenerateJwtToken(newUser)}";
-                        return new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = newUser.Email });
+                        return new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = newUser.Email,FirstName=newUser.FirstName,LastName=newUser.LastName,Mobile=newUser.PhoneNumber,NationalCode=newUser.NationalCode,Id=newUser.Id });
                     }
                     return new ResultDto<LoginResponseDto>("", false);//todo moradi
 
@@ -274,7 +274,8 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     [HttpPost("[action]")]
     private async Task<bool> RegisterUser([FromBody] RegisterModelDto model)
     {
-        var user = new ApplicationUser { Id = Guid.NewGuid().ToString(), NationalCode = model.NationalCode, UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true, PassWord = model.Password };
+        var user = new ApplicationUser { Id = Guid.NewGuid().ToString(), NationalCode = model.NationalCode, UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true, PassWord = model.Password,
+        EmailConfirmed=true};
 
         try
         {

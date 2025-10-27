@@ -115,6 +115,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to انجام درخواست امکان پذیر نیست.
+        /// </summary>
+        public static string errFailed {
+            get {
+                return ResourceManager.GetString("errFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to برای کد ملی وارد شده قرارداد فعال از قبل در سامانه فاوا موجود می باشد.
         /// </summary>
         public static string errFavaNationalCodeExisted {

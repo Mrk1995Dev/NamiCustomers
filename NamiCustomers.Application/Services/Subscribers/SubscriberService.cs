@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using NamiCustomers.Abstractions.Dtos.Subscribers;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
+using NamiCustomers.Application.Services.Vehicles;
 using NamiCustomers.Domain.Entities.Account;
 using NamiCustomers.Domain.Entities.Subscribers;
 using NamiCustomers.Domain.Entities.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 using NamiCustomers.Infrastucture.Utilities;
+using System.Collections.Immutable;
 using System.Runtime.Intrinsics.Arm;
 using System.Text;
 
@@ -33,7 +35,7 @@ public interface ISubscriberService
 
 
 }
-public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsService smsService, ISevenSoftService sevenSoftService, UserManager<ApplicationUser> userManager) : ISubscriberService
+public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsService smsService, ISevenSoftService sevenSoftService,IVehicleService vehicleService, UserManager<ApplicationUser> userManager) : ISubscriberService
 {
     public async Task<ResultDto> RegisterAsync(SubscriberDto addCustomerInfoDto)
     {
@@ -224,7 +226,7 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
         {
             return new ResultDto<SubscriberCodeDto>(Infrastucture.Properties.Resources.errNotFound, false);
         }
-
+        otp.Used = true;
         await dbContext.SaveChangesAsync();
         return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto { NationalCode = otp.NationalCode, AuthCode = otp.AuthCode, Mobile = otp.Mobile });
     }
@@ -251,9 +253,9 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
         //    var result = await smsService.SendSms(newOtp.Mobile, $"کد یکبار مصرف ورود به نامی من: {newOtp.AuthCode} \n @my.namikhodro.com #{newOtp.AuthCode} \n لغو11");
         //}
 
-		var result = await smsService.SendSms(newOtp.Mobile, $"کد یکبار مصرف ورود به نامی من: {newOtp.AuthCode} \n @my.namikhodro.com #{newOtp.AuthCode} \n لغو11");
+        var result = await smsService.SendSms(newOtp.Mobile, $"کد یکبار مصرف ورود به نامی من: {newOtp.AuthCode} \n @my.namikhodro.com #{newOtp.AuthCode} \n لغو11");
 
-		return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto { AuthCode = newOtp.AuthCode, Mobile = newOtp.Mobile, NationalCode = newOtp.NationalCode });
+        return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto { AuthCode = newOtp.AuthCode, Mobile = newOtp.Mobile, NationalCode = newOtp.NationalCode });
     }
 
     public async Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync(string nationalCode)
@@ -261,25 +263,23 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
         var subscriber = dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
            .Include(cu => cu.VehicleModels).FirstOrDefault();
         var sevenMember = await sevenSoftService.GetSubscriberByNationalCode(nationalCode);
-       
-        ChassisInformationByVinNumberResponse sevenChassi = null;
-        if (!string.IsNullOrEmpty(sevenMember.VinNumber))
-        {
-            sevenChassi = await sevenSoftService.GetChassisInformationByVinNumber(sevenMember.VinNumber);
-            if (string.IsNullOrEmpty(sevenChassi.UniqueId))
-            {
-                sevenChassi = null;
-            }
-            if (string.IsNullOrEmpty(sevenMember.UniqueId))
-            {
-                sevenMember = null;
-            }
-        }
-       
+        var chassiList = await sevenSoftService.GetAllChassisInformation(nationalCode);
+        //ChassisInformationByVinNumberResponse sevenChassi = null;
+        //if (!string.IsNullOrEmpty(sevenMember.VinNumber))
+        //{
+        //    sevenChassi = await sevenSoftService.GetChassisInformationByVinNumber(sevenMember.VinNumber);
+        //    if (string.IsNullOrEmpty(sevenChassi.UniqueId))
+        //    {
+        //        sevenChassi = null;
+        //    }
+        //    if (string.IsNullOrEmpty(sevenMember.UniqueId))
+        //    {
+        //        sevenMember = null;
+        //    }
+        //}
 
         if (subscriber is null && sevenMember != null)
         {
-
             var newSubscriber = new Subscriber
             {
                 Name = sevenMember.Name,
@@ -295,13 +295,33 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
                 Mobile = sevenMember.Mobile,
                 Sex = sevenMember.Gender == 1 ? "زن" : "مرد",
             };
-            if (sevenChassi != null)
+            dbContext.Subscribers.Add(newSubscriber);
+            await dbContext.SaveChangesAsync();
+            if (chassiList.Any())
             {
-                var newVehicle = mapper.Map<VehicleModel>(sevenChassi);
-                newSubscriber.VehicleModels.Add(newVehicle);
-
-                dbContext.Subscribers.Add(newSubscriber);
-                await dbContext.SaveChangesAsync();
+                foreach (var item in chassiList)
+                {
+                    var newVehicle = new VehicleModelDto
+                    {
+                        BodyColor = item.BodyColor,
+                        ChassisUsageTypeName = item.ChassisUsageTypeName,
+                        FullSystem = item.FullSystem,
+                        MotorNumber = item.MotorNumber,
+                        ProductYear = item.ProductYear,
+                        SelectedVehicleCommonName = item.SelectedVehicleCommonName,
+                        SelectedVehicleDescription = item.SelectedVehicleDescription,
+                        VehicleModelIdSevenSoft = item.VehicleModelId,
+                        VinNumber = item.VinNumber,
+                        IsDefault = false,
+                        SubscriberId = newSubscriber.Id,
+                        VehicleModelLocalizedName = item.VehicleModelLocalizedName,
+                        VehicleModelName = item.VehicleModelName,
+                        Mobile=newSubscriber.Mobile,
+                        NationalCode=newSubscriber.NationalCode
+                    };
+                    //newSubscriber.VehicleModels.Add(newVehicle);
+                    await vehicleService.RegisterAsync(newVehicle);
+                }
             }
             var registredSubscriber = await dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
                .Include(cu => cu.VehicleModels).Include(cu => cu.City).FirstOrDefaultAsync();
@@ -326,7 +346,7 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
         }
         else
         {
-            if (sevenChassi is null)
+            if (!chassiList.Any())
             {
                 subscriber.VehicleModels.ToList().ForEach(c =>
                 {
@@ -335,12 +355,34 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
 
                 await dbContext.SaveChangesAsync();
             }
-            else if (!subscriber.VehicleModels.Any(c => c.VinNumber == sevenChassi.VinNumber))
+            else if (!subscriber.VehicleModels.Any(c => chassiList.Select(r => r.VinNumber).Contains(c.VinNumber)))
             {
-                VehicleModel newVehicle = mapper.Map<VehicleModel>(sevenChassi);
-                subscriber.VehicleModels.Add(newVehicle);
-
-                await dbContext.SaveChangesAsync();
+                var newVehicleList = chassiList.Where(c => !subscriber.VehicleModels.Select(r => r.VinNumber).Contains(c.VinNumber)).ToList
+                    ();
+                foreach (var item in newVehicleList)
+                {
+                    var vehicle = new VehicleModelDto
+                    {
+                        BodyColor = item.BodyColor,
+                        ChassisUsageTypeName = item.ChassisUsageTypeName,
+                        FullSystem = item.FullSystem,
+                        MotorNumber = item.MotorNumber,
+                        ProductYear = item.ProductYear,
+                        SelectedVehicleCommonName = item.SelectedVehicleCommonName,
+                        SelectedVehicleDescription = item.SelectedVehicleDescription,
+                        VehicleModelIdSevenSoft = item.VehicleModelId,
+                        VinNumber = item.VinNumber,
+                        IsDefault = false,
+                        SubscriberId=subscriber.Id,
+                        VehicleModelLocalizedName=item.VehicleModelLocalizedName,
+                        VehicleModelName=item.VehicleModelName,
+                        Mobile = subscriber.Mobile,
+                        NationalCode = subscriber.NationalCode
+                    };
+                    await  vehicleService.RegisterAsync(vehicle);
+                    //subscriber.VehicleModels.Add(vehicle);
+                }
+                //await dbContext.SaveChangesAsync();
             }
 
             var vModels = dbContext.VehicleModels.Where(c => c.SubscriberId == subscriber.Id).ToList();

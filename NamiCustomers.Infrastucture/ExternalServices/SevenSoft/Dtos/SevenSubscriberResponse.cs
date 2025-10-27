@@ -39,7 +39,7 @@ public class SevenSubscriberResponse
     public string BranchNo { get; set; }
     public string? VinNumber { get; set; }
     public object MotorNumber { get; set; }
-    public object BodyColor { get; set; }
+    public string BodyColor { get; set; }
     public object SubscriberMorality { get; set; }
     public object RegisterDateTime { get; set; }
     public object StrRegisterDateTime { get; set; }

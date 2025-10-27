@@ -21,7 +21,8 @@ public static class RestUtility
         string responseContent = await response.Content.ReadAsStringAsync();
         if (response.IsSuccessStatusCode)
         {
-            return await Task.FromResult(JsonSerializer.Deserialize<T>(responseContent));
+            var a= await Task.FromResult(JsonSerializer.Deserialize<T>(responseContent));
+                return a;
         }
             // Create detailed error message
             var errorMessage = $"HTTP Error: {(int)response.StatusCode} - {response.ReasonPhrase}";

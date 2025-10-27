@@ -3,7 +3,7 @@
 public class SubscriberChassisAllocationResponse
 {
     public int Code { get; set; }
-    public string UniqueId { get; set; }
+    public Guid UniqueId { get; set; }
     public object ChassisPlate { get; set; }
     public Chassisplatevm ChassisPlateVm { get; set; }
     public string SubscriberName { get; set; }

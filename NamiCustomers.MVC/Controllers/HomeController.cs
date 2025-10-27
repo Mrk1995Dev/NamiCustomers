@@ -10,7 +10,7 @@ namespace NamiCustomers.MVC.Controllers;
 
 public class HomeController(ITokenSessionService tokenSessionService, INamiKhodroService namiKhodroService) : Controller
 {
-    [ServiceFilter(typeof(VinFilter))]
+    //[ServiceFilter(typeof(VinFilter))]
     public IActionResult Index()
     {
         if (tokenSessionService.IsExpired)

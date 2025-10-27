@@ -2,6 +2,11 @@
 @model BookingTurnResponse
 @{
     ViewData["Title"] = "Index";
+    InsertBookingResponse insertBookingResponse = null;
+    if (TempData["InsertBookingRResponse"]!=null)
+    {
+        insertBookingResponse = (InsertBookingResponse)TempData["InsertBookingRResponse"];
+    }
 
 }
 
@@ -96,68 +101,81 @@
                         </div>
                         <div class="tab-pane fade show active" id="creative" role="tabpanel" aria-labelledby="creative-tab">
                             <div class="form-group">
-                                <label class="form-label" for="defaultSelect">استان</label>
+                                <label class="form-label">استان</label>
 
                                 <select onchange="refresh()" asp-for="@Model.SubCountryId" asp-items="@Model.SubCountries" class="form-select form-control-clicked"></select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label" for="defaultSelect">شهر</label>
+                                <label class="form-label">شهر</label>
 
                                 <select onchange="refresh()" asp-for="@Model.CityId" asp-items="@Model.Cities" class="form-select form-control-clicked"></select>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label" for="defaultSelect">عاملیت</label>
+                                <label class="form-label">عاملیت</label>
 
                                 <select onchange="refresh()" asp-for="@Model.DealerId" asp-items="@Model.Dealers" class="form-select form-control-clicked"></select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label" for="defaultSelect">شعبه</label>
+                                <label class="form-label">شعبه</label>
 
                                 <select onchange="refresh()" asp-for="@Model.BranchId" asp-items="@Model.Branches" class="form-select form-control-clicked"></select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label" for="defaultSelect">جایگاه</label>
+                                <label class="form-label">جایگاه</label>
 
                                 <select onchange="refresh()" asp-for="@Model.ServerGroupId" asp-items="@Model.ServerGroups" class="form-select form-control-clicked"></select>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label" for="defaultSelect">تاریخ</label>
+                                <label class="form-label">تاریخ</label>
 
                                 <select onchange="refresh()" asp-for="@Model.ServerGroupDateId" asp-items="@Model.ServerGroupDates" class="form-select form-control-clicked"></select>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label" for="defaultSelect">ساعت</label>
+                                <label class="form-label">ساعت</label>
 
-                                <select   asp-for="@Model.ServerGroupTimeId" asp-items="@Model.ServerGroupTimes" class="form-select form-control-clicked"></select>
+                                <select asp-for="@Model.ServerGroupTimeId" asp-items="@Model.ServerGroupTimes" class="form-select form-control-clicked"></select>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label" for="exampleInputnumber"> کیلومتر</label>
-                                <input min="1" class="form-control form-control-clicked" name="@Model.Kilometer" placeholder="کارکرد (کیلومتر)" type="number">
+                                <label class="form-label"> کیلومتر</label>
+                                <input min="1" class="form-control form-control-clicked" asp-for="@Model.Kilometer" placeholder="کارکرد (کیلومتر)" type="number">
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label" for="exampleInputnumber"> توضیحات</label>
-                                <textarea class="form-control form-control-clicked" name="desc" placeholder="کارکرد (کیلومتر)" type="number">
+                                <label class="form-label"> توضیحات</label>
+                                <textarea class="form-control form-control-clicked" asp-for="@Model.Description">
                                     </textarea>
                             </div>
 
                             <hr />
-                            <button id="btnrefresh" style="display:none;" type="submit"></button>
-
+                            <button name="action" class="btnrefresh" type="submit" style="display:none;"></button>
+                            
                         </div>
 
 
                         <div class="tab-pane fade" id="modern" role="tabpanel" aria-labelledby="modern-tab">
-                            <h6 class="text-white">Modern trends.</h6>
-                            <p class="mb-0 text-white">Lorem ipsum, dolor sit amet consectetur adipisicing elit.</p>
+
+                            <label>@Model.ServerGroupTimeId</label>
+                            <label>@Model.Kilometer</label>
+                            <label>@Model.Description</label>
+
+                            <button name="action" class="insertbooking btn btn-primary" type="submit">ثبت</button>
                         </div>
                         <div class="tab-pane fade " id="latest" role="tabpanel" aria-labelledby="latest-tab">
-                            <h6 class="text-white">Latest technology.</h6>
-                            <p class="mb-0 text-white">Lorem ipsum, dolor sit amet consectetur adipisicing elit.</p>
+                            @if (insertBookingResponse!= null)
+                            {
+                                <p>
+                                    @insertBookingResponse.ReturnKey
+                                </p>
+                            }
+                            else
+                            {
+                                <h6 class="text-white">انتخاب نوبت الزامیست</h6>
+                                
+                            }
                         </div>
                     </div>
                 </div>
@@ -171,93 +189,123 @@
 @section Scripts {
     <script>
         function refresh()
-        {
-           $('#btnrefresh').click();
-        }
+           {
+              $('.btnrefresh').click();
+           }
+                 
+           $(document).ready(function () {
+
+                      // جلوگیری از ارسال پیش‌فرض فرم
+           $('#refreshForm').on('submit', function(e) {
+               e.preventDefault();
+           });
+
+
+               $('.insertbooking').on('click', function (event) {
+                   //  Prevent the default form submission (which causes the reload)
+                   event.preventDefault();
+                   // debugger
+                   // alert($('#ServerGroupTimeId').val());
+                        var formData = $('#refreshForm').serialize();
+                   $.ajax({
+                       url: '@Url.Action("Register", "Booking")',
+                       type: 'POST',
+                          data:formData,
+                       success: function (result) {
+
+                           console.log("Form submitted successfully!", result);
+                       },
+                       error: function (xhr, status, error) {
+
+                           console.error("An error occurred:", error);
+                       }
+                   });
+               });
+
+               $('.btnrefresh').click(function (event) {
+                   //  Prevent the default form submission (which causes the reload)
+                   event.preventDefault();
+                      var formData = $('#refreshForm').serialize();
+
+                   $.ajax({
+                       url: '@Url.Action("Refresh", "Booking")',
+                       type: 'POST',
+                          data: formData, // Serializes the form data
+                       success: function (result) {
+
+
+                           const responseData=result.data;
+                           console.log(responseData);
+                           const cities=responseData.cities;
+                           const $cities = $('#CityId');
+                           $cities.empty();
+                           $.each(cities, function(index, item) {
+                           var seleted=item.selected?'selected':'';
+                           $cities.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                           });
+
+
+                           const dealers=responseData.dealers;
+                           const $dealers = $('#DealerId');
+                           $dealers.empty();
+                           $.each(dealers, function(index, item) {
+                           var seleted=item.selected?'selected':'';
+                           $dealers.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                           });
+
+                           const branchs=responseData.branches;
+                           const $branchs = $('#BranchId');
+                           $branchs.empty();
+                           $.each(branchs, function(index, item) {
+                           var seleted=item.selected?'selected':'';
+                           $branchs.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                           });
+
+                           const servergroups=responseData.serverGroups;
+                           const $servergroups = $('#ServerGroupId');
+                           $servergroups.empty();
+                           $.each(servergroups, function(index, item) {
+                           var seleted=item.selected?'selected':'';
+                           $servergroups.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                           });
+
+                           const serverGroupDates=responseData.serverGroupDates;
+                           const $serverGroupDates = $('#ServerGroupDateId');
+                           $serverGroupDates.empty();
+                           $.each(serverGroupDates, function(index, item) {
+                           var seleted=item.selected?'selected':'';
+                           $serverGroupDates.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                           });
+
+                           const serverGroupTimes=responseData.serverGroupTimes;
+                           const $serverGroupTimes = $('#ServerGroupTimeId');
+                           $serverGroupTimes.empty();
+                           $.each(serverGroupTimes, function(index, item) {
+                           var seleted=item.selected?'selected':'';
+                           $serverGroupTimes.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
+                           });
+
+
+
+
+
+
+
+                           console.log("Form submitted successfully!", result);
+                           // You can update parts of the page here instead of reloading
+                           // For example: $('#resultDiv').html(result);
+                       },
+                       error: function (xhr, status, error) {
+
+                           console.error("An error occurred:", error);
+                       }
+                   });
+               });
 
          
-        $(document).ready(function () {
-           
-            $('#refreshForm').on('submit', function (event) {
-                //  Prevent the default form submission (which causes the reload)
-                event.preventDefault();
-
-                
-                $.ajax({
-                    url: '@Url.Action("Refresh", "Booking")', 
-                    type: 'POST',  
-                    data: $(this).serialize(), // Serializes the form data
-                    success: function (result) {
-                        
-
-                        const responseData=result.data;
-                        console.log(responseData);
-                        const cities=responseData.cities;
-                        const $cities = $('#CityId');
-                        $cities.empty();
-                        $.each(cities, function(index, item) {
-                        var seleted=item.selected?'selected':'';
-                        $cities.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
-                        });
 
 
-                        const dealers=responseData.dealers;
-                        const $dealers = $('#DealerId');
-                        $dealers.empty();
-                        $.each(dealers, function(index, item) {
-                        var seleted=item.selected?'selected':'';
-                        $dealers.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
-                        });
-
-                        const branchs=responseData.branches;
-                        const $branchs = $('#BranchId');
-                        $branchs.empty();
-                        $.each(branchs, function(index, item) {
-                        var seleted=item.selected?'selected':'';
-                        $branchs.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
-                        });
-
-                        const servergroups=responseData.serverGroups;
-                        const $servergroups = $('#ServerGroupId');
-                        $servergroups.empty();
-                        $.each(servergroups, function(index, item) {
-                        var seleted=item.selected?'selected':'';
-                        $servergroups.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
-                        });
-
-                        const serverGroupDates=responseData.serverGroupDates;
-                        const $serverGroupDates = $('#ServerGroupDateId');
-                        $serverGroupDates.empty();
-                        $.each(serverGroupDates, function(index, item) {
-                        var seleted=item.selected?'selected':'';
-                        $serverGroupDates.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
-                        });
-
-                        const serverGroupTimes=responseData.serverGroupTimes;
-                        const $serverGroupTimes = $('#ServerGroupTimeId');
-                        $serverGroupTimes.empty();
-                        $.each(serverGroupTimes, function(index, item) {
-                        var seleted=item.selected?'selected':'';
-                        $serverGroupTimes.append("<option "+seleted+" value='"+item.value+"'>"+item.text+"</option>");
-                        });
-
-
-                        
-
-
-
-                        
-                        console.log("Form submitted successfully!", result);
-                        // You can update parts of the page here instead of reloading
-                        // For example: $('#resultDiv').html(result);
-                    },
-                    error: function (xhr, status, error) {
-                         
-                        console.error("An error occurred:", error);
-                    }
-                });
-            });
-        });
+           });
 
     </script>
 }

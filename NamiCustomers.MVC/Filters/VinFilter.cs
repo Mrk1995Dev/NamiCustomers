@@ -12,7 +12,7 @@ public class VinFilter(IHttpContextAccessor httpContextAccessor, ISubscriberServ
 
     public void OnActionExecuting(ActionExecutingContext context)
     {
-        List<string> allewedActions = new() { "SignOut", "login", "Logout" };
+        List<string> allewedActions = new() {"Index", "SignOut", "login", "Logout","Profile", "Contact","Dealers" };
         //List<string> allewedActions = new() { "SignOut", "login" };
 
         string actionName = context.RouteData.Values["action"].ToString();

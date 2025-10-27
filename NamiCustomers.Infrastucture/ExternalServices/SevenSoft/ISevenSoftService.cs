@@ -12,6 +12,20 @@ namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 
 public interface ISevenSoftService
 {
+
+    /// <summary>
+    /// گرفتن لیست کارشناسان
+    /// </summary>
+    /// <param name="WorkShopTimeTableId"></param>
+    /// <param name="werverGroupId"></param>
+    /// <returns></returns>
+    Task<List<RepairAdvisersResponse>> GetAllServerGroupRepairAdvisers(Guid? workShopTimeTableId, Guid? serverGroupId);
+    /// <summary>
+    /// ثبت نوبت
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    Task<ResultDto<InsertBookingResponse>> InsertBooking(InsertBookingRequest request);
     /// <summary>
     /// لیست شعب
     /// </summary>
@@ -152,7 +166,7 @@ public interface ISevenSoftService
     /// </summary>
     /// <param name="VinNumber"></param>
     /// <returns></returns>
-    Task<ResultDto<SubscriberChassisAllocationResponse[]>> GetSubscriberChassisAllocation(string vinNumber);
+    Task<ResultDto<SubscriberChassisAllocationResponse>> GetSubscriberChassisAllocation(string vinNumber);
     /// <summary>
     /// بررسی اینکه ایا کلیومتر پذیرش ثبت شده درست است یا خیر نمایش داده میشود در صورت اینکه کیلومتر وارد شده از اطلاعات ثبت شده در سیستم کمتر باشد false  بر میگردونه
     /// </summary>
@@ -160,12 +174,30 @@ public interface ISevenSoftService
     /// <param name="kilometer"></param>
     /// <returns></returns>
     Task<(bool, string)> CheckIsValidKilometer(string vinNumber, int kilometer);
+    /// <summary>
+    /// انصراف از نوبت
+    /// </summary>
+    /// <param name="bookingId"></param>
+    /// <param name="vinNumber"></param>
+    /// <returns></returns>
+    Task<bool> CancelBooking(Guid bookingId, string vinNumber);
+    /// <summary>
+    /// مشاهده لیست رزرو اینترنت
+    /// </summary>
+    /// <param name="vinNumber"></param>
+    /// <returns></returns>
+    Task<ResultDto<BookingResponse>> GetBooking(string vinNumber);
+    Task<ChassisInformationResponse[]> GetAllChassisInformation(string nationalCode);
 }
 
 public class SevenSoftService : ISevenSoftService
 {
     private string _baseUrl = Infrastucture.Properties.Resource7Soft.BaseUrl;
-    
+
+    public async Task<List<RepairAdvisersResponse>> GetAllServerGroupRepairAdvisers(Guid? workShopTimeTableId, Guid? serverGroupId)
+    {
+        return await RestUtility.GetData<List<RepairAdvisersResponse>>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, string.Format(Resource7Soft.GetAllServerGroupRepairAdvisers, workShopTimeTableId, serverGroupId), "");
+    }
     public async Task<BranchesByDealerResponse[]> GetBranchesByDealer(Guid dealerId)
     {
         return await RestUtility.GetData<BranchesByDealerResponse[]>(_baseUrl, Resource7Soft.GetBranchesByDealer, dealerId);
@@ -186,6 +218,25 @@ public class SevenSoftService : ISevenSoftService
     {
         return await RestUtility.GetData<SevenSubscriberResponse>(Infrastucture.Properties.Resource7Soft.BaseUrlSales, Resource7Soft.GetSubscriberByNationalCode, nationalCode);
     }
+    public async Task<ChassisInformationResponse[]> GetAllChassisInformation(string nationalCode)
+    {
+        return await RestUtility.GetData<ChassisInformationResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrl, string.Format(Resource7Soft.GetAllChassisInformation, nationalCode),"");
+    }
+
+
+    public async Task<ResultDto<InsertBookingResponse>> InsertBooking(InsertBookingRequest request)
+    {
+        try
+        {
+            var data = await RestUtility.PostData<InsertBookingResponse>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.InsertBooking, request);
+            return new ResultDto<InsertBookingResponse>("", true, data);
+        }
+        catch (Exception ex)
+        {
+            return new ResultDto<InsertBookingResponse>(ex.Message, false);
+        }
+    }
+
 
     public async Task<ChassisInformationByVinNumberResponse> GetChassisInformationByVinNumber(string vinNumber)
     {
@@ -302,31 +353,33 @@ public class SevenSoftService : ISevenSoftService
         }
     }
 
-    public async Task<ResultDto<SubscriberChassisAllocationResponse[]>> GetSubscriberChassisAllocation(string VinNumber)
+    public async Task<ResultDto<SubscriberChassisAllocationResponse>> GetSubscriberChassisAllocation(string VinNumber)
     {
         try
         {
-            var data = await RestUtility.GetData<SubscriberChassisAllocationResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.GetSubscriberChassisAllocation, $"?VinNumber={VinNumber}");
-            return new ResultDto<SubscriberChassisAllocationResponse[]>("", true, data);
+            var data = await RestUtility.GetData<SubscriberChassisAllocationResponse>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.GetSubscriberChassisAllocation, $"?VinNumber={VinNumber}");
+
+
+            return new ResultDto<SubscriberChassisAllocationResponse>("", true, data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<SubscriberChassisAllocationResponse[]>(ex.Message, false);
+            return new ResultDto<SubscriberChassisAllocationResponse>(ex.Message, false);
         }
     }
-    public async Task<(bool,string)> CheckExistsReserveVinNumber(string VinNumber)
+    public async Task<(bool, string)> CheckExistsReserveVinNumber(string VinNumber)
     {
         try
         {
             var data = await RestUtility.GetData<bool>(_baseUrl, Resource7Soft.CheckExistsReserveVinNumber, $"?VinNumber={VinNumber}");
-            return new (true,"");
+            return new(true, "");
         }
         catch (Exception ex)
         {
             return new(false, ex.Message);
         }
     }
-    public async Task<(bool, string)> CheckIsValidKilometer(string VinNumber,int kilometer)
+    public async Task<(bool, string)> CheckIsValidKilometer(string VinNumber, int kilometer)
     {
         try
         {
@@ -338,10 +391,40 @@ public class SevenSoftService : ISevenSoftService
             return new(false, ex.Message);
         }
     }
+    public async Task<ResultDto<BookingResponse>> GetBooking(string vinNumber)
+    {
+        try
+        {
+            var data = await RestUtility.GetData<BookingResponse>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, string.Format(Resource7Soft.GetBooking, vinNumber), "");
+            if (data != null)
+            {
+                return new ResultDto<BookingResponse>("", true, data);
+            }
+            return new ResultDto<BookingResponse>(Infrastucture.Properties.Resources.errNotFound, false);
+        }
+        catch (Exception ex)
+        {
+            return new ResultDto<BookingResponse>(ex.Message, false);
+        }
+    }
 
-    
 
-    public async Task<ResultDto<AllServerGroupTimeResponse[]>> GetAllServerGroupTime(Guid WorkShopTimeTableId,Guid ServerGroupId)
+
+    public async Task<bool> CancelBooking(Guid bookingId, string vinNumber)
+    {
+        using var client = new HttpClient();
+        var request = new HttpRequestMessage(HttpMethod.Get, $"{Infrastucture.Properties.Resource7Soft.BaseUrlBooking}{string.Format(Resource7Soft.CancelBooking, bookingId, vinNumber)}");
+        request.Headers.Add("Accept", "application/json");
+        var response = await client.SendAsync(request);
+        if (response.IsSuccessStatusCode)
+        {
+            var res = await response.Content.ReadAsStringAsync();
+            return bool.Parse(res);
+        }
+        return false;
+    }
+
+    public async Task<ResultDto<AllServerGroupTimeResponse[]>> GetAllServerGroupTime(Guid WorkShopTimeTableId, Guid ServerGroupId)
     {
         try
         {
@@ -353,7 +436,7 @@ public class SevenSoftService : ISevenSoftService
             return new ResultDto<AllServerGroupTimeResponse[]>(ex.Message, false);
         }
     }
-    public async Task<ResultDto<AllServerGroupDateResponse[]>> GetAllServerGroupDate(Guid ServerGroupId,Guid BranchId)
+    public async Task<ResultDto<AllServerGroupDateResponse[]>> GetAllServerGroupDate(Guid ServerGroupId, Guid BranchId)
     {
         try
         {
@@ -403,5 +486,4 @@ public class SevenSoftService : ISevenSoftService
         }
     }
 }
- 
- 
+
