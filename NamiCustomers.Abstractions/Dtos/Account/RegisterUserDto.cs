@@ -24,6 +24,13 @@ public class RegisterUserDto
     [Display(Name = "تکرارگذر واژه")]
     public string ConfirmPassword { get; set; }
     public string CallbakUrl { get; set; }
+
+    [Display(Name = "موبایل")]
+    [Required]
+    public string Mobile { get; set; }
+    [Display(Name = "کدملی")]
+    [Required]
+    public string NationalCode { get; set; }
 }
 
 public class RegisterModelDto

@@ -17,9 +17,9 @@ namespace NamiCustomers.Application.Services.Subscribers;
 public interface ISubscriberService
 {
     Task<ResultDto<List<SubscriberDto>>> GetAllAsync();
-    Task<ResultDto> RegisterAsync(SubscriberDto subscriberDto);
-    Task<ResultDto> DeleteAsync(int id);
-    Task<ResultDto> EditAsync(SubscriberDto updateCustomerInfoDto);
+    Task<ResultDto<SubscriberDto>> RegisterAsync(SubscriberDto subscriberDto);
+    Task<ResultDto<Subscriber>> DeleteAsync(int id);
+    Task<ResultDto<Subscriber>> EditAsync(SubscriberDto updateCustomerInfoDto);
     Task<ResultDto<SubscriberDto>> GetAsync(int id);
     Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync(string nationalCode);
     Task<ResultDto<SubscriberDto>> GetAsync(string mobile);
@@ -35,94 +35,125 @@ public interface ISubscriberService
 
 
 }
-public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsService smsService, ISevenSoftService sevenSoftService,IVehicleService vehicleService, UserManager<ApplicationUser> userManager) : ISubscriberService
+public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsService smsService, ISevenSoftService sevenSoftService, IVehicleService vehicleService, UserManager<ApplicationUser> userManager) : ISubscriberService
 {
-    public async Task<ResultDto> RegisterAsync(SubscriberDto addCustomerInfoDto)
+    public async Task<ResultDto<SubscriberDto>> RegisterAsync(SubscriberDto subscriber)
     {
-        if (addCustomerInfoDto == null) return ResultDto.Failure(Infrastucture.Properties.Resources.errInputInValid);
+        if (subscriber == null)
+            return ResultDto.Failure<SubscriberDto>(Infrastucture.Properties.Resources.errInputInValid);
+        if (!subscriber.Mobile.IsValidIranianMobileNumber())
+        {
+            return ResultDto.Failure<SubscriberDto>(Infrastucture.Properties.Resources.errInvalidMobile);
+        }
+        if (subscriber.SubscriberType == (int)SubscriberType.Haghighi)
+        {
+            var isValid = subscriber.NationalCode.IsValid();
+            if (isValid)
+            {
+                ResultDto.Failure<SubscriberDto>(Infrastucture.Properties.Resources.errInvalidNationalCode);
+            }
+        }
+        else
+        {
+            var isValid = subscriber.NationalCode.IsValidNationalId();
+            if (isValid)
+            {
+                ResultDto.Failure<SubscriberDto>(Infrastucture.Properties.Resources.errInvalidNationalCode);
+            }
+        }
         Subscriber newCustomer = new Subscriber
         {
-            Name = addCustomerInfoDto.Name,
-            Family = addCustomerInfoDto.Family,
-            Mobile = addCustomerInfoDto.Phone,
-            NationalCode = addCustomerInfoDto.NationalCode,
+            Name = subscriber.Name,
+            Family = subscriber.Family,
+            Mobile = subscriber.Mobile,
+            NationalCode = subscriber.NationalCode,
+            Sex = subscriber.Sex,
+            BrithDate = subscriber.BrithDate,
+            BrithDatePersian = subscriber.BrithDatePersian,
+            SubscriberType = subscriber.SubscriberType
         };
 
         await dbContext.Subscribers.AddAsync(newCustomer);
         if (await dbContext.SaveChangesAsync() < 1)
-            return ResultDto.Failure(Infrastucture.Properties.Resources.errSave);
+            return ResultDto.Failure<SubscriberDto>(Infrastucture.Properties.Resources.errSave);
+        var dto = mapper.Map<SubscriberDto>(newCustomer);
 
-        return ResultDto.Success(Infrastucture.Properties.Resources.msgSave);
+        return ResultDto.Success<SubscriberDto>(dto);
     }
 
-    public async Task<ResultDto> DeleteAsync(int customerId)
+    public async Task<ResultDto<Subscriber>> DeleteAsync(int customerId)//todo moradi replace by dto
     {
         if (customerId == 0)
-            return ResultDto.Failure("شناسه وارد شده نامعتبر می باشد.");
+            return ResultDto.Failure<Subscriber>(Infrastucture.Properties.Resources.errInputInValid);
 
         var customer = await dbContext.Subscribers.FirstOrDefaultAsync(cu => cu.Id == customerId);
         if (customer is null)
-            return ResultDto.Failure("کاربر مربوطه یافت نشد.");
+            return ResultDto.Failure<Subscriber>(Infrastucture.Properties.Resources.errSubscriberNotFound);
 
         dbContext.Subscribers.Remove(customer);
-        if (await dbContext.SaveChangesAsync() < 1) return ResultDto.Failure(Infrastucture.Properties.Resources.msgDeleted);
+        if (await dbContext.SaveChangesAsync() < 1) return ResultDto.Failure<Subscriber>(Infrastucture.Properties.Resources.errDelete);
 
-        return ResultDto.Success(Infrastucture.Properties.Resources.msgDeleted);
+        return ResultDto.Success<Subscriber>(customer);
     }
 
     public async Task<ResultDto<List<SubscriberDto>>> GetAllAsync()
     {
         var customers = dbContext.Subscribers.AsQueryable();
 
-        var data = await customers.Select(c => new SubscriberDto
+        var result = await customers.Select(data => new SubscriberDto
         {
-            Id = c.Id,
-            Name = c.Name,
-            Family = c.Family,
-            Address = c.Address,
-            CityName = c.City.Title,
-            Phone = c.Mobile
+            Id = data.Id,
+            Name = data.Name,
+            Family = data.Family,
+            NationalCode = data.NationalCode,
+            Mobile = data.Mobile,
+            Sex = data.Sex,
+            BrithDate = data.BrithDate,
+            BrithDatePersian = data.BrithDatePersian,
+            SubscriberType = data.SubscriberType,
         }).ToListAsync();
 
-        return new ResultDto<List<SubscriberDto>>(
-            "",
-
-            true, data);
+        return ResultDto.Success<List<SubscriberDto>>(result);
     }
 
-    public async Task<ResultDto> EditAsync(SubscriberDto subscriberDto)
+    public async Task<ResultDto<Subscriber>> EditAsync(SubscriberDto subscriberDto)
     {
-        var subscriber = await dbContext.Subscribers.Where(cu => cu.Id == subscriberDto.Id).FirstOrDefaultAsync();
-
-        if (subscriber is null)
-            return ResultDto.Failure(Infrastucture.Properties.Resources.errNotFound);
-
-
-
-        subscriber.Name = subscriberDto.Name;
-        subscriber.Family = subscriberDto.Family;
-        subscriber.Address = subscriberDto.Address;
-        subscriber.Mobile = subscriberDto.Mobile;
-        subscriber.CityId = subscriberDto.CityId;
-        subscriber.Phone = subscriberDto.Phone;
-
-        dbContext.Subscribers.Update(subscriber);
-
-        var user = await userManager.Users.Where(c => c.NationalCode == subscriber.NationalCode).FirstOrDefaultAsync();
-        if (user != null)
+        try
         {
-            user.FirstName = subscriber.Name;
-            user.LastName = subscriber.Family;
+            var subscriber = await dbContext.Subscribers.Where(cu => cu.Id == subscriberDto.Id).FirstOrDefaultAsync();
+
+            if (subscriber is null)
+                return ResultDto.Failure<Subscriber>(Infrastucture.Properties.Resources.errNotFound);
+
+            subscriber.Name = subscriberDto.Name;
+            subscriber.Family = subscriberDto.Family;
+            //subscriber.Mobile = subscriberDto.Mobile;//موبایل نباید عوض شود
+            //subscriber.NationalCode = subscriberDto.NationalCode;نباید کد ملی را عوض کند
+            subscriber.Sex = subscriberDto.Sex;
+            subscriber.BrithDatePersian = subscriberDto.BrithDatePersian;
+            subscriber.BrithDate = subscriberDto.BrithDate;
+            subscriber.SubscriberType = subscriberDto.SubscriberType;
+            subscriber.Address = subscriberDto.Address;
+            subscriber.Phone = subscriberDto.Phone;
+            dbContext.Subscribers.Update(subscriber);
+
+            var user = await userManager.Users.Where(c => c.NationalCode == subscriber.NationalCode).FirstOrDefaultAsync();
+            if (user != null)
+            {
+                user.FirstName = subscriber.Name;
+                user.LastName = subscriber.Family;
+            }
+            var subRessult = await dbContext.SaveChangesAsync();
+            var userResult = await userManager.UpdateAsync(user);
+
+            if (user is null || subRessult < 1)
+                return ResultDto.Failure<Subscriber>(Infrastucture.Properties.Resources.errEdited);
+            return ResultDto.Success<Subscriber>(subscriber);
         }
-        var subRessult = await dbContext.SaveChangesAsync();
-        var userResult = await userManager.UpdateAsync(user);
-
-        if (user is null || subRessult < 1)
-            return ResultDto.Failure(Infrastucture.Properties.Resources.errEdited);
-
-
-
-        return ResultDto.Success(Infrastucture.Properties.Resources.msgEdited);
+        catch (Exception ex)
+        {
+            return ResultDto.Failure<Subscriber>(ex.Message);
+        }
     }
 
 
@@ -140,19 +171,19 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
             Id = data.Id,
             Name = data.Name,
             Family = data.Family,
-
-            Address = data.Address,
-            //CityName = data.City.Title,
-            Phone = data.Phone,
             NationalCode = data.NationalCode,
             Mobile = data.Mobile,
+            Sex = data.Sex,
+            BrithDate = data.BrithDate,
+            Phone=data.Phone,
+            Address=data.Address,
+            CityId=data.CityId,
+            CityName=data.City?.Title,
+            BrithDatePersian = data.BrithDatePersian,
+            SubscriberType = data.SubscriberType,
             VehicleModels = mapper.Map<List<VehicleModelDto>>(data.VehicleModels)
         };
-
-        return new ResultDto<SubscriberDto>(
-            "",
-
-            true, subscriberDto);
+        return ResultDto.Success<SubscriberDto>(subscriberDto);
     }
 
 
@@ -162,26 +193,23 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
         var data = await dbContext.Subscribers.Where(cu => cu.Mobile == mobile)
             .Include(cu => cu.City).Include(cu => cu.VehicleModels).FirstOrDefaultAsync();
 
-        if (data == null) return new ResultDto<SubscriberDto>(
-           Infrastucture.Properties.Resources.errNotFound, false);
+        if (data == null) return ResultDto.Failure<SubscriberDto>(
+           Infrastucture.Properties.Resources.errNotFound);
 
         var customerInfo = new SubscriberDto
         {
             Id = data.Id,
             Name = data.Name,
             Family = data.Family,
-            Address = data.Address,
-            CityName = data.City.Title,
-            Phone = data.Mobile,
             NationalCode = data.NationalCode,
             Mobile = data.Mobile,
+            Sex = data.Sex,
+            BrithDate = data.BrithDate,
+            BrithDatePersian = data.BrithDatePersian,
+            SubscriberType = data.SubscriberType,
             VehicleModels = mapper.Map<List<VehicleModelDto>>(data.VehicleModels)
         };
-
-        return new ResultDto<SubscriberDto>(
-            "",
-
-            true, customerInfo);
+        return ResultDto.Success<SubscriberDto>(customerInfo);
     }
 
     public async Task<ResultDto<byte[]>> ExportAsync()
@@ -201,8 +229,7 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
         var bytes = Encoding.UTF8.GetBytes(sb.ToString());
 
         return new ResultDto<byte[]>(
-            "خروجی با موفقیت دانلود شد",
-
+            Infrastucture.Properties.Resources.msgDownloadSuccess,
             true, bytes);
     }
 
@@ -228,34 +255,26 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
         }
         otp.Used = true;
         await dbContext.SaveChangesAsync();
-        return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto { NationalCode = otp.NationalCode, AuthCode = otp.AuthCode, Mobile = otp.Mobile });
+        return ResultDto.Success<SubscriberCodeDto>(new SubscriberCodeDto { NationalCode = otp.NationalCode, AuthCode = otp.AuthCode, Mobile = otp.Mobile });
     }
 
     public async Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string mobile, string nationalCode)
     {
-
-
+        
         var Randowmpass = new PasswordUtility();
         string passnew = Randowmpass.RandomString(5);
-        var newOtp = new SubscriberCode { AuthCode = passnew, Mobile = mobile, NationalCode = nationalCode };
+        var newOtp = new SubscriberCode { AuthCode = passnew, Mobile = mobile, NationalCode = nationalCode, Used = false };
 
-        //if (nationalCode == "0082425639")
-        //{
-        //    newOtp.AuthCode = "00000";
-        //}
 
 
         await dbContext.SubscriberCodes.AddAsync(newOtp);
         await dbContext.SaveChangesAsync();
 
-        //if (nationalCode != "0082425639")
-        //{
-        //    var result = await smsService.SendSms(newOtp.Mobile, $"کد یکبار مصرف ورود به نامی من: {newOtp.AuthCode} \n @my.namikhodro.com #{newOtp.AuthCode} \n لغو11");
-        //}
+
 
         var result = await smsService.SendSms(newOtp.Mobile, $"کد یکبار مصرف ورود به نامی من: {newOtp.AuthCode} \n @my.namikhodro.com #{newOtp.AuthCode} \n لغو11");
 
-        return new ResultDto<SubscriberCodeDto>("", true, new SubscriberCodeDto { AuthCode = newOtp.AuthCode, Mobile = newOtp.Mobile, NationalCode = newOtp.NationalCode });
+        return ResultDto.Success(new SubscriberCodeDto { AuthCode = newOtp.AuthCode, Mobile = newOtp.Mobile, NationalCode = newOtp.NationalCode });
     }
 
     public async Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync(string nationalCode)
@@ -264,19 +283,6 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
            .Include(cu => cu.VehicleModels).FirstOrDefault();
         var sevenMember = await sevenSoftService.GetSubscriberByNationalCode(nationalCode);
         var chassiList = await sevenSoftService.GetAllChassisInformation(nationalCode);
-        //ChassisInformationByVinNumberResponse sevenChassi = null;
-        //if (!string.IsNullOrEmpty(sevenMember.VinNumber))
-        //{
-        //    sevenChassi = await sevenSoftService.GetChassisInformationByVinNumber(sevenMember.VinNumber);
-        //    if (string.IsNullOrEmpty(sevenChassi.UniqueId))
-        //    {
-        //        sevenChassi = null;
-        //    }
-        //    if (string.IsNullOrEmpty(sevenMember.UniqueId))
-        //    {
-        //        sevenMember = null;
-        //    }
-        //}
 
         if (subscriber is null && sevenMember != null)
         {
@@ -293,7 +299,7 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
                 NationalCode = sevenMember.NationalCode,
                 Family = sevenMember.LastName,
                 Mobile = sevenMember.Mobile,
-                Sex = sevenMember.Gender == 1 ? "زن" : "مرد",
+                Sex = ((GenderType)sevenMember.Gender).GetEnumDescription(),
             };
             dbContext.Subscribers.Add(newSubscriber);
             await dbContext.SaveChangesAsync();
@@ -316,10 +322,9 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
                         SubscriberId = newSubscriber.Id,
                         VehicleModelLocalizedName = item.VehicleModelLocalizedName,
                         VehicleModelName = item.VehicleModelName,
-                        Mobile=newSubscriber.Mobile,
-                        NationalCode=newSubscriber.NationalCode
+                        Mobile = newSubscriber.Mobile,
+                        NationalCode = newSubscriber.NationalCode
                     };
-                    //newSubscriber.VehicleModels.Add(newVehicle);
                     await vehicleService.RegisterAsync(newVehicle);
                 }
             }
@@ -327,22 +332,7 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
                .Include(cu => cu.VehicleModels).Include(cu => cu.City).FirstOrDefaultAsync();
             var subscriberDto = mapper.Map<SubscriberDto>(registredSubscriber);
 
-            //var subscriberDto = new SubscriberDto
-            //{
-            //    Id = registredSubscriber.Id,
-            //    Name = registredSubscriber.Name,
-            //    Address = registredSubscriber.Address,
-            //    Phone = registredSubscriber.Phone,
-            //    NationalCode = registredSubscriber.NationalCode,
-            //    Family = registredSubscriber.Family,
-            //    Mobile = registredSubscriber.Mobile,
-            //    Sex = registredSubscriber.Sex,
-            //    VehicleModels = mapper.Map<List<VehicleModelDto>>(registredSubscriber.VehicleModels)
-            //};
-
-            return new ResultDto<SubscriberDto>(
-                "",
-                true, subscriberDto);
+            return ResultDto.Success<SubscriberDto>(subscriberDto);
         }
         else
         {
@@ -373,53 +363,34 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
                         VehicleModelIdSevenSoft = item.VehicleModelId,
                         VinNumber = item.VinNumber,
                         IsDefault = false,
-                        SubscriberId=subscriber.Id,
-                        VehicleModelLocalizedName=item.VehicleModelLocalizedName,
-                        VehicleModelName=item.VehicleModelName,
+                        SubscriberId = subscriber.Id,
+                        VehicleModelLocalizedName = item.VehicleModelLocalizedName,
+                        VehicleModelName = item.VehicleModelName,
                         Mobile = subscriber.Mobile,
                         NationalCode = subscriber.NationalCode
                     };
-                    await  vehicleService.RegisterAsync(vehicle);
-                    //subscriber.VehicleModels.Add(vehicle);
+                    await vehicleService.RegisterAsync(vehicle);
+
                 }
-                //await dbContext.SaveChangesAsync();
             }
 
             var vModels = dbContext.VehicleModels.Where(c => c.SubscriberId == subscriber.Id).ToList();
-            bool hasTras = false;
+            bool hasTrash = false;
             foreach (var item in vModels)
             {
                 var chassi = await sevenSoftService.GetChassisInformationByVinNumber(item.VinNumber);
                 if (chassi is null)
                 {
                     dbContext.VehicleModels.Remove(item);
-                    hasTras = true;
+                    hasTrash = true;
                 }
             }
-            if (hasTras)
+            if (hasTrash)
             {
                 await dbContext.SaveChangesAsync();
             }
-
-
             var existedSubscriber = mapper.Map<SubscriberDto>(subscriber);
-
-            //var existedSubscriber = new SubscriberDto
-            //{
-            //    Id = subscriber.Id,
-            //    Name = subscriber.Name,
-            //    Address = subscriber.Address,
-            //    Phone = subscriber.Phone,
-            //    NationalCode = subscriber.NationalCode,
-            //    Family = subscriber.Family,
-            //    Mobile = subscriber.Mobile,
-            //    Sex = subscriber.Sex,
-            //    VehicleModels = mapper.Map<List<VehicleModelDto>>(subscriber.VehicleModels)
-            //};
-            return new ResultDto<SubscriberDto>(
-      ""
-    , true,
-      existedSubscriber);
+            return ResultDto.Success<SubscriberDto>(existedSubscriber);
         }
     }
 }

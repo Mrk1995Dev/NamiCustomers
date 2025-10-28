@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using NamiCustomers.Abstractions.Dtos.Security.Dto;
 
 namespace NamiCustomers.Application.Services.Accounts
 {
-    public interface IPermissionService
+    public interface IAccountService
     {
         Task<IdentityResult> AddPermissionToRoleAsync(string roleName, string permission);
         Task<IdentityResult> AddPermissionToUserAsync(string userId, string permission);
@@ -10,5 +11,8 @@ namespace NamiCustomers.Application.Services.Accounts
         Task<IdentityResult> RemovePermissionFromRoleAsync(string roleName, string permission);
         Task<IdentityResult> RemovePermissionFromUserAsync(string userId, string permission);
         Task<bool> UserHasPermissionAsync(string userId, string permission);
+
+
+        Task<ResultDto<UserDto>> GetByNationalCodeAsync(string nationalCode);
     }
 }

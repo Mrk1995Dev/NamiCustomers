@@ -30,7 +30,7 @@
 <!-- User Meta Data-->
 <div class="card user-data-card">
     <div class="card-body">
-        <form action="#">
+           
             <div class="form-group mb-3">
                     <label class="form-label" style="color: #fff !important;" for="@Html.DisplayNameFor(model => model.Name)">@Html.DisplayNameFor(model => model.Name)</label>
                     <input class="form-control" id="@Html.DisplayNameFor(model => model.Name)" type="text" style="color: #000 !important;" value=" @Html.DisplayFor(model => model.Name)" placeholder="@Html.DisplayNameFor(model => model.Name)" disabled>
@@ -57,9 +57,9 @@
                     <input class="form-control" id="@Html.DisplayNameFor(model => model.Address)" type="text" style="color: #000 !important;" value=" @Html.DisplayFor(model => model.Address)" placeholder="@Html.DisplayNameFor(model => model.Address)" disabled>
                 </div>
 
-                @Html.ActionLink("ویرایش", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary w-100", style = "" })
-
-            </form>
+            @Html.ActionLink("ویرایش", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
+            
+            
     </div>
 </div>
 </div>

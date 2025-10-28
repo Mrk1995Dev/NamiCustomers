@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using NamiCustomers.Infrastucture.ExternalServices.IranFava.Dtos;
+using NamiCustomers.Infrastucture.Utilities;
 using NamiCustomers.MVC.Services;
 using NamiCustomers.MVC.Services.Auth;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace NamiCustomers.MVC.Controllers;
@@ -15,7 +17,7 @@ namespace NamiCustomers.MVC.Controllers;
 
 public class AccountController(IAuthService authService, IUrlHelperFactory urlHelperFactory, IUserService userService,ICookieService cookieService) : MyBaseController
 {
-    [Authorize]
+    
     public async Task<IActionResult> Index()
     {
         return View(User.Identity);
@@ -37,11 +39,12 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
     {
         if (!ModelState.IsValid)
         {
+            SetModelStateError();
             return View(login);
         }
 
 
-        var result = authService.LoginAsync(new LoginRequestDto { Email = login.UserName, Password = login.Password }).Result;
+        var result =await  authService.LoginAsync(new LoginRequestDto { Email = login.UserName, Password = login.Password });
         if (result)
         {
             var claims = new List<System.Security.Claims.Claim>
@@ -69,69 +72,74 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
     [HttpPost]
     public async Task<IActionResult> GetOtp(string mobile, string nationalcode)
     {
-        if (string.IsNullOrEmpty(mobile) || string.IsNullOrEmpty(nationalcode))
+        if (string.IsNullOrEmpty(mobile) || string.IsNullOrEmpty(nationalcode) || !mobile.IsValidIranianMobileNumber())
         {
+            SetError(Infrastucture.Properties.Resources.errInputInValid);
             return RedirectToAction("LoginByMobile");
         }
-        var code = await authService.GetOtpAsync(mobile, nationalcode);
+        var result = await authService.GetOtpAsync(mobile, nationalcode);
+        if (!result.Succeeded)
+        {
+            SetError(result.Message);
+            return RedirectToAction("LoginByMobile");
+        }
 
 
-        return View("~/Views/Account/LoginByOtp.cshtml", new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { Mobile = mobile }));
+        return View("~/Views/Account/LoginByOtp.cshtml", ResultDto.Success<LoginResponseDto>(new LoginResponseDto { Mobile = mobile }));
     }
     [HttpGet]
     public async Task<IActionResult> LoginByOtp(string mobile)
     {
+        if (!mobile.IsValidIranianMobileNumber())
+        {
+            SetError(Infrastucture.Properties.Resources.errInvalidMobile);
+            return RedirectToAction("LoginByMobile");
+        }
         return View("LoginByMobile.cshtml", new LoginResponseDto() { Mobile = mobile });
     }
     [HttpPost]
     public async Task<IActionResult> CheckOtp(string otp)
     {
-        
+
         var result = await authService.LoginByOtpAsync(otp);
         if (!result.Succeeded)
         {
-            return View("~/Views/Account/LoginByOtp.cshtml", new ResultDto<LoginResponseDto>(result.Message, false, result.Data));
+            SetError(result.Message);
+            return View("~/Views/Account/LoginByMobile.cshtml");
         }
-        var user = result.Data;
-        var userRoles = (await userService.GetRolesAsync(user.Id)).Data;
-        if (user.Email != null)
+        else
         {
-            var claims = new List<System.Security.Claims.Claim>
-        {
-            new  System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name,user.Email),
-            new  System.Security.Claims.Claim("NationalCode",user.NationalCode),
-            new  System.Security.Claims.Claim("Mobile",user.Mobile),
-            new  System.Security.Claims.Claim("UserId",user.Id),
-            new  System.Security.Claims.Claim("FullName",$"{user.FirstName} {user.LastName}"),
-        };
-            foreach (var role in userRoles.Roles)
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = (JwtSecurityToken)tokenHandler.ReadJwtToken(result.Data.Token);
+            var claims = securityToken.Claims;
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+
+
+            // Check what claim type is used for roles in your JWT
+            var roleClaims = claims.Where(c => c.Type == "role" || c.Type == ClaimTypes.Role).ToList();
+
+
+            // If roles are stored in a custom claim type, add them as Role claims
+            foreach (var claim in roleClaims)
             {
-                claims.Add(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, role.Name));
-                claims.Add(new System.Security.Claims.Claim("PersianRole", role.Description));
+                claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, claim.Value));
             }
 
-            var claimsIdentity = new ClaimsIdentity(
-            claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            //Note: For these changes to persist, you typically need to:
+            //1.Sign out the user
+            await HttpContext.SignOutAsync();
 
+            // 2.Sign in with the modified principal
             await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity));
+              CookieAuthenticationDefaults.AuthenticationScheme,
+              new ClaimsPrincipal(claimsIdentity));
+            //Save multiple data in cookies
 
-            //var us = await authService.GetCurrentUserAsync();
-            //ClaimsPrincipal claimsPrincipal=new ClaimsPrincipal(us);
-            // Note: For these changes to persist, you typically need to:
-            // 1. Sign out the user
-            // await HttpContext.SignOutAsync();
-
-            // 2. Sign in with the modified principal
-            // await HttpContext.SignInAsync(claimsPrincipal);
-
-            // Save multiple data in cookies
-
-            return RedirectToAction("Index", "Home");
         }
-        //TempData["otpError"] = "Login  Error";
-        return View();
+
+        return RedirectToAction("Index", "Home");
     }
 
 
@@ -226,8 +234,9 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
     [HttpPost]
     public async Task<IActionResult> Register(RegisterUserDto register)
     {
-        if (ModelState.IsValid == false)
+        if (!ModelState.IsValid)
         {
+            SetModelStateError();
             return View(register);
         }
         var urlHelper = urlHelperFactory.GetUrlHelper(ControllerContext);

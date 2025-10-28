@@ -372,7 +372,7 @@ public class SevenSoftService : ISevenSoftService
         try
         {
             var data = await RestUtility.GetData<bool>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.CheckExistsReserveVinNumber, $"?VinNumber={VinNumber}");
-            return new(true, "");
+            return new(data, "");
         }
         catch (Exception ex)
         {

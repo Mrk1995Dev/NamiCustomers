@@ -28,19 +28,20 @@
     <!-- User Meta Data-->
     <div class="card user-data-card">
         <div class="card-body">
-          
-        <form asp-action="Edit" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group" style="display:none">
+
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group" style="display:none">
                     <label asp-for="Id" class="control-label" style="color: #fff !important;"></label>
                     <input asp-for="Id" class="form-control" style="color: #000 !important;" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+                    <span asp-validation-for="Id" class="text-danger"></span>
+                </div>
+                
+                <div class="form-group">
                     <label asp-for="Name" class="control-label" style="color: #fff !important;"></label>
                     <input asp-for="Name" class="form-control" style="color: #000 !important;" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
                 <div class="form-group">
                     <label asp-for="Family" class="control-label" style="color: #fff !important;"></label>
                     <input asp-for="Family" class="form-control" style="color: #000 !important;" />
@@ -48,28 +49,33 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Mobile" class="control-label" style="color: #fff !important;"></label>
-                    <input asp-for="Mobile" class="form-control" style="color: #000 !important;" />
+                    <input readonly asp-for="Mobile" class="form-control" style="color: #000 !important;" />
                     <span asp-validation-for="Mobile" class="text-danger"></span>
                 </div>
-             
-            <div class="form-group">
+                <div class="form-group">
+                    <label asp-for="NationalCode" class="control-label" style="color: #fff !important;"></label>
+                    <input readonly asp-for="NationalCode" class="form-control" style="color: #000 !important;" />
+                    <span asp-validation-for="NationalCode" class="text-danger"></span>
+                </div>
+                <div class="form-group">
                     <label asp-for="Phone" class="control-label" style="color: #fff !important;"></label>
                     <input asp-for="Phone" class="form-control" style="color: #000 !important;" />
                     <span asp-validation-for="Phone" class="text-danger"></span>
-            </div>
+                </div>
                 <div class="form-group">
                     <label asp-for="Address" class="control-label" style="color: #fff !important;"></label>
                     <input asp-for="Address" class="form-control" style="color: #000 !important;" />
                     <span asp-validation-for="Address" class="text-danger"></span>
                 </div>
-            <div class="form-group">
+                 
+                 
+                <div class="form-group">
 
-                   
 
-                    <input type="submit" value="ذخیره" class="btn btn-primary w-100" />
-@*                     @Html.ActionLink("بازگشت به پروفایل", "Profile", new { id = Model.Id }, new { @class = "btn btn-outline-secondary ", style = "" })
- *@            </div>
-        </form>
+
+                    <input type="submit" value="ویرایش" class="btn btn-primary" />
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -84,5 +90,7 @@
 
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

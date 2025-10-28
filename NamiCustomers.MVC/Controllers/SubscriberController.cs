@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using NamiCustomers.MVC.Services;
 
 namespace NamiCustomers.MVC.Controllers;
 
-[Authorize(Policy = nameof(MyPloicies.SubscriberAccess))]
+[Authorize]
 public class SubscriberController(
     ISubscriberService subscriberService) : MyBaseController
 {

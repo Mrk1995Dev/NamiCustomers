@@ -7,18 +7,13 @@ using NamiCustomers.MVC.Services;
 namespace NamiCustomers.MVC.Controllers;
 
 [Authorize(Policy = nameof(MyPloicies.SubscriberAccess))]
-
 public class VehicleController(
     ISubscriberService subscriberService, IVehicleService vehicleService) : MyBaseController
 {
-    [ServiceFilter(typeof(VinFilter))]
+    //[ServiceFilter(typeof(VinFilter))]
     [HttpGet]
-    public async Task<IActionResult> ActiveMainChassisGuarantee()//string? VinNumber
+    public async Task<IActionResult> ActiveMainChassisGuarantee()
     {
-
-        //var relatedVins = await vehicleService.GetAllAsync(subscriberService.CurrentSubscriber.Id);
-       // ViewBag.relatedVins = relatedVins.Data.Select(c => new KeyValuePair<string, string>(c.VinNumber, c.VinNumber)).ToList();
-
         var vinNumber = subscriberService.CurrentSubscriber.VehicleModels?.FirstOrDefault(c => c.IsDefault)?.VinNumber;
         if (vinNumber != null)
         {
@@ -33,7 +28,7 @@ public class VehicleController(
         return View(new ActiveMainChassisGuaranteeResponse());
     }
 
-    [ServiceFilter(typeof(VinFilter))]
+   // [ServiceFilter(typeof(VinFilter))]
     public async Task<IActionResult> Details(int id)
     {
         var result = await vehicleService.GetAsync(id);

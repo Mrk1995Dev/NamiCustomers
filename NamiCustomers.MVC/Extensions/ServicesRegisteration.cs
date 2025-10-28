@@ -50,7 +50,7 @@ public static class ServicesRegisteration
     }
     public static IServiceCollection ConfigurationActionFilters(this IServiceCollection services)
     {
-        services.AddScoped<VinFilter>(); // Add the   filter Globaly 
+        //services.AddScoped<VinFilter>(); // Add the   filter Globaly 
         return services;
     }
 
@@ -164,7 +164,7 @@ public static class ServicesRegisteration
 
             var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
             var subscriberService = sp.GetRequiredService<ISubscriberService>();
-            return new AccountService(httpClient);
+            return new AccountService(httpClient, httpContextAccessor);
         });
         services.AddScoped<IBookingService, BookingService>(sp =>
         {

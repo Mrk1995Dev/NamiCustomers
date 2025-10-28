@@ -18,9 +18,6 @@ namespace NamiCustomers.API.Controllers.v1
             => await subscriberService.GetCitiesAsync();
 
         [HttpGet("[action]")]
-        public async Task<ResultDto<SubscriberDto>> Info([FromQuery] int id)
-            => await subscriberService.GetAsync(id);
-        [HttpGet("[action]")]
         public async Task<IActionResult> InfoByNationalCode([FromQuery] string nationalCode)
         {
             var response = await subscriberService.GetByNationalCodeAsync(nationalCode);
@@ -31,7 +28,17 @@ namespace NamiCustomers.API.Controllers.v1
 
             return NotFound(response);
         }
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Info([FromQuery] int id)
+        {
+            var response = await subscriberService.GetAsync(id);
+            if (response.Succeeded)
+            {
+                return Ok(response);
+            }
 
+            return NotFound(response);
+        }
 
 
         [HttpGet("[action]")]
@@ -54,15 +61,16 @@ namespace NamiCustomers.API.Controllers.v1
         {
             var result = await subscriberService.RegisterAsync(customerInfo);
 
-            if (result.Succeeded) return Created();
+            if (result.Succeeded)
+                return Ok(result);
 
-            return NotFound(result);
+            return BadRequest(result);
         }
 
         [HttpPut("[action]")]
         public async Task<IActionResult> Edit([FromBody] SubscriberDto updateCustomer)
         {
-            if (!ModelState.IsValid) return BadRequest("اطلاعات مربوطه ناقص می باشد.");
+            if (!ModelState.IsValid) return BadRequest(Infrastucture.Properties.Resources.errInputInValid);
             var data = await subscriberService.EditAsync(updateCustomer);
             if (data.Succeeded) return Ok(data);
 
@@ -73,9 +81,10 @@ namespace NamiCustomers.API.Controllers.v1
         public async Task<IActionResult> Remove([FromQuery] int id)
         {
             var data = await subscriberService.DeleteAsync(id);
-            if (data.Succeeded) return Ok();
+            if (data.Succeeded)
+                return Ok(data.Data);
 
-            return NotFound(data);
+            return BadRequest(data);
         }
 
         [HttpGet("[action]")]

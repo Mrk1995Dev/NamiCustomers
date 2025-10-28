@@ -4,10 +4,10 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>4.08.05.1</AssemblyVersion>
-    <FileVersion>4.08.05.1</FileVersion>
-    <Version>4.08.05.1</Version>
-    <InformationalVersion>4.08.05.1 - 2025-10-27</InformationalVersion>
+    <AssemblyVersion>4.08.05.2</AssemblyVersion>
+    <FileVersion>4.08.05.2</FileVersion>
+    <Version>4.08.05.2</Version>
+    <InformationalVersion>4.08.05.2 - 2025-10-28</InformationalVersion>
     <AssemblyDescription>Alimoradi573@gmail.com</AssemblyDescription>
   </PropertyGroup>
   <ItemGroup>

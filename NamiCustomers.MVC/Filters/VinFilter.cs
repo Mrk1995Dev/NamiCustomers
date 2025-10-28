@@ -12,7 +12,7 @@ public class VinFilter(IHttpContextAccessor httpContextAccessor, ISubscriberServ
 
     public void OnActionExecuting(ActionExecutingContext context)
     {
-        List<string> allewedActions = new() {"Index", "SignOut", "login", "Logout","Profile", "Contact","Dealers" };
+        List<string> allewedActions = new() {"Index", "SignOut", "login", "Logout","Profile", "Contact","Dealers", "AccessDenied" };
         //List<string> allewedActions = new() { "SignOut", "login" };
 
         string actionName = context.RouteData.Values["action"].ToString();
@@ -25,10 +25,10 @@ public class VinFilter(IHttpContextAccessor httpContextAccessor, ISubscriberServ
 
             if (!allewedActions.Contains(actionName) && subscriber != null )
             {
-                if (controllerName != "Vehicle" && (!subscriber.VehicleModels.Any() ||subscriber.VehicleModels == null || subscriber.VehicleModels.All(c => c.IsDefault != true)))
+                if ((!subscriber.VehicleModels.Any() ||subscriber.VehicleModels == null || subscriber.VehicleModels.All(c => c.IsDefault != true)))
                 {
 
-                    context.Result = new RedirectToActionResult("Index", "Vehicle", null);
+                  //  context.Result = new RedirectToActionResult("Index", "Vehicle", null);
 
                 }
             }

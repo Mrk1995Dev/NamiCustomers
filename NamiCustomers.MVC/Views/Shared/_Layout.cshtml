@@ -131,12 +131,17 @@
                     {
                         <li >
                             <a href="#" class="nav-url">
-                                <i class="bi bi-cart-check"></i>دسترسی ها
-                                <span class="dropdown-icon"><i class="bi bi-chevron-down"></i></span>
+
+                                <i class="bi bi-shield-shaded"></i>   دسترسی ها
                             </a>
                             <ul>
-                                <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Index" && ViewContext.RouteData.Values["controller"].ToString() == "roles" ? "active" : "")"><a asp-area="admin" asp-controller="roles" asp-action="Index">نقش ها</a></li>
-                                <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Index" && ViewContext.RouteData.Values["controller"].ToString() == "users" ? "active" : "")"><a asp-area="admin" asp-controller="users" asp-action="Index">کاربران</a></li>
+                                <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Index" && ViewContext.RouteData.Values["controller"].ToString() == "roles" ? "active" : "")"><a asp-area="admin" asp-controller="roles" asp-action="Index">
+                                        <i class="bi bi-shield-fill-plus"></i>   نقش ها
+                                </a></li>
+                                <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Index" && ViewContext.RouteData.Values["controller"].ToString() == "users" ? "active" : "")"><a asp-area="admin" asp-controller="users" asp-action="Index">
+
+                                        <i class="bi bi-shield-fill-x"></i>   کاربران
+                                </a></li>
 
                             </ul>
                         </li>

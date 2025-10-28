@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using NamiCustomers.Abstractions.Dtos.Security.Dto;
+using NamiCustomers.Infrastucture.Utilities;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -9,11 +11,11 @@ public interface IAuthService
     Task<bool> LoginAsync(LoginRequestDto loginRequest);
     Task<string?> RefreshTokenAsync(string refreshToken);
     Task LogoutAsync();
-    Task<string> GetOtpAsync(string mobile, string nationalCode);
+    Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string mobile, string nationalCode);
     Task<ResultDto<LoginResponseDto>> LoginByOtpAsync(string otp);
     Task<ResultDto<ForgotPasswordResponse>> ForgotPasswordAsync(ForgotPasswordRequestDto forgotPasswordRequestDto);
     Task<ResultDto<IdentityResult>> ResetPasswordAsync(ResetPasswordDto reset);
-    Task<ResultDto> RegisterAsync(RegisterUserDto registerDto);
+    Task<ResultDto<UserDto>> RegisterAsync(RegisterUserDto registerDto);
     Task<ConfirmResponse> ConfirmEmailAsync(string userId, string token);
     Task<HttpResponseMessage> SetPhoneNumberAsync(SetPhoneNumberDto phoneNumberDto);
     Task<ConfirmResponse> VerifyPhoneNumberAsync(VerifyPhoneNumberDto verify);
@@ -106,30 +108,29 @@ public class AuthService(HttpClient httpClient, ITokenSessionService tokenServic
 
 
 
-    public async Task<ResultDto> RegisterAsync(RegisterUserDto registerDto)
+    public async Task<ResultDto<UserDto>> RegisterAsync(RegisterUserDto registerDto)
     {
         var response = await httpClient.PostAsJsonAsync("Account/Register", registerDto);
         if (response.IsSuccessStatusCode)
         {
-            var result = await response.Content.ReadFromJsonAsync<ResultDto>();
-            if (result != null)
-            {
-                return result;
-            }
+            return await response.Content.ReadFromJsonAsync<ResultDto<UserDto>>();
         }
-        return   ResultDto.Failure(Infrastucture.Properties.Resources.errSave);
+        return ResultDto.Failure<UserDto>(response.Message<UserDto>());
     }
 
 
-    public async Task<string> GetOtpAsync(string mobile, string nationalCode)
+    public async Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string mobile, string nationalCode)
     {
-        var response = await GetData<ResultDto<SubscriberCodeDto>>($"Account/GetOtp?mobile={mobile}&nationalCode=", nationalCode);
+        // var token = await GetTokenAsync(mobile);
 
-        if (response.Succeeded)
+        var response = await httpClient.GetAsync($"Account/GetOtp?mobile={mobile}&nationalCode={nationalCode}");
+
+        if (response.IsSuccessStatusCode)
         {
-            return response.Data.AuthCode;
+            return await response.Content.ReadFromJsonAsync<ResultDto<SubscriberCodeDto>>();
         }
-        return Infrastucture.Properties.Resources.errGetOtp;
+
+        return await response.Content.ReadFromJsonAsync<ResultDto<SubscriberCodeDto>>();
     }
 
     public async Task<ResultDto<LoginResponseDto>> LoginByOtpAsync(string otp)

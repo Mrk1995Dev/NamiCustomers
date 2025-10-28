@@ -11,11 +11,11 @@ namespace NamiCustomers.API.Controllers.v1;
 [ApiController]
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
-[Authorize]
+[Authorize(Policy = (nameof(MyPloicies.AdminAccess)))]
 public class RolesController(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager) : ControllerBase
 {
     [HttpGet("[action]")]
-    public async Task<ResultDto<List<RoleDto>>> GetAllAsync()
+    public async Task<IActionResult> GetAllAsync()
     {
         var roles = await roleManager.Roles
             .Select(p =>
@@ -26,7 +26,7 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
                  Name = p.Name
              })
             .ToListAsync();
-        return new ResultDto<List<RoleDto>>(Infrastucture.Properties.Resources.msgFound, true, roles);
+        return Ok(ResultDto.Success<List<RoleDto>>(roles));
     }
 
     [HttpGet("[action]")]
@@ -41,13 +41,13 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
                  Name = p.Name
              })
             .FirstOrDefaultAsync();
-        return new ResultDto<RoleDto>(Infrastucture.Properties.Resources.msgFound, true, role);
+        return ResultDto.Success<RoleDto>(role);
     }
 
 
 
     [HttpPost("[action]")]
-    public async Task<ResultDto> Register(AddNewRoleDto newRole)
+    public async Task<ResultDto<IdentityResult>> Register(AddNewRoleDto newRole)
     {
         ApplicationRole role = new ApplicationRole()
         {
@@ -61,17 +61,16 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
         //_roleManager.DeleteAsync()
         if (result.Succeeded)
         {
-            return  ResultDto.Success(Infrastucture.Properties.Resources.msgFound);
+            return ResultDto.Success<IdentityResult>(result);
         }
         ;
-        //ViewBag.Errors = result.Errors.ToList();
-        return   ResultDto.Failure(Infrastucture.Properties.Resources.errSave);
+
+        return ResultDto.Failure<IdentityResult>(string.Join(",", result.Errors.Select(c => c.Description).ToList()));
 
     }
 
-
     [HttpPut("[action]")]
-    public async Task<ResultDto> Edit(RoleDto roleEdit)
+    public async Task<ResultDto<IdentityResult>> Edit(RoleDto roleEdit)
     {
         var role = await roleManager.FindByIdAsync(roleEdit.Id);
 
@@ -82,21 +81,11 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
 
         if (result.Succeeded)
         {
-            return ResultDto.Success(Infrastucture.Properties.Resources.msgEdited);
+            return ResultDto.Success<IdentityResult>(result);
         }
-        string message = "";
-        foreach (var item in result.Errors.ToList())
-        {
-            message += item.Description + Environment.NewLine;
-        }
-        //TempData["Message"] = message;
-        return   ResultDto.Failure(Infrastucture.Properties.Resources.errEdited);
+        return ResultDto.Failure<IdentityResult>(string.Join(",", result.Errors.Select(c => c.Description).ToList()));
     }
-
-
-
-
-
+   
     [HttpGet("[action]")]
     public async Task<ResultDto<List<UserDto>>> GetUsersInRole(string Name)
     {
@@ -111,8 +100,6 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
             Id = p.Id,
         }).ToList();
 
-        return new ResultDto<List<UserDto>>(Infrastucture.Properties.Resources.msgFound, true, users);
+        return ResultDto.Success(users);
     }
-
-
 }

@@ -88,11 +88,12 @@ namespace NamiCustomers.MVC.Extensions
                 webApplication.MapStaticAssets();
 
                 webApplication.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}").WithStaticAssets(); ;
-                webApplication.MapControllerRoute(
                     name: "areas",
                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                webApplication.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}").WithStaticAssets(); ;
+                
                 webApplication.MapControllerRoute(//NOTICE:this line for APIs
                     name: "gateway",
                     pattern: "api/{controller=Gateway}/{action=Get}/{id?}");

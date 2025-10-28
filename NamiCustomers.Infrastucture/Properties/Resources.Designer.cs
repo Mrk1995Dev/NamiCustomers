@@ -170,6 +170,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to شماره موبایل وارد شده معتبر نیست.
+        /// </summary>
+        public static string errInvalidMobile {
+            get {
+                return ResourceManager.GetString("errInvalidMobile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to کد ملی معتبر نمی باشد.
         /// </summary>
         public static string errInvalidNationalCode {
@@ -278,6 +287,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to مشترک مورد نظر یافت نشد.
+        /// </summary>
+        public static string errSubscriberNotFound {
+            get {
+                return ResourceManager.GetString("errSubscriberNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to روزهای پنجشنبه وجمعه تعطیل است.
         /// </summary>
         public static string errVacationDateNotSelectable {
@@ -301,6 +319,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         public static string msgDeleted {
             get {
                 return ResourceManager.GetString("msgDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to خروجی با موفقیت دانلود شد.
+        /// </summary>
+        public static string msgDownloadSuccess {
+            get {
+                return ResourceManager.GetString("msgDownloadSuccess", resourceCulture);
             }
         }
         

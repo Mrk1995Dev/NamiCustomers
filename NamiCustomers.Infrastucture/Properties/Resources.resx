@@ -224,4 +224,13 @@
   <data name="errFailed" xml:space="preserve">
     <value>انجام درخواست امکان پذیر نیست</value>
   </data>
+  <data name="errInvalidMobile" xml:space="preserve">
+    <value>شماره موبایل وارد شده معتبر نیست</value>
+  </data>
+  <data name="msgDownloadSuccess" xml:space="preserve">
+    <value>خروجی با موفقیت دانلود شد</value>
+  </data>
+  <data name="errSubscriberNotFound" xml:space="preserve">
+    <value>مشترک مورد نظر یافت نشد</value>
+  </data>
 </root>

@@ -35,13 +35,63 @@ public static class ServicesRegisteration
             .ConfigureHealthcheck()
             .ConfigureMemoryCache()
             .ConfigureOther()
+             .AddAuthorization(configuration)
+               .ConsolEnvironment()
             ;
         services.ConfigurationApplicationServices(configuration);
 
         return services;
     }
+    public static IServiceCollection AddAuthorization(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<IdentityOptions>(options =>
+        {
+            options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
+        });
 
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(MyPloicies.AdminAccess, policy => policy.RequireRole(MyRoles.Admin));
 
+            options.AddPolicy(MyPloicies.OperatorAccess, policy =>
+            {
+                policy.RequireRole(MyRoles.Admin);
+                policy.RequireRole(MyRoles.Operator);
+            }
+               );
+
+            options.AddPolicy(MyPloicies.SubscriberAccess, policy =>
+            {
+                policy.RequireRole(MyRoles.Subscriber);
+            }
+                      );
+            //options =>
+            //{
+            //    // Dynamic permission policies
+            //    options.AddPolicy("Permission", policy =>
+            //        policy.RequireAssertion(context =>
+            //            context.User.HasClaim(c =>
+            //                c.Type == "Permission" &&
+            //                c.Value == context.GetRequiredService<IAuthorizationService>()
+            //                    .GetPolicyRequirements().First().ToString())));
+
+            //    // Specific permission policies
+            //    options.AddPolicy("CanEditProducts", policy =>
+            //        policy.RequireClaim("Permission", "products.edit"));
+            //    options.AddPolicy("CanDeleteUsers", policy =>
+            //        policy.RequireClaim("Permission", "users.delete"));
+            //}
+
+        });
+        return services;
+    }
+
+    private static IServiceCollection ConsolEnvironment(this IServiceCollection services)
+    {
+        var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        Console.WriteLine(environmentName);
+        return services;
+    }
 
     private static IServiceCollection ConfigureOther(this IServiceCollection services)
     {

@@ -22,7 +22,7 @@ namespace NamiCustomers.Application
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IDealerService, DealerService>();
             services.AddScoped<IAppointmentService, AppointmentService>();
-            services.AddScoped<IPermissionService, PermissionService>();
+            services.AddScoped<IAccountService, AccountService>();
             services.AddTransient<ISevenSoftService, SevenSoftService>();
             services.AddScoped<IMailService, MailService>();
 

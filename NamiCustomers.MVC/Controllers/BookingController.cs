@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace NamiCustomers.MVC.Controllers
 {
-    [ServiceFilter(typeof(VinFilter))]
+    //[ServiceFilter(typeof(VinFilter))]
     public class BookingController(IBookingService bookingService, ISevenSoftService sevenSoftService, ISubscriberService subscriberService, IVehicleService vehicleService) : MyBaseController
     {
-        [ServiceFilter(typeof(VinFilter))]
+        //[ServiceFilter(typeof(VinFilter))]
         public async Task<IActionResult> BookingIndex(BookingTurnRequest? bookingTurnRequest)
         {
 
