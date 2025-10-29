@@ -1,0 +1,70 @@
+﻿@model  NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos.ServicesPriceResponse[]
+
+@{
+    ViewData["Title"] = "ServicesPriceList";
+}
+
+<h4> بهای قطعات</h4>
+<hr />
+@if(Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].RowNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].ServiceCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].ServiceName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].BranchId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].PriceCustomer)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model[0].PriceWarranty)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RowNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ServiceCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ServiceName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BranchId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PriceCustomer)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PriceWarranty)
+                    </td>
+                     
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+

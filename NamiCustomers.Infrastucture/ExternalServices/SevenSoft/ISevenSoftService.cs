@@ -3,6 +3,7 @@ using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 using NamiCustomers.Infrastucture.Properties;
 using NamiCustomers.Infrastucture.Utilities;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Buffers.Text;
 using System.Numerics;
@@ -188,6 +189,12 @@ public interface ISevenSoftService
     /// <returns></returns>
     Task<ResultDto<BookingResponse>> GetBooking(string vinNumber);
     Task<ChassisInformationResponse[]> GetAllChassisInformation(string nationalCode);
+    /// <summary>
+    /// قطعات
+    /// </summary>
+    /// <param name="servicesPriceRequest"></param>
+    /// <returns></returns>
+    Task<ResultDto<ServicesPriceResponse[]>> GetServicesPriceByBranchId(ServicesPriceRequest servicesPriceRequest);
 }
 
 public class SevenSoftService : ISevenSoftService
@@ -206,6 +213,23 @@ public class SevenSoftService : ISevenSoftService
     {
         return await RestUtility.GetData<ReceptionsInformationByVinNumberResponse[]>(_baseUrl, Resource7Soft.GetReceptionsInformationByVinNumber, chassisVinNumber);
     }
+
+
+    public async Task<ResultDto<ServicesPriceResponse[]>> GetServicesPriceByBranchId(ServicesPriceRequest servicesPriceRequest)
+    {
+        try
+        {
+            var data = await RestUtility.PostData<ServicesPriceResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrl, Resource7Soft.GetServicesPriceByBranchId, servicesPriceRequest);
+            return ResultDto.Success<ServicesPriceResponse[]>(data);
+        }
+        catch (Exception ex)
+        {
+            return ResultDto.Failure < ServicesPriceResponse[] >(ex.Message);
+        }
+    }
+
+
+
     public async Task<DealerResponse[]> GetDealers()
     {
         return await RestUtility.GetData<DealerResponse[]>(_baseUrl, Resource7Soft.GetDealers, "");
@@ -220,7 +244,7 @@ public class SevenSoftService : ISevenSoftService
     }
     public async Task<ChassisInformationResponse[]> GetAllChassisInformation(string nationalCode)
     {
-        return await RestUtility.GetData<ChassisInformationResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrl, string.Format(Resource7Soft.GetAllChassisInformation, nationalCode),"");
+        return await RestUtility.GetData<ChassisInformationResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrl, string.Format(Resource7Soft.GetAllChassisInformation, nationalCode), "");
     }
 
 

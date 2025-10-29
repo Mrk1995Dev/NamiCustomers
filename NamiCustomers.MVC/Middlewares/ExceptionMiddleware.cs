@@ -27,24 +27,24 @@ namespace NamiCustomers.MVC.Middlewares
         {
             context.Response.ContentType = "text/html";
 
-            if (!env.IsDevelopment())
-            {
-                // Show detailed error in development
-                await context.Response.WriteAsync($@"
-                <html>
-                    <head><title>Error</title></head>
-                    <body>
-                        <h1>Error: {exception.Message}</h1>
-                        <pre>{exception.StackTrace}</pre>
-                    </body>
-                </html>");
-            }
-            else
-            {
+            //if ( env.IsDevelopment())
+            //{
+            //    // Show detailed error in development
+            //    await context.Response.WriteAsync($@"
+            //    <html>
+            //        <head><title>Error</title></head>
+            //        <body>
+            //            <h1>Error: {exception.Message}</h1>
+            //            <pre>{exception.StackTrace}</pre>
+            //        </body>
+            //    </html>");
+            //}
+            //else
+            //{
                 context.Session.SetString("Error", exception.Message);
                 // Redirect to error page in production
                 context.Response.Redirect($"/Home/Error?statusCode=500&message={exception.Message}");
-            }
+            //}
 
 
 

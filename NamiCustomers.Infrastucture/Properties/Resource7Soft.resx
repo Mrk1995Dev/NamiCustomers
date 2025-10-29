@@ -210,4 +210,7 @@
   <data name="GetAllChassisInformation" xml:space="preserve">
     <value>api/VINInformation/GetAllChassisInformation?NationalCodeOrEconomicCode={0}</value>
   </data>
+  <data name="GetServicesPriceByBranchId" xml:space="preserve">
+    <value>api/PartServicePrice/GetServicesPriceByBranchId</value>
+  </data>
 </root>

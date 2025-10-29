@@ -12,9 +12,9 @@ public class SubscriberController(
     [AllowAnonymous]
     public IActionResult CheckMyClaims()
     {
-        var a = nameof(MyPloicies.SubscriberAccess);
         return Json(User.Claims.Select(c => new { c.Type, c.Value }));
     }
+
 
     public async Task<IActionResult> Details(int id)
     {

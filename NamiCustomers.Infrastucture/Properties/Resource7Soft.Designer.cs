@@ -295,6 +295,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/PartServicePrice/GetServicesPriceByBranchId.
+        /// </summary>
+        public static string GetServicesPriceByBranchId {
+            get {
+                return ResourceManager.GetString("GetServicesPriceByBranchId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to api/VINInformation/GetSpecificCases.
         /// </summary>
         public static string GetSpecificCases {

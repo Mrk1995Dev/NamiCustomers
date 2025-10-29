@@ -1,14 +1,19 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using MimeKit;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
+using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
+using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 using NamiCustomers.MVC.Filters;
 using NamiCustomers.MVC.Services;
+using NuGet.Protocol.Plugins;
 
 namespace NamiCustomers.MVC.Controllers;
 
 [Authorize(Policy = nameof(MyPloicies.SubscriberAccess))]
 public class VehicleController(
-    ISubscriberService subscriberService, IVehicleService vehicleService) : MyBaseController
+    ISubscriberService subscriberService, IVehicleService vehicleService, ISevenSoftService sevenSoftService) : MyBaseController
 {
     //[ServiceFilter(typeof(VinFilter))]
     [HttpGet]
@@ -27,8 +32,55 @@ public class VehicleController(
         }
         return View(new ActiveMainChassisGuaranteeResponse());
     }
+    [HttpGet]
+    public async Task<IActionResult> ServicesPrice(ServicesPriceRequest? request)
+    {
+        if (request.DealerId == Guid.Empty)
+        {
+            var dealers = await sevenSoftService.GetDealers();
+            List<SelectListItem> list = new List<SelectListItem> { new SelectListItem { Text = "", Value = Guid.Empty.ToString() } };
+            var items = dealers.Select(c => new SelectListItem { Text = c.BrancheName, Value = c.UniqueId }).ToList();
+            list.AddRange(items);
+            ViewBag.Dealers = list;
+          request = new ServicesPriceRequest();
+        }
+        return View(request);
+    }
 
-   // [ServiceFilter(typeof(VinFilter))]
+
+    [HttpGet]
+    public JsonResult GetBranchesByDealer(Guid dealerId)
+    {
+        var data = sevenSoftService.GetBranchesByDealer(dealerId).Result;
+        var branches = data.Select(c => new SelectListItem { Text = c.DealerName, Value = c.UniqueId }).ToList();
+
+        return Json(branches);
+    }
+
+
+    [HttpPost]
+    public async Task<IActionResult> ServicesPriceList(ServicesPriceRequest request)
+    {
+        var subscriber = subscriberService.CurrentSubscriber;
+        var vinNumber = subscriber.VehicleModels?.FirstOrDefault(c => c.IsDefault)?.VinNumber;
+        if (vinNumber != null)
+        {
+            request.NationalCodeOrEconomicCode = subscriber.NationalCode;
+            request.ChassisVinNumber = vinNumber;
+            var data = await sevenSoftService.GetServicesPriceByBranchId(request);
+            if (!data.Succeeded)
+            {
+                SetError(data.Message);
+                return RedirectToAction("ServicesPrice", request);
+            }
+            return View(data.Data);
+        }
+        return RedirectToAction("ServicesPrice", request);
+    }
+
+
+
+    // [ServiceFilter(typeof(VinFilter))]
     public async Task<IActionResult> Details(int id)
     {
         var result = await vehicleService.GetAsync(id);
