@@ -406,19 +406,20 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     private async Task<string> GenerateJwtToken(ApplicationUser user)
     {
         var userRoles =await  userManager.GetRolesAsync(user);
+        var subscriber = (await subscriberService.GetByNationalCodeAsync(user.NationalCode)).Data;
 
         var jwtSettings = configuration.GetSection("JWTSettings");
         var key = Encoding.ASCII.GetBytes(jwtSettings["securityKey"]);
 
         var claims = new List<Claim>{
-            new Claim(ClaimTypes.Name, user.UserName),
+                                        new Claim(ClaimTypes.Name, user.UserName),
                                         new Claim(ClaimTypes.Email, user.Email),
                                         new Claim("NationalCode", user.NationalCode),
                                         new Claim("Mobile", user.PhoneNumber),
                                         new  System.Security.Claims.Claim("UserId",user.Id),
                                         new  System.Security.Claims.Claim("FullName",$"{user.FirstName} {user.LastName}"),
                                         new Claim(ClaimTypes.NameIdentifier, user.Id),
-                                        new Claim(ClaimTypes.Name, user.UserName),
+                                        new Claim("Subscriber", JsonConvert.SerializeObject(subscriber))
                                     };
         var rolesDtos = await roleManager.Roles.Where(c => userRoles.Contains(c.Name)).Select(c => new RoleDto
         {

@@ -8,7 +8,8 @@ public enum MyClaims
     NationalCode,
     FullName,
     Role,
-    PersianRole
+    PersianRole,
+    Subscriber
 }
 
 public static class MyRoles

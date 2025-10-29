@@ -6,10 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>8e9bee6e-68c6-4822-a35c-425fe3a9219d</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <AssemblyVersion>4.08.05.2</AssemblyVersion>
-    <FileVersion>4.08.05.2</FileVersion>
-    <Version>4.08.05.2</Version>
-    <InformationalVersion>4.08.05.2 - 2025-10-28</InformationalVersion>
+    <AssemblyVersion>4.08.07.01</AssemblyVersion>
+    <FileVersion>4.08.07.01</FileVersion>
+    <Version>4.08.07.01</Version>
+    <InformationalVersion>4.08.07.01 - 2025-10-29</InformationalVersion>
     <AssemblyDescription>Alimoradi573@gmail.com</AssemblyDescription>
   </PropertyGroup>
   <ItemGroup>

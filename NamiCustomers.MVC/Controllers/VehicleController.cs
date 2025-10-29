@@ -38,8 +38,8 @@ public class VehicleController(
         if (request.DealerId == Guid.Empty)
         {
             var dealers = await sevenSoftService.GetDealers();
-            List<SelectListItem> list = new List<SelectListItem> { new SelectListItem { Text = "", Value = Guid.Empty.ToString() } };
-            var items = dealers.Select(c => new SelectListItem { Text = c.BrancheName, Value = c.UniqueId }).ToList();
+            List<SelectListItem> list = new List<SelectListItem> { new SelectListItem { Text = "", Value = Guid.Empty.ToString() ,Selected=true} };
+            var items = dealers.Select(c => new SelectListItem { Text =$"{c.DealerName}-{c.DealerNo}", Value = c.UniqueId }).ToList();
             list.AddRange(items);
             ViewBag.Dealers = list;
           request = new ServicesPriceRequest();
@@ -52,7 +52,7 @@ public class VehicleController(
     public JsonResult GetBranchesByDealer(Guid dealerId)
     {
         var data = sevenSoftService.GetBranchesByDealer(dealerId).Result;
-        var branches = data.Select(c => new SelectListItem { Text = c.DealerName, Value = c.UniqueId }).ToList();
+        var branches = data.Where(c=>c.BranchNo=="200").Select(c => new SelectListItem { Text =$" {c.BranchName}-کد {c.BranchNo} -گرید {c.BranchGrade}" , Value = c.UniqueId }).ToList();
 
         return Json(branches);
     }

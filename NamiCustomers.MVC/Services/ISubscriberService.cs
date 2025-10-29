@@ -4,7 +4,9 @@ using IdentityModel.OidcClient;
 using k8s.KubeConfigModels;
 using Microsoft.AspNetCore.Mvc;
 using NamiCustomers.Infrastucture.Utilities;
+using Newtonsoft.Json;
 using System;
+using System.Security.Claims;
 
 namespace NamiCustomers.MVC.Services;
 
@@ -25,8 +27,8 @@ public class SubscriberService : ISubscriberService
     private readonly HttpClient _httpClient;
     private readonly IHttpContextAccessor httpContextAccessor;
 
-    public SubscriberDto CurrentSubscriber => GetByNationalCodeAsync().GetAwaiter().GetResult().Data;
 
+    public SubscriberDto CurrentSubscriber=> GetByNationalCodeAsync().GetAwaiter().GetResult().Data;
     public SubscriberService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
     {
         _httpClient = httpClient;
@@ -101,9 +103,14 @@ public class SubscriberService : ISubscriberService
 
     public async Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync()
     {
+        var jsonSubscriber = httpContextAccessor.GetClaimValue(MyClaims.Subscriber);
+        if (!string.IsNullOrEmpty(jsonSubscriber))
+        {
+            var subscriberDto=JsonConvert.DeserializeObject<SubscriberDto>(jsonSubscriber);   
+            return ResultDto.Success<SubscriberDto>(subscriberDto);
+        }
 
         var nationalCode = httpContextAccessor.GetClaimValue(MyClaims.NationalCode);
-
         var response = await _httpClient.GetAsync($"subscriber/InfoByNationalCode?nationalcode={nationalCode}");
 
         if (response.IsSuccessStatusCode)
@@ -115,7 +122,7 @@ public class SubscriberService : ISubscriberService
                ((ResultDto<SubscriberDto>)result).Data);
             }
         }
-        return new ResultDto<SubscriberDto>(response.ReasonPhrase, false);
+        return ResultDto.Failure<SubscriberDto>(response.ReasonPhrase);
         // Log or handle the error response
         var errorContent = await response.Content.ReadAsStringAsync();
         // _logger.LogError($"API Error: {response.StatusCode} - {errorContent}");
