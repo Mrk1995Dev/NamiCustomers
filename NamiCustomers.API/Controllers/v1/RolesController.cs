@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis;
 using NamiCustomers.Abstractions.Dtos.Security.Dto;
 using NamiCustomers.Abstractions.Dtos.Security.Dto.Roles;
 using NamiCustomers.Domain.Entities.Account;
@@ -30,7 +31,7 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
     }
 
     [HttpGet("[action]")]
-    public async Task<ResultDto<RoleDto>> GetAsync(string id)
+    public async Task<IActionResult> GetAsync(string id)
     {
         var role = await roleManager.Roles.Where(c => c.Id == id)
             .Select(p =>
@@ -41,13 +42,13 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
                  Name = p.Name
              })
             .FirstOrDefaultAsync();
-        return ResultDto.Success<RoleDto>(role);
+        return Ok( ResultDto.Success<RoleDto>(role));
     }
 
 
 
     [HttpPost("[action]")]
-    public async Task<ResultDto<IdentityResult>> Register(AddNewRoleDto newRole)
+    public async Task<IActionResult> Register(AddNewRoleDto newRole)
     {
         ApplicationRole role = new ApplicationRole()
         {
@@ -61,16 +62,16 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
         //_roleManager.DeleteAsync()
         if (result.Succeeded)
         {
-            return ResultDto.Success<IdentityResult>(result);
+            return Ok( ResultDto.Success<IdentityResult>(result));
         }
         ;
 
-        return ResultDto.Failure<IdentityResult>(string.Join(",", result.Errors.Select(c => c.Description).ToList()));
+        return BadRequest( ResultDto.Failure<IdentityResult>(string.Join(",", result.Errors.Select(c => c.Description).ToList())));
 
     }
 
     [HttpPut("[action]")]
-    public async Task<ResultDto<IdentityResult>> Edit(RoleDto roleEdit)
+    public async Task<IActionResult> Edit(RoleDto roleEdit)
     {
         var role = await roleManager.FindByIdAsync(roleEdit.Id);
 
@@ -81,13 +82,13 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
 
         if (result.Succeeded)
         {
-            return ResultDto.Success<IdentityResult>(result);
+            return Ok( ResultDto.Success<IdentityResult>(result));
         }
-        return ResultDto.Failure<IdentityResult>(string.Join(",", result.Errors.Select(c => c.Description).ToList()));
+        return BadRequest(ResultDto.Failure<IdentityResult>(string.Join(",", result.Errors.Select(c => c.Description).ToList())));
     }
    
     [HttpGet("[action]")]
-    public async Task<ResultDto<List<UserDto>>> GetUsersInRole(string Name)
+    public async Task<IActionResult> GetUsersInRole(string Name)
     {
         var usersInRole = await userManager.GetUsersInRoleAsync(Name);
 
@@ -100,6 +101,6 @@ public class RolesController(RoleManager<ApplicationRole> roleManager, UserManag
             Id = p.Id,
         }).ToList();
 
-        return ResultDto.Success(users);
+        return Ok(ResultDto.Success(users));
     }
 }

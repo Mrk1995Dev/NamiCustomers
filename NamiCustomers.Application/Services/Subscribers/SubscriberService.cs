@@ -24,7 +24,7 @@ public interface ISubscriberService
     Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync(string nationalCode);
     Task<ResultDto<SubscriberDto>> GetAsync(string mobile);
     Task<ResultDto<byte[]>> ExportAsync();
-    Task<List<CityDto>> GetCitiesAsync();
+   Task<ResultDto<List<CityDto>>> GetCitiesAsync();
     Task<ResultDto<SubscriberCodeDto>> SendOtpAsync(string mobile);
     Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string mobile, string nationalCode);
 
@@ -233,7 +233,7 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
             true, bytes);
     }
 
-    public async Task<List<CityDto>> GetCitiesAsync()
+    public async Task<ResultDto< List<CityDto>>> GetCitiesAsync()
     {
         var cities = await dbContext.Cities.ToListAsync();
 
@@ -243,7 +243,7 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
             Title = c.Title
         }).ToList();
 
-        return data;
+        return ResultDto.Success<List<CityDto>>(data);
     }
 
     public async Task<ResultDto<SubscriberCodeDto>> SendOtpAsync(string authCode)

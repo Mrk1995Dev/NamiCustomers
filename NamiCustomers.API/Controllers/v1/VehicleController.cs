@@ -14,71 +14,93 @@ namespace NamiCustomers.API.Controllers.v1;
 public class VehicleController(IVehicleService vehicleService, ISevenSoftService sevenSoftService, IMapper mapper) : ControllerBase
 {
     [HttpGet("[action]")]
-    public async Task<ResultDto<VehicleModelDto>> Get(int id)
+    public async Task<IActionResult> Get(int id)
     {
-        return await vehicleService.GetAsync(id);
+        var result = await vehicleService.GetAsync(id);
+        if (result.Succeeded)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
     }
     [HttpGet("[action]")]
-    public async Task<ResultDto<List<VehicleModelDto>>> GetAll(int subscriberId)
+    public async Task<IActionResult> GetAll(int subscriberId)
     {
-        return await vehicleService.GetAllAsync(subscriberId);
+        var result = await vehicleService.GetAllAsync(subscriberId);
+        if (result.Succeeded)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
     }
     [HttpPost("[action]")]
-    public async Task<ResultDto<VehicleModelDto>> Register(VehicleModelDto vehicleModelDto)
+    public async Task<IActionResult> Register(VehicleModelDto vehicleModelDto)
     {
-        return await vehicleService.RegisterAsync(vehicleModelDto);
+        var result = await vehicleService.RegisterAsync(vehicleModelDto);
+        if (result.Succeeded)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
     }
     [HttpDelete("[action]")]
-    public async Task<ResultDto<VehicleModelDto>> Remove(int id)
+    public async Task<IActionResult> Remove(int id)
     {
-        return await vehicleService.RemoveAsync(id);
+        var result = await vehicleService.RemoveAsync(id);
+        if (result.Succeeded)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
     }
     [HttpPut("[action]/{id}")]
-    public async Task<ResultDto<VehicleModelDto>> SetDefault(int id)
+    public async Task<IActionResult> SetDefault(int id)
     {
-        return await vehicleService.SetDefaultAsync(id);
+        var result = await vehicleService.SetDefaultAsync(id);
+        if (result.Succeeded)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
     }
     [HttpPut("[action]")]
-    public async Task<ResultDto<VehicleModelDto>> Edit(VehicleModelDto vehicleModelDto)
+    public async Task<IActionResult> Edit(VehicleModelDto vehicleModelDto)
     {
-        return await vehicleService.EditAsync(vehicleModelDto);
+        var result = await vehicleService.EditAsync(vehicleModelDto);
+        if (result.Succeeded)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
     }
 
     [HttpGet("[action]")]
-    public async Task<ResultDto<VehicleModelDto>> GetChassisInformationByVinNumber(string vinNumber)
+    public async Task<IActionResult> GetChassisInformationByVinNumber(string vinNumber)
     {
         if (string.IsNullOrEmpty(vinNumber))
         {
-            return new ResultDto<VehicleModelDto>(
-          Infrastucture.Properties.Resources.errNotFound, false
-          );
+            return BadRequest(ResultDto.Failure<VehicleModelDto>(
+          Infrastucture.Properties.Resources.errNotFound));
         }
         var result = await sevenSoftService.GetChassisInformationByVinNumber(vinNumber);
-        if (result == null) return new ResultDto<VehicleModelDto>(
-       Infrastucture.Properties.Resources.errNotFound, false
-       );
+        if (result == null)
+            return BadRequest(ResultDto.Failure<VehicleModelDto>(
+       Infrastucture.Properties.Resources.errNotFound
+       ));
 
-        return new ResultDto<VehicleModelDto>(
-      Infrastucture.Properties.Resources.msgFound
-     , true
-     , mapper.Map<VehicleModelDto>(result)
-       );
-
+        return Ok(ResultDto.Success<VehicleModelDto>(mapper.Map<VehicleModelDto>(result)));
     }
 
 
     [HttpGet("[action]")]
-    public async Task<ResultDto<string[]>> GetSpecificCases(string vinNumber, string nationalCodeOrEconomicCode, string mobile)
+    public async Task<IActionResult> GetSpecificCases(string vinNumber, string nationalCodeOrEconomicCode, string mobile)
     {
         var result = await sevenSoftService.GetSpecificCases(vinNumber, nationalCodeOrEconomicCode, mobile);
-        if (result == null) return new ResultDto<string[]>(
-       Infrastucture.Properties.Resources.errNotFound, false
-       );
+        if (result == null)
+            return BadRequest(ResultDto.Failure<string[]>(
+       Infrastucture.Properties.Resources.errNotFound));
 
-        return new ResultDto<string[]>(
-      Infrastucture.Properties.Resources.msgFound
-     , true
-     , mapper.Map<string[]>(result)
+        return Ok(ResultDto.Success<string[]>(mapper.Map<string[]>(result))
        );
 
     }
@@ -86,21 +108,12 @@ public class VehicleController(IVehicleService vehicleService, ISevenSoftService
     public async Task<ResultDto<ActiveMainChassisGuaranteeResponse>> GetActiveMainChassisGuarantee(string vinNumber)
     {
         var result = await sevenSoftService.GetActiveMainChassisGuarantee(vinNumber);
-        if (result == null) return new ResultDto<ActiveMainChassisGuaranteeResponse>(
+        if (result == null) 
+            return ResultDto.Failure<ActiveMainChassisGuaranteeResponse>(
         Infrastucture.Properties.Resources.errNotFound
-        , false
-        );
-
-
-        return new ResultDto<ActiveMainChassisGuaranteeResponse>(
-      Infrastucture.Properties.Resources.msgFound
-       , true,
+);
+        return ResultDto.Success<ActiveMainChassisGuaranteeResponse>(
       mapper.Map<ActiveMainChassisGuaranteeResponse>(result)
        );
-
     }
-
-
-
-    //LGBH9VEAXPY770511
 }

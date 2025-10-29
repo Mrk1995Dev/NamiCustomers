@@ -14,8 +14,16 @@ namespace NamiCustomers.API.Controllers.v1
     {
 
         [HttpGet("cities")]
-        public async Task<List<CityDto>> GetAllCities()
-            => await subscriberService.GetCitiesAsync();
+        public async Task<IActionResult> GetAllCities()
+        {
+            var result=await subscriberService.GetCitiesAsync();
+                 if (result.Succeeded)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+          
 
         [HttpGet("[action]")]
         public async Task<IActionResult> InfoByNationalCode([FromQuery] string nationalCode)
@@ -42,10 +50,17 @@ namespace NamiCustomers.API.Controllers.v1
 
 
         [HttpGet("[action]")]
-        public async Task<ResultDto<SubscriberDto>> GetByMobile([FromQuery] string mobile)
-           => await subscriberService.GetAsync(mobile);
+        public async Task<IActionResult> GetByMobile([FromQuery] string mobile)
+        {
+            var result=await subscriberService.GetAsync(mobile);
 
-
+                if (result.Succeeded)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+         
         [HttpGet("[action]")]
         public async Task<IActionResult> Subscribers()
         {

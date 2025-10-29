@@ -31,9 +31,7 @@
     <!-- Style CSS -->
     <link rel="stylesheet" href="~/SiteTmeplate/style.css">
     <link rel="stylesheet" href="~/SiteTmeplate/css/fontiran.css">
-
-    <!-- Web App Manifest -->
-@*     <link rel="manifest" href="~/SiteTmeplate/manifest.json"> *@
+    <link href="~/css/toastr.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -110,6 +108,15 @@
     <script src="~/SiteTmeplate/js/active.js"></script>
     <script src="~/SiteTmeplate/js/pwa.js"></script>
     
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/toastr.js"></script>
+    <script src="~/js/lib-notify.js"></script>
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <script>
+            showError('@TempData["ErrorMessage"]');
+        </script>
+    }
     
 </body>
 

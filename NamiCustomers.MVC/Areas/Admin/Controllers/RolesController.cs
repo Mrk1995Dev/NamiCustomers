@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using Microsoft.Win32;
 using NamiCustomers.Abstractions.Dtos.Security.Dto.Roles;
+using NamiCustomers.MVC.Controllers;
 using NamiCustomers.MVC.Services;
 
 namespace NamiCustomers.MVC.Areas.Admin.Controllers;
 
 [Authorize(Policy = nameof(MyPloicies.AdminAccess))]
 [Area("Admin")]
-public class RolesController(IRoleService roleService) : Controller
+public class RolesController(IRoleService roleService) : MyBaseController
 {
     public async Task<IActionResult> Index()
     {
@@ -24,6 +27,13 @@ public class RolesController(IRoleService roleService) : Controller
     [HttpPost]
     public async Task<IActionResult> Create(AddNewRoleDto newRole)
     {
+        
+        //if (!ModelState.IsValid)
+        //{
+        //    SetModelStateError();
+        //    return View(newRole);
+        //}
+
         var result = await roleService.RegisterAsync(newRole);
         if (result.Succeeded)
         {

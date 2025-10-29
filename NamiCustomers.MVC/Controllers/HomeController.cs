@@ -22,9 +22,9 @@ public class HomeController(ITokenSessionService tokenSessionService, INamiKhodr
 
     [AllowAnonymous]
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
+    public IActionResult Error(string? message)
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,Errors=new List<string> { message} });
     }
 
     public IActionResult Privacy()

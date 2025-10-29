@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using IdentityModel.OidcClient;
+using Microsoft.AspNetCore.Authorization;
 using NamiCustomers.Application.Services.Dealers;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
@@ -17,14 +18,24 @@ public class DealerController(IDealerService dealerService) : ControllerBase
     }
 
     [HttpGet("[action]")]
-    public async Task<ResultDto<ReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumberAsync(string chassisVinNumber)
+    public async Task<IActionResult> GetReceptionsInformationByVinNumberAsync(string chassisVinNumber)
     {
-        return await dealerService.GetReceptionsInformationByVinNumber(chassisVinNumber);
+        var result=await dealerService.GetReceptionsInformationByVinNumber(chassisVinNumber);
+        if (result.Succeeded)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
     }
     [HttpGet("[action]")]
-    public async Task<ResultDto<BranchesByDealerResponse[]>> GetBranchesByDealerAsync(Guid dealerId)
+    public async Task<IActionResult> GetBranchesByDealerAsync(Guid dealerId)
     {
-        return await dealerService.GetBranchesByDealerAsync(dealerId);
+        var result= await dealerService.GetBranchesByDealerAsync(dealerId);
+        if (result.Succeeded)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
     }
 
 }

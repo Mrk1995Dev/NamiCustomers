@@ -16,13 +16,12 @@ public class UsersController(UserManager<ApplicationUser> userManager, RoleManag
 {
 
     [HttpGet("[action]")]
-    public async Task<ResultDto<AddUserRoleDto>> GetUserRolesAsync(string userId)
+    public async Task<IActionResult> GetUserRolesAsync(string userId)
     {
-        try
-        {
+      
             if (userId is null)
             {
-                return new ResultDto<AddUserRoleDto>(Infrastucture.Properties.Resources.errNotFound, false);
+                return BadRequest( ResultDto.Failure<AddUserRoleDto>(Infrastucture.Properties.Resources.errNotFound));
             }
             var user = await userManager.Users.SingleOrDefaultAsync(c => c.Id == userId);
             var roles = await userManager.GetRolesAsync(user);
@@ -42,16 +41,12 @@ public class UsersController(UserManager<ApplicationUser> userManager, RoleManag
                 Roles = rolesDtos
             };
 
-            return ResultDto.Success<AddUserRoleDto>(result);
-        }
-        catch (Exception ex)
-        {
-            return ResultDto.Failure<AddUserRoleDto>(ex.Message);
-        }
+            return Ok(ResultDto.Success<AddUserRoleDto>(result));
+        
     }
 
     [HttpGet("[action]")]
-    public async Task<ResultDto<UserDto>> GetAsync(string id)
+    public async Task<IActionResult> GetAsync(string id)
     {
         var user = await userManager.Users.Select(p => new UserDto
         {
@@ -65,11 +60,11 @@ public class UsersController(UserManager<ApplicationUser> userManager, RoleManag
             Email = p.Email
         }).FirstOrDefaultAsync(c => c.Id == id);
 
-        return ResultDto.Success<UserDto>(user);
+        return Ok(ResultDto.Success<UserDto>(user));
     }
 
     [HttpGet("[action]")]
-    public async Task<ResultDto<List<UserDto>>> GetAllAsync()
+    public async Task<IActionResult> GetAllAsync()
     {
         var users = await userManager.Users
             .Select(p => new UserDto
@@ -83,7 +78,7 @@ public class UsersController(UserManager<ApplicationUser> userManager, RoleManag
                 AccessFailedCount = p.AccessFailedCount,
                 Email = p.Email
             }).ToListAsync();
-        return ResultDto.Success<List<UserDto>>(users);
+        return Ok(ResultDto.Success<List<UserDto>>(users));
     }
 
     [HttpPost("[action]")]

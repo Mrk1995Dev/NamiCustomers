@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using IdentityModel.OidcClient;
+using Microsoft.AspNetCore.Authorization;
 
 using NamiCustomers.Abstractions.Dtos.Appointments;
 using NamiCustomers.Application.Services.Appointments;
@@ -13,28 +14,53 @@ namespace NamiCustomers.API.Controllers.v1;
 public class AppointmentController(IAppointmentService appointmentService, IDealerService dealerService) : ControllerBase
 {
     [HttpGet("{id}")]
-    public async Task<ResultDto<AppointmentDto>> Get(int id)
+    public async Task<IActionResult> Get(int id)
     {
-        return await appointmentService.GetAsync(id);
+        var result=  await appointmentService.GetAsync(id);
+        if (result.Succeeded)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
     }
     [HttpGet("GetAll")]
-    public async Task<ResultDto<List<AppointmentDto>>> GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        return await appointmentService.GetAllAsync();
+        var result= await appointmentService.GetAllAsync();
+        if (result.Succeeded)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
     }
     [HttpPost]
-    public async Task<ResultDto<List<AppointmentDto>>> Post(DefineAppointmentDto defineAppointmentDto)
+    public async Task<IActionResult> Post(DefineAppointmentDto defineAppointmentDto)
     {
-        return await appointmentService.DefineAppointments(defineAppointmentDto);
+        var result= await appointmentService.DefineAppointments(defineAppointmentDto);
+        if (result.Succeeded)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
     }
     [HttpDelete]
-    public async Task<ResultDto<AppointmentDto>> Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        return await appointmentService.RemoveAsync(id);
+        var result= await appointmentService.RemoveAsync(id);
+        if (result.Succeeded)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
     }
     [HttpPut]
-    public async Task<ResultDto<AppointmentDto>> Put(AppointmentDto AppointmentDto)
+    public async Task<IActionResult> Put(AppointmentDto AppointmentDto)
     {
-        return await appointmentService.EditAsync(AppointmentDto);
+        var result= await appointmentService.EditAsync(AppointmentDto);
+        if (result.Succeeded)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
     }
 }
