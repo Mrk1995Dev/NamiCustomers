@@ -260,6 +260,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to انتخاب کد خدمت یا عنوان خدمت اجباریست.
+        /// </summary>
+        public static string errRequiredServiceCodeName {
+            get {
+                return ResourceManager.GetString("errRequiredServiceCodeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to خطا ذخیره.
         /// </summary>
         public static string errSave {

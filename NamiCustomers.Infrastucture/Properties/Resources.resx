@@ -233,4 +233,7 @@
   <data name="errSubscriberNotFound" xml:space="preserve">
     <value>مشترک مورد نظر یافت نشد</value>
   </data>
+  <data name="errRequiredServiceCodeName" xml:space="preserve">
+    <value>انتخاب کد خدمت یا عنوان خدمت اجباریست</value>
+  </data>
 </root>

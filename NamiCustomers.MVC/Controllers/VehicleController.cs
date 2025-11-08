@@ -1,14 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using MimeKit;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
-using NamiCustomers.MVC.Filters;
 using NamiCustomers.MVC.Services;
-using NuGet.Protocol.Plugins;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NamiCustomers.MVC.Controllers;
 
@@ -66,7 +62,7 @@ public class VehicleController(
         {
             request.DealerId = Guid.Empty;
             request.BranchId = Guid.Empty;
-            SetError("انتخاب کد خدمت یا عنوان خدمت اجباریست");
+            SetError(Infrastucture.Properties.Resources.errRequiredServiceCodeName);
             return RedirectToAction("ServicesPrice", request);
         }
         var subscriber = subscriberService.CurrentSubscriber;
