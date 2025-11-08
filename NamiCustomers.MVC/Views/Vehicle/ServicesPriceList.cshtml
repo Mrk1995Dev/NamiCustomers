@@ -4,67 +4,80 @@
     ViewData["Title"] = "ServicesPriceList";
 }
 
-<h4> بهای قطعات</h4>
+<br />
+
+<div class="container direction-rtl">
+    <div class="card">
+        <div class="card-body p-2">
+            <div class="d-flex align-items-center justify-content-between">
+                <small class="ms-1">استعلام بهای قطعات </small>
+                <form action="#">
+
+                    <a title="بازگشت" href="/"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></a>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <hr />
 @if(Model.Any())
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model[0].RowNumber)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model[0].ServiceCode)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model[0].ServiceName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model[0].Price)
-                </th>
-              @*   <th>
-                    @Html.DisplayNameFor(model => model[0].BranchId)
-                </th> *@
-                <th>
-                    @Html.DisplayNameFor(model => model[0].PriceCustomer)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model[0].PriceWarranty)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RowNumber)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ServiceCode)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ServiceName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Price)
-                    </td>
-                  @*   <td>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <table class="w-100" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>  @Html.DisplayNameFor(model => model[0].RowNumber)</th>
+                            <th> @Html.DisplayNameFor(model => model[0].ServiceCode)</th>
+                            <th> @Html.DisplayNameFor(model => model[0].ServiceName)</th>
+
+                            <th>
+                                @Html.DisplayNameFor(model => model[0].PriceCustomer)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model[0].PriceWarranty)
+                            </th>
+                          
+                           
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RowNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ServiceCode)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ServiceName)
+                                </td>
+                             
+                                @*   <td>
                         @Html.DisplayFor(modelItem => item.BranchId)
                     </td> *@
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PriceCustomer)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PriceWarranty)
-                    </td>
-                     
-                </tr>
-            }
-        </tbody>
-    </table>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PriceCustomer)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PriceWarranty)
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+ 
 
 }
 
