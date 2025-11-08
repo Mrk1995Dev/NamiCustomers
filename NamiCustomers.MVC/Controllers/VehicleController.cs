@@ -8,6 +8,7 @@ using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 using NamiCustomers.MVC.Filters;
 using NamiCustomers.MVC.Services;
 using NuGet.Protocol.Plugins;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NamiCustomers.MVC.Controllers;
 
@@ -61,6 +62,13 @@ public class VehicleController(
     [HttpPost]
     public async Task<IActionResult> ServicesPriceList(ServicesPriceRequest request)
     {
+        if (string.IsNullOrEmpty(request.ServiceCode) && string.IsNullOrEmpty(request.ServiceName))
+        {
+            request.DealerId = Guid.Empty;
+            request.BranchId = Guid.Empty;
+            SetError("انتخاب کد خدمت یا عنوان خدمت اجباریست");
+            return RedirectToAction("ServicesPrice", request);
+        }
         var subscriber = subscriberService.CurrentSubscriber;
         var vinNumber = subscriber.VehicleModels?.FirstOrDefault(c => c.IsDefault)?.VinNumber;
         if (vinNumber != null)
