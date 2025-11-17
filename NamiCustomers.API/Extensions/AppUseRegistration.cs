@@ -32,7 +32,7 @@ namespace NamiCustomers.API.Extensions
         private static IApplicationBuilder UsingSwagger(this IApplicationBuilder app)
         {
             app.UseSwagger(options => options.OpenApiVersion =
-                                Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0);
+                                Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0);
 
             app.UseSwaggerUI(c =>
             {

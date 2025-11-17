@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NamiCustomers.API.Filters;
 using NamiCustomers.Application.Mappings;
 using NamiCustomers.Domain.Entities.Account;
 using Serilog;
@@ -281,38 +282,30 @@ public static class ServicesRegisteration
                     Type = ReferenceType.SecurityScheme
                 }
             };
-            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            {
-                Description = "Please insert JWT into field",
-                Name = "Authorization",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.Http,
-                Scheme = "Bearer",
-                BearerFormat = "JWT",
-            });
+            c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
 
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] { }
-        }
+            //        c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            //{
+            //    {
+            //        new OpenApiSecurityScheme
+            //        {
+            //            Reference = new OpenApiReference
+            //            {
+            //                Type = ReferenceType.SecurityScheme,
+            //                Id = "Bearer"
+            //            }
+            //        },
+            //        new string[] { }
+            //    }
 
-    });
+            //});
 
 
 
 
 
             // Enable the "Authorize" button in Swagger UI
-            //c.OperationFilter<SwaggerAuthorizeOperationFilter>();TODO moradi thi not work
+            // c.OperationFilter<SwaggerAuthorizeOperationFilter>();//TODO moradi thi not work
 
 
             // using System.Reflection;
