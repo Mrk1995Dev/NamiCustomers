@@ -1,26 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
 public class PartsPriceByChassisRequest
 {
+    [DisplayName("شناسه مدل خودرو")]
     public string VehicleModelId { get; set; }
-    public string PartNo { get; set; }
+    [DisplayName("شماره قطعه")]
+    public string? PartNo { get; set; }
+    [DisplayName("شماره شاسی")]
     public string ChassisVinNumber { get; set; }
+    [DisplayName("شناسه ملی")]
     public string NationalCodeOrEconomicCode { get; set; }
-    public string PartName { get; set; }
+    [DisplayName("نام قطعه")]
+    public string? PartName { get; set; }
+    [DisplayName("شماره تامین کننده")]
     public object PartSupplierNo { get; set; }
 }
 
 public class PartsPriceByChassisResponse
 {
+    [DisplayName("شماره ردیف")]
     public int RowNumber { get; set; }
+    [DisplayName("شماره قطعه")]
     public string PartNo { get; set; }
+    [DisplayName("نام قطعه")]
     public string PartName { get; set; }
+    [DisplayName("قیمت های قطعه")]
     public PartsPriceItemResponse[] Prices { get; set; }
+    [DisplayName("قیمت قطعه (بدون ارزش افزوده ) ")]
     public float Price { get; set; }
+
+    [DisplayName("قیمت قطعه (با احتساب ارزش افزوده ) ")]
+    public float PriceByTax =>Price + ((int)(Price * 10) / 100);
     public object PartSupplierNo { get; set; }
 }
 

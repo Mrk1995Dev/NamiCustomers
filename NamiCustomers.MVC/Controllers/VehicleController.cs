@@ -221,19 +221,6 @@ public class VehicleController(
         var result = await sevenSoftService.GetSpOrderingsBySubscriber("LGBL4AE07RD064874", "2360736541");//subscriber.NationalCode
         return View(result);
     }
-    //------------------
-
-
-    /// <summary>
-    /// استعلام بهای قطعات
-    /// </summary>
-    /// <param name="getPartsPriceByChassisRequest"></param>
-    /// <returns></returns>
-    public async Task<ResultDto<PartsPriceByChassisResponse[]>> GetPartsPriceByChassis(PartsPriceByChassisRequest getPartsPriceByChassisRequest)
-    {
-        var result = await sevenSoftService.GetPartsPriceByChassis(getPartsPriceByChassisRequest);
-        return result;
-    }
     /// <summary>
     /// ریز سفارشات
     /// </summary>
@@ -244,6 +231,47 @@ public class VehicleController(
         var result = await sevenSoftService.GetSpOrderingPartSpOrderingCode(id);
         return View(result);
     }
+    //------------------
+    [HttpGet]
+    public async Task<IActionResult> PartsPriceByChassis(PartsPriceByChassisRequest? getPartsPriceByChassisRequest)
+    {
+        if (getPartsPriceByChassisRequest == null)
+        {
+            getPartsPriceByChassisRequest = new PartsPriceByChassisRequest();
+        }
+
+        return View(getPartsPriceByChassisRequest);
+    }
+
+    /// <summary>
+    /// استعلام بهای قطعات
+    /// </summary>
+    /// <param name="getPartsPriceByChassisRequest"></param>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<IActionResult> PartsPriceDetailsByChassis(PartsPriceByChassisRequest getPartsPriceByChassisRequest)
+    {
+        if (string.IsNullOrEmpty(getPartsPriceByChassisRequest.PartName) && string.IsNullOrEmpty(getPartsPriceByChassisRequest.PartNo))
+        {
+            SetError(Infrastucture.Properties.Resources.errInputInValid);
+            return RedirectToAction("PartsPriceByChassis");
+        }
+        var subscriber = subscriberService.CurrentSubscriber;
+        var vinNumber = subscriber.VehicleModels?.FirstOrDefault(c => c.IsDefault)?.VinNumber;
+
+        getPartsPriceByChassisRequest.ChassisVinNumber = vinNumber;
+        getPartsPriceByChassisRequest.NationalCodeOrEconomicCode = subscriber.NationalCode;
+
+        var result = await sevenSoftService.GetPartsPriceByChassis(getPartsPriceByChassisRequest);
+
+        if (!result.Succeeded)
+        {
+            SetError(result.Message);
+            return RedirectToAction("PartsPriceByChassis", getPartsPriceByChassisRequest);
+        }
+        return View("PartsPriceDetailsByChassis", result.Data);
+    }
+
     //[HttpGet("[action]")]
     //public async Task<IActionResult> GetAllOrderStatusType()
     //{

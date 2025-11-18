@@ -1,0 +1,51 @@
+﻿@model IEnumerable<NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos.PartsPriceByChassisResponse>
+
+@{
+    ViewData["Title"] = "PartsPriceDetailsByChassis";
+}
+
+<h1>   بهای قطعات</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.RowNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PriceByTax)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RowNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PartNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PartName)
+                </td>
+                <td>
+                    @item.Price.ToString("000,0")
+                </td>
+                <td>
+                   @item.PriceByTax.ToString("000,0") 
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
