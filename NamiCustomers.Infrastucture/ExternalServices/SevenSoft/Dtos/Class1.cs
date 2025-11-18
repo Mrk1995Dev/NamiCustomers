@@ -99,6 +99,7 @@ public class SpOrderingPartSpOrderingCodeResponse
 
 public class SpOrderingsBySubscriberResponse
 {
+    public string TrackCode => $"{DealerNo}-{BranchNo}-{DealerSystemCode}";
     public int Code { get; set; }
     public string UniqueId { get; set; }
     public int DealerSystemCode { get; set; }

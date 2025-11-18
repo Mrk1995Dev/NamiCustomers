@@ -36,11 +36,11 @@ public class VehicleController(
         if (request.DealerId == Guid.Empty)
         {
             var dealers = await sevenSoftService.GetDealers();
-            List<SelectListItem> list = new List<SelectListItem> { new SelectListItem { Text = "", Value = Guid.Empty.ToString() ,Selected=true} };
-            var items = dealers.Select(c => new SelectListItem { Text =$"{c.DealerName}-{c.DealerNo}", Value = c.UniqueId }).ToList();
+            List<SelectListItem> list = new List<SelectListItem> { new SelectListItem { Text = "", Value = Guid.Empty.ToString(), Selected = true } };
+            var items = dealers.Select(c => new SelectListItem { Text = $"{c.DealerName}-{c.DealerNo}", Value = c.UniqueId }).ToList();
             list.AddRange(items);
             ViewBag.Dealers = list;
-          request = new ServicesPriceRequest();
+            request = new ServicesPriceRequest();
         }
         return View(request);
     }
@@ -54,7 +54,7 @@ public class VehicleController(
     public JsonResult GetBranchesByDealer(Guid dealerId)
     {
         var data = sevenSoftService.GetBranchesByDealer(dealerId).Result;
-        var branches = data.Where(c=>c.BranchNo=="200").Select(c => new SelectListItem { Text =$" {c.BranchName}-کد {c.BranchNo} -گرید {c.BranchGrade}" , Value = c.UniqueId }).ToList();
+        var branches = data.Where(c => c.BranchNo == "200").Select(c => new SelectListItem { Text = $" {c.BranchName}-کد {c.BranchNo} -گرید {c.BranchGrade}", Value = c.UniqueId }).ToList();
 
         return Json(branches);
     }
@@ -209,30 +209,40 @@ public class VehicleController(
         }
         return RedirectToAction("Index");
     }
-
+    /// <summary>
+    /// لیست سفارشات
+    /// </summary>
+    /// <returns></returns>
+    public async Task<IActionResult> OrderingsBySubscriber()
+    {
+        var subscriber = subscriberService.CurrentSubscriber;
+        var vinNumber = subscriber.VehicleModels?.FirstOrDefault(c => c.IsDefault)?.VinNumber;
+        //toDo
+        var result = await sevenSoftService.GetSpOrderingsBySubscriber("LGBL4AE07RD064874", "2360736541");//subscriber.NationalCode
+        return View(result);
+    }
     //------------------
 
 
-    [HttpGet("[action]")]
+    /// <summary>
+    /// استعلام بهای قطعات
+    /// </summary>
+    /// <param name="getPartsPriceByChassisRequest"></param>
+    /// <returns></returns>
     public async Task<ResultDto<PartsPriceByChassisResponse[]>> GetPartsPriceByChassis(PartsPriceByChassisRequest getPartsPriceByChassisRequest)
     {
         var result = await sevenSoftService.GetPartsPriceByChassis(getPartsPriceByChassisRequest);
         return result;
     }
-    
-    public async Task<IActionResult> OrderingsBySubscriber()
+    /// <summary>
+    /// ریز سفارشات
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public async Task<IActionResult> SpOrderingPartSpOrderingCode(string id)
     {
-        var subscriber = subscriberService.CurrentSubscriber;
-        var vinNumber = subscriber.VehicleModels?.FirstOrDefault(c => c.IsDefault)?.VinNumber;
-        
-        var result = await sevenSoftService.GetSpOrderingsBySubscriber(vinNumber, subscriber.NationalCode);
+        var result = await sevenSoftService.GetSpOrderingPartSpOrderingCode(id);
         return View(result);
-    }
-    [HttpGet("[action]")]
-    public async Task<SpOrderingPartSpOrderingCodeResponse[]> GetSpOrderingPartSpOrderingCode(string spOrderingCode)
-    {
-        var result = await sevenSoftService.GetSpOrderingPartSpOrderingCode(spOrderingCode);
-        return result;
     }
     //[HttpGet("[action]")]
     //public async Task<IActionResult> GetAllOrderStatusType()
