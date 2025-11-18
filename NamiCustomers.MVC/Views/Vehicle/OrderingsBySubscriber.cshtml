@@ -1,0 +1,328 @@
+﻿@model IEnumerable<NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos.SpOrderingsBySubscriberResponse>
+
+@{
+    ViewData["Title"] = "OrderingsBySubscriber";
+}
+
+<h1>لیست سفارشات</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UniqueId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DealerSystemCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BranchSystemCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DealerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DealerNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BranchId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BranchNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubscriberChassisAllocationId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubscriberName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceptionDealerSystemCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RegisterPersonnelId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PersonnelName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderTypeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderTypeLocalizedName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RelatedSystemCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderPriorityTypeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderPriorityTypeLocalizedName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderReceiveTypeLocalizedName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderStatusTypeLocalizedName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentTypeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentTypeLocalizedName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DestinationDealerId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DestinationBranchId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsBackOrder)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SentDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrSentDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrSentTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatusDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalFee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Discount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DiscountPercent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tax)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Toll)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndFee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SpExchangeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SpOrderingSourceWareHouseId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SpOrderingSourceWareHouse)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VinNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChassisNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TemporaryReceiptDealerSystemCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClientId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsDirty)
+            </th>
+             
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UniqueId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DealerSystemCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BranchSystemCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DealerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DealerNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BranchId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BranchNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubscriberChassisAllocationId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubscriberName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceptionDealerSystemCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegisterPersonnelId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PersonnelName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderTypeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderTypeLocalizedName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RelatedSystemCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderPriorityTypeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderPriorityTypeLocalizedName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderReceiveTypeLocalizedName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderStatusTypeLocalizedName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentTypeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentTypeLocalizedName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DestinationDealerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DestinationBranchId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsBackOrder)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SentDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrSentDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrSentTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatusDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalFee)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Discount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DiscountPercent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tax)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Toll)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndFee)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SpExchangeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SpOrderingSourceWareHouseId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SpOrderingSourceWareHouse)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VinNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChassisNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Number)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TemporaryReceiptDealerSystemCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClientId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsDirty)
+            </td>
+            
+        </tr>
+}
+    </tbody>
+</table>

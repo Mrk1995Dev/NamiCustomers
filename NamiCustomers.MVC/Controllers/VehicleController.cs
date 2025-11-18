@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.IdentityModel.JsonWebTokens;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
@@ -45,6 +46,10 @@ public class VehicleController(
     }
 
 
+
+
+
+
     [HttpGet]
     public JsonResult GetBranchesByDealer(Guid dealerId)
     {
@@ -53,6 +58,10 @@ public class VehicleController(
 
         return Json(branches);
     }
+
+
+
+
 
 
     [HttpPost]
@@ -200,4 +209,46 @@ public class VehicleController(
         }
         return RedirectToAction("Index");
     }
+
+    //------------------
+
+
+    [HttpGet("[action]")]
+    public async Task<ResultDto<PartsPriceByChassisResponse[]>> GetPartsPriceByChassis(PartsPriceByChassisRequest getPartsPriceByChassisRequest)
+    {
+        var result = await sevenSoftService.GetPartsPriceByChassis(getPartsPriceByChassisRequest);
+        return result;
+    }
+    
+    public async Task<IActionResult> OrderingsBySubscriber()
+    {
+        var subscriber = subscriberService.CurrentSubscriber;
+        var vinNumber = subscriber.VehicleModels?.FirstOrDefault(c => c.IsDefault)?.VinNumber;
+        
+        var result = await sevenSoftService.GetSpOrderingsBySubscriber(vinNumber, subscriber.NationalCode);
+        return View(result);
+    }
+    [HttpGet("[action]")]
+    public async Task<SpOrderingPartSpOrderingCodeResponse[]> GetSpOrderingPartSpOrderingCode(string spOrderingCode)
+    {
+        var result = await sevenSoftService.GetSpOrderingPartSpOrderingCode(spOrderingCode);
+        return result;
+    }
+    //[HttpGet("[action]")]
+    //public async Task<IActionResult> GetAllOrderStatusType()
+    //{
+    //    var orderStatusList = await sevenSoftService.GetAllOrderStatusType();
+    //    List<SelectListItem> list = new List<SelectListItem> { new SelectListItem { Text = "", Value = Guid.Empty.ToString(), Selected = true } };
+    //    var items = orderStatusList.Select(c => new SelectListItem { Text = $"{c.OrderStatusTypeLocalizedName}-{c.Code}", Value = c.UniqueId }).ToList();
+    //    list.AddRange(items);
+    //    ViewBag.OrderStatusList = list;
+
+    //}
+
+
+
+
+
+
+
 }
