@@ -32,9 +32,9 @@
                 <div id="basicwizard" class="colorful-tab">
 
 
-                    <ul class="nav nav-pills bg-light nav-justified form-wizard-header mb-4">
+                    <ul class="nav nav-pills nav-justified form-wizard-header mb-4" style="border-bottom-right-radius:0.375rem !important; -webkit-border-top-right-radius:0.375rem !important;background-color: #979797 !important;">
                         <li class="nav-item">
-                            <a href="#step1" data-bs-toggle="tab" data-toggle="tab" class="nav-link rounded-0 pt-2 pb-2 active">
+                            <a href="#step1" data-bs-toggle="tab" data-toggle="tab" style="border-bottom-right-radius:0.375rem !important; -webkit-border-top-right-radius:0.375rem !important" class="nav-link rounded-0 pt-2 pb-2 active">
                                 <i class="mdi mdi-account-circle me-1"></i>
                                 <span class="d-none d-sm-inline">شروع</span>
                             </a>
@@ -152,7 +152,7 @@
 
                             <div class="form-group">
                                 <label class="form-label"> توضیحات</label>
-                                <textarea class="form-control form-control-clicked" asp-for="@Model.Description">
+                                <textarea id="@Model.Description"  class="form-control form-control-clicked" asp-for="@Model.Description">
                                     </textarea>
                             </div>
 
@@ -164,15 +164,75 @@
 
                         <div class="tab-pane fade" id="step3" role="tabpanel" aria-labelledby="modern-tab">
 
-                            <p id="lblSubCountryId"></p>
-                            <p id="lblCityId"></p>
-                            <p id="lblDealerId"></p>
-                            <p id="lblBranchId"></p>
-                            <p id="lblServerGroupId"></p>
-                            <p id="lblServerGroupDateId"></p>
-                            <p id="lblServerGroupTimeId"></p>
-                            <p id="lblKilometer"></p>
-                            <p id="lblDescription"></p>
+                            <div class="cart-table card mb-3">
+                                <div class="table-responsive card-body " style="display: flex; justify-content: center;">
+                                    <table class="table mb-0" style="text-align: right; direction: rtl;">
+                                        @*                          <thead class="thead-light">
+                                            <tr style="text-align:center">
+                                                <th colspan="2"></th>
+
+
+                                            </tr>
+                                        </thead> *@
+                                        <tbody>
+                                            <tr style="border-bottom:1px solid rgb(139 135 135 / 44%)">
+                                                <th>   استان</th>
+                                                <td id="lblSubCountryId" style="font-weight:bold;">   </td>
+
+                                            </tr>
+                                            <tr style="border-bottom:1px solid rgb(139 135 135 / 44%)">
+                                                <th>    شهر </th>
+                                                <td id="lblCityId" style="font-weight:bold;">    </td>
+
+                                            </tr>
+                                            <tr style="border-bottom:1px solid rgb(139 135 135 / 44%)">
+                                                <th>    عاملیت انتخابی</th>
+                                                <td id="lblDealerId" style="font-weight:bold;">     </td>
+
+                                            </tr>
+                                            <tr style="border-bottom:1px solid rgb(139 135 135 / 44%)">
+                                                <th>    شعبه انتخابی</th>
+                                                <td id="lblBranchId" style="font-weight:bold;">  </td>
+
+                                            </tr>
+                                            <tr style="border-bottom:1px solid rgb(139 135 135 / 44%)">
+                                                <th>    نوع خدمت </th>
+                                                <td id="lblServerGroupId" style="font-weight:bold;">   </td>
+
+                                            </tr>
+                                            <tr style="border-bottom:1px solid rgb(139 135 135 / 44%)">
+                                                <th>    تاریخ نوبت</th>
+                                                <td id="lblServerGroupDateId" style="font-weight:bold;">  </td>
+
+                                            </tr>
+                                            <tr style="border-bottom:1px solid rgb(139 135 135 / 44%)">
+                                                <th>    ساعت نوبت</th>
+                                                <td id="lblServerGroupTimeId" style="font-weight:bold;">     </td>
+                                            </tr>
+                                            <tr style="border-bottom:1px solid rgb(139 135 135 / 44%)">
+                                                <th>    کیلومتر فعلی</th>
+                                                <td id="lblKilometer" style="font-weight:bold;">   </td>
+
+                                            </tr>
+                                            <tr>
+                                                <th>    توضیحات</th>
+                                                <td id="lblDescription" style="font-weight:bold;">    </td>
+
+                                            </tr>
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+
+
+
+
+
+
+
 
 
                             <button style="display:none" name="action" class="insertbooking btn btn-primary" type="submit">ثبت</button>
@@ -187,10 +247,10 @@
 
 
                             <li class="next list-inline-item">
-                                <a id="btnNext" href="javascript: void(0);" class="btn btn-secondary">بعدی</a>
+                                <a id="btnNext" href="javascript: void(0);" class="btn m-1 btn-outline-danger" style="border: 1px solid #f00029 !important">بعدی</a>
                             </li>
                             <li class="previous list-inline-item float-end">
-                                <a id="btnPrevious" href="javascript: void(0);" class="btn btn-secondary">قبلی</a>
+                                <a id="btnPrevious" href="javascript: void(0);" class="btn m-1 btn-outline-secondary" style="border: 1px solid #6c757d !important">قبلی</a>
                             </li>
                         </ul>
                     </div>
@@ -319,7 +379,7 @@
                 else if($('#step3').hasClass('active'))
                 {
                     $('.insertbooking').click();
-                }  
+                }
                    });
 
 
