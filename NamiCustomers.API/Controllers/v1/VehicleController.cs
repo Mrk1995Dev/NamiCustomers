@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Application.Services.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
+using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 using System.Reflection;
 
 namespace NamiCustomers.API.Controllers.v1;
@@ -115,5 +116,30 @@ public class VehicleController(IVehicleService vehicleService, ISevenSoftService
         return ResultDto.Success<ActiveMainChassisGuaranteeResponse>(
       mapper.Map<ActiveMainChassisGuaranteeResponse>(result)
        );
+    }
+
+    [HttpGet("[action]")]
+    public async Task<ResultDto<PartsPriceByChassisResponse[]>> GetPartsPriceByChassis(PartsPriceByChassisRequest getPartsPriceByChassisRequest)
+    {
+        var result = await sevenSoftService.GetPartsPriceByChassis(getPartsPriceByChassisRequest);
+        return result;
+    }
+    [HttpGet("[action]")]
+    public async Task<SpOrderingsBySubscriberResponse[]> GetSpOrderingsBySubscriber(string chassisVinNumber, string nationalCodeOrEconomicCode)
+    {
+        var result = await sevenSoftService.GetSpOrderingsBySubscriber(chassisVinNumber,nationalCodeOrEconomicCode);
+        return result;
+    }
+    [HttpGet("[action]")]
+    public async Task<SpOrderingPartSpOrderingCodeResponse[]> GetSpOrderingPartSpOrderingCode(string spOrderingCode)
+    {
+        var result = await sevenSoftService.GetSpOrderingPartSpOrderingCode(spOrderingCode);
+        return result;
+    }
+    [HttpGet("[action]")]
+    public async Task<AllOrderStatusTypeResponse[]> GetAllOrderStatusType()
+    {
+        var result = await sevenSoftService.GetAllOrderStatusType();
+        return result;
     }
 }

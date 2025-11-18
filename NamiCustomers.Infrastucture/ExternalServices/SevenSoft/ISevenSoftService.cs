@@ -195,11 +195,62 @@ public interface ISevenSoftService
     /// <param name="servicesPriceRequest"></param>
     /// <returns></returns>
     Task<ResultDto<ServicesPriceResponse[]>> GetServicesPriceByBranchId(ServicesPriceRequest servicesPriceRequest);
+    /// <summary>
+    /// دریافت لیست سفارشات
+    /// </summary>
+    /// <param name="ChassisVinNumber"></param>
+    /// <param name="NationalCodeOrEconomicCode"></param>
+    /// <returns></returns>
+    Task<SpOrderingsBySubscriberResponse[]> GetSpOrderingsBySubscriber(string ChassisVinNumber, string NationalCodeOrEconomicCode);
+    /// <summary>
+    /// ریز سفارشات
+    /// </summary>
+    /// <param name="SpOrderingCode"></param>
+    /// <returns></returns>
+    Task<SpOrderingPartSpOrderingCodeResponse[]> GetSpOrderingPartSpOrderingCode(string SpOrderingCode);
+    /// <summary>
+    /// دریافت لیست قیمت قطعات
+    /// </summary>
+    /// <param name="getPartsPriceByChassisRequest"></param>
+    /// <returns></returns>
+    Task<ResultDto<PartsPriceByChassisResponse[]>> GetPartsPriceByChassis(PartsPriceByChassisRequest getPartsPriceByChassisRequest);
+    /// <summary>
+    /// وضعیت سفارشات
+    /// </summary>
+    /// <returns></returns>
+    Task<AllOrderStatusTypeResponse[]> GetAllOrderStatusType();
 }
 
 public class SevenSoftService : ISevenSoftService
 {
-    private string _baseUrl = Infrastucture.Properties.Resource7Soft.BaseUrl;
+    
+    public async Task<ResultDto<PartsPriceByChassisResponse[]>> GetPartsPriceByChassis(PartsPriceByChassisRequest getPartsPriceByChassisRequest)
+    {
+        try
+        {
+            var data = await RestUtility.PostData<PartsPriceByChassisResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetPartsPriceByChassis, getPartsPriceByChassisRequest);
+            return ResultDto.Success<PartsPriceByChassisResponse[]>(data);
+        }
+        catch (Exception ex)
+        {
+            return ResultDto.Failure<PartsPriceByChassisResponse[]>(ex.Message);
+        }
+    }
+    public async Task<AllOrderStatusTypeResponse[]> GetAllOrderStatusType()
+    {
+        return await RestUtility.GetData<AllOrderStatusTypeResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetAllOrderStatusTypeResponse, "");
+    }
+
+    public async Task<SpOrderingPartSpOrderingCodeResponse[]> GetSpOrderingPartSpOrderingCode(string SpOrderingCode)
+    {
+        return await RestUtility.GetData<SpOrderingPartSpOrderingCodeResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, string.Format(Resource7Soft.GetSpOrderingPartSpOrderingCode, SpOrderingCode), "");
+    }
+
+    public async Task<SpOrderingsBySubscriberResponse[]> GetSpOrderingsBySubscriber(string ChassisVinNumber, string NationalCodeOrEconomicCode)
+    {
+        return await RestUtility.GetData<SpOrderingsBySubscriberResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, string.Format(Resource7Soft.GetSpOrderingsBySubscriber, ChassisVinNumber, NationalCodeOrEconomicCode), "");
+    }
+
 
     public async Task<List<RepairAdvisersResponse>> GetAllServerGroupRepairAdvisers(Guid? workShopTimeTableId, Guid? serverGroupId)
     {
@@ -207,11 +258,11 @@ public class SevenSoftService : ISevenSoftService
     }
     public async Task<BranchesByDealerResponse[]> GetBranchesByDealer(Guid dealerId)
     {
-        return await RestUtility.GetData<BranchesByDealerResponse[]>(_baseUrl, Resource7Soft.GetBranchesByDealer, dealerId);
+        return await RestUtility.GetData<BranchesByDealerResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetBranchesByDealer, dealerId);
     }
     public async Task<ReceptionsInformationByVinNumberResponse[]> GetReceptionsInformationByVinNumber(string chassisVinNumber)
     {
-        return await RestUtility.GetData<ReceptionsInformationByVinNumberResponse[]>(_baseUrl, Resource7Soft.GetReceptionsInformationByVinNumber, chassisVinNumber);
+        return await RestUtility.GetData<ReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetReceptionsInformationByVinNumber, chassisVinNumber);
     }
 
 
@@ -219,24 +270,26 @@ public class SevenSoftService : ISevenSoftService
     {
         try
         {
-            var data = await RestUtility.PostData<ServicesPriceResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrl, Resource7Soft.GetServicesPriceByBranchId, servicesPriceRequest);
+            var data = await RestUtility.PostData<ServicesPriceResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetServicesPriceByBranchId, servicesPriceRequest);
             return ResultDto.Success<ServicesPriceResponse[]>(data);
         }
         catch (Exception ex)
         {
-            return ResultDto.Failure < ServicesPriceResponse[] >(ex.Message);
+            return ResultDto.Failure<ServicesPriceResponse[]>(ex.Message);
         }
     }
+
+
 
 
 
     public async Task<DealerResponse[]> GetDealers()
     {
-        return await RestUtility.GetData<DealerResponse[]>(_baseUrl, Resource7Soft.GetDealers, "");
+        return await RestUtility.GetData<DealerResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetDealers, "");
     }
     public async Task<ActiveMainChassisGuaranteeResponse> GetActiveMainChassisGuarantee(string vinNumber)
     {
-        return await RestUtility.GetData<ActiveMainChassisGuaranteeResponse>(_baseUrl, Resource7Soft.GetActiveMainChassisGuarantee, vinNumber);
+        return await RestUtility.GetData<ActiveMainChassisGuaranteeResponse>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetActiveMainChassisGuarantee, vinNumber);
     }
     public async Task<SevenSubscriberResponse> GetSubscriberByNationalCode(string nationalCode)
     {
@@ -244,7 +297,7 @@ public class SevenSoftService : ISevenSoftService
     }
     public async Task<ChassisInformationResponse[]> GetAllChassisInformation(string nationalCode)
     {
-        return await RestUtility.GetData<ChassisInformationResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrl, string.Format(Resource7Soft.GetAllChassisInformation, nationalCode), "");
+        return await RestUtility.GetData<ChassisInformationResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, string.Format(Resource7Soft.GetAllChassisInformation, nationalCode), "");
     }
 
 
@@ -264,31 +317,31 @@ public class SevenSoftService : ISevenSoftService
 
     public async Task<ChassisInformationByVinNumberResponse> GetChassisInformationByVinNumber(string vinNumber)
     {
-        return await RestUtility.GetData<ChassisInformationByVinNumberResponse>(_baseUrl, Resource7Soft.GetChassisInformationByVinNumber, vinNumber);
+        return await RestUtility.GetData<ChassisInformationByVinNumberResponse>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetChassisInformationByVinNumber, vinNumber);
     }
     public async Task<string> GetRelationCustomerInfoByVinNumber(string chassisVinNumber, string nationalCodeOrEconomicCode, string mobile)
     {
         string qStr = $"?ChassisVinNumber={chassisVinNumber}&NationalCodeOrEconomicCode={nationalCodeOrEconomicCode}&Mobile={mobile}";
-        return await RestUtility.GetData<string>(_baseUrl, Resource7Soft.RelationCustomerInfoByVinNumber, qStr);
+        return await RestUtility.GetData<string>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.RelationCustomerInfoByVinNumber, qStr);
     }
 
     public async Task<string[]> GetSpecificCases(string chassisVinNumber, string nationalCodeOrEconomicCode, string mobile)
     {
         string qStr = $"?ChassisVinNumber={chassisVinNumber}&NationalCodeOrEconomicCode={nationalCodeOrEconomicCode}&Mobile={mobile}";
-        return await RestUtility.GetData<string[]>(_baseUrl, Resource7Soft.GetSpecificCases, qStr);
+        return await RestUtility.GetData<string[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetSpecificCases, qStr);
     }
 
     public async Task<ResultDto<ReceptionsPartsInformationByReceptionCodeResponse[]>> GetReceptionsPartsInformationByReceptionCode(string ReceptionCode, string NationalCodeOrEconomicCode)
     {
         try
         {
-            var data = await RestUtility.GetData<ReceptionsPartsInformationByReceptionCodeResponse[]>(_baseUrl, Resource7Soft.GetReceptionsPartsInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
+            var data = await RestUtility.GetData<ReceptionsPartsInformationByReceptionCodeResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetReceptionsPartsInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
             return new ResultDto<ReceptionsPartsInformationByReceptionCodeResponse[]>("", true, data);
         }
         catch (Exception ex)
         {
 
-            return new ResultDto<ReceptionsPartsInformationByReceptionCodeResponse[]>(ex.Message, false);
+            return   ResultDto.Failure<ReceptionsPartsInformationByReceptionCodeResponse[]>(ex.Message);
         }
 
     }
@@ -297,7 +350,7 @@ public class SevenSoftService : ISevenSoftService
     {
         try
         {
-            var data = await RestUtility.GetData<ReceptionsInServicesInformationByReceptionCodeResponse[]>(_baseUrl, Resource7Soft.GetReceptionsInServicesInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
+            var data = await RestUtility.GetData<ReceptionsInServicesInformationByReceptionCodeResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetReceptionsInServicesInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
 
             return new ResultDto<ReceptionsInServicesInformationByReceptionCodeResponse[]>("", true, data);
         }
@@ -313,7 +366,7 @@ public class SevenSoftService : ISevenSoftService
     {
         try
         {
-            var data = await RestUtility.GetData<ReceptionsOutServicesInformationByReceptionCodeResponse[]>(_baseUrl, Resource7Soft.GetReceptionsOutServicesInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
+            var data = await RestUtility.GetData<ReceptionsOutServicesInformationByReceptionCodeResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetReceptionsOutServicesInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
 
             return new ResultDto<ReceptionsOutServicesInformationByReceptionCodeResponse[]>("", true, data);
         }
@@ -327,7 +380,7 @@ public class SevenSoftService : ISevenSoftService
     {
         try
         {
-            var data = await RestUtility.GetData<ReceptionCustomerStatementInformationByReceptionCodeResponse[]>(_baseUrl, Resource7Soft.GetReceptionCustomerStatementInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
+            var data = await RestUtility.GetData<ReceptionCustomerStatementInformationByReceptionCodeResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetReceptionCustomerStatementInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
             return new ResultDto<ReceptionCustomerStatementInformationByReceptionCodeResponse[]>("", true, data);
         }
         catch (Exception ex)
@@ -342,7 +395,7 @@ public class SevenSoftService : ISevenSoftService
     {
         try
         {
-            var data = await RestUtility.PostData<ReceptionsInformationByReceptionIDResponse>(_baseUrl, Resource7Soft.getReceptionsInformationByReceptionID, ReceptionCode);
+            var data = await RestUtility.PostData<ReceptionsInformationByReceptionIDResponse>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.getReceptionsInformationByReceptionID, ReceptionCode);
             return new ResultDto<ReceptionsInformationByReceptionIDResponse>("", true, data);
         }
         catch (Exception ex)
@@ -407,7 +460,7 @@ public class SevenSoftService : ISevenSoftService
     {
         try
         {
-            var data = await RestUtility.GetData<bool>(_baseUrl, Resource7Soft.CheckIsValidKilometer, $"?VinNumber={VinNumber}&Kilometer={kilometer}");
+            var data = await RestUtility.GetData<bool>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.CheckIsValidKilometer, $"?VinNumber={VinNumber}&Kilometer={kilometer}");
             return new(true, "");
         }
         catch (Exception ex)

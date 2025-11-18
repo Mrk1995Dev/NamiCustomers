@@ -1,9 +1,12 @@
 ﻿using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using NamiCustomers.API.Filters;
+using Microsoft.OpenApi;
+using Mono.TextTemplating.CodeCompilation;
+using NamiCustomers.API.Services.Validator;
 using NamiCustomers.Application.Mappings;
 using NamiCustomers.Domain.Entities.Account;
 using Serilog;
@@ -242,71 +245,49 @@ public static class ServicesRegisteration
 
         services.AddSwaggerGen(c =>
         {
+
             c.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "Nami.Customers",
                 Version = "v1.0",
-                //Description = "تو روحت یادمون میره برداریم",
-                //Contact = new OpenApiContact
-                //{
-                //    Name = "Ali Moradi => تو روحت یادمون میره برداریم",
-                //    Email = "a.moradi@namikhodro.com",
-                //    Url = new Uri("https://www.linkedin.com/in/alimoradi573/")
-                //}
             });
+
             c.SwaggerDoc("v2", new OpenApiInfo
             {
                 Title = "Nami.Customers",
                 Version = "v2.0",
-                //Description = "تو روحت یادمون میره برداریم",
-                //Contact = new OpenApiContact
-                //{
-                //	Name = "Ali Moradi => تو روحت یادمون میره برداریم",
-                //	Email = "a.moradi@namikhodro.com",
-                //	Url = new Uri("https://www.linkedin.com/in/alimoradi573/")
-                //}
+
             });
 
             c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
+            // Step 1: Define the security scheme (unchanged)
+            // تعریف Bearer
             var securityScheme = new OpenApiSecurityScheme
             {
-                Name = "JWT Authentication",
-                Description = "توکن بازگشتی از متد لاگین رو در کادر مربوطه کپی کنید:",
-                In = ParameterLocation.Header,
                 Type = SecuritySchemeType.Http,
-                Scheme = "bearer", // must be lower case
+                Scheme = "bearer",
                 BearerFormat = "JWT",
-                Reference = new OpenApiReference
-                {
-                    Id = JwtBearerDefaults.AuthenticationScheme,
-                    Type = ReferenceType.SecurityScheme
-                }
+                In = ParameterLocation.Header,
+                Name = "Authorization",
+                Description = "فقط توکن رو وارد کن (بدون Bearer)",
+
             };
-            c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
-
-            //        c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            //{
-            //    {
-            //        new OpenApiSecurityScheme
-            //        {
-            //            Reference = new OpenApiReference
-            //            {
-            //                Type = ReferenceType.SecurityScheme,
-            //                Id = "Bearer"
-            //            }
-            //        },
-            //        new string[] { }
-            //    }
-
-            //});
+            c.AddSecurityDefinition("Bearer", securityScheme);
 
 
+            // Step 2: اعمال طرح امنیتی global (تصحیح‌شده برای .NET 10 / v10)
 
+            c.AddSecurityRequirement(r => new OpenApiSecurityRequirement
+    {
+        {
+           new OpenApiSecuritySchemeReference(securityScheme.Scheme) // این کلاس وجود دارد!
+          ,
+            new List<string>()  // بدون scopes برای Bearer پایه
+        }
+    });
 
-
-            // Enable the "Authorize" button in Swagger UI
-            // c.OperationFilter<SwaggerAuthorizeOperationFilter>();//TODO moradi thi not work
-
+            //diablo 
 
             // using System.Reflection;
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -319,16 +300,53 @@ public static class ServicesRegisteration
 
     private static IServiceCollection ConfigureJwt(this IServiceCollection services, IConfiguration configuration)
     {
+
+        services.AddScoped<ITokenValidator, TokenValidate>();
+
+
         var jwtSettings = configuration.GetSection("JWTSettings");
         services.AddAuthentication(options =>
         {
+            options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(options =>
         {
             options.RequireHttpsMetadata = false;
-            options.SaveToken = true;
+            options.SaveToken = true;//در کنترل ها وسایر قسمت ها بتوانم اطلاعات توکن را بخوانم httpContext.getTokenAsync()
+
+            options.Events = new JwtBearerEvents
+            {
+                OnAuthenticationFailed = context =>
+                {
+                    Console.WriteLine("Authentication failed: " + context.Exception.Message);
+                    return Task.CompletedTask;
+                },
+                OnTokenValidated = context =>
+                {
+                    //validate ekhtesasi
+                    //log
+                    var tokenValidatorService = context.HttpContext.RequestServices.GetRequiredService<ITokenValidator>();
+                    return tokenValidatorService.Execute(context);
+                    //Console.WriteLine("Token validated for: " + context.Principal.Identity.Name);
+                    //return Task.CompletedTask;
+                },
+                OnChallenge = context =>
+                {
+                    return Task.CompletedTask;
+                }
+               ,
+                OnMessageReceived = context =>
+                {
+                    //زمانی که درخواستی دریافت کردم قبل از هر واقعه دیگری کار خاصی روی درخواست انجام دهم
+                    return Task.CompletedTask;
+                },
+                OnForbidden = context =>
+                {
+                    return Task.CompletedTask;
+                }
+            };
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
