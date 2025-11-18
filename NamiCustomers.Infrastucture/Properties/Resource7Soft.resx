@@ -129,7 +129,7 @@
   <data name="GetActiveMainChassisGuarantee" xml:space="preserve">
     <value>api/Guaranty/GetActiveMainChassisGuarantee?vinNumber=</value>
   </data>
-  <data name="BaseUrl" xml:space="preserve">
+  <data name="BaseUrlCrm" xml:space="preserve">
     <value>http://7soft.namikhodro.com:8088/</value>
   </data>
   <data name="GetDealers" xml:space="preserve">
@@ -212,5 +212,17 @@
   </data>
   <data name="GetServicesPriceByBranchId" xml:space="preserve">
     <value>api/PartServicePrice/GetServicesPriceByBranchId</value>
+  </data>
+  <data name="GetPartsPriceByChassis" xml:space="preserve">
+    <value>api/PartServicePrice/GetPartsPriceByChassis</value>
+  </data>
+  <data name="GetAllOrderStatusTypeResponse" xml:space="preserve">
+    <value>api/SpOrdering/GetAllOrderStatusType</value>
+  </data>
+  <data name="GetSpOrderingsBySubscriber" xml:space="preserve">
+    <value>api/SpOrdering/GetSpOrderingsBySubscriber?ChassisVinNumber={0}&amp;NationalCodeOrEconomicCode={1}</value>
+  </data>
+  <data name="GetSpOrderingPartSpOrderingCode" xml:space="preserve">
+    <value>api/SpOrdering/GetSpOrderingPartSpOrderingCode?SpOrderingCode={0}</value>
   </data>
 </root>

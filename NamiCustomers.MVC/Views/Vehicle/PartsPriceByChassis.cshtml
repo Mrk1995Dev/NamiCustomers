@@ -1,0 +1,35 @@
+﻿@model NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos.PartsPriceByChassisRequest
+
+@{
+    ViewData["Title"] = "PartsPriceByChassis";
+}
+
+ 
+<h4> استعلام بهای قطعات</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-controller="vehicle" asp-action="PartsPriceDetailsByChassis">
+           
+            <div class="form-group">
+                <label asp-for="PartNo" class="control-label"></label>
+                <input asp-for="PartNo" class="form-control" />
+                
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PartName" class="control-label"></label>
+                <input asp-for="PartName" class="form-control" />
+                
+            </div>
+            <div class="form-group">
+                <input type="submit" value="جستجو" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

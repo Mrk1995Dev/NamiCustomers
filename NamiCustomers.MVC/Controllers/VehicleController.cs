@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.IdentityModel.JsonWebTokens;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
@@ -35,24 +36,32 @@ public class VehicleController(
         if (request.DealerId == Guid.Empty)
         {
             var dealers = await sevenSoftService.GetDealers();
-            List<SelectListItem> list = new List<SelectListItem> { new SelectListItem { Text = "", Value = Guid.Empty.ToString() ,Selected=true} };
-            var items = dealers.Select(c => new SelectListItem { Text =$"{c.DealerName}-{c.DealerNo}", Value = c.UniqueId }).ToList();
+            List<SelectListItem> list = new List<SelectListItem> { new SelectListItem { Text = "", Value = Guid.Empty.ToString(), Selected = true } };
+            var items = dealers.Select(c => new SelectListItem { Text = $"{c.DealerName}-{c.DealerNo}", Value = c.UniqueId }).ToList();
             list.AddRange(items);
             ViewBag.Dealers = list;
-          request = new ServicesPriceRequest();
+            request = new ServicesPriceRequest();
         }
         return View(request);
     }
+
+
+
+
 
 
     [HttpGet]
     public JsonResult GetBranchesByDealer(Guid dealerId)
     {
         var data = sevenSoftService.GetBranchesByDealer(dealerId).Result;
-        var branches = data.Where(c=>c.BranchNo=="200").Select(c => new SelectListItem { Text =$" {c.BranchName}-کد {c.BranchNo} -گرید {c.BranchGrade}" , Value = c.UniqueId }).ToList();
+        var branches = data.Where(c => c.BranchNo == "200").Select(c => new SelectListItem { Text = $" {c.BranchName}-کد {c.BranchNo} -گرید {c.BranchGrade}", Value = c.UniqueId }).ToList();
 
         return Json(branches);
     }
+
+
+
+
 
 
     [HttpPost]
@@ -200,4 +209,84 @@ public class VehicleController(
         }
         return RedirectToAction("Index");
     }
+    /// <summary>
+    /// لیست سفارشات
+    /// </summary>
+    /// <returns></returns>
+    public async Task<IActionResult> OrderingsBySubscriber()
+    {
+        var subscriber = subscriberService.CurrentSubscriber;
+        var vinNumber = subscriber.VehicleModels?.FirstOrDefault(c => c.IsDefault)?.VinNumber;
+        //toDo
+        var result = await sevenSoftService.GetSpOrderingsBySubscriber("LGBL4AE07RD064874", "2360736541");//subscriber.NationalCode
+        return View(result);
+    }
+    /// <summary>
+    /// ریز سفارشات
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public async Task<IActionResult> SpOrderingPartSpOrderingCode(string id)
+    {
+        var result = await sevenSoftService.GetSpOrderingPartSpOrderingCode(id);
+        return View(result);
+    }
+    //------------------
+    [HttpGet]
+    public async Task<IActionResult> PartsPriceByChassis(PartsPriceByChassisRequest? getPartsPriceByChassisRequest)
+    {
+        if (getPartsPriceByChassisRequest == null)
+        {
+            getPartsPriceByChassisRequest = new PartsPriceByChassisRequest();
+        }
+
+        return View(getPartsPriceByChassisRequest);
+    }
+
+    /// <summary>
+    /// استعلام بهای قطعات
+    /// </summary>
+    /// <param name="getPartsPriceByChassisRequest"></param>
+    /// <returns></returns>
+    [HttpPost]
+    public async Task<IActionResult> PartsPriceDetailsByChassis(PartsPriceByChassisRequest getPartsPriceByChassisRequest)
+    {
+        if (string.IsNullOrEmpty(getPartsPriceByChassisRequest.PartName) && string.IsNullOrEmpty(getPartsPriceByChassisRequest.PartNo))
+        {
+            SetError(Infrastucture.Properties.Resources.errInputInValid);
+            return RedirectToAction("PartsPriceByChassis");
+        }
+        var subscriber = subscriberService.CurrentSubscriber;
+        var vinNumber = subscriber.VehicleModels?.FirstOrDefault(c => c.IsDefault)?.VinNumber;
+
+        getPartsPriceByChassisRequest.ChassisVinNumber = vinNumber;
+        getPartsPriceByChassisRequest.NationalCodeOrEconomicCode = subscriber.NationalCode;
+
+        var result = await sevenSoftService.GetPartsPriceByChassis(getPartsPriceByChassisRequest);
+
+        if (!result.Succeeded)
+        {
+            SetError(result.Message);
+            return RedirectToAction("PartsPriceByChassis", getPartsPriceByChassisRequest);
+        }
+        return View("PartsPriceDetailsByChassis", result.Data);
+    }
+
+    //[HttpGet("[action]")]
+    //public async Task<IActionResult> GetAllOrderStatusType()
+    //{
+    //    var orderStatusList = await sevenSoftService.GetAllOrderStatusType();
+    //    List<SelectListItem> list = new List<SelectListItem> { new SelectListItem { Text = "", Value = Guid.Empty.ToString(), Selected = true } };
+    //    var items = orderStatusList.Select(c => new SelectListItem { Text = $"{c.OrderStatusTypeLocalizedName}-{c.Code}", Value = c.UniqueId }).ToList();
+    //    list.AddRange(items);
+    //    ViewBag.OrderStatusList = list;
+
+    //}
+
+
+
+
+
+
+
 }

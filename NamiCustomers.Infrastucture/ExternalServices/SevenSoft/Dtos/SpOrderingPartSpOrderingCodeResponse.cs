@@ -1,0 +1,59 @@
+﻿namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
+
+public class SpOrderingPartSpOrderingCodeResponse
+{
+    public int Code { get; set; }
+    public string UniqueId { get; set; }
+    public string SpOrderingId { get; set; }
+    public string SpOrderingCode { get; set; }
+    public DateTime SpOrderingDate { get; set; }
+    public string StrSpOrderingDate { get; set; }
+    public string StrSpOrderingTime { get; set; }
+    public int DealerSystemCode { get; set; }
+    public string PartGroupId { get; set; }
+    public object PartGroupNo { get; set; }
+    public object PartGroupName { get; set; }
+    public string PartId { get; set; }
+    public string PartNo { get; set; }
+    public string PartName { get; set; }
+    public object ProviderLocalizedCode { get; set; }
+    public float OrderNumber { get; set; }
+    public float MaxOrderNumber { get; set; }
+    public float OrderRate { get; set; }
+    public object Inventory { get; set; }
+    public float ReceiptNumber { get; set; }
+    public float AverageNumber { get; set; }
+    public object DailyAverageOrderNumberBasedOnWeek { get; set; }
+    public float PreviousOrderNumber { get; set; }
+    public float UnitPrice { get; set; }
+    public float Tax { get; set; }
+    public float Toll { get; set; }
+    public float TotalPrice { get; set; }
+    public bool DoNotWantSimilarParts { get; set; }
+    public object PartRequestTransactionId { get; set; }
+    public string SubscriberId { get; set; }
+    public string ChassisInfoId { get; set; }
+    public object ReceptionId { get; set; }
+    public int SpOrderingTypeId { get; set; }
+    public string SpOrderingType { get; set; }
+    public object ReceptionCode { get; set; }
+    public string VinNumber { get; set; }
+    public object SpExchangeDate { get; set; }
+    public string StrSpExchangeDate { get; set; }
+    public object SpExchangeCode { get; set; }
+    public DateTime SentDate { get; set; }
+    public string StrSentDate { get; set; }
+    public string CreatedOnTime { get; set; }
+    public string OrderStatus { get; set; }
+    public string VehicleName { get; set; }
+    public string BackOrderCode { get; set; }
+    public object PartUsageCategoryId { get; set; }
+    public object PartUsageCategoryName { get; set; }
+    public float Discount { get; set; }
+    public float DiscountPercent { get; set; }
+    public object CountingUnitLocalizedName { get; set; }
+    public object PartTypeName { get; set; }
+    public object PartTypeId { get; set; }
+    public string ClientId { get; set; }
+    public bool IsDirty { get; set; }
+}

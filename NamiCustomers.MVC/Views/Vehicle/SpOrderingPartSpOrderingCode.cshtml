@@ -1,0 +1,258 @@
+﻿@model IEnumerable<NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos.SpOrderingPartSpOrderingCodeResponse>
+
+@{
+    ViewData["Title"] = "SpOrderingPartSpOrderingCode";
+}
+
+<h1>ریز سفارشات</h1>
+<div style ="max-width:100% !important;overflow:auto !important; ">
+
+<table class="table table-responsive " >
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UniqueId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SpOrderingId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SpOrderingCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SpOrderingDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrSpOrderingDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrSpOrderingTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DealerSystemCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartGroupId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxOrderNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderRate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceiptNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AverageNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PreviousOrderNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tax)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Toll)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DoNotWantSimilarParts)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubscriberId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChassisInfoId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SpOrderingTypeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SpOrderingType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VinNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrSpExchangeDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SentDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StrSentDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedOnTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BackOrderCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Discount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DiscountPercent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ClientId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsDirty)
+            </th>
+            
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UniqueId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SpOrderingId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SpOrderingCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SpOrderingDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrSpOrderingDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrSpOrderingTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DealerSystemCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartGroupId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PartName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxOrderNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderRate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReceiptNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AverageNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PreviousOrderNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tax)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Toll)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DoNotWantSimilarParts)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubscriberId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChassisInfoId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SpOrderingTypeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SpOrderingType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VinNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrSpExchangeDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SentDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StrSentDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedOnTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BackOrderCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Discount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DiscountPercent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClientId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsDirty)
+            </td>
+          
+        </tr>
+}
+    </tbody>
+</table>
+</div>

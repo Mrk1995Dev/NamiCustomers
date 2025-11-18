@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>4.08.07.01</AssemblyVersion>
-    <FileVersion>4.08.07.01</FileVersion>
-    <Version>4.08.07.01</Version>
-    <InformationalVersion>4.08.07.01 - 2025-10-29</InformationalVersion>
+    <AssemblyVersion>04.08.27.1</AssemblyVersion>
+    <FileVersion>04.08.27.1</FileVersion>
+    <Version>04.08.27.1</Version>
+    <InformationalVersion>04.08.27.1 - 2025-11-18</InformationalVersion>
     <AssemblyDescription>Alimoradi573@gmail.com</AssemblyDescription>
   </PropertyGroup>
   <ItemGroup>
@@ -16,14 +16,14 @@
     <None Remove="FakesAssemblies\**" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8">
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.QualityTools.Testing.Fakes" Version="17.14.1" />
+    <PackageReference Include="Microsoft.QualityTools.Testing.Fakes" Version="18.1.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NamiCustomers.Application\NamiCustomers.Application.csproj" />

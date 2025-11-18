@@ -19,7 +19,7 @@ namespace NamiCustomers.Infrastucture.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resource7Soft {
@@ -61,20 +61,20 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://7soft.namikhodro.com:8088/.
-        /// </summary>
-        public static string BaseUrl {
-            get {
-                return ResourceManager.GetString("BaseUrl", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to http://7soft.namikhodro.com:8087/.
         /// </summary>
         public static string BaseUrlBooking {
             get {
                 return ResourceManager.GetString("BaseUrlBooking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to http://7soft.namikhodro.com:8088/.
+        /// </summary>
+        public static string BaseUrlCrm {
+            get {
+                return ResourceManager.GetString("BaseUrlCrm", resourceCulture);
             }
         }
         
@@ -160,6 +160,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/SpOrdering/GetAllOrderStatusType.
+        /// </summary>
+        public static string GetAllOrderStatusTypeResponse {
+            get {
+                return ResourceManager.GetString("GetAllOrderStatusTypeResponse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to api/Booking/getAllServerGroup.
         /// </summary>
         public static string GetAllServerGroup {
@@ -241,6 +250,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/PartServicePrice/GetPartsPriceByChassis.
+        /// </summary>
+        public static string GetPartsPriceByChassis {
+            get {
+                return ResourceManager.GetString("GetPartsPriceByChassis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to api/ReceptionInformaionHistory/GetReceptionCustomerStatementInformationByReceptionCode.
         /// </summary>
         public static string GetReceptionCustomerStatementInformationByReceptionCode {
@@ -309,6 +327,24 @@ namespace NamiCustomers.Infrastucture.Properties {
         public static string GetSpecificCases {
             get {
                 return ResourceManager.GetString("GetSpecificCases", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/SpOrdering/GetSpOrderingPartSpOrderingCode?SpOrderingCode={0}.
+        /// </summary>
+        public static string GetSpOrderingPartSpOrderingCode {
+            get {
+                return ResourceManager.GetString("GetSpOrderingPartSpOrderingCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/SpOrdering/GetSpOrderingsBySubscriber?ChassisVinNumber={0}&amp;NationalCodeOrEconomicCode={1}.
+        /// </summary>
+        public static string GetSpOrderingsBySubscriber {
+            get {
+                return ResourceManager.GetString("GetSpOrderingsBySubscriber", resourceCulture);
             }
         }
         
