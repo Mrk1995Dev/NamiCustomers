@@ -57,10 +57,9 @@ public class VehicleService(HttpClient httpClient, IHttpContextAccessor httpCont
         var response = await httpClient.GetFromJsonAsync<ResultDto<VehicleModelDto>>($"Vehicle/Get?id={id}");
         if (response.Data != null)
         {
-            return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.msgFound
-           , true, response.Data);
+            return   ResultDto.Success<VehicleModelDto>( response.Data);
         }
-        return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errNotFound, false);
+        return   ResultDto.Failure<VehicleModelDto>(Infrastucture.Properties.Resources.errNotFound);
     }
     public async Task<ResultDto<VehicleModelDto>> SetDefaultAsync(int id)
     {
@@ -68,10 +67,9 @@ public class VehicleService(HttpClient httpClient, IHttpContextAccessor httpCont
         if (response.IsSuccessStatusCode)
         {
             var dto = await response.Content.ReadFromJsonAsync<ResultDto<VehicleModelDto>>();
-            return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.msgEdited
-           , true, dto.Data);
+            return   ResultDto.Success<VehicleModelDto>( dto.Data);
         }
-        return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errEdited, false);
+        return   ResultDto.Failure<VehicleModelDto>(Infrastucture.Properties.Resources.errEdited);
     }
 
 
@@ -80,10 +78,9 @@ public class VehicleService(HttpClient httpClient, IHttpContextAccessor httpCont
         var response = await httpClient.GetFromJsonAsync<ResultDto<VehicleModelDto>>($"Vehicle/GetChassisInformationByVinNumber?vinNumber={vinNumber}");
         if (response.Data != null)
         {
-            return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.msgFound, true,
-            response.Data);
+            return   ResultDto.Success<VehicleModelDto>(response.Data);
         }
-        return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errNotFound, false);
+        return   ResultDto.Failure<VehicleModelDto>(Infrastucture.Properties.Resources.errNotFound);
     }
 
     public async Task<ResultDto<List<string>>> GetSpecificCases()
@@ -97,12 +94,11 @@ public class VehicleService(HttpClient httpClient, IHttpContextAccessor httpCont
             if (!response.Data.Any())
             {
                 //diablo حالت خاص 
-                return new ResultDto<List<string>>(Infrastucture.Properties.Resources.msgNotFoundAnyResult, true, new List<string> { Infrastucture.Properties.Resources.msgNotFoundAnyResult });
+                return   ResultDto.Success<List<string>>( new List<string> { Infrastucture.Properties.Resources.msgNotFoundAnyResult });
             }
-            return new ResultDto<List<string>>(Infrastucture.Properties.Resources.msgFound, true,
-            response.Data.ToList());
+            return   ResultDto.Success < List<string> >( response.Data.ToList());
         }
-        return new ResultDto<List<string>>(Infrastucture.Properties.Resources.errNotFound, false);
+        return   ResultDto.Failure<List<string>>(Infrastucture.Properties.Resources.errNotFound);
     }
 
 
@@ -115,7 +111,7 @@ public class VehicleService(HttpClient httpClient, IHttpContextAccessor httpCont
         {
             return response;
         }
-        return new ResultDto<List<VehicleModelDto>>(Infrastucture.Properties.Resources.errNotFound, false);
+        return   ResultDto.Failure<List<VehicleModelDto>>(Infrastucture.Properties.Resources.errNotFound);
     }
 
 
@@ -136,25 +132,17 @@ public class VehicleService(HttpClient httpClient, IHttpContextAccessor httpCont
             var result = JsonSerializer.Deserialize<ResultDto<VehicleModelDto>>(response.Content.ReadAsStringAsync().Result);
             if (result.Succeeded)
             {
-                return new ResultDto<VehicleModelDto>(
-              Infrastucture.Properties.Resources.msgSave
-               , true,
-               result.Data);
+                return   ResultDto.Success<VehicleModelDto>( result.Data);
             }
             else
             {
-                return new ResultDto<VehicleModelDto>(
-           result.Message,
-           false,
-           null
-           ,
-           errors: new List<string> { result.Message }
-           );
+                return ResultDto.Failure<VehicleModelDto>(result.Message);
+          
             }
 
         }
-        return new ResultDto<VehicleModelDto>(
-             Infrastucture.Properties.Resources.errSave, false
+        return   ResultDto.Failure<VehicleModelDto>(
+             Infrastucture.Properties.Resources.errSave
               );
 
     }
@@ -166,6 +154,6 @@ public class VehicleService(HttpClient httpClient, IHttpContextAccessor httpCont
         {
             return response;
         }
-        return new ResultDto<ActiveMainChassisGuaranteeResponse>(Infrastucture.Properties.Resources.errNotFound, false);
+        return ResultDto.Failure<ActiveMainChassisGuaranteeResponse>(Infrastucture.Properties.Resources.errNotFound);
     }
 }

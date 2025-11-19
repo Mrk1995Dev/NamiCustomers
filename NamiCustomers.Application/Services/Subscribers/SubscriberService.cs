@@ -166,8 +166,8 @@ public class SubscriberService(IMapper mapper, ITokenService tokenService, IHttp
         var data = await dbContext.Subscribers.Where(cu => cu.Id == id)
             .Include(cu => cu.City).Include(cu => cu.VehicleModels).FirstOrDefaultAsync();
 
-        if (data == null) return new ResultDto<SubscriberDto>(
-             Infrastucture.Properties.Resources.errNotFound, false);
+        if (data == null) return   ResultDto.Failure<SubscriberDto>(
+             Infrastucture.Properties.Resources.errNotFound);
 
         var subscriberDto = new SubscriberDto
         {
@@ -231,9 +231,8 @@ public class SubscriberService(IMapper mapper, ITokenService tokenService, IHttp
 
         var bytes = Encoding.UTF8.GetBytes(sb.ToString());
 
-        return new ResultDto<byte[]>(
-            Infrastucture.Properties.Resources.msgDownloadSuccess,
-            true, bytes);
+        return   ResultDto.Success
+            <byte[]>( bytes);
     }
 
     public async Task<ResultDto<List<CityDto>>> GetCitiesAsync()
@@ -254,7 +253,7 @@ public class SubscriberService(IMapper mapper, ITokenService tokenService, IHttp
         var otp = await dbContext.SubscriberCodes.FirstOrDefaultAsync(c => !c.Used && c.AuthCode == authCode);
         if (otp is null)
         {
-            return new ResultDto<SubscriberCodeDto>(Infrastucture.Properties.Resources.errNotFound, false);
+            return   ResultDto.Failure<SubscriberCodeDto>(Infrastucture.Properties.Resources.errNotFound);
         }
         otp.Used = true;
         await dbContext.SaveChangesAsync();

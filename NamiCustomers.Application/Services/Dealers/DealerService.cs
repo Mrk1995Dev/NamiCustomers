@@ -15,20 +15,20 @@ public class DealerService(IMapper mapper, ISevenSoftService sevenSoftService) :
     {
         var data = await sevenSoftService.GetBranchesByDealer(dealerId);
         var models = mapper.Map<BranchesByDealerResponse[]>(data);
-        return new ResultDto<BranchesByDealerResponse[]>(Infrastucture.Properties.Resources.msgFound, true, models);
+        return ResultDto.Success<BranchesByDealerResponse[]>(models);
     }
 
     public async Task<ResultDto<DealerResponse[]>> GetDealersAsync()
     {
         var data = await sevenSoftService.GetDealers();
         var models = mapper.Map<DealerResponse[]>(data);
-        return new ResultDto<DealerResponse[]>(Infrastucture.Properties.Resources.msgFound, true, models);
+        return ResultDto.Success<DealerResponse[]>(models);
     }
 
     public async Task<ResultDto<ReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumber(string chassisVinNumber)
     {
         var data = await sevenSoftService.GetReceptionsInformationByVinNumber(chassisVinNumber);
         var models = mapper.Map<ReceptionsInformationByVinNumberResponse[]>(data);
-        return new ResultDto<ReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.msgFound, true, models);
+        return ResultDto.Success<ReceptionsInformationByVinNumberResponse[]>(models);
     }
 }

@@ -30,25 +30,25 @@ public class VehicleService(IAppDbContext dbContext,
 
         if (dbContext.VehicleModels.Any(c => c.SubscriberId == vehicleModelDto.SubscriberId && c.VinNumber == vehicleModelDto.VinNumber))
         {
-            return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errDuplicateSubscriberVin, false);
+            return   ResultDto.Failure<VehicleModelDto>(Infrastucture.Properties.Resources.errDuplicateSubscriberVin);
         }
         if (dbContext.VehicleModels.Any(c => c.SubscriberId != vehicleModelDto.SubscriberId && c.VinNumber == vehicleModelDto.VinNumber))
         {
-            return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errExistedSubscriber, false);
+            return ResultDto.Failure<VehicleModelDto>(Infrastucture.Properties.Resources.errExistedSubscriber);
         }
 
 
         var response = await sevenSoftService.GetRelationCustomerInfoByVinNumber(vehicleModelDto.VinNumber, vehicleModelDto.NationalCode, vehicleModelDto.Mobile);
         if (response != "OK")
         {
-            return new ResultDto<VehicleModelDto>(response, false);
+            return   ResultDto.Failure<VehicleModelDto>(response);
         }
 
 
         var sVehicle = await sevenSoftService.GetChassisInformationByVinNumber(vehicleModelDto.VinNumber);
         if (sVehicle == null)
         {
-            return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errSave, false);
+            return ResultDto.Failure<VehicleModelDto>(Infrastucture.Properties.Resources.errSave);
         }
         else
         {
@@ -82,21 +82,21 @@ public class VehicleService(IAppDbContext dbContext,
         if (result < 1)
         {
             var model = mapper.Map<VehicleModelDto>(newEntity);
-            return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errSave, false);
+            return ResultDto.Failure<VehicleModelDto>(Infrastucture.Properties.Resources.errSave);
         }
         var newModel = mapper.Map<VehicleModelDto>(newEntity);
-        return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.msgSave, true, newModel);
+        return   ResultDto.Success<VehicleModelDto>(newModel);
     }
 
     public async Task<ResultDto<VehicleModelDto>> RemoveAsync(int id)
     {
         var entity = await dbContext.VehicleModels.FindAsync(id);
         if (entity is null)
-            return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errNotFound, false);
+            return ResultDto.Failure<VehicleModelDto>(Infrastucture.Properties.Resources.errNotFound);
         var model = mapper.Map<VehicleModelDto>(entity);
         dbContext.VehicleModels.Remove(entity);
-        if (await dbContext.SaveChangesAsync() < 1) return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.errDelete, false);
-        return new ResultDto<VehicleModelDto>(Infrastucture.Properties.Resources.msgDeleted, true, model);
+        if (await dbContext.SaveChangesAsync() < 1) return ResultDto.Failure<VehicleModelDto>(Infrastucture.Properties.Resources.errDelete);
+        return ResultDto.Success<VehicleModelDto>(model);
     }
 
 
@@ -113,7 +113,7 @@ public class VehicleService(IAppDbContext dbContext,
             }
         }
         var models = mapper.Map<List<VehicleModelDto>>(data);
-        return new ResultDto<List<VehicleModelDto>>(Infrastucture.Properties.Resources.msgFound, true, models);
+        return ResultDto.Success<List<VehicleModelDto>>(models);
     }
 
 
@@ -121,20 +121,17 @@ public class VehicleService(IAppDbContext dbContext,
     {
         var entity = await dbContext.VehicleModels.FindAsync(model.Id);
         if (entity is null)
-            return new ResultDto<VehicleModelDto>(
-               Infrastucture.Properties.Resources.errNotFound, false
+            return   ResultDto.Failure<VehicleModelDto>(
+               Infrastucture.Properties.Resources.errNotFound
                );
         mapper.Map(model, entity);
         dbContext.VehicleModels.Update(entity);
         var editedEntity = mapper.Map<VehicleModelDto>(entity);
         if (await dbContext.SaveChangesAsync() < 1)
-            return new ResultDto<VehicleModelDto>(
-                Infrastucture.Properties.Resources.errEdited, false
+            return   ResultDto.Failure<VehicleModelDto>(
+                Infrastucture.Properties.Resources.errEdited
                );
-        return new ResultDto<VehicleModelDto>(
-            Infrastucture.Properties.Resources.msgEdited
-
-            , true, editedEntity);
+        return   ResultDto.Success<VehicleModelDto>( editedEntity);
     }
 
     public async Task<ResultDto<VehicleModelDto>> SetDefaultAsync(int id)

@@ -301,11 +301,11 @@ public class SevenSoftService : ISevenSoftService
         try
         {
             var data = await RestUtility.PostData<InsertBookingResponse>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.InsertBooking, request);
-            return new ResultDto<InsertBookingResponse>("", true, data);
+            return   ResultDto.Success<InsertBookingResponse>(data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<InsertBookingResponse>(ex.Message, false);
+            return  ResultDto.Failure<InsertBookingResponse>(ex.Message);
         }
     }
 
@@ -331,7 +331,7 @@ public class SevenSoftService : ISevenSoftService
         try
         {
             var data = await RestUtility.GetData<ReceptionsPartsInformationByReceptionCodeResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetReceptionsPartsInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
-            return new ResultDto<ReceptionsPartsInformationByReceptionCodeResponse[]>("", true, data);
+            return   ResultDto.Success<ReceptionsPartsInformationByReceptionCodeResponse[]>(data);
         }
         catch (Exception ex)
         {
@@ -347,12 +347,12 @@ public class SevenSoftService : ISevenSoftService
         {
             var data = await RestUtility.GetData<ReceptionsInServicesInformationByReceptionCodeResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetReceptionsInServicesInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
 
-            return new ResultDto<ReceptionsInServicesInformationByReceptionCodeResponse[]>("", true, data);
+            return ResultDto.Success<ReceptionsInServicesInformationByReceptionCodeResponse[]>(data);
         }
         catch (Exception ex)
         {
 
-            return new ResultDto<ReceptionsInServicesInformationByReceptionCodeResponse[]>(ex.Message, false);
+            return   ResultDto.Failure<ReceptionsInServicesInformationByReceptionCodeResponse[]>(ex.Message);
         }
 
     }
@@ -363,11 +363,11 @@ public class SevenSoftService : ISevenSoftService
         {
             var data = await RestUtility.GetData<ReceptionsOutServicesInformationByReceptionCodeResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetReceptionsOutServicesInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
 
-            return new ResultDto<ReceptionsOutServicesInformationByReceptionCodeResponse[]>("", true, data);
+            return ResultDto.Success<ReceptionsOutServicesInformationByReceptionCodeResponse[]>(data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<ReceptionsOutServicesInformationByReceptionCodeResponse[]>(ex.Message, false);
+            return ResultDto.Failure<ReceptionsOutServicesInformationByReceptionCodeResponse[]>(ex.Message);
         }
     }
 
@@ -376,11 +376,11 @@ public class SevenSoftService : ISevenSoftService
         try
         {
             var data = await RestUtility.GetData<ReceptionCustomerStatementInformationByReceptionCodeResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetReceptionCustomerStatementInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
-            return new ResultDto<ReceptionCustomerStatementInformationByReceptionCodeResponse[]>("", true, data);
+            return ResultDto.Success<ReceptionCustomerStatementInformationByReceptionCodeResponse[]>(data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<ReceptionCustomerStatementInformationByReceptionCodeResponse[]>(ex.Message, false);
+            return ResultDto.Failure<ReceptionCustomerStatementInformationByReceptionCodeResponse[]>(ex.Message);
         }
 
     }
@@ -391,11 +391,11 @@ public class SevenSoftService : ISevenSoftService
         try
         {
             var data = await RestUtility.PostData<ReceptionsInformationByReceptionIDResponse>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.getReceptionsInformationByReceptionID, ReceptionCode);
-            return new ResultDto<ReceptionsInformationByReceptionIDResponse>("", true, data);
+            return ResultDto.Success<ReceptionsInformationByReceptionIDResponse>(data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<ReceptionsInformationByReceptionIDResponse>(ex.Message, false);
+            return ResultDto.Failure<ReceptionsInformationByReceptionIDResponse>(ex.Message);
         }
     }
 
@@ -405,11 +405,11 @@ public class SevenSoftService : ISevenSoftService
         try
         {
             var data = await RestUtility.GetData<SubCountryResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.GetAllSubCountries, $"?CountryId={CountryId}");
-            return new ResultDto<SubCountryResponse[]>("", true, data);
+            return ResultDto.Success<SubCountryResponse[]>(data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<SubCountryResponse[]>(ex.Message, false);
+            return ResultDto.Failure<SubCountryResponse[]>(ex.Message);
         }
     }
     public async Task<ResultDto<CityResponse[]>> GetAllCity(Guid SubCountryId)
@@ -417,11 +417,11 @@ public class SevenSoftService : ISevenSoftService
         try
         {
             var data = await RestUtility.GetData<CityResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.GetAllCity, $"?SubCountryId={SubCountryId}");
-            return new ResultDto<CityResponse[]>("", true, data);
+            return ResultDto.Success<CityResponse[]>(data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<CityResponse[]>(ex.Message, false);
+            return ResultDto.Failure<CityResponse[]>(ex.Message);
         }
     }
 
@@ -432,11 +432,11 @@ public class SevenSoftService : ISevenSoftService
             var data = await RestUtility.GetData<SubscriberChassisAllocationResponse>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.GetSubscriberChassisAllocation, $"?VinNumber={VinNumber}");
 
 
-            return new ResultDto<SubscriberChassisAllocationResponse>("", true, data);
+            return ResultDto.Success<SubscriberChassisAllocationResponse>(data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<SubscriberChassisAllocationResponse>(ex.Message, false);
+            return ResultDto.Failure<SubscriberChassisAllocationResponse>(ex.Message);
         }
     }
     public async Task<(bool, string)> CheckExistsReserveVinNumber(string VinNumber)
@@ -470,13 +470,13 @@ public class SevenSoftService : ISevenSoftService
             var data = await RestUtility.GetData<BookingResponse>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, string.Format(Resource7Soft.GetBooking, vinNumber), "");
             if (data != null)
             {
-                return new ResultDto<BookingResponse>("", true, data);
+                return   ResultDto.Success<BookingResponse>(data);
             }
-            return new ResultDto<BookingResponse>(Infrastucture.Properties.Resources.errNotFound, false);
+            return   ResultDto.Failure<BookingResponse>(Infrastucture.Properties.Resources.errNotFound);
         }
         catch (Exception ex)
         {
-            return new ResultDto<BookingResponse>(ex.Message, false);
+            return ResultDto.Failure<BookingResponse>(ex.Message);
         }
     }
 
@@ -501,11 +501,11 @@ public class SevenSoftService : ISevenSoftService
         try
         {
             var data = await RestUtility.GetData<AllServerGroupTimeResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.GetAllServerGroupTime, $"?WorkShopTimeTableId={WorkShopTimeTableId}&ServerGroupId={ServerGroupId}");
-            return new ResultDto<AllServerGroupTimeResponse[]>("", true, data);
+            return   ResultDto.Success<AllServerGroupTimeResponse[]>(data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<AllServerGroupTimeResponse[]>(ex.Message, false);
+            return ResultDto.Failure<AllServerGroupTimeResponse[]>(ex.Message);
         }
     }
     public async Task<ResultDto<AllServerGroupDateResponse[]>> GetAllServerGroupDate(Guid ServerGroupId, Guid BranchId)
@@ -513,11 +513,11 @@ public class SevenSoftService : ISevenSoftService
         try
         {
             var data = await RestUtility.GetData<AllServerGroupDateResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.GetAllServerGroupDate, $"?ServerGroupId={ServerGroupId}&BranchId={BranchId}");
-            return new ResultDto<AllServerGroupDateResponse[]>("", true, data);
+            return ResultDto.Success<AllServerGroupDateResponse[]>(data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<AllServerGroupDateResponse[]>(ex.Message, false);
+            return ResultDto.Failure<AllServerGroupDateResponse[]>(ex.Message);
         }
     }
     public async Task<ResultDto<AllServerGroupResponse[]>> GetAllServerGroup(Guid branchId)
@@ -525,11 +525,11 @@ public class SevenSoftService : ISevenSoftService
         try
         {
             var data = await RestUtility.GetData<AllServerGroupResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.GetAllServerGroup, $"?branchId={branchId}");
-            return new ResultDto<AllServerGroupResponse[]>("", true, data);
+            return   ResultDto.Success<AllServerGroupResponse[]>(data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<AllServerGroupResponse[]>(ex.Message, false);
+            return   ResultDto.Failure<AllServerGroupResponse[]>(ex.Message);
         }
     }
     public async Task<ResultDto<BranchResponse[]>> GetAllBranch(Guid DealerId)
@@ -537,11 +537,11 @@ public class SevenSoftService : ISevenSoftService
         try
         {
             var data = await RestUtility.GetData<BranchResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.GetAllBranch, $"?DealerId={DealerId}");
-            return new ResultDto<BranchResponse[]>("", true, data);
+            return ResultDto.Success<BranchResponse[]>(data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<BranchResponse[]>(ex.Message, false);
+            return ResultDto.Failure<BranchResponse[]>(ex.Message);
         }
     }
 
@@ -550,11 +550,11 @@ public class SevenSoftService : ISevenSoftService
         try
         {
             var data = await RestUtility.GetData<DealerResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.GetAllDealer, $"?CityId={CityId}");
-            return new ResultDto<DealerResponse[]>("", true, data);
+            return ResultDto.Success<DealerResponse[]>(data);
         }
         catch (Exception ex)
         {
-            return new ResultDto<DealerResponse[]>(ex.Message, false);
+            return ResultDto.Failure<DealerResponse[]>(ex.Message);
         }
     }
 }

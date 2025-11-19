@@ -34,8 +34,7 @@ public class BookingService(HttpClient httpClient, ISevenSoftService sevenSoftSe
         {
             var result = await sevenSoftService.GetAllSubCountries(filter.CountryId);
             if (result.Data == null)
-                return new ResultDto<BookingTurnResponse>(Infrastucture.Properties.Resources.msgFound
-               , true, response);
+                return   ResultDto.Success<BookingTurnResponse>(response);
             var data =result.Data.Select(c => new BookingTurnOptionDto {Selected=(c.UniqueId==filter.SubCountryId.ToString()), Value = c.UniqueId, Text = c.SubCountryLocalizedName }).ToList();
             response.SubCountries.AddRange(data);
             
@@ -44,8 +43,7 @@ public class BookingService(HttpClient httpClient, ISevenSoftService sevenSoftSe
         {
             var result = await sevenSoftService.GetAllCity(filter.SubCountryId.Value);
             if (result.Data == null)
-                return new ResultDto<BookingTurnResponse>(Infrastucture.Properties.Resources.msgFound
-               , true, response);
+                return   ResultDto.Success<BookingTurnResponse>( response);
             var data=result.Data.Select(c => new BookingTurnOptionDto { Selected = (c.UniqueId == filter.CityId.ToString()), Value = c.UniqueId, Text = c.CityLocalizedName }).ToList();
             response.Cities.AddRange(data);
         }
@@ -53,8 +51,7 @@ public class BookingService(HttpClient httpClient, ISevenSoftService sevenSoftSe
         {
             var result = await sevenSoftService.GetAllDealer(filter.CityId.Value);
             if (result.Data == null)
-                return new ResultDto<BookingTurnResponse>(Infrastucture.Properties.Resources.msgFound
-               , true, response);
+                return   ResultDto.Success<BookingTurnResponse>(  response);
             var data = result.Data.Select(c => new BookingTurnOptionDto { Selected = (c.UniqueId == filter.DealerId.ToString()), Value = c.UniqueId, Text = c.DealerName }).ToList();
             response.Dealers.AddRange(data);
         }
@@ -62,8 +59,7 @@ public class BookingService(HttpClient httpClient, ISevenSoftService sevenSoftSe
         {
             var result = await sevenSoftService.GetAllBranch(filter.DealerId.Value);
             if (result.Data == null)
-                return new ResultDto<BookingTurnResponse>(Infrastucture.Properties.Resources.msgFound
-               , true, response);
+                return   ResultDto.Success<BookingTurnResponse>(  response);
             var data = result.Data.Select(c => new BookingTurnOptionDto { Selected = (c.UniqueId == filter.BranchId.ToString()), Value = c.UniqueId, Text = c.BranchName }).ToList();
             response.Branches.AddRange(data);
         }
@@ -72,8 +68,7 @@ public class BookingService(HttpClient httpClient, ISevenSoftService sevenSoftSe
         {
             var result = await sevenSoftService.GetAllServerGroup(filter.BranchId.Value);
             if (result.Data == null)
-                return new ResultDto<BookingTurnResponse>(Infrastucture.Properties.Resources.msgFound
-               , true, response);
+                return   ResultDto.Success<BookingTurnResponse>(response);
             var data = result.Data.Select(c => new BookingTurnOptionDto { Selected = (c.UniqueId == filter.ServerGroupId.ToString()), Value = c.UniqueId, Text = c.ServerGroupLocalizedName }).ToList();
             response.ServerGroups.AddRange(data);
         }
@@ -81,8 +76,7 @@ public class BookingService(HttpClient httpClient, ISevenSoftService sevenSoftSe
         {
             var result = await sevenSoftService.GetAllServerGroupDate(filter.ServerGroupId.Value,filter.BranchId.Value);
             if (result.Data == null)
-                return new ResultDto<BookingTurnResponse>(Infrastucture.Properties.Resources.msgFound
-               , true, response);
+                return   ResultDto.Success<BookingTurnResponse>( response);
             var data = result.Data.Select(c => new BookingTurnOptionDto { Selected = (c.Value == filter.ServerGroupDateId.ToString()), Value = c.Value, Text = c.Text }).ToList();
             response.ServerGroupDates.AddRange(data);
         }
@@ -90,14 +84,13 @@ public class BookingService(HttpClient httpClient, ISevenSoftService sevenSoftSe
         {
             var result = await sevenSoftService.GetAllServerGroupTime(filter.ServerGroupDateId.Value,filter.ServerGroupId.Value);
             if (result.Data == null)
-                return new ResultDto<BookingTurnResponse>(Infrastucture.Properties.Resources.msgFound
-               , true, response);
+                return   ResultDto.Success<BookingTurnResponse>( response);
             var data = result.Data.Select(c => new BookingTurnOptionDto { Selected = (c.Value == filter.ServerGroupTimeId.ToString()), Value = c.Value, Text = c.Text }).ToList();
             response.ServerGroupTimes.AddRange(data);
         }
 
 
-        return new ResultDto<BookingTurnResponse>(Infrastucture.Properties.Resources.msgReturnDataSuccess, true, response);
+        return   ResultDto.Success<BookingTurnResponse>(response);
     }
 }
 

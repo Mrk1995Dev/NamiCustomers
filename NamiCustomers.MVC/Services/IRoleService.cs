@@ -38,17 +38,11 @@ public class RoleService : IRoleService
 
         if (response.Succeeded)
         {
-            return new ResultDto<List<RoleDto>>(
-                 Infrastucture.Properties.Resources.msgFound
-               , true,
-                response.Data)
-            {
-
-            };
+            return   ResultDto.Success  <List<RoleDto>>(  response.Data);
         }
 
-        return new ResultDto<List<RoleDto>>(
-           Infrastucture.Properties.Resources.errNotFound, false);
+        return   ResultDto.Failure<List<RoleDto>>(
+           Infrastucture.Properties.Resources.errNotFound);
     }
 
     public async Task<ResultDto<RoleDto>> GetAsync(string id)
@@ -57,17 +51,12 @@ public class RoleService : IRoleService
 
         if (response.Succeeded)
         {
-            return new ResultDto<RoleDto>(
-                 Infrastucture.Properties.Resources.msgFound,
-            true,
-                response.Data)
-            {
-
-            };
+            return ResultDto.Success<RoleDto>(response.Data);
+         
         }
 
-        return new ResultDto<RoleDto>(
-           Infrastucture.Properties.Resources.errNotFound, false
+        return   ResultDto.Failure<RoleDto>(
+           Infrastucture.Properties.Resources.errNotFound 
             );
     }
 
@@ -76,14 +65,11 @@ public class RoleService : IRoleService
         var response = await _httpClient.GetFromJsonAsync<ResultDto<List<UserDto>>>($"Roles/GetUsersInRole?name={roleName}");
         if (response.Succeeded)
         {
-            return new ResultDto<List<UserDto>>(
-                 Infrastucture.Properties.Resources.msgSave
-              , true,
-                response.Data);
+            return   ResultDto.Success<List<UserDto>>(  response.Data);
         }
 
-        return new ResultDto<List<UserDto>>(
-           Infrastucture.Properties.Resources.errSave, false
+        return   ResultDto.Failure<List<UserDto>>(
+           Infrastucture.Properties.Resources.errSave 
            );
     }
 

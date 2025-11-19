@@ -21,49 +21,45 @@ public class AppointmentService(IAppDbContext dbContext, IMapper mapper) : IAppo
     {
         var entity = await dbContext.Appointments.FindAsync(id);
         if (entity is null)
-            return new ResultDto<AppointmentDto>(Infrastucture.Properties.Resources.errNotFound, false);
+            return  ResultDto.Failure<AppointmentDto>(Infrastucture.Properties.Resources.errNotFound);
         var model = mapper.Map<AppointmentDto>(entity);
         dbContext.Appointments.Remove(entity);
-        if (await dbContext.SaveChangesAsync() < 1) return new ResultDto<AppointmentDto>(Infrastucture.Properties.Resources.errDelete, false);
-        return new ResultDto<AppointmentDto>(Infrastucture.Properties.Resources.msgDeleted, true, model);
+        if (await dbContext.SaveChangesAsync() < 1) return  ResultDto.Failure<AppointmentDto>(Infrastucture.Properties.Resources.errDelete);
+        return   ResultDto.Success<AppointmentDto>(model);
     }
 
     public async Task<ResultDto<AppointmentDto>> EditAsync(AppointmentDto model)
     {
         var entity = await dbContext.Appointments.FindAsync(model.Id);
         if (entity is null)
-            return new ResultDto<AppointmentDto>(
-               Infrastucture.Properties.Resources.errNotFound, false
+            return   ResultDto.Failure<AppointmentDto>(
+               Infrastucture.Properties.Resources.errNotFound
                );
         mapper.Map(model, entity);
         dbContext.Appointments.Update(entity);
         var editedEntity = mapper.Map<AppointmentDto>(entity);
         if (await dbContext.SaveChangesAsync() < 1)
-            return new ResultDto<AppointmentDto>(
-                Infrastucture.Properties.Resources.errEdited, false
+            return   ResultDto.Failure<AppointmentDto>(
+                Infrastucture.Properties.Resources.errEdited
                );
-        return new ResultDto<AppointmentDto>(
-            Infrastucture.Properties.Resources.msgEdited
-           , true
-            , editedEntity);
+        return   ResultDto.Success<AppointmentDto>(
+          editedEntity);
     }
 
     public async Task<ResultDto<List<AppointmentDto>>> GetAllAsync()
     {
         var data = await dbContext.Appointments.ToListAsync();
         var models = mapper.Map<List<AppointmentDto>>(data);
-        return new ResultDto<List<AppointmentDto>>(Infrastucture.Properties.Resources.msgFound, true, models);
+        return   ResultDto.Success<List<AppointmentDto>>( models);
     }
     public async Task<ResultDto<AppointmentDto>> GetAsync(int id)
     {
         var data = await dbContext.Appointments.Include(c => c.Subscriber).FirstOrDefaultAsync(cu => cu.Id == id);
-        if (data == null) return new ResultDto<AppointmentDto>(
-           Infrastucture.Properties.Resources.errNotFound, false
+        if (data == null) return   ResultDto.Failure<AppointmentDto>(
+           Infrastucture.Properties.Resources.errNotFound
            );
         var model = mapper.Map<AppointmentDto>(data);
-        return new ResultDto<AppointmentDto>(
-            Infrastucture.Properties.Resources.msgFound,
-            true, model);
+        return   ResultDto.Success<AppointmentDto>( model);
     }
 
     public async Task<ResultDto<AppointmentDto>> Reserve(int appointmentId, int subscriberId)

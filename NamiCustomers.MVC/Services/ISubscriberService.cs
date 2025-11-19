@@ -120,7 +120,7 @@ public class SubscriberService : ISubscriberService
             var result = await _httpClient.GetFromJsonAsync<ResultDto<SubscriberDto>>($"subscriber/InfoByNationalCode?nationalcode={nationalCode}");
             if (result?.Data != null)
             {
-                return new ResultDto<SubscriberDto>(Infrastucture.Properties.Resources.msgFound, true,
+                return   ResultDto.Success<SubscriberDto>(
                ((ResultDto<SubscriberDto>)result).Data);
             }
         }
@@ -130,7 +130,7 @@ public class SubscriberService : ISubscriberService
         // _logger.LogError($"API Error: {response.StatusCode} - {errorContent}");
 
         // You might want to return null or throw a custom exception
-        return new ResultDto<SubscriberDto>(Infrastucture.Properties.Resources.errNotFound, false);
+        return   ResultDto.Failure<SubscriberDto>(Infrastucture.Properties.Resources.errNotFound);
 
 
 

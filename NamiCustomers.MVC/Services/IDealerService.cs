@@ -37,26 +37,24 @@ public class DealerService(HttpClient httpClient, ISubscriberService subscriberS
         var chassisVinNumber = subscriberService.CurrentSubscriber.VehicleModels.FirstOrDefault(c => c.IsDefault)?.VinNumber;
         if (string.IsNullOrEmpty(chassisVinNumber))
         {
-            return new ResultDto<ReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.errNotFound, false, null, new List<string> { Infrastucture.Properties.Resources.errNotFound });
+            return   ResultDto.Failure<ReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.errNotFound);
         }
 
         var response = await httpClient.GetFromJsonAsync<ResultDto<ReceptionsInformationByVinNumberResponse[]>>($"Dealer/GetReceptionsInformationByVinNumber?chassisVinNumber={chassisVinNumber}");
         if (response.Data != null)
         {
-            return new ResultDto<ReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.msgFound
-           , true, response.Data);
+            return   ResultDto.Success<ReceptionsInformationByVinNumberResponse[]>( response.Data);
         }
-        return new ResultDto<ReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.errNotFound, false);
+        return   ResultDto.Failure<ReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.errNotFound);
     }
     public async Task<ResultDto<DealerResponse[]>> GetDealersAsync()
     {
         var response = await httpClient.GetFromJsonAsync<ResultDto<DealerResponse[]>>($"Dealer/GetDealers");
         if (response.Data != null)
         {
-            return new ResultDto<DealerResponse[]>(Infrastucture.Properties.Resources.msgFound
-           , true, response.Data);
+            return   ResultDto.Success<DealerResponse[]>( response.Data);
         }
-        return new ResultDto<DealerResponse[]>(Infrastucture.Properties.Resources.errNotFound, false);
+        return   ResultDto.Failure<DealerResponse[]>(Infrastucture.Properties.Resources.errNotFound);
     }
 
     public async Task<ResultDto<BranchesByDealerResponse[]>> GetBranchesByDealerAsync(Guid dealerId)
@@ -64,24 +62,22 @@ public class DealerService(HttpClient httpClient, ISubscriberService subscriberS
         var response = await httpClient.GetFromJsonAsync<ResultDto<BranchesByDealerResponse[]>>($"Dealer/GetBranchesByDealer?DealerId={dealerId}");
         if (response.Data != null)
         {
-            return new ResultDto<BranchesByDealerResponse[]>(Infrastucture.Properties.Resources.msgFound
-           , true, response.Data);
+            return   ResultDto.Success<BranchesByDealerResponse[]>( response.Data);
         }
-        return new ResultDto<BranchesByDealerResponse[]>(Infrastucture.Properties.Resources.errNotFound, false);
+        return   ResultDto.Failure<BranchesByDealerResponse[]>(Infrastucture.Properties.Resources.errNotFound);
     }
     public async Task<ResultDto<ReceptionsInformationByVinNumberResponse[]>> GetReceptionsInformationByVinNumber()
     {
         var chassisVinNumber = subscriberService.CurrentSubscriber.VehicleModels.FirstOrDefault(c => c.IsDefault)?.VinNumber;
         if (string.IsNullOrEmpty(chassisVinNumber))
         {
-            return new ResultDto<ReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.errNotFound, false, null, new List<string> { Infrastucture.Properties.Resources.errNotFound });
+            return   ResultDto.Failure<ReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.errNotFound );
         }
         var response = await httpClient.GetFromJsonAsync<ResultDto<ReceptionsInformationByVinNumberResponse[]>>($"Dealer/GetReceptionsInformationByVinNumber?chassisVinNumber={chassisVinNumber}");
         if (response.Data != null)
         {
-            return new ResultDto<ReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.msgFound
-           , true, response.Data);
+            return   ResultDto.Success<ReceptionsInformationByVinNumberResponse[]>( response.Data);
         }
-        return new ResultDto<ReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.errNotFound, false);
+        return   ResultDto.Failure<ReceptionsInformationByVinNumberResponse[]>(Infrastucture.Properties.Resources.errNotFound);
     }
 }
