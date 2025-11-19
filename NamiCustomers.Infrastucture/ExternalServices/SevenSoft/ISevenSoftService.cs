@@ -3,11 +3,6 @@ using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 using NamiCustomers.Infrastucture.Properties;
 using NamiCustomers.Infrastucture.Utilities;
-using Org.BouncyCastle.Asn1.Ocsp;
-using System;
-using System.Buffers.Text;
-using System.Numerics;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 

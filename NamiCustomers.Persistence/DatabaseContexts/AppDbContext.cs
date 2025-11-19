@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using NamiCustomers.Domain.Entities.Account;
 using NamiCustomers.Domain.Entities.Subscribers;
 using NamiCustomers.Domain.Entities.Vehicles;
+using NamiVIP.Application.Configs;
 using System.Data;
 using System.Reflection;
 
@@ -26,7 +28,6 @@ public class AppDbContext : IdentityDbContext<Domain.Entities.Account.Applicatio
     {
         optionsBuilder
           .AddInterceptors(new SoftDeleteInterceptor());
-
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -60,7 +61,7 @@ public class AppDbContext : IdentityDbContext<Domain.Entities.Account.Applicatio
         }
 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(SubscriberConfig)));
-
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(ApplicationUserTokenConfig)));
 
         base.OnModelCreating(modelBuilder);
         // Seed initial roles
@@ -98,7 +99,7 @@ public class AppDbContext : IdentityDbContext<Domain.Entities.Account.Applicatio
                NormalizedUserName = "A.MORADI@NAMIKHODRO.COM",
                PhoneNumber = "09191646456",
                PhoneNumberConfirmed = true,
-
+               Mobile = "09191646456"
            });
         modelBuilder.Entity<IdentityUserRole<string>>().HasData(
             new IdentityUserRole<string>() { RoleId = "110alim-5841-4d44-b807-679d272e7110", UserId = "1109abb4-7619-4567-9a1b-8dcf5e4b73aa" }

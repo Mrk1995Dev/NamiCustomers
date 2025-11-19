@@ -25,6 +25,7 @@ namespace NamiCustomers.Application
             services.AddScoped<IAccountService, AccountService>();
             services.AddTransient<ISevenSoftService, SevenSoftService>();
             services.AddScoped<IMailService, MailService>();
+            services.AddScoped<ITokenService, TokenService>();
 
             #region SmsService
 

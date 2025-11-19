@@ -21,9 +21,10 @@ namespace NamiCustomers.Abstractions.Dtos.Subscribers
         [Display(Name = "کد ملی")]
         [Required]
         public string NationalCode { get; set; }
-        [Required]
-        [Display(Name = "موبایل")]
-        public string Mobile { get; set; }
+        [Display(Name = "تلفن همراه")]
+        [Required(ErrorMessage = "لطفاً مقدار {0} را وارد نمایید.")]
+        [StringLength(maximumLength: 11, ErrorMessage = "طول {0} میبایست  {1} کاراکتر باشد", MinimumLength = 11)]
+        public string Mobile { get; set; } = null!;
         [Display(Name = "جنسیت")]
         public string? Sex { get; set; }
         public ICollection<VehicleModelDto>? VehicleModels { get; set; }

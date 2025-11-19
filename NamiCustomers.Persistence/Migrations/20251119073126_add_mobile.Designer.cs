@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NamiCustomers.Persistence.DatabaseContexts;
 
@@ -11,9 +12,11 @@ using NamiCustomers.Persistence.DatabaseContexts;
 namespace NamiCustomers.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251119073126_add_mobile")]
+    partial class add_mobile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -178,7 +181,7 @@ namespace NamiCustomers.Persistence.Migrations
                         new
                         {
                             Id = "110alim-5841-4d44-b807-679d272e7110",
-                            ConcurrencyStamp = "fbbd208c-d84c-4ca9-9e51-cd5270945bef",
+                            ConcurrencyStamp = "c4000268-6668-465f-8c60-21db2913b4ea",
                             Description = "ادمین",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
@@ -186,7 +189,7 @@ namespace NamiCustomers.Persistence.Migrations
                         new
                         {
                             Id = "283875b0-1760-4e08-ba59-e532dc873bb7",
-                            ConcurrencyStamp = "7965cad9-1ac4-4c95-9ec1-c0ad1203f5e0",
+                            ConcurrencyStamp = "3abe6670-5c59-44e7-ad77-9ca4dcdb65fd",
                             Description = "اپراتور",
                             Name = "Operator",
                             NormalizedName = "OPERATOR"
@@ -587,9 +590,6 @@ namespace NamiCustomers.Persistence.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserToken<string>");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -611,8 +611,6 @@ namespace NamiCustomers.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(1);
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("AspNetUserTokens", (string)null);
 
@@ -706,18 +704,6 @@ namespace NamiCustomers.Persistence.Migrations
                         .HasForeignKey("VehicleAttachmentId");
 
                     b.Navigation("VehicleAttachment");
-                });
-
-            modelBuilder.Entity("NamiCustomers.Domain.Entities.Account.ApplicationUserToken", b =>
-                {
-                    b.HasOne("NamiCustomers.Domain.Entities.Account.ApplicationUser", null)
-                        .WithMany("ApplicationUserTokens")
-                        .HasForeignKey("ApplicationUserId");
-                });
-
-            modelBuilder.Entity("NamiCustomers.Domain.Entities.Account.ApplicationUser", b =>
-                {
-                    b.Navigation("ApplicationUserTokens");
                 });
 
             modelBuilder.Entity("NamiCustomers.Domain.Entities.Subscribers.Subscriber", b =>

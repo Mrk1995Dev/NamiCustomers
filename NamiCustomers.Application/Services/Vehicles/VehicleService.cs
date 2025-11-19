@@ -1,5 +1,8 @@
-﻿using NamiCustomers.Abstractions.Dtos.Vehicles;
+﻿using Microsoft.AspNetCore.Identity;
+using NamiCustomers.Abstractions.Dtos.Vehicles;
+using NamiCustomers.Application.Services.Accounts;
 using NamiCustomers.Application.Services.Subscribers;
+using NamiCustomers.Domain.Entities.Account;
 using NamiCustomers.Domain.Entities.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 using static Dapper.SqlMapper;
@@ -17,7 +20,9 @@ public interface IVehicleService
     Task<ResultDto<VehicleModelDto>> EditAsync(VehicleModelDto model);
     Task<ResultDto<VehicleModelDto>> SetDefaultAsync(int id);
 }
-public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftService sevenSoftService) : IVehicleService
+public class VehicleService(IAppDbContext dbContext,
+    IMapper mapper, ISevenSoftService sevenSoftService,ITokenService tokenService
+    ,UserManager<ApplicationUser> userManager) : IVehicleService
 {
     public async Task<ResultDto<VehicleModelDto>> RegisterAsync(VehicleModelDto vehicleModelDto)
     {
@@ -136,9 +141,12 @@ public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftS
     {
         var entity = await dbContext.VehicleModels.FindAsync(id);
         if (entity is null)
-            return new ResultDto<VehicleModelDto>(
-               Infrastucture.Properties.Resources.errNotFound, false
+            return   ResultDto.Failure<VehicleModelDto>(
+               Infrastucture.Properties.Resources.errNotFound
                );
+
+        var subscriber=await dbContext.Subscribers.FindAsync(entity.SubscriberId);
+        var user = await userManager.Users.FirstAsync(c => c.NationalCode == subscriber.NationalCode);
 
         var hisVehicles = await dbContext.VehicleModels.Where(c => c.SubscriberId == entity.SubscriberId).ToListAsync();
         hisVehicles.ForEach(c => { c.IsDefault = false; });
@@ -148,21 +156,20 @@ public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftS
 
         var editedEntity = mapper.Map<VehicleModelDto>(entity);
         if (await dbContext.SaveChangesAsync() < 1)
-            return new ResultDto<VehicleModelDto>(
-                Infrastucture.Properties.Resources.errEdited, false
+            return   ResultDto.Failure<VehicleModelDto>(
+                Infrastucture.Properties.Resources.errEdited
                );
-        return new ResultDto<VehicleModelDto>(
-            Infrastucture.Properties.Resources.msgEdited
-
-            , true, editedEntity);
+        await tokenService.RevokeTokensAsync(user);
+        await tokenService.GenerateAndStoreTokensAsync(user);
+        return  ResultDto.Success<VehicleModelDto>(editedEntity);
     }
 
 
     public async Task<ResultDto<VehicleModelDto>> GetAsync(int id)
     {
         var data = await dbContext.VehicleModels.Include(c => c.VehicleAttachment).FirstOrDefaultAsync(cu => cu.Id == id);
-        if (data == null) return new ResultDto<VehicleModelDto>(
-           Infrastucture.Properties.Resources.errNotFound, false
+        if (data == null) return  ResultDto.Failure<VehicleModelDto>(
+           Infrastucture.Properties.Resources.errNotFound
            );
         var relatedAttach = dbContext.VehicleAttachments.FirstOrDefault(c => c.VehicleModelIdSevenSoft == data.VehicleModelIdSevenSoft);
         if (relatedAttach != null)
@@ -170,10 +177,7 @@ public class VehicleService(IAppDbContext dbContext, IMapper mapper, ISevenSoftS
             data.VehicleAttachment = relatedAttach;
         }
         var model = mapper.Map<VehicleModelDto>(data);
-        return new ResultDto<VehicleModelDto>(
-            Infrastucture.Properties.Resources.msgFound,
-
-            true, model);
+        return   ResultDto.Success<VehicleModelDto>(model);
     }
 
 }

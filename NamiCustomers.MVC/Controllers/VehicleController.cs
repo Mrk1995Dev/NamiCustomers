@@ -5,13 +5,21 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
+using NamiCustomers.Infrastucture.Utilities;
 using NamiCustomers.MVC.Services;
+using NamiCustomers.MVC.Services.Auth;
+using Newtonsoft.Json;
 
 namespace NamiCustomers.MVC.Controllers;
 
 [Authorize(Policy = nameof(MyPloicies.SubscriberAccess))]
 public class VehicleController(
-    ISubscriberService subscriberService, IVehicleService vehicleService, ISevenSoftService sevenSoftService) : MyBaseController
+    ISubscriberService subscriberService,
+    IVehicleService vehicleService,
+    ISevenSoftService sevenSoftService,
+    IAuthService authService,
+    IHttpContextAccessor httpContextAccessor
+    ) : MyBaseController
 {
     //[ServiceFilter(typeof(VinFilter))]
     [HttpGet]
@@ -111,6 +119,7 @@ public class VehicleController(
         {
             SetError(result.Errors.FirstOrDefault());
         }
+
         return RedirectToAction("Index", "Home");
     }
 

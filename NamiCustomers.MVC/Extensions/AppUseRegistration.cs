@@ -10,7 +10,7 @@ namespace NamiCustomers.MVC.Extensions
     {
         public static IApplicationBuilder BaseAppUse(this IApplicationBuilder app, WebApplication webApplication)
         {
-            app.UsingApplicationBuilder(webApplication);//diablo
+            app.UsingApplicationBuilder(webApplication);
 
             return app;
         }

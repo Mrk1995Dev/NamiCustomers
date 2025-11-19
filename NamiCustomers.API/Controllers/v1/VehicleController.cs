@@ -60,6 +60,7 @@ public class VehicleController(IVehicleService vehicleService, ISevenSoftService
         var result = await vehicleService.SetDefaultAsync(id);
         if (result.Succeeded)
         {
+
             return Ok(result);
         }
         return BadRequest(result);

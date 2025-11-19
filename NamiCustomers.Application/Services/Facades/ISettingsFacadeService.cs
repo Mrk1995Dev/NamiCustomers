@@ -13,9 +13,13 @@ public interface ISettingsFacadeService
     public SevenSoftSetting SevenSoftSetting { get; init; }
     public CompanySetting CompanySetting { get; init; }
     public HostedServiceSetting HotedServiceSetting { get; init; }
+    public JWTSettings JWTSetting { get; init; }
 }
+
 public class SettingsFacadeService : ISettingsFacadeService
 {
+
+    public JWTSettings JWTSetting { get; init; }
 
     public MailSettings MailSettings { get; init; }
     public SmsSetting SmsSetting { get; init; }
@@ -29,7 +33,8 @@ public class SettingsFacadeService : ISettingsFacadeService
                                 IOptions<SevenSoftSetting> sevenSoftSetting,
                                 IOptions<MailSettings> mailSettings,
                                 IOptions<CompanySetting> companySetting,
-                                IOptions<HostedServiceSetting> hotedServiceSetting
+                                IOptions<HostedServiceSetting> hotedServiceSetting,
+                                 IOptions<JWTSettings> jwtSetting
         )
     {
         MailSettings = mailSettings.Value;
@@ -37,7 +42,8 @@ public class SettingsFacadeService : ISettingsFacadeService
         SevenSoftSetting = sevenSoftSetting.Value;
         CompanySetting = companySetting.Value;
         HotedServiceSetting = hotedServiceSetting.Value;
-    }
+        JWTSetting = jwtSetting.Value;
+}
 
 
 

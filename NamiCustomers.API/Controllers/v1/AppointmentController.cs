@@ -1,4 +1,4 @@
-﻿using IdentityModel.OidcClient;
+﻿ 
 using Microsoft.AspNetCore.Authorization;
 
 using NamiCustomers.Abstractions.Dtos.Appointments;

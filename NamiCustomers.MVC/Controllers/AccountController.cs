@@ -146,11 +146,12 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
 
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> Logout()
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         HttpContext.Session.Clear();
-
+        await authService.LogoutAsync();
         return RedirectToAction("LoginByMobile");
     }
     [HttpGet]

@@ -103,14 +103,16 @@ public class SubscriberService : ISubscriberService
 
     public async Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync()
     {
-        var jsonSubscriber = httpContextAccessor.GetClaimValue(MyClaims.Subscriber);
-        if (!string.IsNullOrEmpty(jsonSubscriber))
-        {
-            var subscriberDto=JsonConvert.DeserializeObject<SubscriberDto>(jsonSubscriber);   
-            return ResultDto.Success<SubscriberDto>(subscriberDto);
-        }
+        //var jsonSubscriber = httpContextAccessor.GetClaimValue(MyClaims.Subscriber);//moradi
+        //if (!string.IsNullOrEmpty(jsonSubscriber))
+        //{
+        //    var subscriberDto=JsonConvert.DeserializeObject<SubscriberDto>(jsonSubscriber);   
+        //    return ResultDto.Success<SubscriberDto>(subscriberDto);
+        //}
 
         var nationalCode = httpContextAccessor.GetClaimValue(MyClaims.NationalCode);
+
+
         var response = await _httpClient.GetAsync($"subscriber/InfoByNationalCode?nationalcode={nationalCode}");
 
         if (response.IsSuccessStatusCode)

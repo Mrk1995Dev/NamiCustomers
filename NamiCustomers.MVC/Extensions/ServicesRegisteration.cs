@@ -116,7 +116,6 @@ public static class ServicesRegisteration
     });
         return services;
     }
-    //diablo
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<JwtAuthorizationMessageHandler>();
@@ -143,6 +142,7 @@ public static class ServicesRegisteration
         services.AddScoped<ITokenSessionService, TokenSessionService>();
         services.AddScoped<ICookieService, CookieService>();
         services.AddScoped<ISevenSoftService, SevenSoftService>();
+
         services.AddScoped<ISubscriberService, SubscriberService>(sp =>
         {
             var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");

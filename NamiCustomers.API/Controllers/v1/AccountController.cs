@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using AutoMapper.Configuration.Annotations;
-using IdentityModel.OidcClient;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -29,11 +28,20 @@ namespace NamiCustomers.API.Controllers.v1;
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
 [Authorize]
-public class AccountController(IConfiguration configuration, UserManager<ApplicationUser> userManager,IMapper mapper, RoleManager<ApplicationRole> roleManager,
-        SignInManager<ApplicationUser> signInManager, IAccountService accountService, ISubscriberService subscriberService, IMailService mailService, IUrlHelperFactory urlHelperFactory
-  , ISmsService smsService) : ControllerBase
+public class AccountController(
+    IConfiguration configuration,
+    UserManager<ApplicationUser> userManager,
+    IMapper mapper, RoleManager<ApplicationRole> roleManager,
+    SignInManager<ApplicationUser> signInManager,
+    IAccountService accountService,
+    ISubscriberService subscriberService,
+    IMailService mailService,
+    IUrlHelperFactory urlHelperFactory,
+    ISmsService smsService,
+    ITokenService advancedTokenService,
+    ILogger<AccountController> logger) : ControllerBase
 {
-    
+
     [HttpGet("[action]")]
     public async Task<IActionResult> GetByNationalCodeAsync(string nationalCode)
     {
@@ -127,6 +135,33 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
         return BadRequest(result);
     }
 
+
+    [HttpPost("logout")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Logout()
+    {
+        try
+        {
+            var user = await userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                // حذف توکن از جدول AspNetUserTokens
+                await advancedTokenService.LogoutAsync(user.Id);
+            }
+
+            await signInManager.SignOutAsync();
+            logger.LogInformation("کاربر با موفقیت خارج شد.");
+            return Ok("خروج با موفقیت انجام شد.");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "خطا در خروج کاربر");
+            return StatusCode(500, "خطای سرور");
+        }
+    }
+
+
+
     [HttpGet("[action]")]
     [AllowAnonymous]
     public async Task<IActionResult> LogInByOtp([FromQuery] string otpCode)
@@ -139,9 +174,16 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                 var user = await userManager.Users.WhereIf(true, c => c.PhoneNumber == otpResult.Data.Mobile).SingleOrDefaultAsync();
                 if (user != null)
                 {
-                    var token = $"{GenerateJwtToken(user).Result}";
-                    var refreshToken = $"{GenerateJwtToken(user).Result}";
-                    var result=   ResultDto.Success<LoginResponseDto>(new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, NationalCode = user.NationalCode, Mobile = user.PhoneNumber, Id = user.Id, FirstName = user.FirstName, LastName = user.LastName });
+                    var tokenResponse = await advancedTokenService.GenerateAndStoreTokensAsync(user);
+
+                    //var token = $"{GenerateJwtToken(user).Result}";
+                    //var refreshToken = $"{GenerateJwtToken(user).Result}";
+                    //var result = ResultDto.Success<LoginResponseDto>(new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, NationalCode = user.NationalCode, Mobile = user.PhoneNumber, Id = user.Id, FirstName = user.FirstName, LastName = user.LastName });
+                    //return Ok(result);
+                    var result = ResultDto.Success<LoginResponseDto>(new LoginResponseDto { RefreshToken = tokenResponse.RefreshToken, Token = tokenResponse.AccessToken, Email = user.Email, NationalCode = user.NationalCode, Mobile = user.Mobile, Id = user.Id, FirstName = user.FirstName, LastName = user.LastName });
+                    await HttpContext.SignInAsync(
+                         CookieAuthenticationDefaults.AuthenticationScheme,
+                             new ClaimsPrincipal(tokenResponse.ClaimsIdentity));
                     return Ok(result);
                 }
                 else
@@ -150,7 +192,7 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
                     {
                         Email = $"{otpResult.Data.Mobile}@namikhodro.com",
                         FirstName = $"{otpResult.Data.Mobile}",
-                        
+
                         LastName = $"{otpResult.Data.Mobile}",
                         Mobile = otpResult.Data.Mobile,
                         Password = $"Nn@{otpResult.Data.Mobile}",
@@ -159,11 +201,17 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
 
                     if (registerUserResult)
                     {
-                        var newUser = await userManager.Users.WhereIf(true, c => c.PhoneNumber == otpResult.Data.Mobile).SingleOrDefaultAsync();
-                        var token = $"{GenerateJwtToken(newUser)}";
-                        var refreshToken = $"{GenerateJwtToken(newUser)}";
-                        var result = ResultDto.Success<LoginResponseDto>(new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = newUser.Email,FirstName=newUser.FirstName,LastName=newUser.LastName,Mobile=newUser.PhoneNumber,NationalCode=newUser.NationalCode,Id=newUser.Id });
+                        var newUser = await userManager.Users.WhereIf(true, c => c.Mobile == otpResult.Data.Mobile).SingleOrDefaultAsync();
+                        var tokenResponse = await advancedTokenService.GenerateAndStoreTokensAsync(newUser);
+                        var result = ResultDto.Success<LoginResponseDto>(new LoginResponseDto { RefreshToken = tokenResponse.RefreshToken, Token = tokenResponse.AccessToken, Email = user.Email, NationalCode = user.NationalCode, Mobile = user.Mobile, Id = user.Id, FirstName = user.FirstName, LastName = user.LastName });
+                        await HttpContext.SignInAsync(
+                             CookieAuthenticationDefaults.AuthenticationScheme,
+                                 new ClaimsPrincipal(tokenResponse.ClaimsIdentity));
                         return Ok(result);
+                        //var token = $"{GenerateJwtToken(newUser)}";
+                        //var refreshToken = $"{GenerateJwtToken(newUser)}";
+                        //var result = ResultDto.Success<LoginResponseDto>(new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = newUser.Email, FirstName = newUser.FirstName, LastName = newUser.LastName, Mobile = newUser.PhoneNumber, NationalCode = newUser.NationalCode, Id = newUser.Id });
+                        //return Ok(result);
                     }
                     return BadRequest(ResultDto.Failure<LoginResponseDto>(Infrastucture.Properties.Resources.errNotFound));
                 }
@@ -183,17 +231,17 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
         {
             return BadRequest();
         }
-        var user =await userManager.FindByEmailAsync(reset.UserId);
+        var user = await userManager.FindByEmailAsync(reset.UserId);
         if (user == null)
         {
             return BadRequest();
         }
 
-        var result =await userManager.ResetPasswordAsync(user, reset.Token.Replace(" ", "+"), reset.Password);
+        var result = await userManager.ResetPasswordAsync(user, reset.Token.Replace(" ", "+"), reset.Password);
 
         if (result.Succeeded)
         {
-            var currentUser =await  userManager.FindByEmailAsync(reset.UserId);
+            var currentUser = await userManager.FindByEmailAsync(reset.UserId);
             if (currentUser == null)
             {
                 return BadRequest(ResultDto.Failure<IdentityResult>(Infrastucture.Properties.Resources.errNotFound));
@@ -255,19 +303,44 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     [AllowAnonymous]
     public async Task<IActionResult> LogIn(LoginModelDto model)
     {
-        var user =await  userManager.FindByNameAsync(model.Email);
+        var user = await userManager.FindByNameAsync(model.Email);
         await signInManager.SignOutAsync();
         var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.IsPersistent, false);
         if (result.Succeeded)
         {
-            var token = $"{GenerateJwtToken(user)}";
-            var refreshToken = $"{GenerateJwtToken(user)}";
-            return Ok(ResultDto.Success<LoginResponseDto>(new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, FirstName = user.FirstName, LastName = user.LastName }));
+            // استفاده از فیلدهای سفارشی برای ذخیره توکن
+            var tokenResponse = await advancedTokenService.GenerateAndStoreTokensAsync(user);
+            var refreshToken = tokenResponse.RefreshTokenExpiration;
+            await HttpContext.SignInAsync(
+          CookieAuthenticationDefaults.AuthenticationScheme,
+          new ClaimsPrincipal(tokenResponse.ClaimsIdentity));
+
+            return Ok(ResultDto.Success<LoginResponseDto>(new LoginResponseDto { RefreshToken = tokenResponse.RefreshToken, Token = tokenResponse.AccessToken, Email = user.Email, FirstName = user.FirstName, LastName = user.LastName }));
         }
         return Unauthorized();
     }
 
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
+    {
+        try
+        {
+            var user = await userManager.GetUserAsync(User);
+            var tokenResponse = await advancedTokenService.RefreshTokenAsync(refreshToken, user);
 
+            if (!string.IsNullOrEmpty(tokenResponse.Message))
+            {
+                return BadRequest(tokenResponse.Message);
+            }
+
+            return Ok(tokenResponse);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "خطا در رفرش توکن");
+            return StatusCode(500, "خطای سرور");
+        }
+    }
 
     [HttpGet("[action]")]
     public async Task<IActionResult> GetTokenAsync([FromQuery] LoginModelDto model)
@@ -277,22 +350,19 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
             var user = await userManager.Users.WhereIf(true, c => c.PhoneNumber == model.Mobile).SingleOrDefaultAsync();
             if (user != null)
             {
-                var token = $"{GenerateJwtToken(user)}";
-                var refreshToken = $"{GenerateJwtToken(user)}";
-                return Ok(new ResultDto<LoginResponseDto>("", true, new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, FirstName = user.FirstName, LastName = user.LastName }));
+                var tokenResponse = (await advancedTokenService.GenerateAndStoreTokensAsync(user));
+
+                return Ok(ResultDto.Success<LoginResponseDto>(new LoginResponseDto { RefreshToken = tokenResponse.RefreshToken, Token = tokenResponse.AccessToken, Email = user.Email, FirstName = user.FirstName, LastName = user.LastName }));
             }
             return Unauthorized();
         }
-
-        //a.moradi@namikhodro.com Aa12334566*
         var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
 
         if (result.Succeeded)
         {
             var user = await userManager.FindByEmailAsync(model.Email);
-            var token = $"{GenerateJwtToken(user)}";
-            var refreshToken = $"{GenerateJwtToken(user)}";
-            return Ok(ResultDto.Success<LoginResponseDto>(new LoginResponseDto { RefreshToken = refreshToken, Token = token, Email = user.Email, FirstName = user.FirstName, LastName = user.LastName }));
+            var tokenResponse = (await advancedTokenService.GenerateAndStoreTokensAsync(user));
+            return Ok(ResultDto.Success<LoginResponseDto>(new LoginResponseDto { RefreshToken = tokenResponse.RefreshToken, Token = tokenResponse.AccessToken, Email = user.Email, FirstName = user.FirstName, LastName = user.LastName }));
         }
 
         return Unauthorized();
@@ -301,8 +371,19 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     [HttpPost("[action]")]
     private async Task<bool> RegisterUser([FromBody] RegisterModelDto model)
     {
-        var user = new ApplicationUser { Id = Guid.NewGuid().ToString(), NationalCode = model.NationalCode, UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, PhoneNumber = model.Mobile, PhoneNumberConfirmed = true, PassWord = model.Password,
-        EmailConfirmed=true};
+        var user = new ApplicationUser
+        {
+            Id = Guid.NewGuid().ToString(),
+            NationalCode = model.NationalCode,
+            UserName = model.Email,
+            Email = model.Email,
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            PhoneNumber = model.Mobile,
+            PhoneNumberConfirmed = true,
+            PassWord = model.Password,
+            EmailConfirmed = true
+        };
 
         try
         {
@@ -339,13 +420,13 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     public async Task<IActionResult> ConfirmEmail(ConfirmRequest confirmRequest)
     {
 
-        var user =await userManager.FindByIdAsync(confirmRequest.UserId);
+        var user = await userManager.FindByIdAsync(confirmRequest.UserId);
         if (user == null)
         {
             return BadRequest(ResultDto.Failure<ConfirmResponse>(Infrastucture.Properties.Resources.errNotFound));
         }
 
-        var result =await  userManager.ConfirmEmailAsync(user, confirmRequest.Token);
+        var result = await userManager.ConfirmEmailAsync(user, confirmRequest.Token);
         if (result.Succeeded)
         {
             return BadRequest(ResultDto.Success<ConfirmResponse>(new ConfirmResponse { IsSuccess = true }));
@@ -387,8 +468,8 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
     [HttpPost("[action]")]
     public async Task<IActionResult> VerifyPhoneNumber(VerifyPhoneNumberDto verify)
     {
-        var user =await  userManager.FindByNameAsync(User.Identity.Name);
-        bool resultVerify =await  userManager.VerifyChangePhoneNumberTokenAsync(user, verify.Code, verify.PhoneNumber);
+        var user = await userManager.FindByNameAsync(User.Identity.Name);
+        bool resultVerify = await userManager.VerifyChangePhoneNumberTokenAsync(user, verify.Code, verify.PhoneNumber);
         if (resultVerify == false)
         {
             return BadRequest(ResultDto.Failure<ConfirmResponse>(string.Join(",", new List<string> { $"کد وارد شده برای شماره {verify.PhoneNumber} اشتباه است" })));
@@ -396,79 +477,11 @@ public class AccountController(IConfiguration configuration, UserManager<Applica
         else
         {
             user.PhoneNumberConfirmed = true;
-            var resultUpdate =await  userManager.UpdateAsync(user);
+            var resultUpdate = await userManager.UpdateAsync(user);
         }
         return Ok(ResultDto.Success<ConfirmResponse>(new ConfirmResponse()));
     }
 
-
-
-    private async Task<string> GenerateJwtToken(ApplicationUser user)
-    {
-        var userRoles =await  userManager.GetRolesAsync(user);
-        var subscriber = (await subscriberService.GetByNationalCodeAsync(user.NationalCode)).Data;
-
-        var jwtSettings = configuration.GetSection("JWTSettings");
-        var key = Encoding.ASCII.GetBytes(jwtSettings["securityKey"]);
-
-        var claims = new List<Claim>{
-                                        new Claim(ClaimTypes.Name, user.UserName),
-                                        new Claim(ClaimTypes.Email, user.Email),
-                                        new Claim("NationalCode", user.NationalCode),
-                                        new Claim("Mobile", user.PhoneNumber),
-                                        new  System.Security.Claims.Claim("UserId",user.Id),
-                                        new  System.Security.Claims.Claim("FullName",$"{user.FirstName} {user.LastName}"),
-                                        new Claim(ClaimTypes.NameIdentifier, user.Id),
-                                        new Claim("Subscriber", JsonConvert.SerializeObject(subscriber))
-                                    };
-        var rolesDtos = await roleManager.Roles.Where(c => userRoles.Contains(c.Name)).Select(c => new RoleDto
-        {
-            Id = c.Id,
-            Name = c.Name,
-            Description = c.Description
-        }).ToListAsync();
-
-        foreach (var role in rolesDtos)
-        {
-            claims.Add(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, role.Name));
-            claims.Add(new System.Security.Claims.Claim("PersianRole", role.Description));
-        }
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(claims.ToArray()),
-            Expires = DateTime.UtcNow.AddMinutes(double.Parse(jwtSettings["expiryInMinutes"])),
-            Issuer = jwtSettings["validIssuer"],
-            Audience = jwtSettings["validAudience"],
-
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        };
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
-        var tokenString = tokenHandler.WriteToken(token);
-        var securityToken = (JwtSecurityToken)tokenHandler.ReadJwtToken(tokenString);
-        // Save custom data in cookie
-        var cookieOptions = new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Strict,
-            Expires = DateTime.Now.AddHours(2)
-        };
-
-        Response.Cookies.Append("UserData", "YourCustomDataHere", cookieOptions);
-        Response.Cookies.Append("AuthToken", tokenString, cookieOptions);
-
-        var claimsIdentity = new ClaimsIdentity(
-            claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        await HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            new ClaimsPrincipal(claimsIdentity));
-
-
-        return tokenString;
-    }
 
 }
 

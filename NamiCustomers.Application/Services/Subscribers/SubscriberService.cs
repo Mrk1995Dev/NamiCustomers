@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using NamiCustomers.Abstractions.Dtos.Subscribers;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
+using NamiCustomers.Application.Services.Accounts;
 using NamiCustomers.Application.Services.Vehicles;
 using NamiCustomers.Domain.Entities.Account;
 using NamiCustomers.Domain.Entities.Subscribers;
@@ -8,6 +10,7 @@ using NamiCustomers.Domain.Entities.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 using NamiCustomers.Infrastucture.Utilities;
+using Newtonsoft.Json;
 using System.Collections.Immutable;
 using System.Runtime.Intrinsics.Arm;
 using System.Text;
@@ -24,7 +27,7 @@ public interface ISubscriberService
     Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync(string nationalCode);
     Task<ResultDto<SubscriberDto>> GetAsync(string mobile);
     Task<ResultDto<byte[]>> ExportAsync();
-   Task<ResultDto<List<CityDto>>> GetCitiesAsync();
+    Task<ResultDto<List<CityDto>>> GetCitiesAsync();
     Task<ResultDto<SubscriberCodeDto>> SendOtpAsync(string mobile);
     Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string mobile, string nationalCode);
 
@@ -35,7 +38,7 @@ public interface ISubscriberService
 
 
 }
-public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsService smsService, ISevenSoftService sevenSoftService, IVehicleService vehicleService, UserManager<ApplicationUser> userManager) : ISubscriberService
+public class SubscriberService(IMapper mapper, ITokenService tokenService, IHttpContextAccessor httpContextAccessor, IAppDbContext dbContext, ISmsService smsService, ISevenSoftService sevenSoftService, IVehicleService vehicleService, UserManager<ApplicationUser> userManager) : ISubscriberService
 {
     public async Task<ResultDto<SubscriberDto>> RegisterAsync(SubscriberDto subscriber)
     {
@@ -70,7 +73,7 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
             Sex = subscriber.Sex,
             BrithDate = subscriber.BrithDate,
             BrithDatePersian = subscriber.BrithDatePersian,
-            SubscriberType = subscriber.SubscriberType
+            SubscriberType = subscriber.SubscriberType,
         };
 
         await dbContext.Subscribers.AddAsync(newCustomer);
@@ -175,10 +178,10 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
             Mobile = data.Mobile,
             Sex = data.Sex,
             BrithDate = data.BrithDate,
-            Phone=data.Phone,
-            Address=data.Address,
-            CityId=data.CityId,
-            CityName=data.City?.Title,
+            Phone = data.Phone,
+            Address = data.Address,
+            CityId = data.CityId,
+            CityName = data.City?.Title,
             BrithDatePersian = data.BrithDatePersian,
             SubscriberType = data.SubscriberType,
             VehicleModels = mapper.Map<List<VehicleModelDto>>(data.VehicleModels)
@@ -233,7 +236,7 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
             true, bytes);
     }
 
-    public async Task<ResultDto< List<CityDto>>> GetCitiesAsync()
+    public async Task<ResultDto<List<CityDto>>> GetCitiesAsync()
     {
         var cities = await dbContext.Cities.ToListAsync();
 
@@ -260,7 +263,7 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
 
     public async Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string mobile, string nationalCode)
     {
-        
+
         var Randowmpass = new PasswordUtility();
         string passnew = Randowmpass.RandomString(5);
         var newOtp = new SubscriberCode { AuthCode = passnew, Mobile = mobile, NationalCode = nationalCode, Used = false };
@@ -279,8 +282,30 @@ public class SubscriberService(IMapper mapper, IAppDbContext dbContext, ISmsServ
 
     public async Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync(string nationalCode)
     {
-        var subscriber = dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
-           .Include(cu => cu.VehicleModels).FirstOrDefault();
+        //moradi
+        var user = await userManager.Users.FirstOrDefaultAsync(c => c.NationalCode == nationalCode);
+        var token = await tokenService.GetTokenInfoAsync(user);
+        Subscriber subscriber=null;
+        if (token.HasValidToken)
+        {
+            var jsonSubscriber = httpContextAccessor.GetClaimValue(MyClaims.Subscriber);
+            if (!string.IsNullOrEmpty(jsonSubscriber))
+            {
+                var subscriberDto = JsonConvert.DeserializeObject<SubscriberDto>(jsonSubscriber);
+                return ResultDto.Success<SubscriberDto>(subscriberDto);
+            }
+            else
+            {
+                subscriber =  dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
+                          .Include(cu => cu.VehicleModels).FirstOrDefault();
+            }
+        }
+        else
+        {
+            subscriber = dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
+                           .Include(cu => cu.VehicleModels).FirstOrDefault();
+        }
+
         var sevenMember = await sevenSoftService.GetSubscriberByNationalCode(nationalCode);
         var chassiList = await sevenSoftService.GetAllChassisInformation(nationalCode);
 

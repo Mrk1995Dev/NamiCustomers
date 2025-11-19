@@ -156,10 +156,10 @@ public class AuthService(HttpClient httpClient, ITokenSessionService tokenServic
     public async Task LogoutAsync()
     {
         var refreshToken = tokenService.GetRefreshToken();
-        if (string.IsNullOrEmpty(refreshToken))
-        {
-            throw new InvalidOperationException("Refresh token not found.");
-        }
+        //if (string.IsNullOrEmpty(refreshToken))
+        //{
+        //    throw new InvalidOperationException("Refresh token not found.");
+        //}
 
         var response = await httpClient.PostAsJsonAsync("Account/logout", new { RefreshToken = refreshToken });
         if (response.IsSuccessStatusCode)
@@ -181,7 +181,7 @@ public class AuthService(HttpClient httpClient, ITokenSessionService tokenServic
     public async Task<string?> RefreshTokenAsync(string refreshToken)
     {
 
-        var response = await httpClient.PostAsJsonAsync("Account/refresh", new { RefreshToken = refreshToken });
+        var response = await httpClient.PostAsJsonAsync("Account/refresh-token", new { RefreshToken = refreshToken });
 
         if (response.IsSuccessStatusCode)
         {

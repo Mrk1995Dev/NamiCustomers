@@ -1,4 +1,4 @@
-﻿using IdentityModel.OidcClient;
+﻿ 
 using Microsoft.AspNetCore.Authorization;
 using NamiCustomers.Application.Services.Dealers;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;

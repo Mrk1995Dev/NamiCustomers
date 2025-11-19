@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
-using Mono.TextTemplating.CodeCompilation;
+using NamiCustomers.Abstractions.Dtos.Settings;
 using NamiCustomers.API.Services.Validator;
 using NamiCustomers.Application.Mappings;
 using NamiCustomers.Domain.Entities.Account;
@@ -154,6 +154,7 @@ public static class ServicesRegisteration
 
         services.Configure<List<SmsSetting>>(configuration.GetSection("SmsSettings"));
         services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
+        services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
         return services;
     }
 
@@ -286,8 +287,6 @@ public static class ServicesRegisteration
             new List<string>()  // بدون scopes برای Bearer پایه
         }
     });
-
-            //diablo 
 
             // using System.Reflection;
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
