@@ -633,8 +633,11 @@ input::placeholder {
 
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
-  color: var(--white);
-  background-color: var(--primary-950);
+    /*  color: var(--white);
+  background-color: var(--primary-950);*/
+    color: #f00029;
+    background-color: #f00029;
+    
 }
 
 .breadcrumb {
