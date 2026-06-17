@@ -9,6 +9,10 @@
       {
         "Path": "NamiCustomers.MVC\\NamiCustomers.MVC.csproj",
         "Action": "Start"
+      },
+      {
+        "Path": "NamiCustomers.Web\\NamiCustomers.Web.csproj",
+        "Action": "Start"
       }
     ]
   }

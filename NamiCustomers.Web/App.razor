@@ -1,33 +1,6 @@
-﻿@using NamiCustomers.Web.Layout
-<CascadingAuthenticationState>
-    <Router AppAssembly="@typeof(App).Assembly">
+﻿<Router AppAssembly="@typeof(App).Assembly" NotFoundPage="typeof(Pages.Home.Index)">
     <Found Context="routeData">
-
-        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
-
-            <NotAuthorized>
-   @*              <h1 class="text-danger">شما اجازه دسترسی به این صفحه را ندارید.</h1>
-                <p>برای دسترسی، لطفاً وارد شوید یا با مدیر تماس بگیرید.</p>
-
-                <a href="/login" class="btn btn-sm btn-danger">ورود به حساب کاربری</a> *@
-
-                <NamiCustomers.Web.Pages.Auth.Login></NamiCustomers.Web.Pages.Auth.Login>
-
-            </NotAuthorized>
-
-            <Authorizing>
-                <p>در حال ورود....لطفا صبر کنید</p>
-            </Authorizing>
-        </AuthorizeRouteView>
-       
-
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
     </Found>
-    <NotFound>
-        <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
-        </LayoutView>
-    </NotFound>
 </Router>
-</CascadingAuthenticationState>

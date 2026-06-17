@@ -1,0 +1,7 @@
+﻿.service-box {
+    font-weight: 400;
+    font-size: var(--fs-xxss);
+    color: #ffffff;
+    margin-top: 7px;
+    text-align: center;
+}

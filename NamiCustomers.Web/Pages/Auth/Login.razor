@@ -3,47 +3,79 @@
 @using NamiCustomers.Web.Services.Auth.AuthServices
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
+@layout LoginLayout
 
+<PageTitle>ورود به باشگاه مشتریان | نامی خودرو</PageTitle>
 
-<MudPaper Class="ma-4 pa-6 rounded-lg" Elevation="8">
+<div class="login-wrapper d-flex align-items-center justify-content-center">
+    <div class="custom-container">
+        <div class="text-center px-4">
+            <img class="login-intro-img" src="/SiteTmeplate/img/bg-img/logo.png" alt="" />
+        </div>
 
-<EditForm Model="LoginModel" OnValidSubmit="HandleLogin">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+        <!-- Register Form -->
+        <div class="register-form mt-4">
+            <h6 class="mb-3 text-center">سامانه خدمات پس از فروش نامی خودرو پیشرو</h6>
 
-        @if (!string.IsNullOrEmpty(ErrorMessage))
-        {
-            <MudAlert Severity="Severity.Error"  ContentAlignment="HorizontalAlignment.Right">
-                @ErrorMessage
-            </MudAlert>
-        }
-        
- 
+            <EditForm Model="@LoginModel" OnValidSubmit="() => HandleLogin()">
+                <DataAnnotationsValidator />
 
-        <MudTextField Label="ایمیل" @bind-Value="LoginModel.Email"   Variant="Variant.Outlined" Required="true" />
-        <MudTextField Label="رمز عبور" @bind-Value="LoginModel.Password" InputType="InputType.Password" Variant="Variant.Outlined" Required="true" />
+                <div class="form-group">
+                    <InputText class="form-control" style="color:#000 !important;"
+                               @bind-Value="LoginModel.Password"
+                               inputmode="numeric" pattern="[0-9]*"
+                               placeholder="کد ملی" />
+                    <ValidationMessage For="@(() => LoginModel.Password)" />
+                </div>
 
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary" FullWidth="true">
-         ورد به حساب کاربری
-     </MudButton>
-</EditForm>
+                <div class="form-group">
+                    <InputText class="form-control" style="color:#000 !important;"
+                               @bind-Value="LoginModel.Email"
+                               inputmode="numeric" pattern="[0-9]*"
+                               placeholder="تلفن همراه" />
+                    <ValidationMessage For="@(() => LoginModel.Email)" />
+                </div>
 
-</MudPaper>
+                @if (!string.IsNullOrEmpty(ErrorMessage))
+                {
+                    <div class="alert alert-danger py-2">@ErrorMessage</div>
+                }
+
+                <button class="btn btn-primary w-100" type="submit" disabled="@isSubmitting">
+                    @(isSubmitting ? "در حال ارسال..." : "ورود")
+                </button>
+            </EditForm>
+        </div>
+
+        <!-- Login Meta -->
+        <div class="login-meta-data text-center">
+            <a href="/Account/ForgotPassword" class="stretched-link forgot-password d-block mt-3 mb-1">
+                رمز عبور خود را فراموش کرده اید؟
+            </a>
+        </div>
+
+        <div class="text-muted" style="text-align:center;">
+            Version @(System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version)
+        </div>
+    </div>
+</div>
 
 @code {
     private LoginRequestDto LoginModel = new LoginRequestDto();
     private string ErrorMessage = string.Empty;
+    private bool isSubmitting = false;
 
     private async Task HandleLogin()
     {
         var success = await AuthService.LoginAsync(LoginModel);
         if(success)
         {
-            Navigation.NavigateTo("/dashboard");
+            Navigation.NavigateTo($"/otp?mobile={LoginModel.Email}");
         }
+
         else
         {
-            ErrorMessage = "ایمیل یا پسورد اشتباه است";
+            ErrorMessage = "کدملی یا شماره همراه وارد شده اشتباه است.";
         }
     }
 }

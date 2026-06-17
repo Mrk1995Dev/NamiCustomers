@@ -11,8 +11,10 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+var environment = builder.HostEnvironment.Environment;
+builder.Configuration.AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: false);
+var baseUrl = builder.Configuration["ApiSettings:BaseUrl"];
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
 
 builder.Services.AddAuthorizationCore(options =>
 {
@@ -48,8 +50,7 @@ builder.Services.AddAuthorizationCore(options =>
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 
-builder.Services.AddApplicationServices();
-//builder.Services.AddMudServices();
+builder.Services.AddApplicationServices(baseUrl);
 builder.Services.AddMudServices(config =>
 {
     config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomLeft;
@@ -62,6 +63,5 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.ShowTransitionDuration = 500;
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
-
 
 await builder.Build().RunAsync();

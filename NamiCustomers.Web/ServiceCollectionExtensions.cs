@@ -8,20 +8,20 @@ namespace NamiCustomers.Web
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services, string baseUrl)
         {
             services.AddScoped<JwtAuthorizationMessageHandler>();
 
             services.AddHttpClient("ApiWithAuth", client =>
             {
-                client.BaseAddress = new Uri("https://localhost:7061/api/v1/");
+                client.BaseAddress = new Uri(baseUrl);
 
             }).AddHttpMessageHandler<JwtAuthorizationMessageHandler>();
 
 
             services.AddHttpClient<IAuthService, AuthService>(client =>
             {
-                client.BaseAddress = new Uri("https://localhost:7061/api/v1/");
+                client.BaseAddress = new Uri(baseUrl);
             });
 
             services.AddScoped<ITokenService, TokenService>();

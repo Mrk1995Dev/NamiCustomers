@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_شکایت" data-name="شکایت" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 85.5 85.49">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #000;
+        stroke-miterlimit: 10;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M46.87,62.48h-14.06c-3.41,0-6.18-2.77-6.18-6.18v-25.99c0-3.41,2.77-6.18,6.18-6.18h18.86c3.41,0,6.18,2.77,6.18,6.18v16.41"/>
+  <line class="cls-1" x1="34.38" y1="33.98" x2="50.09" y2="33.98"/>
+  <line class="cls-1" x1="34.38" y1="40.48" x2="50.09" y2="40.48"/>
+  <line class="cls-1" x1="34.4" y1="46.97" x2="43.53" y2="46.97"/>
+  <polyline class="cls-1" points="50.09 55.56 55.55 60.63 66.16 49.85"/>
+</svg>

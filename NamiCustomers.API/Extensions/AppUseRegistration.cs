@@ -11,14 +11,9 @@ namespace NamiCustomers.API.Extensions
             app.UsingSwagger();
             app.UsingCors();
             app.UsingEndPoints();
-           
-
             app.UseHttpLogging();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
-
-
 
             return app;
         }
