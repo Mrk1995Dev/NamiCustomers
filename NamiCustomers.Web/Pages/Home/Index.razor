@@ -1,6 +1,9 @@
 ﻿@page "/"
+@using NamiCustomers.Web.Services.Vehicle.Contract
 
 @inject IJSRuntime JS
+@inject ISnackbar snackbar
+@inject NavigationManager Navigation
 
 <PageTitle>سامانه امور مشتریان نامی خودرو |نامی خودرو</PageTitle>
 
@@ -55,18 +58,18 @@
                             </div>
                         </a>
                         <p class="mb-0">
-                            <a href="/Vehicle/ActiveMainChassisGuarantee" class="service-box"> استعلام گارانتی </a>
+                            <NavLink href="/Vehicle/ActiveMainChassisGuarantee" class="service-box"> استعلام گارانتی </NavLink>
                         </p>
                     </div>
                 </div>
 
                 <div class="col-4">
                     <div class="feature-card mx-auto text-center">
-                        <a href="/vehicle/PartsPriceByChassis">
+                        <NavLink href="/vehicle/PartsPriceByChassis">
                             <div class="card mx-auto bg-gray">
                                 <img src="sitetmeplate/img/icon set/svg/part_price.svg" alt="استعلام بهای قطعات">
                             </div>
-                        </a>
+                        </NavLink>
 
                         <p class="mb-0">
                             <a href="/vehicle/PartsPriceByChassis" class="service-box"> استعلام بهای قطعات</a>
@@ -77,11 +80,11 @@
 
                 <div class="col-4">
                     <div class="feature-card mx-auto text-center">
-                        <a href="/Vehicle/ServicesPrice">
+                        <NavLink href="/vehicle/servicesPrice">
                             <div class="card mx-auto bg-gray">
                                 <img src="sitetmeplate/img/icon set/svg/service_price.svg" alt="استعلام بهای خدمات">
                             </div>
-                        </a>
+                        </NavLink>
                         <p class="mb-0">
                             <a href="/Vehicle/ServicesPrice" class="service-box"> استعلام بهای خدمات </a>
                         </p>
@@ -89,11 +92,11 @@
                 </div>
                 <div class="col-4">
                     <div class="feature-card mx-auto text-center">
-                        <a href="/booking/MyBooking">
+                        <NavLink href="/booking/MyBooking">
                             <div class="card mx-auto bg-gray">
                                 <img src="sitetmeplate/img/icon set/svg/Online_repair_shop_appointment.svg" alt="نوبت دهی">
                             </div>
-                        </a>
+                        </NavLink>
                         <p class="mb-0">
                             <a href="/booking/BookingIndex" class="service-box"> نوبت دهی</a>
                         </p>
@@ -102,24 +105,24 @@
 
                 <div class="col-4">
                     <div class="feature-card mx-auto text-center">
-                        <a href="/Reception/ReceptionsInformationByVinNumber">
+                        <NavLink href="/Reception/ReceptionsInformationByVinNumber">
                             <div class="card mx-auto bg-gray">
                                 <img src="sitetmeplate/img/icon set/svg/Repair_records.svg" alt="سوابق تعمیراتی">
                             </div>
-                        </a>
+                        </NavLink>
                         <p class="mb-0">
-                            <a href="/Reception/ReceptionsInformationByVinNumber" class="service-box"> سوابق تعمیراتی </a>
+                            <NavLink href="/Reception/ReceptionsInformationByVinNumber" class="service-box"> سوابق تعمیراتی </NavLink>
                         </p>
                     </div>
                 </div>
 
                 <div class="col-4">
                     <div class="feature-card mx-auto text-center">
-                        <a href="/Dealer/Call">
+                        <NavLink href="/Dealer/Call">
                             <div class="card mx-auto bg-gray">
                                 <img src="sitetmeplate/img/icon set/svg/Campaign.svg" alt="فراخوان">
                             </div>
-                        </a>
+                        </NavLink>
                         <p class="mb-0"><a href="/Dealer/Call" style="color:#fff"> فراخوان </a></p>
 
                     </div>
@@ -127,11 +130,11 @@
 
                 <div class="col-4">
                     <div class="feature-card mx-auto text-center">
-                        <a href="/Vehicle/OrderingsBySubscriber">
+                        <NavLink href="/Vehicle/OrderingsBySubscriber">
                             <div class="card mx-auto bg-gray">
                                 <img src="sitetmeplate/img/icon set/svg/service_price.svg" alt="لیست سفارشات">
                             </div>
-                        </a>
+                        </NavLink>
                         <p class="mb-0"><a href="/Vehicle/OrderingsBySubscriber" style="color:#fff"> لیست سفارشات </a></p>
                     </div>
                 </div>
@@ -254,8 +257,5 @@
 </div>
 
 @code {
-    protected override Task OnInitializedAsync()
-    {
-        return base.OnInitializedAsync();
-    }
+
 }

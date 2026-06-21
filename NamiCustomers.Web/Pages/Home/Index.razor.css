@@ -1,4 +1,17 @@
-﻿.service-box {
+﻿.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000000;
+    z-index: 9999;
+}
+
+.service-box {
     font-weight: 400;
     font-size: var(--fs-xxss);
     color: #ffffff;

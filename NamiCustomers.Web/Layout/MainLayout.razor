@@ -1,18 +1,19 @@
 ﻿@using Microsoft.JSInterop
 @using MudBlazor
+@using NamiCustomers.Web.Services.LocalStorage
+@using NamiCustomers.Web.Services.Vehicle.Contract
+@using NamiCustomers.Web.Services.Vehicle.Dto
+@using NamiCustomers.Web.Services.Vehicle.Implementation
 @inherits LayoutComponentBase
 
 @inject NavigationManager NavigationManager
+@inject IVehicleService VehicleService
+@inject ILocalStorageService localStorageService
+@inject VehicleContext VehicleContext
 
-<!-- Preloader -->
-@* <div id="preloader">
-    <div class="spinner-grow text-primary" role="status">
-        <span class="visually-hidden">در حال پردازش لطفا منتظر بمانید...</span>
-    </div>
-</div> *@
-
-<!-- Internet Connection Status -->
-@* <div class="internet-connection-status" id="internetStatus"></div> *@
+<MudPopoverProvider />
+<MudDialogProvider></MudDialogProvider>
+<MudSnackbarProvider></MudSnackbarProvider>
 
 <!-- Header Area -->
 <div class="header-area" id="headerArea">
@@ -25,10 +26,41 @@
                     <img src="SiteTmeplate/img/core-img/LogoSign.png" alt="نامی خودرو پیشرو">
                 </NavLink>
             </div>
-            <div class="setting-wrapper">
-                <div class="setting-trigger-btn" id="settingTriggerBtn">
-                    @* @await Component.InvokeAsync("DefaultVin") *@
-                </div>
+            <div class="vin-selector @(isOpen ? "is-open" : "")">
+                <button type="button" class="vin-selector__trigger" @onclick="ToggleOpen">
+                    <i class="bi bi-car-front-fill"></i>
+                    <span class="vin-selector__label">
+                        @(SelectedVin is null ? "انتخاب خودرو" : SelectedVin.VinNumber)
+                    </span>
+                    <i class="bi bi-chevron-down vin-selector__chevron"></i>
+                </button>
+
+                @if (isOpen)
+                {
+                    <div class="vin-selector__backdrop" @onclick="Close"></div>
+
+                    <div class="vin-selector__menu">
+                        @if (Vins is null)
+                        {
+                            <div class="vin-selector__empty">در حال بارگذاری...</div>
+                        }
+                        else if (!Vins.Any())
+                        {
+                            <div class="vin-selector__empty">خودرویی ثبت نشده است</div>
+                        }
+                        else
+                        {
+                            @foreach (var vin in Vins)
+                            {
+                                <button type="button" class="vin-selector__item @(vin.VinNumber == SelectedVin?.VinNumber ? "active" : "")"
+                                        @onclick="() => SelectVin(vin)">
+                                    <span class="vin-selector__item-title">@vin.SelectedVehicleCommonName</span>
+                                    <span class="vin-selector__item-code">@vin.VinNumber</span>
+                                </button>
+                            }
+                        }
+                    </div>
+                }
             </div>
             <!-- Navbar Toggler -->
             <div class="navbar--toggler" id="affanNavbarToggler" data-bs-toggle="offcanvas" data-bs-target="#NamioffCanvas"
@@ -194,111 +226,72 @@
 
     @inject IJSRuntime JS
 
+    private bool isLoading;
     private bool drawerOpen = true;
     private MudTheme? theme = null;
     private bool IsDarkMode = true;
-    private void DrawerToggle()
+
+    [Parameter] public List<VehicleModelDto>? Vins { get; set; }
+    [Parameter] public VehicleModelDto? SelectedVin { get; set; }
+    [Parameter] public EventCallback<VehicleModelDto> OnVinSelected { get; set; }
+
+    private VehicleModelDto vehicleInfo = new();
+    private bool isOpen = false;
+
+    private void ToggleOpen() => isOpen = !isOpen;
+    private void Close() => isOpen = false;
+
+    private async Task SelectVin(VehicleModelDto vin)
     {
-        drawerOpen = !drawerOpen;
+        isOpen = false;
+        SelectedVin = vin;
+        await OnVinSelected.InvokeAsync(SelectedVin);
+        VehicleContext.ChangeVin(vin);
+
+        if(SelectedVin is not null)
+        {
+            await localStorageService.SetItemAsync("vin", vin.VinNumber);
+            var result = await VehicleService.GetSubscriberVehicleInfoAsync(vin.Id);
+
+            if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+                NavigationManager.NavigateTo("/login");
+
+            else if (result.Succeeded)
+            {
+                vehicleInfo = result.Data;
+            }
+
+            else
+            {
+
+            }
+        }
     }
 
-    private async void DarkModeToggle()
+    public class VinItem
     {
-        IsDarkMode = !IsDarkMode;
-        await JS.InvokeVoidAsync("localStorage.setItem", "isDarkMode", IsDarkMode.ToString().ToLower());
+        public string VinCode { get; set; } = string.Empty;
+        public string DisplayName { get; set; } = string.Empty;
     }
-
-    private string DarkLightModeButtonIcon => IsDarkMode switch
-    {
-        true => Icons.Material.Filled.LightMode,
-        false => Icons.Material.Filled.DarkMode
-
-    };
 
     protected override async Task OnInitializedAsync()
     {
-        var storedMode = await JS.InvokeAsync<string>("localStorage.getItem", "isDarkMode");
-        if (!string.IsNullOrEmpty(storedMode))
+        await localStorageService.RemoveItemAsync("vin");
+        var result = await VehicleService.GetSubscriberVehicleAsync();
+        if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+            NavigationManager.NavigateTo("/login");
+
+        else if (result.Succeeded)
         {
-            IsDarkMode = storedMode == "true";
+            SelectedVin = null;
+            Vins = result.Data;
         }
 
-
-        theme = new MudTheme()
+        else
         {
-            // PseudoCss = new PseudoCss
-            // {
 
-            // },
-            // Typography = new Typography()
-            // {
-            //     Default = new DefaultTypography()
-            //     {
-            //         FontFamily = new[] { "Vazir", "Arial" }
-            //     }
-            // },
-            // PaletteLight = new PaletteLight()
-            // {
-            //     Black = "#110e2d",
-            //     AppbarText = "#424242",
-            //     AppbarBackground = "rgba(255,255,255,0.8)",
-            //     DrawerBackground = "#ffffff",
-            //     GrayLight = "#e8e8e8",
-            //     GrayLighter = "#f9f9f9",
-            // },
-            PaletteLight = new PaletteLight()
-            {
-                Black = "#0D1B2A",
-                AppbarBackground = "rgba(230, 247, 255, 0.85)",
-                AppbarText = "#1B263B",
-                DrawerBackground = "#F0F8FF",
-                DrawerText = "#1B263B",
-                GrayLight = "#DDEAF6",
-                GrayLighter = "#EEF5FB",
-                Background = "#F5FAFF",
-                Surface = "#FFFFFF",
-                Primary = "#1976D2",
-                PrimaryContrastText = "#FFFFFF",
-                Secondary = "#64B5F6",
-                SecondaryContrastText = "#FFFFFF",
-                Error = "#E53935",
-                ErrorContrastText = "#FFFFFF",
-                Success = "#43A047",
-                SuccessContrastText = "#FFFFFF",
-                Warning = "#FFC107",
-                WarningContrastText = "#1B263B",
-                Info = "#0288D1",
-                InfoContrastText = "#FFFFFF",
-            },
-            PaletteDark = new PaletteDark()
-            {
-                Primary = "#7e6fff",
-                Surface = "#1e1e2d",
-                Background = "#1a1a27",
-                BackgroundGray = "#151521",
-                AppbarText = "#92929f",
-                AppbarBackground = "rgba(26,26,39,0.8)",
-                DrawerBackground = "#1a1a27",
-                ActionDefault = "#74718e",
-                ActionDisabled = "#9999994d",
-                ActionDisabledBackground = "#605f6d4d",
-                TextPrimary = "#b2b0bf",
-                TextSecondary = "#92929f",
-                TextDisabled = "#ffffff33",
-                DrawerIcon = "#92929f",
-                DrawerText = "#92929f",
-                GrayLight = "#2a2833",
-                GrayLighter = "#1e1e2d",
-                Info = "#4a86ff",
-                Success = "#3dcb6c",
-                Warning = "#ffb545",
-                Error = "#ff3f5f",
-                LinesDefault = "#33323e",
-                TableLines = "#33323e",
-                Divider = "#292838",
-                OverlayLight = "#1e1e2d80",
-            }
-        };
+        }
+
     }
 
 }

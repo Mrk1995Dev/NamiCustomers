@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using NamiCustomers.Abstractions.Dtos.Subscribers;
 using NamiCustomers.Application.Services.Subscribers;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NamiCustomers.API.Controllers.v1
 {

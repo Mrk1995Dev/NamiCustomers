@@ -29,7 +29,7 @@ public interface ISubscriberService
     Task<ResultDto<byte[]>> ExportAsync();
     Task<ResultDto<List<CityDto>>> GetCitiesAsync();
     Task<ResultDto<SubscriberCodeDto>> SendOtpAsync(string mobile);
-    Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string mobile, string nationalCode);
+    Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string nationalCode, string mobile);
 
 
 
@@ -260,7 +260,7 @@ public class SubscriberService(IMapper mapper, ITokenService tokenService, IHttp
         return ResultDto.Success<SubscriberCodeDto>(new SubscriberCodeDto { NationalCode = otp.NationalCode, AuthCode = otp.AuthCode, Mobile = otp.Mobile });
     }
 
-    public async Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string mobile, string nationalCode)
+    public async Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string nationalCode, string mobile)
     {
 
         var Randowmpass = new PasswordUtility();

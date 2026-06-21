@@ -94,7 +94,7 @@ public class VehicleController(
                 SetError(data.Message);
                 return RedirectToAction("ServicesPrice", request);
             }
-            return View(data.Data);
+            return View(data);
         }
         return RedirectToAction("ServicesPrice", request);
     }

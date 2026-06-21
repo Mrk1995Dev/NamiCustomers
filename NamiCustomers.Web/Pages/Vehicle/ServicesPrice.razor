@@ -1,0 +1,143 @@
+﻿@page "/vehicle/servicesPrice"
+@using NamiCustomers.Web.Services.Dealer.Dto
+
+@inject ISnackbar snackbar
+@inject NavigationManager Navigation
+@inject IDealerService dealerService 
+
+<PageTitle>استعلام بهای خدمات | نامی خودرو</PageTitle>
+
+<div class="container-service">
+    <div class="container direction-rtl">
+        <div class="card">
+            <div class="card-body p-2">
+                <div class="d-flex align-items-center justify-content-between">
+                    <small class="ms-1">استعلام بهای خدمات </small>
+                    <form action="#">
+                        <NavLink title="بازگشت" href="/"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></NavLink>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+
+    <div class="container direction-rtl">
+        <div class="cart-wrapper-area">
+            <div class="cart-table card mb-3">
+                <div class="table-responsive card-body">
+                    <EditForm Model="@Model" OnValidSubmit="SearchAsync">
+                        <DataAnnotationsValidator />
+                        <div class="text-danger"></div>
+                        <div class="form-group">
+                            <label class="custom-label">کد خدمت</label>
+                            <InputText style="color: #000" @bind-value="Model.ServiceCode" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="custom-label">نام خدمت</label>
+                            <InputText style="color: #000" @bind-value="Model.ServiceName" class="form-control" />
+                        </div>
+
+                        <div class="custom-form-group">
+                            <label class="custom-label">نمایندگی</label>
+
+                            <select class="custom-select" value="@Model.DealerId" @onchange="DealerChanged">
+
+                                <option value="">انتخاب نمایندگی</option>
+
+                                @foreach (var dealer in Dealers)
+                                {
+                                    <option value="@dealer.DealerId">
+                                        @dealer.DealerName - @dealer.City
+                                    </option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="custom-form-group">
+                            <label class="custom-label">نمایندگی</label>
+
+                            <select class="custom-select"
+                                    @bind="Model.DealerId">
+
+                                <option value="">انتخاب شعبه</option>
+
+                                @foreach (var dealer in Branches)
+                                {
+                                    <option value="@dealer.DealerId">
+                                        @dealer.BranchName - @dealer.BranchNo
+                                    </option>
+                                }
+                            </select>
+                        </div>
+
+
+                        <hr />
+                        <div class="form-group">
+                            <input type="submit" value="جستجو" class="btn btn-primary w-100 mt-3" />
+                            <br />
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private ServicesPriceRequest Model = new();
+    private DealerResponseDto[] Dealers = Array.Empty<DealerResponseDto>();
+    private BranchesByDealerResponse[] Branches = Array.Empty<BranchesByDealerResponse>();
+    private Guid? SelectedDealerId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAllDealerAsync();
+    }
+
+    async Task LoadAllDealerAsync()
+    {
+        var result = await dealerService.GetAllDealerAsync();
+        if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+            Navigation.NavigateTo("/login");
+
+        else if (result.Succeeded)
+            Dealers = result.Data;
+
+        else
+        {
+            //
+        }
+    }
+
+    private async Task DealerChanged(ChangeEventArgs e)
+    {
+        if (Guid.TryParse(e.Value?.ToString(), out var dealerId))
+        {
+            SelectedDealerId = dealerId;
+
+            await LoadBranchesByDealerAsync(dealerId);
+        }
+    }
+
+    async Task LoadBranchesByDealerAsync(Guid id)
+    {
+        var result = await dealerService.GetAllBranchesByDealerAsync(id);
+        if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+            Navigation.NavigateTo("/login");
+
+        else if (result.Succeeded)
+            Branches = result.Data;
+
+        else
+        {
+            //
+        }
+    }
+
+    async Task SearchAsync()
+    {
+        
+    }
+}

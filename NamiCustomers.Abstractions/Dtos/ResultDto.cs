@@ -9,10 +9,10 @@ public class ResultDto<T> where T : class
         this.Succeeded = succeeded;
         this.Data = data;
         this.Errors = errors;
-
     }
 
     public bool Succeeded { get; private set; }
+    public int StatusCode { get; set; }
     public string? Message { get; private set; }
     public T? Data { get; private set; }
     public List<string> Errors { get; private set; }

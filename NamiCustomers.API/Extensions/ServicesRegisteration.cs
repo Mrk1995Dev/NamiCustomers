@@ -313,7 +313,7 @@ public static class ServicesRegisteration
         }).AddJwtBearer(options =>
         {
             options.RequireHttpsMetadata = false;
-            options.SaveToken = true;//در کنترل ها وسایر قسمت ها بتوانم اطلاعات توکن را بخوانم httpContext.getTokenAsync()
+            options.SaveToken = true;
 
             options.Events = new JwtBearerEvents
             {
@@ -349,7 +349,7 @@ public static class ServicesRegisteration
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidateAudience = true,
+                ValidateAudience = false,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
 

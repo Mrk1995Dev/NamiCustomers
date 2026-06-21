@@ -3464,7 +3464,7 @@ background :-webkit-linear-gradient(#ffffff, #ffffff);
   background-color: #212729;
   color: var(--white);
   text-align: center;
-  line-height: 2rem;
+  line-height: 2.34rem;
   position: absolute;
   top: 50%;
   left: 50%;

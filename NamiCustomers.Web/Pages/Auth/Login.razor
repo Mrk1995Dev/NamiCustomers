@@ -1,8 +1,7 @@
 ﻿@page "/login"
-@using NamiCustomers.Web.Models.Auth
-@using NamiCustomers.Web.Services.Auth.AuthServices
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
+@inject ISnackbar snackbar
 @layout LoginLayout
 
 <PageTitle>ورود به باشگاه مشتریان | نامی خودرو</PageTitle>
@@ -22,7 +21,7 @@
 
                 <div class="form-group">
                     <InputText class="form-control" style="color:#000 !important;"
-                               @bind-Value="LoginModel.Password"
+                               @bind-Value="LoginModel.NationalCode"
                                inputmode="numeric" pattern="[0-9]*"
                                placeholder="کد ملی" />
                     <ValidationMessage For="@(() => LoginModel.Password)" />
@@ -30,7 +29,7 @@
 
                 <div class="form-group">
                     <InputText class="form-control" style="color:#000 !important;"
-                               @bind-Value="LoginModel.Email"
+                               @bind-Value="LoginModel.PhoneNumber"
                                inputmode="numeric" pattern="[0-9]*"
                                placeholder="تلفن همراه" />
                     <ValidationMessage For="@(() => LoginModel.Email)" />
@@ -61,21 +60,43 @@
 </div>
 
 @code {
-    private LoginRequestDto LoginModel = new LoginRequestDto();
+    private LoginRequestDto LoginModel = new();
     private string ErrorMessage = string.Empty;
     private bool isSubmitting = false;
 
     private async Task HandleLogin()
     {
-        var success = await AuthService.LoginAsync(LoginModel);
-        if(success)
+        if(string.IsNullOrWhiteSpace(LoginModel.NationalCode) || string.IsNullOrWhiteSpace(LoginModel.PhoneNumber))
         {
+            snackbar.Add($"کاربر گرامی, لطفا اطلاعات مربوطه را وارد کنید.", Severity.Normal, configure =>
+            {
+                configure.IconColor = Color.Error;
+                configure.SuccessIcon = Icons.Material.Filled.Error;
+                configure.CloseAfterNavigation = false;
+            });
+
+            return;
+        }
+
+        isSubmitting = true;
+        var result = await AuthService.LoginAsync(LoginModel);
+        if(result.Succeeded)
+        {
+            snackbar.Add($"کد ورود به شماره {LoginModel.PhoneNumber} ارسال شد.", Severity.Normal, configure =>
+            {
+                configure.IconColor = Color.Success;
+                configure.SuccessIcon = Icons.Material.Filled.Done;
+                configure.CloseAfterNavigation = false;
+            });
+
             Navigation.NavigateTo($"/otp?mobile={LoginModel.Email}");
         }
 
         else
         {
-            ErrorMessage = "کدملی یا شماره همراه وارد شده اشتباه است.";
+            ErrorMessage = result?.Message ?? "";
         }
+
+        isSubmitting = false;
     }
 }

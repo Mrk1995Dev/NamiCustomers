@@ -1,5 +1,4 @@
-﻿using NamiCustomers.Web.Services.Auth.AuthServices;
-using NamiCustomers.Web.Services.Auth.TokenServices;
+﻿using NamiCustomers.Web.Services.Auth.TokenServices;
 using System.Net.Http.Headers;
 
 namespace NamiCustomers.Web.Handlers
@@ -8,16 +7,14 @@ namespace NamiCustomers.Web.Handlers
     {
         private readonly ITokenService tokenService;
         private readonly IAuthService authService;
-        private readonly NavigationManager navigationManager;
         public JwtAuthorizationMessageHandler(ITokenService tokenService,
             IAuthService authService,
             NavigationManager navigationManager)
         {
             this.tokenService = tokenService;
             this.authService = authService;
-            this.navigationManager = navigationManager;
-
         }
+
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             try
@@ -30,7 +27,6 @@ namespace NamiCustomers.Web.Handlers
                 }
 
                 var response = await base.SendAsync(request, cancellationToken);
-
 
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
@@ -45,10 +41,7 @@ namespace NamiCustomers.Web.Handlers
                             return await base.SendAsync(request, cancellationToken);
                         }
                     }
-
-                    navigationManager.NavigateTo("login", true);
                 }
-
 
                 return response;
             }

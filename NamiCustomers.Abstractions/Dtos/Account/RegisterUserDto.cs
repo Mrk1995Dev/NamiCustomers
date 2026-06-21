@@ -35,15 +35,10 @@ public class RegisterUserDto
 
 public class RegisterModelDto
 {
-    [Required]
     public string FirstName { get; set; }
-    [Required]
     public string LastName { get; set; }
-    [Required]
     public string Mobile { get; set; }
-    [Required]
     public string Email { get; set; }
-    [Required]
     public string Password { get; set; }
     [Required]
     public string NationalCode { get; set; }

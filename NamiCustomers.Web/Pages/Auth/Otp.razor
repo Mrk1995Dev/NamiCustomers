@@ -1,9 +1,9 @@
 ﻿@page "/otp"
 @layout LoginLayout
-@using MudX
-@using System.Net.Http.Json
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject ISnackbar snackbar
+@inject IAuthService authService
 
 <div class="login-wrapper d-flex align-items-center justify-content-center">
     <div class="custom-container">
@@ -15,31 +15,18 @@
 
         <div class="otp-verify-form mt-2" style="direction:rtl !important; gap: 4px;">
             <div class="input-group mb-3 otp-input-group">
-                @for (var i = 0; i < 5; i++)
-                {
-                    var index = i;
-                    <input class="form-control"
-                           @ref="inputRefs[index]"
-                           @bind="digits[index]"
-                           @bind:event="oninput"
-                           @onkeyup="e => OnDigitKeyUp(e, index)"
-                           type="text" inputmode="numeric" pattern="[0-9]*"
-                           style="color:#000 !important; border-radius: 8px; gap: 4px;"
-                           maxlength="1"
-                           autofocus="@(index == 0)" />
-                }
+                <input class="form-control"
+                       @bind="otpCode"
+                       @oninput="OnOtpInput"
+                       type="text" inputmode="numeric" pattern="[0-9]*"
+                       style="color:#000 !important; border-radius: 6px;"
+                       maxlength="5"
+                       autofocus />
             </div>
 
-            @if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <div class="alert alert-danger py-2">@errorMessage</div>
-            }
-
-            <MudButton Color="Color.Error" Variant="Variant.Filled"
-                       OnClick="ConfirmOtpAsync" Disabled="@isSubmitting"
-                       FullWidth="true">
+            <button class="btn btn-primary w-100" type="submit" disabled="@isSubmitting" @onclick="ConfirmOtpAsync">
                 @(isSubmitting ? "در حال بررسی..." : "ورود به سامانه")
-            </MudButton>
+            </button>
         </div>
 
         <div class="login-meta-data text-center">
@@ -58,55 +45,61 @@
     private bool isSubmitting = false;
     private string? errorMessage;
 
-    private string Code => string.Concat(digits.Select(d => d ?? ""));
+    private string? otpCode;
 
-    private async Task OnDigitKeyUp(KeyboardEventArgs e, int index)
+    private void OnOtpInput(ChangeEventArgs e)
     {
-        if (!string.IsNullOrEmpty(digits[index]) && digits[index]!.Length > 1)
+        var value = e.Value?.ToString() ?? "";
+
+        value = new string(value.Where(char.IsDigit).ToArray());
+
+        if (value.Length > 5)
         {
-            digits[index] = digits[index]![^1..];
+            value = value[..5];
         }
 
-        if (e.Key != "Backspace" && !string.IsNullOrEmpty(digits[index]) && index > 0)
-        {
-            await inputRefs[index - 1].FocusAsync();
-        }
-        else if (e.Key == "Backspace" && string.IsNullOrEmpty(digits[index]) && index < 4)
-        {
-            await inputRefs[index + 1].FocusAsync();
-        }
+        otpCode = value.Trim();
     }
 
     async Task ConfirmOtpAsync()
     {
-        var code = Code;
-        if (string.IsNullOrWhiteSpace(code) || code.Length < 5)
+        if (string.IsNullOrWhiteSpace(otpCode) || otpCode.Length < 5)
         {
-            errorMessage = "لطفاً کد ۵ رقمی را کامل وارد کنید.";
-            return;
+            snackbar.Add("لطفا کد دو عاملی را وارد کنید.", Severity.Normal, configure =>
+            {
+                configure.IconColor = Color.Error;
+                configure.SuccessIcon = Icons.Material.Filled.Error;
+                configure.CloseAfterNavigation = false;
+            });
         }
 
         isSubmitting = true;
-        errorMessage = null;
 
         try
         {
-            var url = $"api/v1/Account/CheckOtp?mobile={Uri.EscapeDataString(MobileNumber ?? "")}&otp={Uri.EscapeDataString(code)}";
-            var response = await Http.GetAsync(url);
+            var result = await authService.ConfirmOtpAsync(otpCode);
 
-            if (response.IsSuccessStatusCode)
-            {
+            if (result.Succeeded)
                 NavigationManager.NavigateTo("/");
-            }
+
             else
-            {
-                errorMessage = "کد تایید وارد شده صحیح نیست.";
-            }
+                snackbar.Add(result.Message, Severity.Normal, configure =>
+             {
+                 configure.IconColor = Color.Error;
+                 configure.SuccessIcon = Icons.Material.Filled.Error;
+                 configure.CloseAfterNavigation = false;
+             });
         }
         catch
         {
-            errorMessage = "خطا در برقراری ارتباط با سرور.";
+            snackbar.Add("خطا در برقراری ارتباط با سرور", Severity.Normal, configure =>
+             {
+                 configure.IconColor = Color.Error;
+                 configure.SuccessIcon = Icons.Material.Filled.Error;
+                 configure.CloseAfterNavigation = false;
+             });
         }
+
         finally
         {
             isSubmitting = false;

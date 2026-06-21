@@ -34,6 +34,62 @@ label,
     font-family: 'Vazir' !important;
 }
 
+.custom-loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    z-index: 9999;
+}
+
+.dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    animation: bounce 0.8s infinite ease-in-out;
+}
+
+.green {
+    background: #28a745;
+    animation-delay: 0s;
+}
+
+.red {
+    background: #dc3545;
+    animation-delay: 0.2s;
+}
+
+.white {
+    background: #fff;
+    border: 1px solid #ddd;
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+    0%,100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: translateY(-12px);
+        opacity: 1;
+    }
+}
+
 .loading-progress {
     position: relative;
     display: block;
@@ -3844,7 +3900,7 @@ a.affan-element-item {
             background-color: #212729;
             color: var(--white);
             text-align: center;
-            line-height: 2rem;
+            line-height: 2.34rem;
             position: absolute;
             top: 50%;
             left: 50%;

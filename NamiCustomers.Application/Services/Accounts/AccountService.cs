@@ -1,14 +1,56 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using NamiCustomers.Abstractions.Dtos.Account;
 using NamiCustomers.Abstractions.Dtos.Security.Dto;
 using NamiCustomers.Domain.Entities.Account;
+using NamiCustomers.Domain.Entities.Subscribers;
+using NamiCustomers.Infrastucture.Utilities;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 using System.Security.Claims;
 
 namespace NamiCustomers.Application.Services.Accounts;
 public class AccountService(
     RoleManager<ApplicationRole> roleManager,
-    UserManager<ApplicationUser> userManager, IMapper mapper) : IAccountService
+    UserManager<ApplicationUser> userManager, IMapper mapper,
+    IAppDbContext context,
+    ITokenService tokenService) : IAccountService
 {
+    public async Task<ResultDto<LoginResponseDto>> CheckSubscriberRegisteredAsync(string phoneNumber, string nationalCode)
+    {
+        //var user = await userManager.Users.WhereIf(true, c => c.PhoneNumber == phoneNumber).SingleOrDefaultAsync();
+        var subscriber = await context.Subscribers.SingleOrDefaultAsync(s => s.Mobile == phoneNumber);
+        if (subscriber != null)
+        {
+            var tokenResponse = await tokenService.GenerateAndStoreTokensAsync(subscriber);
+            var result = ResultDto.Success<LoginResponseDto>(new LoginResponseDto { RefreshToken = tokenResponse.RefreshToken, Token = tokenResponse.AccessToken, NationalCode = subscriber.NationalCode, Mobile = subscriber.Mobile, Id = subscriber.Id.ToString(), FirstName = subscriber.Name, LastName = subscriber.Family });
+            return result;
+        }
+
+        else
+        {
+            var registerUserResult = await context.Subscribers.AddAsync(new Domain.Entities.Subscribers.Subscriber
+            {
+                Name = string.Empty,
+                Family = string.Empty,
+                Mobile = phoneNumber,
+                NationalCode = nationalCode,
+            });
+
+            if ((await context.SaveChangesAsync()) > 0)
+            {
+                var newUser = await userManager.Users.WhereIf(true, c => c.Mobile == phoneNumber).SingleOrDefaultAsync();
+                var tokenResponse = await tokenService.GenerateAndStoreTokensAsync(newUser);
+                var result = ResultDto.Success<LoginResponseDto>(new LoginResponseDto { RefreshToken = tokenResponse.RefreshToken, Token = tokenResponse.AccessToken, NationalCode = subscriber.NationalCode, Mobile = subscriber.Mobile, Id = subscriber.Id.ToString(), FirstName = subscriber.Name, LastName = subscriber.Family });
+                return result;
+            }
+
+
+            else
+                return new ResultDto<LoginResponseDto>("خطا در ایجاد توکن مربوطه", false);
+        }
+    }
 
     // Add permission to role (AspNetRoleClaims)
     public async Task<IdentityResult> AddPermissionToRoleAsync(string roleName, string permission)

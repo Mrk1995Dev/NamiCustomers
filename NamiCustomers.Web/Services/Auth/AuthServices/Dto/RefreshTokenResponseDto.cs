@@ -1,4 +1,4 @@
-﻿namespace NamiCustomers.Web.Models.Auth
+﻿namespace NamiCustomers.Web.Services.Auth.AuthServices.Dto
 {
     public class RefreshTokenResponseDto
     {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using NamiCustomers.Abstractions.Dtos.Account;
 using NamiCustomers.Abstractions.Dtos.Security.Dto;
 
 namespace NamiCustomers.Application.Services.Accounts
@@ -11,8 +12,7 @@ namespace NamiCustomers.Application.Services.Accounts
         Task<IdentityResult> RemovePermissionFromRoleAsync(string roleName, string permission);
         Task<IdentityResult> RemovePermissionFromUserAsync(string userId, string permission);
         Task<bool> UserHasPermissionAsync(string userId, string permission);
-
-
+        Task<ResultDto<LoginResponseDto>> CheckSubscriberRegisteredAsync(string phoneNumber, string nationalCode);
         Task<ResultDto<UserDto>> GetByNationalCodeAsync(string nationalCode);
     }
 }

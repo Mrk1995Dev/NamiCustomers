@@ -165,14 +165,14 @@ public class VehicleService(IAppDbContext dbContext,
     public async Task<ResultDto<VehicleModelDto>> GetAsync(int id)
     {
         var data = await dbContext.VehicleModels.Include(c => c.VehicleAttachment).FirstOrDefaultAsync(cu => cu.Id == id);
-        if (data == null) return  ResultDto.Failure<VehicleModelDto>(
-           Infrastucture.Properties.Resources.errNotFound
-           );
+
+        if (data == null) return  ResultDto.Failure<VehicleModelDto>(Infrastucture.Properties.Resources.errNotFound);
+
         var relatedAttach = dbContext.VehicleAttachments.FirstOrDefault(c => c.VehicleModelIdSevenSoft == data.VehicleModelIdSevenSoft);
+
         if (relatedAttach != null)
-        {
             data.VehicleAttachment = relatedAttach;
-        }
+
         var model = mapper.Map<VehicleModelDto>(data);
         return   ResultDto.Success<VehicleModelDto>(model);
     }
