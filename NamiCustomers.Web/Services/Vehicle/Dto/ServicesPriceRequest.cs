@@ -7,7 +7,7 @@
         public string? ServiceName { get; set; }
         public string ChassisVinNumber { get; set; } = null!;
         public string NationalCodeOrEconomicCode { get; set; } = null!;
-        public Guid? BranchId { get; set; }
-        public Guid? DealerId { get; set; }
+        public Guid BranchId { get; set; }
+        public Guid DealerId { get; set; }
     }
 }

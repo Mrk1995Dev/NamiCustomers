@@ -1,6 +1,4 @@
 ﻿@page "/"
-@using NamiCustomers.Web.Services.Vehicle.Contract
-
 @inject IJSRuntime JS
 @inject ISnackbar snackbar
 @inject NavigationManager Navigation
@@ -11,8 +9,8 @@
     <div class="tiny-slider-one-wrapper">
         <div class="tiny-slider-one">
             <MudCarousel Class="mud-width-full" Style="height:200px;" ShowArrows="true" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="true" TData="object">
-                <MudCarouselItem Transition="Transition.Slide">
-                    <div class="single-hero-slide bg-overlay" style="background-image: url('../sitetmeplate/img/bg-img/bg_1.jpeg')">
+                <MudCarouselItem Transition="MudBlazor.Transition.Slide">
+                    <div class="single-hero-slide bg-overlay" style="background-image: url('sitetmeplate/img/bg-img/bg_1.jpeg')">
                         <div class="h-100 d-flex align-items-center text-center">
                             <div class="container">
                                 <h3 class="text-white mb-1">محصولات نیسان</h3>
@@ -22,8 +20,8 @@
                         </div>
                     </div>
                 </MudCarouselItem>
-                <MudCarouselItem Transition="Transition.Slide">
-                    <div class="single-hero-slide bg-overlay" style="background-image: url('../sitetmeplate/img/bg-img/bg_3.jpeg')">
+                <MudCarouselItem Transition="MudBlazor.Transition.Slide">
+                    <div class="single-hero-slide bg-overlay" style="background-image: url('sitetmeplate/img/bg-img/bg_3.jpeg')">
                         <div class="h-100 d-flex align-items-center text-center">
                             <div class="container">
                                 <div class="container">
@@ -118,12 +116,12 @@
 
                 <div class="col-4">
                     <div class="feature-card mx-auto text-center">
-                        <NavLink href="/Dealer/Call">
+                        <NavLink href="/call">
                             <div class="card mx-auto bg-gray">
                                 <img src="sitetmeplate/img/icon set/svg/Campaign.svg" alt="فراخوان">
                             </div>
                         </NavLink>
-                        <p class="mb-0"><a href="/Dealer/Call" style="color:#fff"> فراخوان </a></p>
+                        <p class="mb-0"><NavLink href="/call" style="color:#fff"> فراخوان </NavLink></p>
 
                     </div>
                 </div>
@@ -147,14 +145,13 @@
 
 
 <div class="container">
-    <div class="card bg-primary bg-img" style="background-image: url('../sitetmeplate/img/core-img/2.png')">
+    <div class="card bg-primary bg-img" style="background-image: url('sitetmeplate/img/core-img/2.png')">
         <div class="card-body p-5 direction-rtl">
             <i class="bi bi-geo-alt text-white mb-3 display-2"></i>
             <h2 class="text-white">مشاهده لیست عاملیت ها</h2>
             <p class="text-white mb-0">برای مشاهده لیست نمایندگی‌های معتبر فروش و مراکز خدمات پس از فروش در سراسر کشور، روی لینک زیر کلیک کنید:</p>
             <br />
-            <a class="btn" style="border-color:#000;background-color:#000" href="/dealer/Dealers">مشاهده عاملیت ها @* <i class="bi bi-arrow-left"></i> *@</a>
-
+            <NavLink class="btn" style="border-color:#000;background-color:#000" href="/dealers">مشاهده عاملیت ها @* <i class="bi bi-arrow-left"></i> *@</NavLink>
         </div>
     </div>
 </div>
@@ -166,7 +163,7 @@
             <div class="row g-3">
                 <div class="col-4">
                     <div class="feature-card mx-auto text-center">
-                        <a type="button" href="~/sitetmeplate/pdf/قانون-حمایت-.pdf" download>
+                        <a type="button" href="sitetmeplate/pdf/قانون-حمایت-.pdf" download>
                             <div class="card mx-auto bg-gray">
                                 <img src="sitetmeplate/img/icon set/svg/Consumer_Rights_Protection_Law.svg" alt="قانون و آیین نامه حمایت از حقوق مصرف کننده">
                             </div>
@@ -181,14 +178,13 @@
 
                 <div class="col-4">
                     <div class="feature-card mx-auto text-center">
-                        <a type="button" href="~/sitetmeplate/pdf/لیست-قطعات-و-عیوب-ایمنی.pdf" download>
+                        <a type="button" href="sitetmeplate/pdf/لیست-قطعات-و-عیوب-ایمنی.pdf" download>
                             <div class="card mx-auto bg-gray">
                                 <img src="sitetmeplate/img/icon set/svg/parts_and_safety.svg" alt="لیست قطعات و عیوب ایمنی خودرو">
                             </div>
                         </a>
                         <p class="mb-0">
-
-                            <a class="service-box" type="button" href="~/sitetmeplate/pdf/لیست-قطعات-و-عیوب-ایمنی.pdf" download>
+                            <a class="service-box" type="button" href="sitetmeplate/pdf/لیست-قطعات-و-عیوب-ایمنی.pdf" download>
                                 لیست قطعات و عیوب ایمنی خودرو
                             </a>
                         </p>
@@ -198,15 +194,15 @@
 
                 <div class="col-4">
                     <div class="feature-card mx-auto text-center">
-                        <a href="/Home/faq">
+                        <NavLink href="/faq">
                             <div class="card mx-auto bg-gray">
                                 <img src="sitetmeplate/img/icon set/svg/faq.svg" alt="سوالات متداول">
                             </div>
-                        </a>
+                        </NavLink>
                         <p class="mb-0">
-                            <a href="/Home/faq" class="service-box">
+                            <NavLink href="/faq" class="service-box">
                                 سوالات متداول
-                            </a>
+                            </NavLink>
                         </p>
                     </div>
                 </div>
@@ -216,7 +212,7 @@
 </div>
 <br />
 <div class="container">
-    <div class="card shadow-sm bg-img" style="background-image: url('../sitetmeplate/img/core-img/2.png')">
+    <div class="card shadow-sm bg-img" style="background-image: url('sitetmeplate/img/core-img/2.png')">
         <div class="card-body text-center p-5">
             <h2 class="text-white">اخبار و اطلاعیه‌ها</h2>
             <p class="mb-3 text-white">

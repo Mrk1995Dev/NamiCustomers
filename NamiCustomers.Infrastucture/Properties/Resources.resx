@@ -234,6 +234,6 @@
     <value>مشترک مورد نظر یافت نشد</value>
   </data>
   <data name="errRequiredServiceCodeName" xml:space="preserve">
-    <value>انتخاب کد خدمت یا عنوان خدمت اجباریست</value>
+    <value>کاربر گرامی, کد خدمت یا عنوان خدمت اجباری می باشد.</value>
   </data>
 </root>

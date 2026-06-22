@@ -11,5 +11,6 @@ namespace NamiCustomers.Web.Services.Vehicle.Contract
         Task<ResultDto<ActiveMainChassisGuaranteeResponse>> GetActiveMainChassisGuarantee(string vinNumber);
         Task<ResultDto<PartsPriceByChassisResponse[]>> GetPartsPriceByChassisAsync(PartsPriceByChassisRequest getPartsPriceByChassisRequest);
         Task<ResultDto<ServicesPriceResponse[]>> GetServicesPriceList(ServicesPriceRequest request);
+        Task<ResultDto<string[]>> GetSpecificCasesAsync(string vinNumber);
     }
 }

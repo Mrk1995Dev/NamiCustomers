@@ -1,4 +1,4 @@
-﻿@model  NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos.ServicesPriceResponse[]
+﻿@model NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos.ServicesPriceResponse[]
 
 @{
     ViewData["Title"] = "ServicesPriceList";
@@ -21,27 +21,19 @@
     </div>
 </div>
 <hr />
-@if(Model.Any())
+@if (Model.Any())
 {
-
     <div class="container">
         <div class="card">
             <div class="card-body">
                 <table class="w-100" id="dataTable">
                     <thead>
                         <tr>
-                            <th>  @Html.DisplayNameFor(model => model[0].RowNumber)</th>
+                            <th> @Html.DisplayNameFor(model => model[0].RowNumber)</th>
                             <th> @Html.DisplayNameFor(model => model[0].ServiceCode)</th>
                             <th> @Html.DisplayNameFor(model => model[0].ServiceName)</th>
-
-                            <th>
-                                @Html.DisplayNameFor(model => model[0].PriceCustomer)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model[0].PriceWarranty)
-                            </th>
-                          
-                           
+                            <th>@Html.DisplayNameFor(model => model[0].PriceCustomer)</th>
+                            <th>@Html.DisplayNameFor(model => model[0].PriceWarranty)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -57,17 +49,17 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.ServiceName)
                                 </td>
-                             
+
                                 @*   <td>
                         @Html.DisplayFor(modelItem => item.BranchId)
                     </td> *@
                                 <td>
                                     @string.Format("{0:#,##0}", item.PriceCustomer)
-                                   
+
                                 </td>
                                 <td>
                                     @string.Format("{0:#,##0}", item.PriceWarranty)
-                                  
+
                                 </td>
 
                             </tr>
@@ -77,9 +69,4 @@
             </div>
         </div>
     </div>
-
-
- 
-
 }
-

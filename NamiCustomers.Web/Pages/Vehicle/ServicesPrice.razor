@@ -3,7 +3,9 @@
 
 @inject ISnackbar snackbar
 @inject NavigationManager Navigation
-@inject IDealerService dealerService 
+@inject IDealerService dealerService
+@inject IVehicleService vehicleService
+@inject ToastService ToastService
 
 <PageTitle>استعلام بهای خدمات | نامی خودرو</PageTitle>
 
@@ -62,10 +64,10 @@
 
                                 <option value="">انتخاب شعبه</option>
 
-                                @foreach (var dealer in Branches)
+                                @foreach (var branche in Branches)
                                 {
-                                    <option value="@dealer.DealerId">
-                                        @dealer.BranchName - @dealer.BranchNo
+                                    <option value="@branche.BranchId">
+                                        @branche.BranchName - @branche.BranchNo
                                     </option>
                                 }
                             </select>
@@ -85,11 +87,71 @@
 </div>
 
 
+@if (showList)
+{
+    <br />
+
+    @if (ServicesPriceList.Any())
+    {
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <small class="ms-1">نمایش لیست قیمت </small>
+                        <NavLink title="بازگشت" href="/Vehicle/ServicesPrice"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></NavLink>
+                    </div>
+
+                    <hr />
+
+                    <table class="w-100" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>ردیف</th>
+                                <th> کد خدمت</th>
+                                <th> نام خدمت</th>
+                                <th>قیمت مشتری</th>
+                                <th>گارانتی قیمت</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ServicesPriceList)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.RowNumber
+                                    </td>
+                                    <td>
+                                        @item.ServiceCode
+                                    </td>
+                                    <td>
+                                        @item.ServiceName
+                                    </td>
+                                    <td>
+                                        @string.Format("{0:#,##0}", item.PriceCustomer)
+
+                                    </td>
+                                    <td>
+                                        @string.Format("{0:#,##0}", item.PriceWarranty)
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
 @code {
     private ServicesPriceRequest Model = new();
     private DealerResponseDto[] Dealers = Array.Empty<DealerResponseDto>();
     private BranchesByDealerResponse[] Branches = Array.Empty<BranchesByDealerResponse>();
+    private ServicesPriceResponse[] ServicesPriceList = Array.Empty<ServicesPriceResponse>();
     private Guid? SelectedDealerId;
+    private bool showList;
 
     protected override async Task OnInitializedAsync()
     {
@@ -138,6 +200,27 @@
 
     async Task SearchAsync()
     {
-        
+        var result = await vehicleService.GetServicesPriceList(Model);
+        if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+            Navigation.NavigateTo("/login");
+
+        else if (result.Succeeded)
+        {
+            showList = true;
+            ServicesPriceList = result.Data;
+        }
+
+        else
+        {
+            await ToastService.Show(new ToastOption()
+            {
+                ShowClose = true,
+                ShowHeader = true,
+                Category = ToastCategory.Error,
+                Title = "اعلان",
+                Content = result.Message,
+                Animation = true
+            });
+        }
     }
 }

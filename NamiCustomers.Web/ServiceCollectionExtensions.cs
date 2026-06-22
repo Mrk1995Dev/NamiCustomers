@@ -6,6 +6,7 @@ using NamiCustomers.Web.Services.CustomerService.Implementation;
 using NamiCustomers.Web.Services.Dealer.Contract;
 using NamiCustomers.Web.Services.Dealer.Implementation;
 using NamiCustomers.Web.Services.LocalStorage;
+using NamiCustomers.Web.Services.Subscriber.Contract;
 using NamiCustomers.Web.Services.Vehicle.Contract;
 using NamiCustomers.Web.Services.Vehicle.Implementation;
 
@@ -47,6 +48,11 @@ namespace NamiCustomers.Web
             });
 
             services.AddHttpClient<IDealerService, DealerService>("ApiWithAuth", configureClient =>
+            {
+                configureClient.BaseAddress = new Uri(baseUrl);
+            });
+
+            services.AddHttpClient<ISubscriberService, SubscriberService>("ApiWithAuth", configureClient =>
             {
                 configureClient.BaseAddress = new Uri(baseUrl);
             });

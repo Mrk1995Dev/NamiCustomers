@@ -25,8 +25,14 @@ namespace NamiCustomers.API.Controllers.v1
           
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> InfoByNationalCode([FromQuery] string nationalCode)
+        public async Task<IActionResult> InfoByNationalCode()
         {
+            var nationalCode = User.FindFirst("NationalCode")?.Value;
+            if(string.IsNullOrWhiteSpace(nationalCode))
+            {
+                //return BadRequest(ResultDto.Failure());
+            }
+
             var response = await subscriberService.GetByNationalCodeAsync(nationalCode);
             if (response.Succeeded)
             {

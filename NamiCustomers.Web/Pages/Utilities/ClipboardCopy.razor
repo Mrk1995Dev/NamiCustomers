@@ -19,7 +19,7 @@
             await JS.InvokeVoidAsync("navigator.clipboard.writeText", TextToCopy);
             Snackbar.Add("متن در کلیپ‌بورد کپی شد!", Severity.Info, options =>
             {
-                options.IconColor = Color.Dark;
+                options.IconColor = MudBlazor.Color.Dark;
             });
         }
         else

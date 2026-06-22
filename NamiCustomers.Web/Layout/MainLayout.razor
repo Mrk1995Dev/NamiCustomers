@@ -1,4 +1,5 @@
-﻿@using Microsoft.JSInterop
+﻿@using BootstrapBlazor.Components
+@using Microsoft.JSInterop
 @using MudBlazor
 @using NamiCustomers.Web.Services.LocalStorage
 @using NamiCustomers.Web.Services.Vehicle.Contract
@@ -15,6 +16,7 @@
 <MudDialogProvider></MudDialogProvider>
 <MudSnackbarProvider></MudSnackbarProvider>
 
+<BootstrapBlazorRoot>
 <!-- Header Area -->
 <div class="header-area" id="headerArea">
     <div class="container-fluid">
@@ -164,7 +166,6 @@
     </div>
 </div>
 
-
 <div class="page-content-wrapper">
     @Body
     <!-- Welcome Toast -->
@@ -182,35 +183,35 @@
         <div class="footer-nav position-relative">
             <ul class="h-100 d-flex align-items-center justify-content-between ps-0">
                 <li>
-                    <NavLink class="nav-link text-dark" href="" Match="NavLinkMatch.All">
+                    <NavLink class="nav-link text-dark" href="/" Match="NavLinkMatch.All">
                         <i class="bi bi-house-door"></i>
                         <span>خانه</span>
                     </NavLink>
                 </li>
 
                 <li>
-                    <NavLink class="nav-link text-dark" href="Subscriber/Profile">
+                    <NavLink class="nav-link text-dark" href="/profile">
                         <i class="bi bi-person"></i>
                         <span>پروفایل</span>
                     </NavLink>
                 </li>
 
                 <li>
-                    <NavLink class="nav-link text-dark" href="Vehicle">
+                    <NavLink class="nav-link text-dark" href="vehicle">
                         <i class="bi bi-car-front"></i>
                         <span>خودروهای من</span>
                     </NavLink>
                 </li>
 
                 <li>
-                    <NavLink class="nav-link text-dark" href="Home/Contact">
+                    <NavLink class="nav-link text-dark" href="/contact">
                         <i class="bi bi-telephone"></i>
                         <span>تماس با ما</span>
                     </NavLink>
                 </li>
 
                 <li>
-                    <NavLink class="nav-link text-dark" href="Dealer/Dealers">
+                    <NavLink class="nav-link text-dark" href="/dealers">
                         <i class="bi bi-geo-alt"></i>
                         <span>لیست عاملیت</span>
                     </NavLink>
@@ -219,7 +220,7 @@
         </div>
     </div>
 </div>
-
+</BootstrapBlazorRoot>
 
 
 @code {

@@ -13,6 +13,3 @@ app.BaseAppUse();
 
 app.MapControllers();
 app.Run();
-
-
-

@@ -54,14 +54,18 @@ builder.Services.AddApplicationServices(baseUrl);
 builder.Services.AddMudServices(config =>
 {
     config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopCenter;
-
     config.SnackbarConfiguration.PreventDuplicates = false;
     config.SnackbarConfiguration.NewestOnTop = false;
     config.SnackbarConfiguration.ShowCloseIcon = true;
-    config.SnackbarConfiguration.VisibleStateDuration = 3500;
+    config.SnackbarConfiguration.VisibleStateDuration = 4000;
     config.SnackbarConfiguration.HideTransitionDuration = 500;
     config.SnackbarConfiguration.ShowTransitionDuration = 500;
     config.SnackbarConfiguration.SnackbarVariant = Variant.Outlined;
+});
+builder.Services.AddBootstrapBlazor(options =>
+{
+    options.ToastPlacement = BootstrapBlazor.Components.Placement.TopEnd;
+    options.ToastDelay = 5000;
 });
 
 await builder.Build().RunAsync();

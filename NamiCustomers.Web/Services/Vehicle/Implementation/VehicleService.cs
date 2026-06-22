@@ -1,6 +1,7 @@
 ﻿using NamiCustomers.Abstractions.Dtos;
 using NamiCustomers.Web.Services.Vehicle.Contract;
 using NamiCustomers.Web.Services.Vehicle.Dto;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Json;
@@ -142,6 +143,32 @@ namespace NamiCustomers.Web.Services.Vehicle.Implementation
             else
             {
                 result = await response.Content.ReadFromJsonAsync<ResultDto<ServicesPriceResponse[]>>();
+                return result;
+            }
+        }
+
+        public async Task<ResultDto<string[]>> GetSpecificCasesAsync(string vinNumber)
+        {
+            var result = new ResultDto<string[]>("", false);
+            var response = await httpClient.GetAsync($"Vehicle/GetSpecificCases?vinNumber={vinNumber}");
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return new ResultDto<string[]>("", false)
+                {
+                    StatusCode = (int)HttpStatusCode.Unauthorized
+                };
+            }
+
+            else if (response.IsSuccessStatusCode)
+            {
+                result = await response.Content.ReadFromJsonAsync<ResultDto<string[]>>();
+                return result;
+            }
+
+            else
+            {
+                result = await response.Content.ReadFromJsonAsync<ResultDto<string[]>>();
                 return result;
             }
         }

@@ -67,7 +67,7 @@
         {
             snackbar.Add("لطفا کد دو عاملی را وارد کنید.", Severity.Normal, configure =>
             {
-                configure.IconColor = Color.Error;
+                configure.IconColor = MudBlazor.Color.Error;
                 configure.SuccessIcon = Icons.Material.Filled.Error;
                 configure.CloseAfterNavigation = false;
             });
@@ -85,7 +85,7 @@
             else
                 snackbar.Add(result.Message, Severity.Normal, configure =>
              {
-                 configure.IconColor = Color.Error;
+                 configure.IconColor = MudBlazor.Color.Error;
                  configure.SuccessIcon = Icons.Material.Filled.Error;
                  configure.CloseAfterNavigation = false;
              });
@@ -94,7 +94,7 @@
         {
             snackbar.Add("خطا در برقراری ارتباط با سرور", Severity.Normal, configure =>
              {
-                 configure.IconColor = Color.Error;
+                 configure.IconColor = MudBlazor.Color.Error;
                  configure.SuccessIcon = Icons.Material.Filled.Error;
                  configure.CloseAfterNavigation = false;
              });

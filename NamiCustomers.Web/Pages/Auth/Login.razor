@@ -70,7 +70,7 @@
         {
             snackbar.Add($"کاربر گرامی, لطفا اطلاعات مربوطه را وارد کنید.", Severity.Normal, configure =>
             {
-                configure.IconColor = Color.Error;
+                configure.IconColor = MudBlazor.Color.Error;
                 configure.SuccessIcon = Icons.Material.Filled.Error;
                 configure.CloseAfterNavigation = false;
             });
@@ -84,7 +84,7 @@
         {
             snackbar.Add($"کد ورود به شماره {LoginModel.PhoneNumber} ارسال شد.", Severity.Normal, configure =>
             {
-                configure.IconColor = Color.Success;
+                configure.IconColor = MudBlazor.Color.Success;
                 configure.SuccessIcon = Icons.Material.Filled.Done;
                 configure.CloseAfterNavigation = false;
             });

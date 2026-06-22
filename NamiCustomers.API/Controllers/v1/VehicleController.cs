@@ -101,8 +101,10 @@ public class VehicleController(IVehicleService vehicleService,
 
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetSpecificCases(string vinNumber, string nationalCodeOrEconomicCode, string mobile)
+    public async Task<IActionResult> GetSpecificCases([FromQuery] string vinNumber)
     {
+        var nationalCodeOrEconomicCode = User.FindFirst("NationalCode")?.Value;
+        var mobile = User.FindFirst("Mobile")?.Value;
         var result = await sevenSoftService.GetSpecificCases(vinNumber, nationalCodeOrEconomicCode, mobile);
         if (result == null)
             return BadRequest(ResultDto.Failure<string[]>(
@@ -174,7 +176,7 @@ public class VehicleController(IVehicleService vehicleService,
                 var result = ResultDto.Failure(data.Message);
                 return BadRequest(result);
             }
-            return Ok(data.Data);
+            return Ok(data);
         }
         else
         {
