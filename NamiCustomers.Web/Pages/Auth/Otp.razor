@@ -2,8 +2,8 @@
 @layout LoginLayout
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
-@inject ISnackbar snackbar
 @inject IAuthService authService
+@inject ToastService toastService
 
 <div class="login-wrapper d-flex align-items-center justify-content-center">
     <div class="custom-container">
@@ -65,11 +65,14 @@
     {
         if (string.IsNullOrWhiteSpace(otpCode) || otpCode.Length < 5)
         {
-            snackbar.Add("لطفا کد دو عاملی را وارد کنید.", Severity.Normal, configure =>
+            await toastService.Show(new ToastOption()
             {
-                configure.IconColor = MudBlazor.Color.Error;
-                configure.SuccessIcon = Icons.Material.Filled.Error;
-                configure.CloseAfterNavigation = false;
+                ShowClose = true,
+                ShowHeader = true,
+                Category = ToastCategory.Error,
+                Title = "کد دوعاملی",
+                Content = "لطفا کد دو عاملی را وارد کنید.",
+                Animation = true
             });
         }
 
@@ -83,21 +86,27 @@
                 NavigationManager.NavigateTo("/");
 
             else
-                snackbar.Add(result.Message, Severity.Normal, configure =>
-             {
-                 configure.IconColor = MudBlazor.Color.Error;
-                 configure.SuccessIcon = Icons.Material.Filled.Error;
-                 configure.CloseAfterNavigation = false;
-             });
+                await toastService.Show(new ToastOption()
+                {
+                    ShowClose = true,
+                    ShowHeader = true,
+                    Category = ToastCategory.Error,
+                    Title = "کد دوعاملی",
+                    Content = result.Message,
+                    Animation = true
+                });
         }
         catch
         {
-            snackbar.Add("خطا در برقراری ارتباط با سرور", Severity.Normal, configure =>
-             {
-                 configure.IconColor = MudBlazor.Color.Error;
-                 configure.SuccessIcon = Icons.Material.Filled.Error;
-                 configure.CloseAfterNavigation = false;
-             });
+            await toastService.Show(new ToastOption()
+            {
+                ShowClose = true,
+                ShowHeader = true,
+                Category = ToastCategory.Error,
+                Title = "کد دوعاملی",
+                Content = "خطا در برقراری ارتباط با سرور",
+                Animation = true
+            });
         }
 
         finally

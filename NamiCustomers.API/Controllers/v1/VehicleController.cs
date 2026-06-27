@@ -40,6 +40,7 @@ public class VehicleController(IVehicleService vehicleService,
 
         return BadRequest(result);
     }
+
     [HttpPost("[action]")]
     public async Task<IActionResult> Register(VehicleModelDto vehicleModelDto)
     {

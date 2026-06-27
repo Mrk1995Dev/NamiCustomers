@@ -2,6 +2,7 @@
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
 @inject ISnackbar snackbar
+@inject ToastService toastService
 @layout LoginLayout
 
 <PageTitle>ورود به باشگاه مشتریان | نامی خودرو</PageTitle>
@@ -68,13 +69,15 @@
     {
         if(string.IsNullOrWhiteSpace(LoginModel.NationalCode) || string.IsNullOrWhiteSpace(LoginModel.PhoneNumber))
         {
-            snackbar.Add($"کاربر گرامی, لطفا اطلاعات مربوطه را وارد کنید.", Severity.Normal, configure =>
+            await toastService.Show(new ToastOption()
             {
-                configure.IconColor = MudBlazor.Color.Error;
-                configure.SuccessIcon = Icons.Material.Filled.Error;
-                configure.CloseAfterNavigation = false;
+                ShowClose = true,
+                ShowHeader = true,
+                Category = ToastCategory.Error,
+                Title = "ورود",
+                Content = "کاربر گرامی, لطفا اطلاعات مربوطه را وارد کنید.",
+                Animation = true
             });
-
             return;
         }
 
@@ -82,11 +85,14 @@
         var result = await AuthService.LoginAsync(LoginModel);
         if(result.Succeeded)
         {
-            snackbar.Add($"کد ورود به شماره {LoginModel.PhoneNumber} ارسال شد.", Severity.Normal, configure =>
+            await toastService.Show(new ToastOption()
             {
-                configure.IconColor = MudBlazor.Color.Success;
-                configure.SuccessIcon = Icons.Material.Filled.Done;
-                configure.CloseAfterNavigation = false;
+                ShowClose = true,
+                ShowHeader = true,
+                Category = ToastCategory.Error,
+                Title = "ورود",
+                Content = $"کد ورود به شماره {LoginModel.PhoneNumber} ارسال شد.",
+                Animation = true
             });
 
             Navigation.NavigateTo($"/otp?mobile={LoginModel.Email}");
