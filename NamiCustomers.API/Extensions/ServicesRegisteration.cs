@@ -237,7 +237,6 @@ public static class ServicesRegisteration
             .AllowAnyOrigin()
             .AllowAnyMethod()
             .AllowAnyHeader()
-
             );
         });
 
