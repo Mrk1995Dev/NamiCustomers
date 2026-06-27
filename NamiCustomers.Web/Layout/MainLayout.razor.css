@@ -12,6 +12,19 @@ main {
     position: relative;
 }
 
+.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000000;
+    z-index: 9999;
+}
+
 .vin-selector__trigger {
     display: flex;
     align-items: center;

@@ -17,209 +17,219 @@
 <MudSnackbarProvider></MudSnackbarProvider>
 
 <BootstrapBlazorRoot>
-<!-- Header Area -->
-<div class="header-area" id="headerArea">
-    <div class="container-fluid">
-        <!-- Header Content -->
-        <div class="header-content header-style-five position-relative d-flex align-items-center justify-content-between">
-            <!-- Logo Wrapper -->
-            <div class="logo-wrapper">
-                <NavLink href="/">
-                    <img src="SiteTmeplate/img/core-img/LogoSign.png" alt="نامی خودرو پیشرو">
-                </NavLink>
-            </div>
-            <div class="vin-selector @(isOpen ? "is-open" : "")">
-                <button type="button" class="vin-selector__trigger" @onclick="ToggleOpen">
-                    <i class="bi bi-car-front-fill"></i>
-                    <span class="vin-selector__label">
-                        @(SelectedVin is null ? "انتخاب خودرو" : SelectedVin.VinNumber)
-                    </span>
-                    <i class="bi bi-chevron-down vin-selector__chevron"></i>
-                </button>
+    <!-- Header Area -->
+    <div class="header-area" id="headerArea">
+        <div class="container-fluid">
+            <!-- Header Content -->
+            <div class="header-content header-style-five position-relative d-flex align-items-center justify-content-between">
+                <!-- Logo Wrapper -->
+                <div class="logo-wrapper">
+                    <NavLink href="/">
+                        <img src="SiteTmeplate/img/core-img/LogoSign.png" alt="نامی خودرو پیشرو">
+                    </NavLink>
+                </div>
+                <div class="vin-selector @(isOpen ? "is-open" : "")">
+                    <button type="button" class="vin-selector__trigger" @onclick="ToggleOpen">
+                        <i class="bi bi-car-front-fill"></i>
+                        <span class="vin-selector__label">
+                            @(SelectedVin is null ? "انتخاب خودرو" : SelectedVin.VinNumber)
+                        </span>
+                        <i class="bi bi-chevron-down vin-selector__chevron"></i>
+                    </button>
 
-                @if (isOpen)
-                {
-                    <div class="vin-selector__backdrop" @onclick="Close"></div>
+                    @if (isOpen)
+                    {
+                        <div class="vin-selector__backdrop" @onclick="Close"></div>
 
-                    <div class="vin-selector__menu">
-                        @if (Vins is null)
-                        {
-                            <div class="vin-selector__empty">در حال بارگذاری...</div>
-                        }
-                        else if (!Vins.Any())
-                        {
-                            <div class="vin-selector__empty">خودرویی ثبت نشده است</div>
-                        }
-                        else
-                        {
-                            @foreach (var vin in Vins)
+                        <div class="vin-selector__menu">
+                            @if (Vins is null)
                             {
-                                <button type="button" class="vin-selector__item @(vin.VinNumber == SelectedVin?.VinNumber ? "active" : "")"
-                                        @onclick="() => SelectVin(vin)">
-                                    <span class="vin-selector__item-title">@vin.SelectedVehicleCommonName</span>
-                                    <span class="vin-selector__item-code">@vin.VinNumber</span>
-                                </button>
+                                <div class="vin-selector__empty">در حال بارگذاری...</div>
                             }
-                        }
-                    </div>
-                }
-            </div>
-            <!-- Navbar Toggler -->
-            <div class="navbar--toggler" id="affanNavbarToggler" data-bs-toggle="offcanvas" data-bs-target="#NamioffCanvas"
-                 aria-controls="NamioffCanvas">
-                <span class="d-block"></span>
-                <span class="d-block"></span>
-                <span class="d-block"></span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- # Sidenav Right -->
-
-<div class="offcanvas offcanvas-end" id="NamioffCanvas" data-bs-scroll="true" tabindex="-1" aria-labelledby="affanOffcanvsLabel">
-
-    <button class="btn-close btn-close-white text-reset" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    <div class="offcanvas-body p-0">
-        <div class="sidenav-wrapper">
-            <div class="sidenav-profile bg-gradient">
-                <div class="sidenav-style1"></div>
-                <div class="user-profile">
-                    <img src="img/bg-img/2.jpg" alt="" />
+                            else if (!Vins.Any())
+                            {
+                                <div class="vin-selector__empty">خودرویی ثبت نشده است</div>
+                            }
+                            else
+                            {
+                                @foreach (var vin in Vins)
+                                {
+                                    <button type="button" class="vin-selector__item @(vin.VinNumber == SelectedVin?.VinNumber ? "active" : "")"
+                                            @onclick="() => SelectVin(vin)">
+                                        <span class="vin-selector__item-title">@vin.SelectedVehicleCommonName</span>
+                                        <span class="vin-selector__item-code">@vin.VinNumber</span>
+                                    </button>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+                <!-- Navbar Toggler -->
+                <div class="navbar--toggler" id="affanNavbarToggler" data-bs-toggle="offcanvas" data-bs-target="#NamioffCanvas"
+                     aria-controls="NamioffCanvas">
+                    <span class="d-block"></span>
+                    <span class="d-block"></span>
+                    <span class="d-block"></span>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <ul class="sidenav-nav ps-0">
-                <li>
-                    <NavLink class="nav-link text-dark" href="" Match="NavLinkMatch.All">
-                        <i class="bi bi-house-door"></i> خانه
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink class="nav-link text-dark" href="Subscriber/Profile">
-                        <i class="bi bi-person"></i> پروفایل
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink class="nav-link text-dark" href="Vehicle">
-                        <i class="bi bi-car-front"></i> خودروهای من
-                    </NavLink>
-                </li>
+    <!-- # Sidenav Right -->
 
-                <li>
-                    <a href="#" class="nav-url">
-                        <i class="bi bi-shield-shaded"></i> دسترسی ها
-                    </a>
-                    <ul>
-                        <li>
-                            <NavLink href="admin/roles">
-                                <i class="bi bi-shield-fill-plus"></i> نقش ها
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink href="admin/users">
-                                <i class="bi bi-shield-fill-x"></i> کاربران
-                            </NavLink>
-                        </li>
-                    </ul>
-                </li>
+    <div class="offcanvas offcanvas-end" id="NamioffCanvas" data-bs-scroll="true" tabindex="-1" aria-labelledby="affanOffcanvsLabel">
 
-                <li>
-                    <NavLink class="nav-link text-dark" href="Home/Contact">
-                        <i class="bi bi-telephone"></i> تماس با ما
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink class="nav-link text-dark" href="Home/About">
-                        <i class="bi bi-building"></i> درباره ما
-                    </NavLink>
-                </li>
-                <li>
-                    <NavLink class="nav-link text-dark" href="Home/Privacy">
-                        <i class="bi bi-shield-check"></i> حریم خصوصی
-                    </NavLink>
-                </li>
+        <button class="btn-close btn-close-white text-reset" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <div class="offcanvas-body p-0">
+            <div class="sidenav-wrapper">
+                <div class="sidenav-profile bg-gradient">
+                    <div class="sidenav-style1"></div>
+                    <div class="user-profile">
+                        <img src="img/bg-img/2.jpg" alt="" />
+                    </div>
+                </div>
 
-                <li>
-                    <a class="nav-link text-dark" href="Account/Logout">
-                        <i class="bi bi-box-arrow-right"></i> خروج
-                    </a>
-                </li>
+                <ul class="sidenav-nav ps-0">
+                    <li>
+                        <NavLink class="nav-link text-dark" href="" Match="NavLinkMatch.All">
+                            <i class="bi bi-house-door"></i> خانه
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink class="nav-link text-dark" href="Subscriber/Profile">
+                            <i class="bi bi-person"></i> پروفایل
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink class="nav-link text-dark" href="Vehicle">
+                            <i class="bi bi-car-front"></i> خودروهای من
+                        </NavLink>
+                    </li>
 
-                <li>
-                    <NavLink class="nav-link text-dark right" href="Account/LoginByMobile">ورود</NavLink>
-                </li>
+                    <li>
+                        <a href="#" class="nav-url">
+                            <i class="bi bi-shield-shaded"></i> دسترسی ها
+                        </a>
+                        <ul>
+                            <li>
+                                <NavLink href="admin/roles">
+                                    <i class="bi bi-shield-fill-plus"></i> نقش ها
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink href="admin/users">
+                                    <i class="bi bi-shield-fill-x"></i> کاربران
+                                </NavLink>
+                            </li>
+                        </ul>
+                    </li>
 
-            </ul>
+                    <li>
+                        <NavLink class="nav-link text-dark" href="Home/Contact">
+                            <i class="bi bi-telephone"></i> تماس با ما
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink class="nav-link text-dark" href="Home/About">
+                            <i class="bi bi-building"></i> درباره ما
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink class="nav-link text-dark" href="Home/Privacy">
+                            <i class="bi bi-shield-check"></i> حریم خصوصی
+                        </NavLink>
+                    </li>
 
-            <!-- Social Info -->
-            <div class="social-info-wrap">
-                <a href="https://instagram.com/namikhodropishro"><i class="bi bi-instagram"></i></a>
-                <a href="https://www.linkedin.com/company/namikhodro"><i class="bi bi-linkedin"></i></a>
+                    <li>
+                        <a class="nav-link text-dark" href="Account/Logout">
+                            <i class="bi bi-box-arrow-right"></i> خروج
+                        </a>
+                    </li>
+
+                    <li>
+                        <NavLink class="nav-link text-dark right" href="Account/LoginByMobile">ورود</NavLink>
+                    </li>
+
+                </ul>
+
+                <!-- Social Info -->
+                <div class="social-info-wrap">
+                    <a href="https://instagram.com/namikhodropishro"><i class="bi bi-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/namikhodro"><i class="bi bi-linkedin"></i></a>
+                </div>
+
+                <!-- Copyright Info -->
+                <div class="copyright-info">
+                    <p><span>1404</span> © کپی رایت<a href="#"> شرکت نامی خودرو پیشرو</a></p>
+                </div>
             </div>
+        </div>
+    </div>
 
-            <!-- Copyright Info -->
-            <div class="copyright-info">
-                <p><span>1404</span> © کپی رایت<a href="#"> شرکت نامی خودرو پیشرو</a></p>
+    @if (isLoading)
+    {
+        <div class="loader-container">
+            <MudProgressCircular Rounded="true" Size="MudBlazor.Size.Medium" StrokeWidth="5" Style="color: #ffffff;" Indeterminate="true" />
+        </div>
+    }
+
+    else
+    {
+        <div class="page-content-wrapper">
+            @Body
+            <!-- Welcome Toast -->
+            <div class="card setting-popup-card shadow-lg " id="settingCard">
+                <div class="card-body">
+                    @* @await Component.InvokeAsync("VinMenu") *@
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Footer Nav -->
+    <div class="footer-nav-area" id="footerNav">
+        <div class="container-fluid px-0">
+            <!-- Footer Content -->
+            <div class="footer-nav position-relative">
+                <ul class="h-100 d-flex align-items-center justify-content-between ps-0">
+                    <li>
+                        <NavLink class="nav-link text-dark" href="/" Match="NavLinkMatch.All">
+                            <i class="bi bi-house-door"></i>
+                            <span>خانه</span>
+                        </NavLink>
+                    </li>
+
+                    <li>
+                        <NavLink class="nav-link text-dark" href="/profile">
+                            <i class="bi bi-person"></i>
+                            <span>پروفایل</span>
+                        </NavLink>
+                    </li>
+
+                    <li>
+                        <NavLink class="nav-link text-dark" href="vehicle">
+                            <i class="bi bi-car-front"></i>
+                            <span>خودروهای من</span>
+                        </NavLink>
+                    </li>
+
+                    <li>
+                        <NavLink class="nav-link text-dark" href="/contact">
+                            <i class="bi bi-telephone"></i>
+                            <span>تماس با ما</span>
+                        </NavLink>
+                    </li>
+
+                    <li>
+                        <NavLink class="nav-link text-dark" href="/dealers">
+                            <i class="bi bi-geo-alt"></i>
+                            <span>لیست عاملیت</span>
+                        </NavLink>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
-</div>
-
-<div class="page-content-wrapper">
-    @Body
-    <!-- Welcome Toast -->
-    <div class="card setting-popup-card shadow-lg " id="settingCard">
-        <div class="card-body">
-            @* @await Component.InvokeAsync("VinMenu") *@
-        </div>
-    </div>
-</div>
-
-<!-- Footer Nav -->
-<div class="footer-nav-area" id="footerNav">
-    <div class="container-fluid px-0">
-        <!-- Footer Content -->
-        <div class="footer-nav position-relative">
-            <ul class="h-100 d-flex align-items-center justify-content-between ps-0">
-                <li>
-                    <NavLink class="nav-link text-dark" href="/" Match="NavLinkMatch.All">
-                        <i class="bi bi-house-door"></i>
-                        <span>خانه</span>
-                    </NavLink>
-                </li>
-
-                <li>
-                    <NavLink class="nav-link text-dark" href="/profile">
-                        <i class="bi bi-person"></i>
-                        <span>پروفایل</span>
-                    </NavLink>
-                </li>
-
-                <li>
-                    <NavLink class="nav-link text-dark" href="vehicle">
-                        <i class="bi bi-car-front"></i>
-                        <span>خودروهای من</span>
-                    </NavLink>
-                </li>
-
-                <li>
-                    <NavLink class="nav-link text-dark" href="/contact">
-                        <i class="bi bi-telephone"></i>
-                        <span>تماس با ما</span>
-                    </NavLink>
-                </li>
-
-                <li>
-                    <NavLink class="nav-link text-dark" href="/dealers">
-                        <i class="bi bi-geo-alt"></i>
-                        <span>لیست عاملیت</span>
-                    </NavLink>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div>
 </BootstrapBlazorRoot>
 
 
@@ -249,7 +259,7 @@
         await OnVinSelected.InvokeAsync(SelectedVin);
         VehicleContext.ChangeVin(vin);
 
-        if(SelectedVin is not null)
+        if (SelectedVin is not null)
         {
             await localStorageService.SetItemAsync("vin", vin.VinNumber);
             var result = await VehicleService.GetSubscriberVehicleInfoAsync(vin.Id);
@@ -277,6 +287,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        isLoading = true;
         await localStorageService.RemoveItemAsync("vin");
         var result = await VehicleService.GetSubscriberVehicleAsync();
         if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
@@ -293,6 +304,7 @@
 
         }
 
+        isLoading = false;
     }
 
 }
