@@ -65,7 +65,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
 
         base.OnModelCreating(modelBuilder);
         // Seed initial roles
-        SeedUserByRoles(modelBuilder);
+        //SeedUserByRoles(modelBuilder);
 
 
     }

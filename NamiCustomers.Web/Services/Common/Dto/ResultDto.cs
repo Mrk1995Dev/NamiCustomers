@@ -62,6 +62,6 @@ public class ResultDto
         Message = message;
         this.Succeeded = succeeded;
     }
-    public string Message { get; private set; }
-    public bool Succeeded { get; private set; }
+    public string Message { get; set; }
+    public bool Succeeded { get; set; }
 }

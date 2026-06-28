@@ -325,7 +325,7 @@ namespace NamiCustomers.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("NamiCustomers.Domain.Entities.Subscribers.Appointment", b =>
@@ -368,7 +368,7 @@ namespace NamiCustomers.Persistence.Migrations
 
                     b.HasIndex("SubscriberId");
 
-                    b.ToTable("Appointments");
+                    b.ToTable("Appointments", (string)null);
                 });
 
             modelBuilder.Entity("NamiCustomers.Domain.Entities.Subscribers.Subscriber", b =>
@@ -453,7 +453,7 @@ namespace NamiCustomers.Persistence.Migrations
                         .IsUnique()
                         .HasFilter("[NationalCode] IS NOT NULL");
 
-                    b.ToTable("Subscribers");
+                    b.ToTable("Subscribers", (string)null);
                 });
 
             modelBuilder.Entity("NamiCustomers.Domain.Entities.Subscribers.SubscriberCode", b =>
@@ -487,7 +487,7 @@ namespace NamiCustomers.Persistence.Migrations
 
                     b.HasIndex("SubscriberId");
 
-                    b.ToTable("SubscriberCodes");
+                    b.ToTable("SubscriberCodes", (string)null);
                 });
 
             modelBuilder.Entity("NamiCustomers.Domain.Entities.Vehicles.VehicleAttachment", b =>
@@ -515,7 +515,7 @@ namespace NamiCustomers.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("VehicleAttachments");
+                    b.ToTable("VehicleAttachments", (string)null);
                 });
 
             modelBuilder.Entity("NamiCustomers.Domain.Entities.Vehicles.VehicleModel", b =>
@@ -580,7 +580,7 @@ namespace NamiCustomers.Persistence.Migrations
 
                     b.HasIndex("VehicleAttachmentId");
 
-                    b.ToTable("VehicleModels");
+                    b.ToTable("VehicleModels", (string)null);
                 });
 
             modelBuilder.Entity("NamiCustomers.Domain.Entities.Account.ApplicationUserToken", b =>

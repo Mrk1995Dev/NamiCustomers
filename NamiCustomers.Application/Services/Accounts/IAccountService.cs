@@ -14,5 +14,6 @@ namespace NamiCustomers.Application.Services.Accounts
         Task<bool> UserHasPermissionAsync(string userId, string permission);
         Task<ResultDto<LoginResponseDto>> CheckSubscriberRegisteredAsync(string phoneNumber, string nationalCode);
         Task<ResultDto<UserDto>> GetByNationalCodeAsync(string nationalCode);
+        Task<ResultDto> ResetPasswordAsync(ResetPasswordDto reset);
     }
 }

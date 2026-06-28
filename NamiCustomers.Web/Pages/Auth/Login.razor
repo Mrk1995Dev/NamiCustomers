@@ -42,21 +42,21 @@
                 }
 
                 <button class="btn btn-primary w-100" type="submit" disabled="@isSubmitting">
-                    @(isSubmitting ? "در حال ارسال..." : "ورود")
+                    @(isSubmitting ? "در حال ارسال" : "ورود")
                 </button>
             </EditForm>
         </div>
 
         <!-- Login Meta -->
-        <div class="login-meta-data text-center">
-            <a href="/Account/ForgotPassword" class="stretched-link forgot-password d-block mt-3 mb-1">
+        <div class="login-meta-data text-center" style="display: grid;">
+            <button @onclick="NavigateToForgotPassword" class="stretched-link forgot-password d-block mt-4 mb-1" style="color: #ffffff">
                 رمز عبور خود را فراموش کرده اید؟
-            </a>
+            </button>
         </div>
 
-        <div class="text-muted" style="text-align:center;">
+        @* <div class="text-muted" style="text-align:center;">
             Version @(System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version)
-        </div>
+        </div> *@
     </div>
 </div>
 
@@ -104,5 +104,24 @@
         }
 
         isSubmitting = false;
+    }
+
+    async Task NavigateToForgotPassword ()
+    {
+        if (string.IsNullOrWhiteSpace(LoginModel.NationalCode))
+        {
+            await toastService.Show(new ToastOption()
+                {
+                    ShowClose = true,
+                    ShowHeader = true,
+                    Category = ToastCategory.Error,
+                    Title = "فراموشی رمز عبور",
+                    Content = "لطفا کد ملی خود را وارد کنید.",
+                    Animation = true
+                });
+        }
+
+        else
+            Navigation.NavigateTo($"/forgotPassword/{LoginModel.NationalCode}");
     }
 }

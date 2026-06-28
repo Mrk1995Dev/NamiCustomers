@@ -52,7 +52,7 @@ namespace NamiCustomers.Domain.Entities.Subscribers
         [StringLength(maximumLength: 17, ErrorMessage = "طول {0} میبایست  {1} کاراکتر باشد", MinimumLength = 2)]
         public string? EconomicCode { get; set; }
         public string? Sex { get; set; }
-
+        public string? HashPassword { get; set; }
         public int SubscriberType { get; set; } = 1;//1 is haghighi 2 is hoghooghi
         public ICollection<VehicleModel>? VehicleModels { get; set; }
 

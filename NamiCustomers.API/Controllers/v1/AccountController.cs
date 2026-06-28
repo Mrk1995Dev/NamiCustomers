@@ -222,41 +222,37 @@ public class AccountController(
 
     [HttpPost("[action]")]
     [AllowAnonymous]
-    public async Task<IActionResult> ResetPassword(ResetPasswordDto reset)
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto reset)
     {
-        if (!ModelState.IsValid)
-            return BadRequest();
-        if (reset.Password != reset.ConfirmPassword)
-        {
-            return BadRequest();
-        }
-        var user = await userManager.FindByEmailAsync(reset.UserId);
-        if (user == null)
-        {
-            return BadRequest();
-        }
+        var result = await accountService.ResetPasswordAsync(reset);
 
-        var result = await userManager.ResetPasswordAsync(user, reset.Token.Replace(" ", "+"), reset.Password);
+        if(result.Succeeded)
+            return Ok(result);
 
-        if (result.Succeeded)
-        {
-            var currentUser = await userManager.FindByEmailAsync(reset.UserId);
-            if (currentUser == null)
-            {
-                return BadRequest(ResultDto.Failure<IdentityResult>(Infrastucture.Properties.Resources.errNotFound));
-            }
-            currentUser.PassWord = reset.Password;
-            var updateResult = await userManager.UpdateAsync(currentUser);
-            if (!updateResult.Succeeded)
-            {
-                return BadRequest(ResultDto.Failure<IdentityResult>(Infrastucture.Properties.Resources.errEdited));
-            }
-            return Ok(ResultDto.Success<IdentityResult>(updateResult));
-        }
         else
-        {
-            return BadRequest(ResultDto.Failure<IdentityResult>(string.Join(",", result.Errors.Select(c => c.Description).ToList())));
-        }
+            return BadRequest(result);
+
+        //var result = await userManager.ResetPasswordAsync(user, reset.Token.Replace(" ", "+"), reset.Password);
+
+        //if (result.Succeeded)
+        //{
+        //    var currentUser = await userManager.FindByEmailAsync(reset.UserId);
+        //    if (currentUser == null)
+        //    {
+        //        return BadRequest(ResultDto.Failure<IdentityResult>(Infrastucture.Properties.Resources.errNotFound));
+        //    }
+        //    currentUser.PassWord = reset.Password;
+        //    var updateResult = await userManager.UpdateAsync(currentUser);
+        //    if (!updateResult.Succeeded)
+        //    {
+        //        return BadRequest(ResultDto.Failure<IdentityResult>(Infrastucture.Properties.Resources.errEdited));
+        //    }
+        //    return Ok(ResultDto.Success<IdentityResult>(updateResult));
+        //}
+        //else
+        //{
+        //    return BadRequest(ResultDto.Failure<IdentityResult>(string.Join(",", result.Errors.Select(c => c.Description).ToList())));
+        //}
 
     }
 

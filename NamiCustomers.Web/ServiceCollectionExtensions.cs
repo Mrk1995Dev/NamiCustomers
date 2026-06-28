@@ -1,4 +1,5 @@
 ﻿using NamiCustomers.Web.Handlers;
+using NamiCustomers.Web.Services.Account.Contract;
 using NamiCustomers.Web.Services.Auth.AuthServices.Contract;
 using NamiCustomers.Web.Services.Auth.AuthServices.Implementation;
 using NamiCustomers.Web.Services.Auth.TokenServices;
@@ -53,6 +54,11 @@ namespace NamiCustomers.Web
             });
 
             services.AddHttpClient<ISubscriberService, SubscriberService>("ApiWithAuth", configureClient =>
+            {
+                configureClient.BaseAddress = new Uri(baseUrl);
+            });
+
+            services.AddHttpClient<IAccountService, AccountService>("ApiWithAuth", configureClient =>
             {
                 configureClient.BaseAddress = new Uri(baseUrl);
             });

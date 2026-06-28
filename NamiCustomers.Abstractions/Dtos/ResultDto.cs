@@ -50,10 +50,7 @@ public class ResultDto
     {
         return new ResultDto<T>(message, false);
     }
-    public ResultDto()
-    {
 
-    }
     private ResultDto(string message, bool succeeded)
     {
         Message = message;

@@ -11,6 +11,7 @@ using Org.BouncyCastle.Bcpg.OpenPgp;
 using System.Security.Claims;
 
 namespace NamiCustomers.Application.Services.Accounts;
+
 public class AccountService(
     RoleManager<ApplicationRole> roleManager,
     UserManager<ApplicationUser> userManager, IMapper mapper,
@@ -164,5 +165,30 @@ public class AccountService(
         {
             return ResultDto.Failure<UserDto>(ex.Message);
         }
+    }
+
+    public async Task<ResultDto> ResetPasswordAsync(ResetPasswordDto reset)
+    {
+        var subscriber = await context.Subscribers.FirstOrDefaultAsync(s => s.NationalCode == reset.UserId);
+
+        if (subscriber is null)
+            return ResultDto.Failure("کاربر با مشخصات مربوطه یافت نشد.");
+
+        if (reset.Password != reset.ConfirmPassword)
+            return ResultDto.Failure("کاربر گرامی, رمزعبور با تکرار رمز عبور باید یکسان باشد.");
+
+        if (string.IsNullOrWhiteSpace(reset.Password))
+            return ResultDto.Failure("کاربر گرامی, لطفا رمز عبور را وارد کنید.");
+
+        string hashPassword = BCrypt.Net.BCrypt.HashPassword(reset.Password);
+
+        subscriber.HashPassword = hashPassword;
+
+        context.Subscribers.Update(subscriber);
+
+        if(( await context.SaveChangesAsync()) > 0)
+            return ResultDto.Success("رمز عبور با موفقیت تغییر یافت.");
+        else
+            return ResultDto.Failure("خطا در تغییر رمز عبور, لطفا مجددا تلاش کنید.");
     }
 }
