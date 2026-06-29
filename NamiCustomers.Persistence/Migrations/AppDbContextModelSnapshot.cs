@@ -17,7 +17,7 @@ namespace NamiCustomers.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.0")
+                .HasAnnotation("ProductVersion", "10.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -107,13 +107,6 @@ namespace NamiCustomers.Persistence.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "1109abb4-7619-4567-9a1b-8dcf5e4b73aa",
-                            RoleId = "110alim-5841-4d44-b807-679d272e7110"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -139,7 +132,7 @@ namespace NamiCustomers.Persistence.Migrations
 
                     b.ToTable("AspNetUserTokens", (string)null);
 
-                    b.HasDiscriminator().HasValue("IdentityUserToken<string>");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUserToken<string>");
 
                     b.UseTphMappingStrategy();
                 });
@@ -173,24 +166,6 @@ namespace NamiCustomers.Persistence.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "110alim-5841-4d44-b807-679d272e7110",
-                            ConcurrencyStamp = "fbbd208c-d84c-4ca9-9e51-cd5270945bef",
-                            Description = "ادمین",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "283875b0-1760-4e08-ba59-e532dc873bb7",
-                            ConcurrencyStamp = "7965cad9-1ac4-4c95-9ec1-c0ad1203f5e0",
-                            Description = "اپراتور",
-                            Name = "Operator",
-                            NormalizedName = "OPERATOR"
-                        });
                 });
 
             modelBuilder.Entity("NamiCustomers.Domain.Entities.Account.ApplicationUser", b =>
@@ -274,29 +249,6 @@ namespace NamiCustomers.Persistence.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1109abb4-7619-4567-9a1b-8dcf5e4b73aa",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "7a0803d9-dac0-446f-b145-a48b202dbf52",
-                            Email = "a.moardi@namikhodro.com",
-                            EmailConfirmed = true,
-                            FirstName = "علی",
-                            LastName = "مرادی",
-                            LockoutEnabled = false,
-                            Mobile = "09191646456",
-                            NormalizedEmail = "A.MORADI@NAMIKHODRO.COM",
-                            NormalizedUserName = "A.MORADI@NAMIKHODRO.COM",
-                            PassWord = "Aa12334566*",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDWXR4EMPJhFFXowJTQ51DhTJ8/Trup0It8Ws2LzXKTf1sIhEMuKY3UFbYG/7uoq2A==",
-                            PhoneNumber = "09191646456",
-                            PhoneNumberConfirmed = true,
-                            SecurityStamp = "VDH6RYMZDZ2U5JB5VYQRK47G6LZRQJ6O",
-                            TwoFactorEnabled = false,
-                            UserName = "a.moradi@namikhodro.com"
-                        });
                 });
 
             modelBuilder.Entity("NamiCustomers.Domain.Entities.City", b =>
@@ -534,6 +486,9 @@ namespace NamiCustomers.Persistence.Migrations
 
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullSystem")
                         .HasColumnType("nvarchar(max)");

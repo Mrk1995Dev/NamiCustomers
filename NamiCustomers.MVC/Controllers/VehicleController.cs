@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace NamiCustomers.MVC.Controllers;
 
-[Authorize(Policy = nameof(MyPloicies.SubscriberAccess))]
+//[Authorize(Policy = nameof(MyPloicies.SubscriberAccess))]
 public class VehicleController(
     ISubscriberService subscriberService,
     IVehicleService vehicleService,

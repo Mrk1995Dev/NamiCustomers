@@ -10,7 +10,7 @@ public class VehicleModel : IBaseEntity<int>
     public string? FullSystem { get; set; }
     public Guid? VehicleModelIdSevenSoft { get; set; }
     public string? ChassisUsageTypeName { get; set; }
-
+    public  string? Description { get; set; }
     public string? SelectedVehicleCommonName { get; set; }
     public string? SelectedVehicleDescription { get; set; }
     /// <summary>
