@@ -1,0 +1,265 @@
+﻿@page "/faq"
+
+<PageTitle>سوالات متداول | نامی خودرو</PageTitle>
+
+<br />
+
+<div class="container direction-rtl">
+    <div class="card">
+        <div class="card-body p-2">
+            <div class="d-flex align-items-center justify-content-between">
+                <small class="ms-1">
+                    سوالات متداول
+                </small>
+                <NavLink title="بازگشت" href="/"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></NavLink>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="container">
+
+    <!-- Accordion Card -->
+    @*     <div class="card bg-danger rounded-0 rounded-top">
+        <div class="card-body text-center py-3">
+            <h6 class="mb-0 text-white line-height-1"></h6>
+        </div>
+    </div> *@
+
+    <div class="card rounded-0 rounded-bottom">
+        <div class="card-body">
+            <div class="accordion accordion-flush accordion-style-two" id="accordionStyle22">
+                <!-- Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" style="background-color: #222222;" id="accordionFour2">
+                        <h6 style="gap: 10px;" data-bs-toggle="collapse" data-bs-target="#accordionStyleFour2" aria-expanded="true" aria-controls="accordionStyleFour2">
+                            <MudIcon Icon="@Icons.Material.Filled.QuestionAnswer" Size="MudBlazor.Size.Small" />
+                            ثبت نام خودرو های وارداتی، چگونه انجام می پذیرد؟
+                        </h6>
+                    </div>
+                    <div class="accordion-collapse collapse show" id="accordionStyleFour2" aria-labelledby="accordionFour2" data-bs-parent="#accordionStyle22">
+                        <div class="accordion-body">
+                            <p class="mb-0">مشتری می بایست پس از افتتاح حساب وکالتی، نسبت به خرید خودرو از طریق سامانه یکپارچه عرضه خودروهای وارداتی به نشانی SaleAuto.ir اقدام نماید.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" style="background-color: #222222;" id="accordionFive2">
+                        <h6 style="gap: 10px;" class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordionStyleFive2" aria-expanded="false" aria-controls="accordionStyleFive2">
+                            <MudIcon Icon="@Icons.Material.Filled.QuestionAnswer" Size="MudBlazor.Size.Small" />
+                            نحوه اطلاع رسانی شرکت، در صورت برنده شدن در سامانه یکپارچه به چه صورت است؟
+                        </h6>
+                    </div>
+                    <div class="accordion-collapse collapse" id="accordionStyleFive2" aria-labelledby="accordionFive2" data-bs-parent="#accordionStyle22">
+                        <div class="accordion-body">
+                            <p class="mb-0">
+                                پس از دریافت لیست مشتریان، پیامک تکمیل فرآیند خرید خودرو، به شماره همراه مشتری که در سامانه یکپارچه ثبت شده، از طرف شرکت ارسال می گردد.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Start Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" style="background-color: #222222;" id="accordionSix3">
+                        <h6 style="gap: 10px;" class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordionStyleSix3" aria-expanded="false" aria-controls="accordionStyleSix3">
+                            <MudIcon Icon="@Icons.Material.Filled.QuestionAnswer" Size="MudBlazor.Size.Small" />
+                            در صورت انتخاب شدن در سامانه یکپارچه، پرداخت مبلغ  به چه صورت انجام می پذیرد؟
+                        </h6>
+                    </div>
+                    <div class="accordion-collapse collapse" id="accordionStyleSix3" aria-labelledby="accordionSix3" data-bs-parent="#accordionStyle22">
+                        <div class="accordion-body">
+                            <p class="mb-0">
+                                مبلغ، نحوه واریز و مهلت زمان واریز، به متقاضی اطلاع رسانی می گردد.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--End Single Accordion -->
+                <!-- Start Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" style="background-color: #222222;" id="accordionSix4">
+                        <h6 style="gap: 10px;" class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordionStyleSix4" aria-expanded="false" aria-controls="accordionStyleSix4">
+                            <MudIcon Icon="@Icons.Material.Filled.QuestionAnswer" Size="MudBlazor.Size.Small" />
+                            آیا امکان واریز وجه خودرو توسط شخص دیگری وجود دارد؟
+                        </h6>
+                    </div>
+                    <div class="accordion-collapse collapse" id="accordionStyleSix4" aria-labelledby="accordionSix4" data-bs-parent="#accordionStyle22">
+                        <div class="accordion-body">
+                            <p class="mb-0">
+                                خیر. مبلغ واریزی صرفا می بایست از حساب شخص متقاضی به شماره حساب های معرفی شده توسط شرکت، واریز شود.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--End Single Accordion -->
+                <!--End Single Accordion -->
+                <!-- Start Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" style="background-color: #222222;" id="accordionSix5">
+                        <h6 style="gap: 10px;" class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordionStyleSix5" aria-expanded="false" aria-controls="accordionStyleSix5">
+                            <MudIcon Icon="@Icons.Material.Filled.QuestionAnswer" Size="MudBlazor.Size.Small" />
+                            آیا خرید خودرو توسط وکیل متقاضی امکانپذیر است؟
+                        </h6>
+                    </div>
+                    <div class="accordion-collapse collapse" id="accordionStyleSix5" aria-labelledby="accordionSix5" data-bs-parent="#accordionStyle22">
+                        <div class="accordion-body">
+                            <p class="mb-0">
+                                تمامی مراحل خرید خودرو می بایست توسط متقاضی که در سامانه یکپارچه ثبت نام نموده انجام پذیرد. تنها در مرحله تحویل خودرو، امکان تحویل خودرو، تا اطلاع ثانوی، بنا بر شرایط اعلامی شرکت، به وکیل مشتری امکان پذیر می باشد.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--End Single Accordion -->
+                <!-- Start Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" style="background-color: #222222;" id="accordionSix6">
+                        <h6 style="gap: 10px;" class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordionStyleSix6" aria-expanded="false" aria-controls="accordionStyleSix6">
+                            <MudIcon Icon="@Icons.Material.Filled.QuestionAnswer" Size="MudBlazor.Size.Small" />
+                            آیا خرید خودرو توسط وکیل متقاضی امکانپذیر است؟
+                        </h6>
+                    </div>
+                    <div class="accordion-collapse collapse" id="accordionStyleSix6" aria-labelledby="accordionSix6" data-bs-parent="#accordionStyle22">
+                        <div class="accordion-body">
+                            <p class="mb-0">
+                                تمامی مراحل خرید خودرو می بایست توسط متقاضی که در سامانه یکپارچه ثبت نام نموده انجام پذیرد. تنها در مرحله تحویل خودرو، امکان تحویل خودرو، تا اطلاع ثانوی، بنا بر شرایط اعلامی شرکت، به وکیل مشتری امکان پذیر می باشد.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--End Single Accordion -->
+                <!-- Start Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" style="background-color: #222222;" id="accordionSix7">
+                        <h6 style="gap: 10px;" class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordionStyleSix7" aria-expanded="false" aria-controls="accordionStyleSix7">
+                            <MudIcon Icon="@Icons.Material.Filled.QuestionAnswer" Size="MudBlazor.Size.Small" />
+                            چنانچه در زمان مشخص شده توسط شرکت، واریزی از سمت متقاضی صورت نگیرد، امکان تمدید مدت واریز وجود دارد؟
+                        </h6>
+                    </div>
+                    <div class="accordion-collapse collapse" id="accordionStyleSix7" aria-labelledby="accordionSix7" data-bs-parent="#accordionStyle22">
+                        <div class="accordion-body">
+                            <p class="mb-0">
+                                خیر. طبق بخشنامه شماره ۱۱ عدم واریز وجه در مدت زمان اعلام شده منجر به حذف الویت متقاضی و ابطال نوبت ایشان می گردد.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--End Single Accordion -->
+                <!-- Start Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" style="background-color: #222222;" id="accordionSix8">
+                        <h6 style="gap: 10px;" class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordionStyleSix8" aria-expanded="false" aria-controls="accordionStyleSix8">
+                            <MudIcon Icon="@Icons.Material.Filled.QuestionAnswer" Size="MudBlazor.Size.Small" />
+                            چنانچه در زمان مشخص شده توسط شرکت، واریزی از سمت متقاضی صورت نگیرد، امکان تمدید مدت واریز وجود دارد؟
+                        </h6>
+                    </div>
+                    <div class="accordion-collapse collapse" id="accordionStyleSix8" aria-labelledby="accordionSix8" data-bs-parent="#accordionStyle22">
+                        <div class="accordion-body">
+                            <p class="mb-0">
+                                در صورت تمایل به انصراف، مشتری می بایست درخواست کتبی خود را به دفتر مرکزی ارسال نماید.
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--End Single Accordion -->
+                <!-- Start Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" style="background-color: #222222;" id="accordionSix9">
+                        <h6 style="gap: 10px;" class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordionStyleSix9" aria-expanded="false" aria-controls="accordionStyleSix9">
+                            <MudIcon Icon="@Icons.Material.Filled.QuestionAnswer" Size="MudBlazor.Size.Small" />
+                            نحوه قیمت گذاری خودروها به چه صورت است؟
+                        </h6>
+                    </div>
+                    <div class="accordion-collapse collapse" id="accordionStyleSix9" aria-labelledby="accordionSix9" data-bs-parent="#accordionStyle22">
+                        <div class="accordion-body">
+                            <p class="mb-0">
+                                قیمت گذاری تمامی خودروها توسط سازمان حمایت مشخص و اعلام می شود.
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--End Single Accordion -->
+                <!-- Start Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" style="background-color: #222222;" id="accordionSix10">
+                        <h6 style="gap: 10px;" class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordionStyleSix10" aria-expanded="false" aria-controls="accordionStyleSix10">
+                            <MudIcon Icon="@Icons.Material.Filled.QuestionAnswer" Size="MudBlazor.Size.Small" />
+                            آیا امکان خرید مستقیم خودرو از شرکت وجود دارد؟
+                        </h6>
+                    </div>
+                    <div class="accordion-collapse collapse" id="accordionStyleSix10" aria-labelledby="accordionSix10" data-bs-parent="#accordionStyle22">
+                        <div class="accordion-body">
+                            <p class="mb-0">
+                                در حال حاضر خیر. عرضه تمامی خودروها صرفاً از طریق سامانه یکپارچه عرضه خودروهای وارداتی انجام می پذیرد.
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--End Single Accordion -->
+                <!-- Start Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" style="background-color: #222222;" id="accordionSix11">
+                        <h6 style="gap: 10px;" class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordionStyleSix11" aria-expanded="false" aria-controls="accordionStyleSix11">
+                            <MudIcon Icon="@Icons.Material.Filled.QuestionAnswer" Size="MudBlazor.Size.Small" />
+                            آیا زمان و تعداد عرضه در هر مرحله مشخص است؟
+                        </h6>
+                    </div>
+                    <div class="accordion-collapse collapse" id="accordionStyleSix11" aria-labelledby="accordionSix11" data-bs-parent="#accordionStyle22">
+                        <div class="accordion-body">
+                            <p class="mb-0">
+                                زمان و تعداد عرضه، بر اساس اعلام سامانه یکپارچه، مشخص می شود.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--End Single Accordion -->
+                <!-- Start Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" style="background-color: #222222;" id="accordionSix12">
+                        <h6 style="gap: 10px;" class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordionStyleSix12" aria-expanded="false" aria-controls="accordionStyleSix12">
+                            <MudIcon Icon="@Icons.Material.Filled.QuestionAnswer" Size="MudBlazor.Size.Small" />
+                            نحوه انتخاب رنگ خودرو به چه صورت است؟
+                        </h6>
+                    </div>
+                    <div class="accordion-collapse collapse" id="accordionStyleSix12" aria-labelledby="accordionSix12" data-bs-parent="#accordionStyle22">
+                        <div class="accordion-body">
+                            <p class="mb-0">
+                                در زمان انجام مراحل خرید خودرو در سامانه فروش شرکت نامی خودرو پیشرو، انتخاب الویت های رنگ، براساس خودروهای عرضه شده، فعال می شود.
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!--End Single Accordion -->
+                <!-- Start Single Accordion -->
+                <div class="accordion-item">
+                    <div class="accordion-header" style="background-color: #222222;" id="accordionSix13">
+                        <h6 style="gap: 10px;" class="collapsed" data-bs-toggle="collapse" data-bs-target="#accordionStyleSix13" aria-expanded="false" aria-controls="accordionStyleSix13">
+                            <MudIcon Icon="@Icons.Material.Filled.Add" Size="MudBlazor.Size.Small" />
+                            تخصیص رنگ خودروها، به چه صورت انجام می پذیرد؟
+                        </h6>
+                    </div>
+                    <div class="accordion-collapse collapse" id="accordionStyleSix13" aria-labelledby="accordionSix13" data-bs-parent="#accordionStyle22">
+                        <div class="accordion-body">
+                            <p class="mb-0">
+                                الویت بندی تخصیص رنگ خودروها، بر اساس زمان واریز/تکمیل وجه، زمان عقد قرارداد و همینطور موجودی شرکت می باشد.
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--End Single Accordion -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+}

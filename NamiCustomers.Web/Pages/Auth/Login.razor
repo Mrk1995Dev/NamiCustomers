@@ -1,49 +1,127 @@
 ﻿@page "/login"
-@using NamiCustomers.Web.Models.Auth
-@using NamiCustomers.Web.Services.Auth.AuthServices
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
+@inject ISnackbar snackbar
+@inject ToastService toastService
+@layout LoginLayout
 
+<PageTitle>ورود به باشگاه مشتریان | نامی خودرو</PageTitle>
 
-<MudPaper Class="ma-4 pa-6 rounded-lg" Elevation="8">
+<div class="login-wrapper d-flex align-items-center justify-content-center">
+    <div class="custom-container">
+        <div class="text-center px-4">
+            <img class="login-intro-img" src="/SiteTmeplate/img/bg-img/logo.png" alt="" />
+        </div>
 
-<EditForm Model="LoginModel" OnValidSubmit="HandleLogin">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+        <!-- Register Form -->
+        <div class="register-form mt-4">
+            <h6 class="mb-3 text-center">سامانه خدمات پس از فروش نامی خودرو پیشرو</h6>
 
-        @if (!string.IsNullOrEmpty(ErrorMessage))
-        {
-            <MudAlert Severity="Severity.Error"  ContentAlignment="HorizontalAlignment.Right">
-                @ErrorMessage
-            </MudAlert>
-        }
-        
- 
+            <EditForm Model="@LoginModel" OnValidSubmit="() => HandleLogin()">
+                <DataAnnotationsValidator />
 
-        <MudTextField Label="ایمیل" @bind-Value="LoginModel.Email"   Variant="Variant.Outlined" Required="true" />
-        <MudTextField Label="رمز عبور" @bind-Value="LoginModel.Password" InputType="InputType.Password" Variant="Variant.Outlined" Required="true" />
+                <div class="form-group">
+                    <InputText class="form-control" style="color:#000 !important;"
+                               @bind-Value="LoginModel.NationalCode"
+                               inputmode="numeric" pattern="[0-9]*"
+                               placeholder="کد ملی" />
+                    <ValidationMessage For="@(() => LoginModel.Password)" />
+                </div>
 
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary" FullWidth="true">
-         ورد به حساب کاربری
-     </MudButton>
-</EditForm>
+                <div class="form-group">
+                    <InputText class="form-control" style="color:#000 !important;"
+                               @bind-Value="LoginModel.PhoneNumber"
+                               inputmode="numeric" pattern="[0-9]*"
+                               placeholder="تلفن همراه" />
+                    <ValidationMessage For="@(() => LoginModel.Email)" />
+                </div>
 
-</MudPaper>
+                @if (!string.IsNullOrEmpty(ErrorMessage))
+                {
+                    <div class="alert alert-danger py-2">@ErrorMessage</div>
+                }
+
+                <button class="btn btn-primary w-100" type="submit" disabled="@isSubmitting">
+                    @(isSubmitting ? "در حال ارسال" : "ورود")
+                </button>
+            </EditForm>
+        </div>
+
+        <!-- Login Meta -->
+        <div class="login-meta-data text-center" style="display: grid;">
+            <button @onclick="NavigateToForgotPassword" class="stretched-link forgot-password d-block mt-4 mb-1" style="color: #ffffff">
+                رمز عبور خود را فراموش کرده اید؟
+            </button>
+        </div>
+
+        @* <div class="text-muted" style="text-align:center;">
+            Version @(System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version)
+        </div> *@
+    </div>
+</div>
 
 @code {
-    private LoginRequestDto LoginModel = new LoginRequestDto();
+    private LoginRequestDto LoginModel = new();
     private string ErrorMessage = string.Empty;
+    private bool isSubmitting = false;
 
     private async Task HandleLogin()
     {
-        var success = await AuthService.LoginAsync(LoginModel);
-        if(success)
+        if(string.IsNullOrWhiteSpace(LoginModel.NationalCode) || string.IsNullOrWhiteSpace(LoginModel.PhoneNumber))
         {
-            Navigation.NavigateTo("/dashboard");
+            await toastService.Show(new ToastOption()
+            {
+                ShowClose = true,
+                ShowHeader = true,
+                Category = ToastCategory.Error,
+                Title = "ورود",
+                Content = "کاربر گرامی, لطفا اطلاعات مربوطه را وارد کنید.",
+                Animation = true
+            });
+            return;
         }
+
+        isSubmitting = true;
+        var result = await AuthService.LoginAsync(LoginModel);
+        if(result.Succeeded)
+        {
+            await toastService.Show(new ToastOption()
+            {
+                ShowClose = true,
+                ShowHeader = true,
+                Category = ToastCategory.Error,
+                Title = "ورود",
+                Content = $"کد ورود به شماره {LoginModel.PhoneNumber} ارسال شد.",
+                Animation = true
+            });
+
+            Navigation.NavigateTo($"/otp?mobile={LoginModel.Email}");
+        }
+
         else
         {
-            ErrorMessage = "ایمیل یا پسورد اشتباه است";
+            ErrorMessage = result?.Message ?? "";
         }
+
+        isSubmitting = false;
+    }
+
+    async Task NavigateToForgotPassword ()
+    {
+        if (string.IsNullOrWhiteSpace(LoginModel.NationalCode))
+        {
+            await toastService.Show(new ToastOption()
+                {
+                    ShowClose = true,
+                    ShowHeader = true,
+                    Category = ToastCategory.Error,
+                    Title = "فراموشی رمز عبور",
+                    Content = "لطفا کد ملی خود را وارد کنید.",
+                    Animation = true
+                });
+        }
+
+        else
+            Navigation.NavigateTo($"/forgotPassword/{LoginModel.NationalCode}");
     }
 }

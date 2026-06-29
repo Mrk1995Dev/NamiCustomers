@@ -1,0 +1,93 @@
+﻿@page "/dealers"
+@using NamiCustomers.Web.Services.Dealer.Dto
+
+@inject NavigationManager Navigation
+@inject ISnackbar snackbar
+@inject IDealerService dealerService
+@inject ToastService toastService
+
+<PageTitle>عاملیت های مجاز | نامی خودرو</PageTitle>
+
+<br />
+
+<div class="container direction-rtl">
+    <div class="card">
+        <div class="card-body p-2">
+            <div class="d-flex align-items-center justify-content-between">
+                <small class="ms-1">لیست عاملیت ها </small>
+                <NavLink title="بازگشت" href="/"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></NavLink>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+
+<div class="container">
+    <div class="row g-3">
+
+        @foreach (var (item, index) in dealers.Select((item, index) => (item, index)).OrderBy(x => x.item.SubCountry))
+        {
+            <!-- Single Top Product Card -->
+            <div class="col-12 ">
+                <div class="card single-product-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="card-content px-4 py-2">
+                                <a class="product-title d-block text-truncate mt-0" href="#"> @item.DealerName @item.DealerNo</a>
+                                <hr />
+                                <a class="product-title d-block text-truncate mt-0" href="#">وضعیت عاملیت: @item.DealerStatus</a>
+
+                                <a class="product-title d-block text-truncate mt-0" href="#">استان : @item.City</a>
+                                <a class="product-title d-block text-truncate mt-0" href="#">شهر: @item.SubCountry</a>
+                                <br />
+                                <a class="btn btn-primary btn-sm" href="#">مشاهده جزئیات</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        }
+    </div>
+</div>
+
+<br />
+
+@code {
+    private DealerResponseDto[] dealers = Array.Empty<DealerResponseDto>();
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        await LoadActiveDealersAsync();
+        isLoading = false;
+    }
+
+    async Task LoadActiveDealersAsync()
+    {
+        var result = await dealerService.GetAllDealerAsync();
+        if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+            Navigation.NavigateTo("/login");
+
+        else if(result.Succeeded)
+        {
+            dealers = result.Data;
+        }
+
+        else
+        {
+            await toastService.Show(new ToastOption()
+            {
+                ShowClose = true,
+                ShowHeader = true,
+                Category = ToastCategory.Error,
+                Title = "عاملیت ها",
+                Content = result.Message,
+                Animation = true
+            });
+        }
+    }
+}

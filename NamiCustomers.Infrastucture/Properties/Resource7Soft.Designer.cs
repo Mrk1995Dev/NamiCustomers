@@ -61,7 +61,7 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://7soft.namikhodro.com:8087/.
+        ///   Looks up a localized string similar to http://172.20.10.6:8087/.
         /// </summary>
         public static string BaseUrlBooking {
             get {
@@ -70,7 +70,7 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://7soft.namikhodro.com:8088/.
+        ///   Looks up a localized string similar to http://172.20.10.6:8088/.
         /// </summary>
         public static string BaseUrlCrm {
             get {
@@ -79,7 +79,7 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://7soft.namikhodro.com:8089/.
+        ///   Looks up a localized string similar to http://172.20.10.6:8089/.
         /// </summary>
         public static string BaseUrlSales {
             get {

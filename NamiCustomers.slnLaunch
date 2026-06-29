@@ -7,7 +7,7 @@
         "Action": "Start"
       },
       {
-        "Path": "NamiCustomers.MVC\\NamiCustomers.MVC.csproj",
+        "Path": "NamiCustomers.Web\\NamiCustomers.Web.csproj",
         "Action": "Start"
       }
     ]

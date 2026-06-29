@@ -11,7 +11,5 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 app.BaseAppUse();
 
+app.MapControllers();
 app.Run();
-
-
-

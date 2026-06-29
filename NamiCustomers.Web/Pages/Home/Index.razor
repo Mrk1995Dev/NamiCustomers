@@ -1,0 +1,258 @@
+﻿@page "/"
+@inject IJSRuntime JS
+@inject ISnackbar snackbar
+@inject NavigationManager Navigation
+
+<PageTitle>سامانه امور مشتریان نامی خودرو |نامی خودرو</PageTitle>
+
+<div class="container" style="margin-top: 4rem;">
+    <div class="tiny-slider-one-wrapper">
+        <div class="tiny-slider-one">
+            <MudCarousel Class="mud-width-full" Style="height:200px;" ShowArrows="true" ShowBullets="false" EnableSwipeGesture="true" AutoCycle="true" TData="object">
+                <MudCarouselItem Transition="MudBlazor.Transition.Slide">
+                    <div class="single-hero-slide bg-overlay" style="background-image: url('sitetmeplate/img/bg-img/bg_1.jpeg')">
+                        <div class="h-100 d-flex align-items-center text-center">
+                            <div class="container">
+                                <h3 class="text-white mb-1">محصولات نیسان</h3>
+                                <p class="text-white mb-4">جهت مشاهده خودروها در وب سایت  نامی خودرو بر روی لینک ذیل کلیک نمایید.</p>
+                                <a class="btn btn-creative btn-primary" target="_blank" href="https://namikhodro.com/products/">مشاهده </a>
+                            </div>
+                        </div>
+                    </div>
+                </MudCarouselItem>
+                <MudCarouselItem Transition="MudBlazor.Transition.Slide">
+                    <div class="single-hero-slide bg-overlay" style="background-image: url('sitetmeplate/img/bg-img/bg_3.jpeg')">
+                        <div class="h-100 d-flex align-items-center text-center">
+                            <div class="container">
+                                <div class="container">
+                                    <h3 class="text-white mb-1">محصولات تویوتا</h3>
+                                    <p class="text-white mb-4">جهت مشاهده خودروها در وب سایت  نامی خودرو بر روی لینک ذیل کلیک نمایید.</p>
+                                    <a class="btn btn-creative btn-primary" target="_blank" href="https://namikhodro.com/%d9%85%d8%ad%d8%b5%d9%88%d9%84%d8%a7%d8%aa-%d8%aa%d9%88%db%8c%d9%88%d8%aa%d8%a7/">مشاهده </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </MudCarouselItem>
+            </MudCarousel>
+
+        </div>
+    </div>
+</div>
+
+
+<br />
+
+<div class="pt-3"></div>
+
+<div class="container direction-rtl">
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-4">
+                    <div class="feature-card mx-auto text-center">
+                        <a href="/Vehicle/ActiveMainChassisGuarantee">
+                            <div class="card mx-auto bg-gray">
+                                <img src="sitetmeplate/img/icon set/svg/warranty inquiry.svg" alt="استعلام گارانتی">
+                            </div>
+                        </a>
+                        <p class="mb-0">
+                            <NavLink href="/Vehicle/ActiveMainChassisGuarantee" class="service-box"> استعلام گارانتی </NavLink>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="feature-card mx-auto text-center">
+                        <NavLink href="/vehicle/PartsPriceByChassis">
+                            <div class="card mx-auto bg-gray">
+                                <img src="sitetmeplate/img/icon set/svg/part_price.svg" alt="استعلام بهای قطعات">
+                            </div>
+                        </NavLink>
+
+                        <p class="mb-0">
+                            <a href="/vehicle/PartsPriceByChassis" class="service-box"> استعلام بهای قطعات</a>
+                        </p>
+                    </div>
+                </div>
+
+
+                <div class="col-4">
+                    <div class="feature-card mx-auto text-center">
+                        <NavLink href="/vehicle/servicesPrice">
+                            <div class="card mx-auto bg-gray">
+                                <img src="sitetmeplate/img/icon set/svg/service_price.svg" alt="استعلام بهای خدمات">
+                            </div>
+                        </NavLink>
+                        <p class="mb-0">
+                            <a href="/Vehicle/ServicesPrice" class="service-box"> استعلام بهای خدمات </a>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="feature-card mx-auto text-center">
+                        <NavLink href="/booking/MyBooking">
+                            <div class="card mx-auto bg-gray">
+                                <img src="sitetmeplate/img/icon set/svg/Online_repair_shop_appointment.svg" alt="نوبت دهی">
+                            </div>
+                        </NavLink>
+                        <p class="mb-0">
+                            <a href="/booking/BookingIndex" class="service-box"> نوبت دهی</a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="feature-card mx-auto text-center">
+                        <NavLink href="/Reception/ReceptionsInformationByVinNumber">
+                            <div class="card mx-auto bg-gray">
+                                <img src="sitetmeplate/img/icon set/svg/Repair_records.svg" alt="سوابق تعمیراتی">
+                            </div>
+                        </NavLink>
+                        <p class="mb-0">
+                            <NavLink href="/Reception/ReceptionsInformationByVinNumber" class="service-box"> سوابق تعمیراتی </NavLink>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="feature-card mx-auto text-center">
+                        <NavLink href="/call">
+                            <div class="card mx-auto bg-gray">
+                                <img src="sitetmeplate/img/icon set/svg/Campaign.svg" alt="فراخوان">
+                            </div>
+                        </NavLink>
+                        <p class="mb-0"><NavLink href="/call" style="color:#fff"> فراخوان </NavLink></p>
+
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="feature-card mx-auto text-center">
+                        <NavLink href="/Vehicle/OrderingsBySubscriber">
+                            <div class="card mx-auto bg-gray">
+                                <img src="sitetmeplate/img/icon set/svg/service_price.svg" alt="لیست سفارشات">
+                            </div>
+                        </NavLink>
+                        <p class="mb-0"><a href="/Vehicle/OrderingsBySubscriber" style="color:#fff"> لیست سفارشات </a></p>
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="card bg-primary bg-img" style="background-image: url('sitetmeplate/img/core-img/2.png')">
+        <div class="card-body p-5 direction-rtl">
+            <i class="bi bi-geo-alt text-white mb-3 display-2"></i>
+            <h2 class="text-white">مشاهده لیست عاملیت ها</h2>
+            <p class="text-white mb-0">برای مشاهده لیست نمایندگی‌های معتبر فروش و مراکز خدمات پس از فروش در سراسر کشور، روی لینک زیر کلیک کنید:</p>
+            <br />
+            <NavLink class="btn" style="border-color:#000;background-color:#000" href="/dealers">مشاهده عاملیت ها @* <i class="bi bi-arrow-left"></i> *@</NavLink>
+        </div>
+    </div>
+</div>
+<br />
+
+<div class="container direction-rtl">
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-4">
+                    <div class="feature-card mx-auto text-center">
+                        <a type="button" href="sitetmeplate/pdf/قانون-حمایت-.pdf" download>
+                            <div class="card mx-auto bg-gray">
+                                <img src="sitetmeplate/img/icon set/svg/Consumer_Rights_Protection_Law.svg" alt="قانون و آیین نامه حمایت از حقوق مصرف کننده">
+                            </div>
+                        </a>
+                        <p class="mb-0">
+                            <a class="service-box" type="button" href="sitetmeplate/pdf/قانون-حمایت-.pdf" download>
+                                قانون و آیین نامه حمایت از حقوق مصرف کننده
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="feature-card mx-auto text-center">
+                        <a type="button" href="sitetmeplate/pdf/لیست-قطعات-و-عیوب-ایمنی.pdf" download>
+                            <div class="card mx-auto bg-gray">
+                                <img src="sitetmeplate/img/icon set/svg/parts_and_safety.svg" alt="لیست قطعات و عیوب ایمنی خودرو">
+                            </div>
+                        </a>
+                        <p class="mb-0">
+                            <a class="service-box" type="button" href="sitetmeplate/pdf/لیست-قطعات-و-عیوب-ایمنی.pdf" download>
+                                لیست قطعات و عیوب ایمنی خودرو
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+
+                <div class="col-4">
+                    <div class="feature-card mx-auto text-center">
+                        <NavLink href="/faq">
+                            <div class="card mx-auto bg-gray">
+                                <img src="sitetmeplate/img/icon set/svg/faq.svg" alt="سوالات متداول">
+                            </div>
+                        </NavLink>
+                        <p class="mb-0">
+                            <NavLink href="/faq" class="service-box">
+                                سوالات متداول
+                            </NavLink>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="container">
+    <div class="card shadow-sm bg-img" style="background-image: url('sitetmeplate/img/core-img/2.png')">
+        <div class="card-body text-center p-5">
+            <h2 class="text-white">اخبار و اطلاعیه‌ها</h2>
+            <p class="mb-3 text-white">
+                جهت مشاهده اخبار و اطلاعیه ها بر روی لینک ذیل کلیک نمایید.
+            </p>
+            <a class="btn" style="border-color:#df0a2a;background-color:#df0a2a
+            " href="/Home/naminews">مشاهده اخبار و اطلاعیه ها @* <i class="bi bi-arrow-left"></i> *@</a>
+        </div>
+    </div>
+</div>
+<br />
+<div class="container">
+    <div class="card bg-primary mb-3 bg-img" style="background-image: url('img/core-img/1.png')">
+        <div class="card-body p-5 direction-rtl">
+
+            <h2 class="text-white">اخبار و اطلاعیه‌ها</h2>
+            <p class="mb-3 text-white">
+                جهت مشاهده اخبار و اطلاعیه ها بر روی لینک ذیل کلیک نمایید.
+            </p>
+            <NavLink class="btn" style="border-color:#000;background-color:#000" href="/nami
+
+news">مشاهده اخبار و اطلاعیه ها </NavLink>
+        </div>
+    </div>
+</div>
+
+<div class="container" style="margin-bottom: 5.2rem;">
+    <div class="card mb-3">
+        <div class="card-body">
+            <h3>آخرین اخبار</h3>
+            <br />
+            <div class="testimonial-slide-three-wrapper">
+                <div class="testimonial-slide3 testimonial-style3">
+                    <LatestNews />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+}

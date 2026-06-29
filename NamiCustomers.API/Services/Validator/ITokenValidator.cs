@@ -30,21 +30,21 @@ public class TokenValidate(UserManager<ApplicationUser>  userManager,ISettingsFa
 {
     public async Task Execute(TokenValidatedContext context)
     {
-        var claimsidentity = context.Principal.Identity as ClaimsIdentity;
-        if(claimsidentity?.Claims == null  || !claimsidentity.Claims.Any()) 
-        {
-            context.Fail("claims not found....");
-            return;
-        }
+        //var claimsidentity = context.Principal.Identity as ClaimsIdentity;
+        //if(claimsidentity?.Claims == null  || !claimsidentity.Claims.Any()) 
+        //{
+        //    context.Fail("claims not found....");
+        //    return;
+        //}
 
-        var userId = claimsidentity.FindFirst("UserId").Value;
-        if(!Guid.TryParse(userId, out Guid userGuid))
-        {
-            context.Fail("claims not found....");
-            return;
-        }
+        //var userId = claimsidentity.FindFirst("UserId").Value;
+        //if(!Guid.TryParse(userId, out Guid userGuid))
+        //{
+        //    context.Fail("claims not found....");
+        //    return;
+        //}
 
-        var user=await  userManager.FindByIdAsync(userGuid.ToString());
+        //var user=await  userManager.FindByIdAsync(userGuid.ToString());
 
         //// بررسی اینکه توکن واقعاً ذخیره شده است
         //var storedToken = await userManager.GetAuthenticationTokenAsync(user, settingsFacadeService.JWTSetting.LogInProvider, TokenType.AccessToken.GetEnumDescription());

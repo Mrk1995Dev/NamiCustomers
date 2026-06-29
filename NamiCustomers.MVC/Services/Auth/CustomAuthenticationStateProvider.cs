@@ -23,7 +23,7 @@ namespace NamiCustomers.MVC.Services.Auth
 
             if (string.IsNullOrEmpty(token))
             {
-                _navigationManager.NavigateTo("/Account/LoginByMobile", forceLoad: true);
+                //_navigationManager.NavigateTo("/Account/LoginByMobile", forceLoad: true);
                 //کاربر لاگین نیست
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             }

@@ -1,0 +1,32 @@
+﻿.title-part {
+    margin-top: 4.4rem;
+    font-size: 18px;
+}
+
+.search-form-container {
+    width: 32%;
+    margin: 0 auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+    .search-form-container .form-control {
+        height: 48px;
+        border-radius: 10px;
+    }
+
+.search-btn {
+    width: 100%;
+    height: 44px;
+    border-radius: 8px;
+    margin-top: 14px;
+}
+
+@media (max-width: 999px) {
+    .search-form-container {
+        width: 100%;
+        padding: 16px;
+    }
+}

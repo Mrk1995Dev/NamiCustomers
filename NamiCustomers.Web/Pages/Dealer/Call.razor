@@ -1,0 +1,105 @@
+﻿@page "/call"
+@using NamiCustomers.Web.Services.LocalStorage
+
+@inject NavigationManager Navigation
+@inject ISnackbar snackbar
+@inject IVehicleService vehicleService
+@inject ToastService toastService
+@inject ILocalStorageService localStorgeService
+
+<PageTitle>فراخوان | نامی خودرو</PageTitle>
+
+@if (!isLoading)
+{
+    <div class="loader-container">
+        <MudProgressCircular Rounded="true" Size="MudBlazor.Size.Medium" StrokeWidth="5" Style="color: #ffffff;" Indeterminate="true" />
+    </div>
+}
+
+else
+{
+    <br />
+
+    <div class="container direction-rtl">
+        <div class="card">
+            <div class="card-body p-2">
+                <div class="d-flex align-items-center justify-content-between">
+                    <small class="ms-1">اطلاعیه و فراخوان </small>
+                    <NavLink title="بازگشت" href="/"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></NavLink>
+                </div>
+            </div>
+        </div>
+    </div>  
+    <br />
+
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+
+                @foreach (var (item, index) in Model.Select((item, index) => (item, index)))
+                {
+                    <div class="alert custom-alert-one alert-dark alert-dismissible fade show mb-0" role="alert">
+                        <i class="bi bi-check-circle"></i>
+                        @item
+                    </div>
+                    <br />
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private string[] Model = Array.Empty<string>();
+    private bool isLoading;
+    private string vinNumber;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+        await LoadSubscriberCallsAsync();
+        isLoading = false;
+    }
+
+    async Task LoadSubscriberCallsAsync()
+    {
+        vinNumber = await localStorgeService.GetItemAsync("vin");
+
+        if(string.IsNullOrWhiteSpace(vinNumber))
+        {
+            Navigation.NavigateTo("/");
+            await toastService.Show(new ToastOption()
+            {
+                ShowClose = true,
+                ShowHeader = true,
+                Category = ToastCategory.Error,
+                Title = "فراخوان",
+                Content = "کاربر گرامی, لطفا خودرو خود را انتخاب بفرمایید.",
+                Animation = true
+            });
+
+            return;
+        }
+
+        var result = await vehicleService.GetSpecificCasesAsync(vinNumber);
+        if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+            Navigation.NavigateTo("/login");
+
+
+        else if(result.Succeeded)
+            Model = result.Data;
+
+        else
+        {
+            await toastService.Show(new ToastOption()
+            {
+                ShowClose = true,
+                ShowHeader = true,
+                Category = ToastCategory.Error,
+                Title = "فراخوان",
+                Content = result.Message,
+                Animation = true
+            });
+        }
+    }
+}

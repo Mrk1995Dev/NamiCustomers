@@ -130,7 +130,7 @@
     <value>api/Guaranty/GetActiveMainChassisGuarantee?vinNumber=</value>
   </data>
   <data name="BaseUrlCrm" xml:space="preserve">
-    <value>http://7soft.namikhodro.com:8088/</value>
+    <value>http://172.20.10.6:8088/</value>
   </data>
   <data name="GetDealers" xml:space="preserve">
     <value>api/Dealer/GetDealers</value>
@@ -190,10 +190,10 @@
     <value>api/Booking/CheckIsValidKilometer</value>
   </data>
   <data name="BaseUrlBooking" xml:space="preserve">
-    <value>http://7soft.namikhodro.com:8087/</value>
+    <value>http://172.20.10.6:8087/</value>
   </data>
   <data name="BaseUrlSales" xml:space="preserve">
-    <value>http://7soft.namikhodro.com:8089/</value>
+    <value>http://172.20.10.6:8089/</value>
   </data>
   <data name="InsertBooking" xml:space="preserve">
     <value>api/Booking/InsertBooking</value>

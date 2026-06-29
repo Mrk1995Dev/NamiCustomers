@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
+using NamiCustomers.Application.Services.Subscribers;
 using NamiCustomers.Application.Services.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
-using System.Reflection;
+using System.Security.Claims;
 
 namespace NamiCustomers.API.Controllers.v1;
 
@@ -12,28 +13,34 @@ namespace NamiCustomers.API.Controllers.v1;
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiVersion("1.0")]
 [Authorize]//todo moradi
-public class VehicleController(IVehicleService vehicleService, ISevenSoftService sevenSoftService, IMapper mapper) : ControllerBase
+public class VehicleController(IVehicleService vehicleService,
+    ISevenSoftService sevenSoftService,
+    IMapper mapper,
+    ISubscriberService subscriberService) : ControllerBase
 {
     [HttpGet("[action]")]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> Get([FromQuery] int id)
     {
+        var appUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
         var result = await vehicleService.GetAsync(id);
         if (result.Succeeded)
-        {
             return Ok(result);
-        }
+
         return BadRequest(result);
     }
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetAll(int subscriberId)
+    public async Task<IActionResult> GetAll()
     {
-        var result = await vehicleService.GetAllAsync(subscriberId);
+        var appUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        var result = await vehicleService.GetAllAsync(appUserId);
         if (result.Succeeded)
-        {
             return Ok(result);
-        }
+
         return BadRequest(result);
     }
+
     [HttpPost("[action]")]
     public async Task<IActionResult> Register(VehicleModelDto vehicleModelDto)
     {
@@ -95,8 +102,10 @@ public class VehicleController(IVehicleService vehicleService, ISevenSoftService
 
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> GetSpecificCases(string vinNumber, string nationalCodeOrEconomicCode, string mobile)
+    public async Task<IActionResult> GetSpecificCases([FromQuery] string vinNumber)
     {
+        var nationalCodeOrEconomicCode = User.FindFirst("NationalCode")?.Value;
+        var mobile = User.FindFirst("Mobile")?.Value;
         var result = await sevenSoftService.GetSpecificCases(vinNumber, nationalCodeOrEconomicCode, mobile);
         if (result == null)
             return BadRequest(ResultDto.Failure<string[]>(
@@ -107,7 +116,7 @@ public class VehicleController(IVehicleService vehicleService, ISevenSoftService
 
     }
     [HttpGet("[action]")]
-    public async Task<ResultDto<ActiveMainChassisGuaranteeResponse>> GetActiveMainChassisGuarantee(string vinNumber)
+    public async Task<ResultDto<ActiveMainChassisGuaranteeResponse>> GetActiveMainChassisGuarantee([FromQuery] string vinNumber)
     {
         var result = await sevenSoftService.GetActiveMainChassisGuarantee(vinNumber);
         if (result == null) 
@@ -120,7 +129,7 @@ public class VehicleController(IVehicleService vehicleService, ISevenSoftService
     }
 
     [HttpGet("[action]")]
-    public async Task<ResultDto<PartsPriceByChassisResponse[]>> GetPartsPriceByChassis(PartsPriceByChassisRequest getPartsPriceByChassisRequest)
+    public async Task<ResultDto<PartsPriceByChassisResponse[]>> GetPartsPriceByChassis([FromQuery]PartsPriceByChassisRequest getPartsPriceByChassisRequest)
     {
         var result = await sevenSoftService.GetPartsPriceByChassis(getPartsPriceByChassisRequest);
         return result;
@@ -142,5 +151,37 @@ public class VehicleController(IVehicleService vehicleService, ISevenSoftService
     {
         var result = await sevenSoftService.GetAllOrderStatusType();
         return result;
+    }
+
+    [HttpPost("[action]")]
+    public async Task<IActionResult> ServicesPriceList([FromBody] ServicesPriceRequest request)
+    {
+        var nationalCode = User.FindFirst("NationalCode")?.Value;
+        if (string.IsNullOrEmpty(request.ServiceCode) && string.IsNullOrEmpty(request.ServiceName))
+        {
+            request.DealerId = Guid.Empty;
+            request.BranchId = Guid.Empty;
+            var result = ResultDto.Failure(Infrastucture.Properties.Resources.errRequiredServiceCodeName);
+            return BadRequest(result);
+        }
+
+        var subscriber = (await subscriberService.GetByNationalCodeAsync(nationalCode)).Data;
+        var vinNumber = subscriber.VehicleModels?.FirstOrDefault(c => c.IsDefault)?.VinNumber;
+        if (vinNumber != null)
+        {
+            request.NationalCodeOrEconomicCode = subscriber.NationalCode;
+            request.ChassisVinNumber = vinNumber;
+            var data = await sevenSoftService.GetServicesPriceByBranchId(request);
+            if (!data.Succeeded)
+            {
+                var result = ResultDto.Failure(data.Message);
+                return BadRequest(result);
+            }
+            return Ok(data);
+        }
+        else
+        {
+            return BadRequest(ResultDto.Failure(Infrastucture.Properties.Resources.errRequiredServiceCodeName));
+        }
     }
 }

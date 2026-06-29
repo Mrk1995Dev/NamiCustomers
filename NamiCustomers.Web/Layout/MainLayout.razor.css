@@ -8,6 +8,127 @@ main {
     flex: 1;
 }
 
+.vin-selector {
+    position: relative;
+}
+
+.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000000;
+    z-index: 9999;
+}
+
+.vin-selector__trigger {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    background: #fff;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 6px 14px;
+    /*min-width: 240px;*/
+    font-size: 13px;
+    color: #222;
+    cursor: pointer;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+    .vin-selector__trigger:hover {
+        border-color: #df0a2a;
+    }
+
+.vin-selector.is-open .vin-selector__trigger {
+    border-color: #222;
+    box-shadow: 0 0 0 3px rgba(223, 10, 42, 0.08);
+}
+
+.vin-selector__label {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #222;
+}
+
+.vin-selector__chevron {
+    font-size: 11px;
+    transition: transform .2s;
+}
+
+.vin-selector.is-open .vin-selector__chevron {
+    transform: rotate(180deg);
+}
+
+.vin-selector__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1040;
+    background: transparent;
+}
+
+.vin-selector__menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 50%;
+    transform: translateX(50%);
+    min-width: 220px;
+    max-height: 280px;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.12);
+    z-index: 1050;
+    padding: 6px;
+}
+
+.vin-selector__item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: right;
+    padding: 8px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    gap: 6px;
+}
+
+    .vin-selector__item:hover {
+        background: #f7f7f7;
+    }
+
+    .vin-selector__item.active {
+        background: rgba(223, 10, 42, 0.08);
+    }
+
+.vin-selector__item-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #222;
+}
+
+.vin-selector__item-code {
+    font-size: 12px;
+    color: #999;
+    direction: ltr;
+}
+
+.vin-selector__empty {
+    padding: 14px;
+    text-align: center;
+    font-size: 12px;
+    color: #999;
+}
+
 .sidebar {
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
 }
@@ -35,6 +156,57 @@ main {
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+a {
+    color: #0077cc;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.border-top {
+    border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
+}
+
 
 @media (max-width: 640.98px) {
     .top-row {

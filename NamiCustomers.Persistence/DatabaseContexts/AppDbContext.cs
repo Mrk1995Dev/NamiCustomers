@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace NamiCustomers.Persistence.DatabaseContexts;
 
-public class AppDbContext : IdentityDbContext<Domain.Entities.Account.ApplicationUser, Domain.Entities.Account.ApplicationRole, string>, IAppDbContext
+public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>, IAppDbContext
 {
     public DbSet<VehicleAttachment> VehicleAttachments { get; set; }
     public DbSet<Subscriber> Subscribers { get; set; }

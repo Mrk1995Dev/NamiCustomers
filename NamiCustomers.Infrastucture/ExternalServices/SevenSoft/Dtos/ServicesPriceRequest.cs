@@ -10,17 +10,12 @@ namespace NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 public class ServicesPriceRequest
 {
     public Guid? VehicleModelId { get; set; }
-    [DisplayName("کد خدمت")]
     public string? ServiceCode { get; set; }
-    [DisplayName("عنوان خدمت")]
     public string? ServiceName { get; set; }
     public string ChassisVinNumber { get; set; } = null!;
     public string NationalCodeOrEconomicCode { get; set; } = null!;
-    [DisplayName("شعبه")]
     public Guid BranchId { get; set; }
-    [DisplayName("نمایندگی")]
     public Guid DealerId { get; set; }
-
 }
 
 public class ServicesPriceResponse

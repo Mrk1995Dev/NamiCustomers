@@ -9,8 +9,6 @@ using NamiCustomers.Application.Services.Facades;
 using NamiCustomers.Domain.Entities.Account;
 using NamiCustomers.Domain.Entities.Subscribers;
 using NamiCustomers.Infrastucture.Utilities;
-using Newtonsoft.Json;
-using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -20,11 +18,12 @@ namespace NamiCustomers.Application.Services.Accounts;
 public interface ITokenService
 {
     Task<TokenResponse> GenerateAndStoreTokensAsync(ApplicationUser user);
+    Task<TokenResponse> GenerateAndStoreTokensAsync(Subscriber user);
     Task<TokenInfo> GetTokenInfoAsync(ApplicationUser user);
     Task<bool> LogoutAsync(string userId);
     Task<ResultDto<TokenResponse>> RefreshTokenAsync(string oldRefreshToken, ApplicationUser user);
     Task<bool> RevokeTokensAsync(ApplicationUser user);
-    Task<ResultDto<string>> StoreTokensAsync(ApplicationUser user, string accessToken, string refreshToken );
+    Task<ResultDto<string>> StoreTokensAsync(ApplicationUser user, string accessToken, string refreshToken);
     Task<bool> ValidateAccessTokenAsync(ApplicationUser user, string accessToken);
 }
 
@@ -51,14 +50,14 @@ public class TokenService(
 
 
         var claims = new List<Claim>{
-                                        new Claim(ClaimTypes.Name, user.UserName),
-                                        new Claim(ClaimTypes.Email, user.Email),
-                                        new Claim("NationalCode", user.NationalCode),
-                                        new Claim("Mobile", user.Mobile),
-                                        new  System.Security.Claims.Claim("UserId",user.Id),
-                                        new  System.Security.Claims.Claim("FullName",$"{user.FirstName} {user.LastName}"),
-                                        new Claim(ClaimTypes.NameIdentifier, user.Id),
-                                        new Claim("Subscriber", JsonConvert.SerializeObject(subscriber))//alidiablo
+                                        new Claim(ClaimTypes.Name, user?.UserName ?? ""),
+                                        new Claim(ClaimTypes.Email, user?.Email ?? ""),
+                                        new Claim("NationalCode", user?.NationalCode ?? ""),
+                                        new Claim("Mobile", subscriber?.Mobile ?? ""),
+                                        new Claim("UserId",user?.Id ?? ""),
+                                        new Claim("FullName",$"{subscriber?.Name ?? ""} {subscriber?.Family ?? ""}"),
+                                        new Claim(ClaimTypes.NameIdentifier, user?.Id ?? ""),
+                                        //new Claim("Subscriber", JsonConvert.SerializeObject(subscriber))//alidiablo
                                     };
         var rolesDtos = await roleManager.Roles.Where(c => userRoles.Contains(c.Name)).Select(c => new RoleDto
         {
@@ -69,8 +68,8 @@ public class TokenService(
 
         foreach (var role in rolesDtos)
         {
-            claims.Add(new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, role.Name));
-            claims.Add(new System.Security.Claims.Claim("PersianRole", role.Description));
+            claims.Add(new Claim(ClaimTypes.Role, role.Name));
+            claims.Add(new Claim("PersianRole", role.Description));
         }
 
         var token = new JwtSecurityToken(
@@ -92,6 +91,52 @@ public class TokenService(
             jwtToken,
             refreshToken
             );
+
+
+
+        var claimsIdentity = new ClaimsIdentity(
+            claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        return new Tuple<string, ClaimsIdentity>(jwtToken, claimsIdentity);
+    }
+
+    private async Task<Tuple<string, ClaimsIdentity>> GenerateJwtTokenAsync(Subscriber user)
+    {
+        //var userRoles = await userManager.GetRolesAsync(user);
+        var key = Encoding.ASCII.GetBytes(settingsFacadeService.JWTSetting.securityKey);
+        var secretKey = new SymmetricSecurityKey(key);
+        var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+        var subscriber = await dbContext.Subscribers.Include(c => c.VehicleModels).FirstOrDefaultAsync(c => c.NationalCode == user.NationalCode);
+
+        var claims = new List<Claim>{
+                                        new Claim(ClaimTypes.Name, subscriber?.Name ?? ""),
+                                        new Claim("NationalCode", subscriber?.NationalCode ?? ""),
+                                        new Claim("Mobile", subscriber?.Mobile ?? ""),
+                                        new Claim("UserId",subscriber?.Id.ToString() ?? ""),
+                                        new Claim("FullName",$"{subscriber?.Name ?? ""} {subscriber?.Family ?? ""}"),
+                                        new Claim(ClaimTypes.NameIdentifier, subscriber?.Id.ToString() ?? ""),
+                                        //new Claim(ClaimTypes.Role, BuiltInRole.User.ToString())
+                                    };
+
+        var token = new JwtSecurityToken(
+            issuer: settingsFacadeService.JWTSetting.validIssuer,
+            audience: settingsFacadeService.JWTSetting.validAudience,
+            claims: claims,
+             notBefore: DateTime.UtcNow,
+             expires: DateTime.UtcNow.AddMinutes(double.Parse(settingsFacadeService.JWTSetting.expiryInMinutes.ToString())),
+            signingCredentials: credentials
+        );
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var jwtToken = tokenHandler.WriteToken(token);
+        //var securityToken = tokenHandler.ReadJwtToken(jwtToken);//diablo why signingCredentials is null???? 
+
+        var refreshToken = GenerateRefreshToken();
+        // ذخیره توکن در جدول AspNetUserTokens
+        //await StoreTokensAsync(user,
+        //    jwtToken,
+        //    refreshToken
+        //    );
 
 
 
@@ -126,7 +171,7 @@ public class TokenService(
             var result = await userManager.SetAuthenticationTokenAsync(
                 user,
                 settingsFacadeService.JWTSetting.LogInProvider,
-              TokenType.AccessToken.GetEnumDescription() ,
+              TokenType.AccessToken.GetEnumDescription(),
                 accessToken);
 
             if (!result.Succeeded)
@@ -163,11 +208,12 @@ public class TokenService(
                 user,
                 settingsFacadeService.JWTSetting.LogInProvider,
                 "TokenType",
-                TokenType.Both.ToString());  
+                TokenType.Both.ToString());
 
-           
-            return ResultDto.Success<string>("توکن‌ها با موفقیت ذخیره شدند.");  
+
+            return ResultDto.Success<string>("توکن‌ها با موفقیت ذخیره شدند.");
         }
+
         catch (Exception ex)
         {
             return ResultDto.Failure<string>($"خطا در ذخیره توکن‌ها: {ex.Message}");
@@ -184,7 +230,7 @@ public class TokenService(
 
         if (storeResult.Succeeded)
         {
-            
+
             int expiryMinutes = settingsFacadeService.JWTSetting.expiryInMinutes;
 
             return new TokenResponse
@@ -193,13 +239,36 @@ public class TokenService(
                 ClaimsIdentity = accessToken.Item2,
                 RefreshToken = refreshToken,
                 Expiration = DateTime.UtcNow.AddMinutes(expiryMinutes),
-                RefreshTokenExpiration = DateTime.UtcNow.AddDays(1),  
+                RefreshTokenExpiration = DateTime.UtcNow.AddDays(1),
                 TokenType = "Bearer"
             };
         }
 
         throw new Exception($"Failed to store tokens: {storeResult.Message}");
     }
+
+    public async Task<TokenResponse> GenerateAndStoreTokensAsync(Subscriber user)
+    {
+        var accessToken = await GenerateJwtTokenAsync(user);
+        var refreshToken = GenerateRefreshToken();
+
+        //var storeResult = await StoreTokensAsync(user, accessToken.Item1, refreshToken);
+
+        int expiryMinutes = settingsFacadeService.JWTSetting.expiryInMinutes;
+
+        return new TokenResponse
+        {
+            AccessToken = accessToken.Item1,
+            ClaimsIdentity = accessToken.Item2,
+            RefreshToken = refreshToken,
+            Expiration = DateTime.UtcNow.AddMinutes(expiryMinutes),
+            RefreshTokenExpiration = DateTime.UtcNow.AddDays(1),
+            TokenType = "Bearer"
+        };
+
+        //throw new Exception($"Failed to store tokens: {storeResult.Message}");
+    }
+
     public async Task<bool> LogoutAsync(string userId)
     {
         try
@@ -231,7 +300,7 @@ public class TokenService(
         try
         {
             DateTime? refreshTokenExp = null;
-            string? storedRefreshToken  = await userManager.GetAuthenticationTokenAsync(user, settingsFacadeService.JWTSetting.LogInProvider, "RefreshToken");
+            string? storedRefreshToken = await userManager.GetAuthenticationTokenAsync(user, settingsFacadeService.JWTSetting.LogInProvider, "RefreshToken");
             var refreshTokenExpStr = await userManager.GetAuthenticationTokenAsync(user, settingsFacadeService.JWTSetting.LogInProvider, TokenType.RefreshTokenExp.GetEnumDescription());
 
             if (!string.IsNullOrEmpty(refreshTokenExpStr))
@@ -258,7 +327,7 @@ public class TokenService(
 
             if (storeResult.Succeeded)
             {
-                var result= new TokenResponse
+                var result = new TokenResponse
                 {
                     AccessToken = newAccessToken.Item1,
                     RefreshToken = newRefreshToken,
@@ -271,11 +340,11 @@ public class TokenService(
                 return ResultDto.Success<TokenResponse>(result);
             }
 
-            return ResultDto.Failure<TokenResponse>("خطا در تولید رفرش جدید");  
+            return ResultDto.Failure<TokenResponse>("خطا در تولید رفرش جدید");
         }
         catch (Exception ex)
         {
-            return ResultDto.Failure<TokenResponse>($"خطا در رفرش توکن: {ex.Message}"); 
+            return ResultDto.Failure<TokenResponse>($"خطا در رفرش توکن: {ex.Message}");
         }
     }
 
@@ -284,7 +353,7 @@ public class TokenService(
     {
         try
         {
-            var storedToken = await userManager.GetAuthenticationTokenAsync(user, settingsFacadeService.JWTSetting.LogInProvider,TokenType.AccessToken.GetEnumDescription());
+            var storedToken = await userManager.GetAuthenticationTokenAsync(user, settingsFacadeService.JWTSetting.LogInProvider, TokenType.AccessToken.GetEnumDescription());
             return storedToken == accessToken;
         }
         catch (Exception)
@@ -374,4 +443,11 @@ public class TokenInfo
     public DateTime? RefreshTokenExpiration { get; set; }
     public int TokenType { get; set; }
     public bool HasValidToken { get; set; }
+}
+
+public enum BuiltInRole
+{
+    Guest =0,
+    User = 1,
+    Admin
 }

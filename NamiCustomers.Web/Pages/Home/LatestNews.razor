@@ -1,0 +1,30 @@
+﻿@using NamiCustomers.Web.Services.CustomerService.Dto
+
+@foreach (var news in Model)
+{
+
+    <!-- Single Testimonial Slide -->
+    <div class="single-testimonial-slide">
+        <div class="text-content">
+            <span class="d-inline-block badge  mb-2" style="border-color:#df0a2a;background-color:#df0a2a">
+                @news.PersianDate
+            </span>
+            <br />
+            <h6 class="mb-2">@((MarkupString)news.title.rendered)</h6>
+            <br />
+            <span class="d-block">@((MarkupString)news.content.rendered.Substring(0, 200))</span>
+            <br />
+            <a class="btn" style="border-color:#df0a2a;background-color:#df0a2a;float:left" href="/Home/NewsDetails/@news.id">
+                مشاهده
+            </a>
+        </div>
+    </div>
+}
+@code {
+    List<NamiNewsResponse> Model = new();
+
+    protected override Task OnInitializedAsync()
+    {
+        return base.OnInitializedAsync();
+    }
+}

@@ -1,0 +1,23 @@
+﻿.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000000;
+    z-index: 9999;
+}
+
+.custom-btn {
+    transition: all 0.3s ease;
+}
+
+    .custom-btn:hover {
+        background-color: #dc3545 !important;
+        border-color: #dc3545 !important;
+        color: white !important;
+        transform: translateY(-2px);
+    }

@@ -29,7 +29,7 @@ public interface ISubscriberService
     Task<ResultDto<byte[]>> ExportAsync();
     Task<ResultDto<List<CityDto>>> GetCitiesAsync();
     Task<ResultDto<SubscriberCodeDto>> SendOtpAsync(string mobile);
-    Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string mobile, string nationalCode);
+    Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string nationalCode, string mobile);
 
 
 
@@ -260,7 +260,7 @@ public class SubscriberService(IMapper mapper, ITokenService tokenService, IHttp
         return ResultDto.Success<SubscriberCodeDto>(new SubscriberCodeDto { NationalCode = otp.NationalCode, AuthCode = otp.AuthCode, Mobile = otp.Mobile });
     }
 
-    public async Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string mobile, string nationalCode)
+    public async Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string nationalCode, string mobile)
     {
 
         var Randowmpass = new PasswordUtility();
@@ -281,29 +281,37 @@ public class SubscriberService(IMapper mapper, ITokenService tokenService, IHttp
 
     public async Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync(string nationalCode)
     {
+        var subscriber = await dbContext.Subscribers
+            .Include(cu => cu.VehicleModels)
+            .Where(cu => cu.NationalCode == nationalCode)
+            .FirstOrDefaultAsync();
+
+        if (subscriber is null)
+            return new ResultDto<SubscriberDto>("کاربر مربوطه یافت نشد.", false);
+        //                  .Include(cu => cu.VehicleModels).FirstOrDefault();
         //moradi
-        var user = await userManager.Users.FirstOrDefaultAsync(c => c.NationalCode == nationalCode);
-        var token = await tokenService.GetTokenInfoAsync(user);
-        Subscriber subscriber=null;
-        if (token.HasValidToken)
-        {
-            var jsonSubscriber = httpContextAccessor.GetClaimValue(MyClaims.Subscriber);
-            if (!string.IsNullOrEmpty(jsonSubscriber))
-            {
-                var subscriberDto = JsonConvert.DeserializeObject<SubscriberDto>(jsonSubscriber);
-                return ResultDto.Success<SubscriberDto>(subscriberDto);
-            }
-            else
-            {
-                subscriber =  dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
-                          .Include(cu => cu.VehicleModels).FirstOrDefault();
-            }
-        }
-        else
-        {
-            subscriber = dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
-                           .Include(cu => cu.VehicleModels).FirstOrDefault();
-        }
+        //var user = await userManager.Users.FirstOrDefaultAsync(c => c.NationalCode == nationalCode);
+        //var token = await tokenService.GetTokenInfoAsync(user);
+        //Subscriber subscriber =null;
+        //if (token.HasValidToken)
+        //{
+        //    var jsonSubscriber = httpContextAccessor.GetClaimValue(MyClaims.Subscriber);
+        //    if (!string.IsNullOrEmpty(jsonSubscriber))
+        //    {
+        //        var subscriberDto = JsonConvert.DeserializeObject<SubscriberDto>(jsonSubscriber);
+        //        return ResultDto.Success<SubscriberDto>(subscriberDto);
+        //    }
+        //    else
+        //    {
+        //        subscriber =  dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
+        //                  .Include(cu => cu.VehicleModels).FirstOrDefault();
+        //    }
+        //}
+        //else
+        //{
+        //    subscriber = dbContext.Subscribers.Where(cu => cu.NationalCode == nationalCode)
+        //                   .Include(cu => cu.VehicleModels).FirstOrDefault();
+        //}
 
         var sevenMember = await sevenSoftService.GetSubscriberByNationalCode(nationalCode);
         var chassiList = await sevenSoftService.GetAllChassisInformation(nationalCode);
