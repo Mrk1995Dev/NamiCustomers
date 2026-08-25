@@ -12,15 +12,15 @@ using NamiCustomers.Persistence.DatabaseContexts;
 namespace NamiCustomers.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250720111808_VehicleAttachments")]
-    partial class VehicleAttachments
+    [Migration("20260617092021_after8")]
+    partial class after8
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.7")
+                .HasAnnotation("ProductVersion", "10.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -110,13 +110,6 @@ namespace NamiCustomers.Persistence.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = "1109abb4-7619-4567-9a1b-8dcf5e4b73aa",
-                            RoleId = "110alim-5841-4d44-b807-679d272e7110"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -130,12 +123,21 @@ namespace NamiCustomers.Persistence.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(34)
+                        .HasColumnType("nvarchar(34)");
+
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUserToken<string>");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("NamiCustomers.Domain.Entities.Account.ApplicationRole", b =>
@@ -167,22 +169,6 @@ namespace NamiCustomers.Persistence.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "110alim-5841-4d44-b807-679d272e7110",
-                            Description = "ادمین",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "283875b0-1760-4e08-ba59-e532dc873bb7",
-                            Description = "اپراتور",
-                            Name = "Operator",
-                            NormalizedName = "OPERATOR"
-                        });
                 });
 
             modelBuilder.Entity("NamiCustomers.Domain.Entities.Account.ApplicationUser", b =>
@@ -217,6 +203,9 @@ namespace NamiCustomers.Persistence.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Mobile")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NationalCode")
                         .HasColumnType("nvarchar(max)");
@@ -263,28 +252,6 @@ namespace NamiCustomers.Persistence.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1109abb4-7619-4567-9a1b-8dcf5e4b73aa",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "7a0803d9-dac0-446f-b145-a48b202dbf52",
-                            Email = "a.moardi@namikhodro.com",
-                            EmailConfirmed = true,
-                            FirstName = "علی",
-                            LastName = "مرادی",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "A.MORADI@NAMIKHODRO.COM",
-                            NormalizedUserName = "A.MORADI@NAMIKHODRO.COM",
-                            PassWord = "Aa12334566*",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDWXR4EMPJhFFXowJTQ51DhTJ8/Trup0It8Ws2LzXKTf1sIhEMuKY3UFbYG/7uoq2A==",
-                            PhoneNumber = "09191646456",
-                            PhoneNumberConfirmed = true,
-                            SecurityStamp = "VDH6RYMZDZ2U5JB5VYQRK47G6LZRQJ6O",
-                            TwoFactorEnabled = false,
-                            UserName = "a.moradi@namikhodro.com"
-                        });
                 });
 
             modelBuilder.Entity("NamiCustomers.Domain.Entities.City", b =>
@@ -316,66 +283,6 @@ namespace NamiCustomers.Persistence.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("NamiCustomers.Domain.Entities.Dealers.Dealer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("CityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CityName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DealerAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DealerMobile")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DealerName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DealerNo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DealerPhone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DealerType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DealerprePhone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsRemoved")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModifiedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("RemovedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("Sort")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CityId");
-
-                    b.ToTable("Dealers");
-                });
-
             modelBuilder.Entity("NamiCustomers.Domain.Entities.Subscribers.Appointment", b =>
                 {
                     b.Property<int>("Id")
@@ -389,6 +296,10 @@ namespace NamiCustomers.Persistence.Migrations
 
                     b.Property<int>("DealerId")
                         .HasColumnType("int");
+
+                    b.Property<string>("DealerName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsRemoved")
                         .HasColumnType("bit");
@@ -409,8 +320,6 @@ namespace NamiCustomers.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DealerId");
 
                     b.HasIndex("SubscriberId");
 
@@ -488,6 +397,9 @@ namespace NamiCustomers.Persistence.Migrations
                     b.Property<string>("Sex")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("SubscriberType")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CityId");
@@ -533,7 +445,7 @@ namespace NamiCustomers.Persistence.Migrations
                     b.ToTable("SubscriberCodes");
                 });
 
-            modelBuilder.Entity("NamiCustomers.Domain.Entities.Subscribers.VehicleAttachment", b =>
+            modelBuilder.Entity("NamiCustomers.Domain.Entities.Vehicles.VehicleAttachment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -553,18 +465,15 @@ namespace NamiCustomers.Persistence.Migrations
                     b.Property<string>("ThumbnailPath")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("VehicleModelId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("VehicleModelIdSevenSoft")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("VehicleModelId")
-                        .IsUnique();
 
                     b.ToTable("VehicleAttachments");
                 });
 
-            modelBuilder.Entity("NamiCustomers.Domain.Entities.Subscribers.VehicleModel", b =>
+            modelBuilder.Entity("NamiCustomers.Domain.Entities.Vehicles.VehicleModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -575,9 +484,6 @@ namespace NamiCustomers.Persistence.Migrations
                     b.Property<string>("BodyColor")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("BrandIdSevenSoft")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("ChassisUsageTypeName")
                         .HasColumnType("nvarchar(max)");
 
@@ -587,11 +493,11 @@ namespace NamiCustomers.Persistence.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EnglishName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FullSystem")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsRemoved")
                         .HasColumnType("bit");
@@ -608,29 +514,20 @@ namespace NamiCustomers.Persistence.Migrations
                     b.Property<DateTime?>("RemovedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("SaleBasketIdSevenSoft")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("SalePlanIdSevenSoft")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("SelectedVehicleCommonName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SelectedVehicleDescription")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SubscriberId")
+                    b.Property<int?>("SubscriberId")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("VehicleModelId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("VehicleAttachmentId")
+                        .HasColumnType("int");
 
-                    b.Property<Guid?>("VehicleModelIdSevensoft")
+                    b.Property<Guid?>("VehicleModelIdSevenSoft")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("VehicleName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VinNumber")
                         .HasColumnType("nvarchar(max)");
@@ -639,7 +536,45 @@ namespace NamiCustomers.Persistence.Migrations
 
                     b.HasIndex("SubscriberId");
 
+                    b.HasIndex("VehicleAttachmentId");
+
                     b.ToTable("VehicleModels");
+                });
+
+            modelBuilder.Entity("NamiCustomers.Domain.Entities.Account.ApplicationUserToken", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserToken<string>");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("RefreshToken")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("RefreshTokenExp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TokenType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+
+                    b.HasDiscriminator().HasValue("ApplicationUserToken");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -693,28 +628,11 @@ namespace NamiCustomers.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("NamiCustomers.Domain.Entities.Dealers.Dealer", b =>
-                {
-                    b.HasOne("NamiCustomers.Domain.Entities.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId");
-
-                    b.Navigation("City");
-                });
-
             modelBuilder.Entity("NamiCustomers.Domain.Entities.Subscribers.Appointment", b =>
                 {
-                    b.HasOne("NamiCustomers.Domain.Entities.Dealers.Dealer", "Dealer")
-                        .WithMany()
-                        .HasForeignKey("DealerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("NamiCustomers.Domain.Entities.Subscribers.Subscriber", "Subscriber")
                         .WithMany()
                         .HasForeignKey("SubscriberId");
-
-                    b.Navigation("Dealer");
 
                     b.Navigation("Subscriber");
                 });
@@ -735,22 +653,29 @@ namespace NamiCustomers.Persistence.Migrations
                         .HasForeignKey("SubscriberId");
                 });
 
-            modelBuilder.Entity("NamiCustomers.Domain.Entities.Subscribers.VehicleAttachment", b =>
-                {
-                    b.HasOne("NamiCustomers.Domain.Entities.Subscribers.VehicleModel", null)
-                        .WithOne("VehicleAttachment")
-                        .HasForeignKey("NamiCustomers.Domain.Entities.Subscribers.VehicleAttachment", "VehicleModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("NamiCustomers.Domain.Entities.Subscribers.VehicleModel", b =>
+            modelBuilder.Entity("NamiCustomers.Domain.Entities.Vehicles.VehicleModel", b =>
                 {
                     b.HasOne("NamiCustomers.Domain.Entities.Subscribers.Subscriber", null)
                         .WithMany("VehicleModels")
-                        .HasForeignKey("SubscriberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SubscriberId");
+
+                    b.HasOne("NamiCustomers.Domain.Entities.Vehicles.VehicleAttachment", "VehicleAttachment")
+                        .WithMany()
+                        .HasForeignKey("VehicleAttachmentId");
+
+                    b.Navigation("VehicleAttachment");
+                });
+
+            modelBuilder.Entity("NamiCustomers.Domain.Entities.Account.ApplicationUserToken", b =>
+                {
+                    b.HasOne("NamiCustomers.Domain.Entities.Account.ApplicationUser", null)
+                        .WithMany("ApplicationUserTokens")
+                        .HasForeignKey("ApplicationUserId");
+                });
+
+            modelBuilder.Entity("NamiCustomers.Domain.Entities.Account.ApplicationUser", b =>
+                {
+                    b.Navigation("ApplicationUserTokens");
                 });
 
             modelBuilder.Entity("NamiCustomers.Domain.Entities.Subscribers.Subscriber", b =>
@@ -758,11 +683,6 @@ namespace NamiCustomers.Persistence.Migrations
                     b.Navigation("SubscriberCodes");
 
                     b.Navigation("VehicleModels");
-                });
-
-            modelBuilder.Entity("NamiCustomers.Domain.Entities.Subscribers.VehicleModel", b =>
-                {
-                    b.Navigation("VehicleAttachment");
                 });
 #pragma warning restore 612, 618
         }

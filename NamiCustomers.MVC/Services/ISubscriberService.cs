@@ -1,12 +1,4 @@
-﻿
-using Azure;
-using IdentityModel.OidcClient;
-using k8s.KubeConfigModels;
-using Microsoft.AspNetCore.Mvc;
-using NamiCustomers.Infrastucture.Utilities;
-using Newtonsoft.Json;
-using System;
-using System.Security.Claims;
+﻿using NamiCustomers.Infrastucture.Utilities;
 
 namespace NamiCustomers.MVC.Services;
 

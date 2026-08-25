@@ -41,8 +41,13 @@ public class TokenService(
         var key = Encoding.ASCII.GetBytes(settingsFacadeService.JWTSetting.securityKey);
         var secretKey = new SymmetricSecurityKey(key);
         var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-
+        try
+        {
         var subscriber = await dbContext.Subscribers.Include(c => c.VehicleModels).FirstOrDefaultAsync(c => c.NationalCode == user.NationalCode);
+
+        
+
+
 
         var claims = new List<Claim>{
                                         new Claim(ClaimTypes.Name, user?.UserName ?? ""),
@@ -138,8 +143,14 @@ public class TokenService(
         var claimsIdentity = new ClaimsIdentity(
             claims, CookieAuthenticationDefaults.AuthenticationScheme);
         return new Tuple<string, ClaimsIdentity>(jwtToken, claimsIdentity);
-    }
+        }
+        catch (Exception ex)
+        {
 
+            throw;
+        }
+    }
+ 
     /// <summary>
     /// ذخیره توکن دسترسی و رفرش توکن با UserManager
     /// </summary>
