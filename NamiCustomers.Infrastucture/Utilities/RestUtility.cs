@@ -26,7 +26,7 @@ public static class RestUtility
             await AttachTokenAsync(request);
 
             var response = await client.SendAsync(request);
-            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 ClearToken();
                 request = new HttpRequestMessage(HttpMethod.Get, $"{apiAddress}{queryString}");
