@@ -1,41 +1,308 @@
 ﻿@page "/vehicle/PartsPriceByChassis"
+@using NamiCustomers.Web.Services.LocalStorage
+@using NamiCustomers.Web.Services.Vehicle.Implementation
+@using NamiCustomers.Web.Utilities
+@implements IDisposable
 
 @inject IVehicleService vehicleService
+@inject ILocalStorageService localStorageService
+@inject VehicleContext VehicleContext
+@inject NavigationManager Navigation
+@inject ToastService ToastService
+
 <PageTitle>استعلام بهای قطعات | نامی خودرو</PageTitle>
 
-<h4 class="title-part"> استعلام بهای قطعات</h4>
-<hr />
-
-<EditForm Model="@Model" OnValidSubmit="SearchAsync">
-    <DataAnnotationsValidator />
-
-    <div class="search-form-container">
-
-        <div class="form-group mb-3">
-            <label class="form-label">شماره قطعه</label>
-            <InputText style="color: #000" @bind-Value="Model.PartNo"
-                       class="form-control" />
+<div class="parts-page">
+    <div class="container">
+        <div class="parts-top">
+            <span class="parts-top__spacer" aria-hidden="true"></span>
+            <h1 class="parts-title">استعلام بهای قطعات</h1>
+            <NavLink class="parts-back" href="/" title="بازگشت">
+                <i class="bi bi-arrow-right"></i>
+            </NavLink>
         </div>
 
-        <div class="form-group mb-3">
-            <label class="form-label">نام قطعه</label>
-            <InputText style="color: #000" @bind-Value="Model.PartName"
-                       class="form-control" />
-        </div>
+        <section class="parts-card">
+            <p class="parts-card__hint">خودرو را انتخاب کنید، سپس شماره یا نام قطعه را وارد کنید</p>
 
-        <button type="submit" class="btn btn-primary search-btn">
-            جستجو
-        </button>
+            <EditForm Model="@Model" OnValidSubmit="SearchAsync">
+                <DataAnnotationsValidator />
 
+                <div class="parts-field">
+                    <label class="parts-label">خودرو</label>
+                    <div class="parts-dd @(vinOpen ? "is-open" : "")">
+                        <button type="button" class="parts-dd__trigger" @onclick="ToggleVinMenu">
+                            <i class="bi bi-car-front-fill parts-field__icon" aria-hidden="true"></i>
+                            <span class="parts-dd__value @(SelectedVehicle is null ? "is-placeholder" : "")">
+                                @if (SelectedVehicle is null)
+                                {
+                                    <text>انتخاب خودرو</text>
+                                }
+                                else
+                                {
+                                    @DisplayVehicle(SelectedVehicle)
+                                }
+                            </span>
+                            <i class="bi bi-chevron-down parts-dd__chevron" aria-hidden="true"></i>
+                        </button>
+
+                        @if (vinOpen)
+                        {
+                            <div class="parts-dd__backdrop" @onclick="CloseVinMenu"></div>
+                            <div class="parts-dd__menu">
+                                @if (Vehicles is null)
+                                {
+                                    <div class="parts-dd__empty">در حال بارگذاری...</div>
+                                }
+                                else if (!Vehicles.Any())
+                                {
+                                    <div class="parts-dd__empty">خودرویی ثبت نشده است</div>
+                                }
+                                else
+                                {
+                                    @foreach (var vehicle in Vehicles)
+                                    {
+                                        <button type="button"
+                                                class="parts-dd__item @(vehicle.VinNumber == SelectedVehicle?.VinNumber ? "is-active" : "")"
+                                                @onclick="() => SelectVehicle(vehicle)">
+                                            <span class="parts-dd__item-title">@Display(vehicle.SelectedVehicleCommonName)</span>
+                                            <span class="parts-dd__item-code" dir="ltr">@vehicle.VinNumber</span>
+                                        </button>
+                                    }
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="parts-field">
+                    <label class="parts-label" for="partNo">شماره قطعه</label>
+                    <div class="parts-field__box">
+                        <i class="bi bi-hash parts-field__icon" aria-hidden="true"></i>
+                        <InputText id="partNo"
+                                   @bind-Value="Model.PartNo"
+                                   class="parts-input parts-input--ltr"
+                                   maxlength="40"
+                                   placeholder="مثال: ۱۶۵۴۶۰۰۰" />
+                    </div>
+                </div>
+
+                <div class="parts-field">
+                    <label class="parts-label" for="partName">نام قطعه</label>
+                    <div class="parts-field__box">
+                        <i class="bi bi-search parts-field__icon" aria-hidden="true"></i>
+                        <InputText id="partName"
+                                   @bind-Value="Model.PartName"
+                                   class="parts-input"
+                                   maxlength="80"
+                                   placeholder="مثال: فیلتر روغن" />
+                    </div>
+                </div>
+
+                <button type="submit" class="parts-btn" disabled="@isSearching">
+                    @if (isSearching)
+                    {
+                        <span class="parts-btn__spinner" aria-hidden="true"></span>
+                        <span>در حال جستجو...</span>
+                    }
+                    else
+                    {
+                        <i class="bi bi-search"></i>
+                        <span>جستجو</span>
+                    }
+                </button>
+            </EditForm>
+        </section>
+
+        @if (searched)
+        {
+            @if (Results.Length == 0)
+            {
+                <section class="parts-empty">
+                    <i class="bi bi-inbox"></i>
+                    <h2>قطعه‌ای پیدا نشد</h2>
+                    <p>شماره یا نام دیگری را امتحان کنید.</p>
+                </section>
+            }
+            else
+            {
+                <div class="parts-results">
+                    @foreach (var item in Results)
+                    {
+                        <article class="parts-result">
+                            <div class="parts-result__head">
+                                <h3>@item.PartName</h3>
+                                <span dir="ltr">@item.PartNo</span>
+                            </div>
+                            <div class="parts-result__prices">
+                                <div>
+                                    <small>قیمت</small>
+                                    <strong>@ToPersianMoney(item.Price)</strong>
+                                </div>
+                                <div>
+                                    <small>با مالیات</small>
+                                    <strong>@ToPersianMoney(item.PriceByTax)</strong>
+                                </div>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+        }
     </div>
-</EditForm>
+</div>
 
 @code {
     private PartsPriceByChassisRequest Model = new();
+    private PartsPriceByChassisResponse[] Results = Array.Empty<PartsPriceByChassisResponse>();
+    private List<VehicleModelDto>? Vehicles;
+    private VehicleModelDto? SelectedVehicle;
+    private bool vinOpen;
+    private bool isSearching;
+    private bool searched;
 
+    protected override async Task OnInitializedAsync()
+    {
+        VehicleContext.VinChanged += OnVinChanged;
+        await LoadVehiclesAsync();
+    }
+
+    private async Task LoadVehiclesAsync()
+    {
+        var result = await vehicleService.GetSubscriberVehicleAsync();
+        if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        if (!result.Succeeded)
+        {
+            Vehicles = new();
+            return;
+        }
+
+        Vehicles = result.Data ?? new();
+        var storedVin = await localStorageService.GetItemAsync("vin");
+        var current = VehicleContext.SelectedVin
+            ?? Vehicles.FirstOrDefault(v => v.VinNumber == storedVin)
+            ?? Vehicles.FirstOrDefault(v => v.IsDefault)
+            ?? Vehicles.FirstOrDefault();
+
+        if (current is not null)
+        {
+            ApplyVehicle(current);
+        }
+    }
+
+    private void ToggleVinMenu() => vinOpen = !vinOpen;
+    private void CloseVinMenu() => vinOpen = false;
+
+    private async Task SelectVehicle(VehicleModelDto vehicle)
+    {
+        ApplyVehicle(vehicle);
+        vinOpen = false;
+        VehicleContext.ChangeVin(vehicle);
+        if (!string.IsNullOrWhiteSpace(vehicle.VinNumber))
+        {
+            await localStorageService.SetItemAsync("vin", vehicle.VinNumber);
+        }
+    }
+
+    private void ApplyVehicle(VehicleModelDto vehicle)
+    {
+        SelectedVehicle = vehicle;
+        Model.ChassisVinNumber = vehicle.VinNumber ?? string.Empty;
+        Model.VehicleModelId = vehicle.VehicleModelIdSevenSoft?.ToString() ?? string.Empty;
+    }
+
+    private async void OnVinChanged()
+    {
+        var vin = VehicleContext.SelectedVin;
+        if (vin is null)
+        {
+            return;
+        }
+
+        ApplyVehicle(vin);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        VehicleContext.VinChanged -= OnVinChanged;
+    }
 
     async Task SearchAsync()
     {
+        if (SelectedVehicle is null || string.IsNullOrWhiteSpace(Model.ChassisVinNumber))
+        {
+            await ToastService.Show(new ToastOption()
+            {
+                ShowHeader = true,
+                Category = ToastCategory.Warning,
+                Title = "استعلام بهای قطعات",
+                Content = "لطفاً خودرو را انتخاب کنید.",
+                Animation = true
+            });
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(Model.PartNo) && string.IsNullOrWhiteSpace(Model.PartName))
+        {
+            await ToastService.Show(new ToastOption()
+            {
+                ShowHeader = true,
+                Category = ToastCategory.Warning,
+                Title = "استعلام بهای قطعات",
+                Content = "شماره قطعه یا نام قطعه را وارد کنید.",
+                Animation = true
+            });
+            return;
+        }
+
+        isSearching = true;
+        searched = false;
+
         var result = await vehicleService.GetPartsPriceByChassisAsync(Model);
+
+        if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        if (result.Succeeded)
+        {
+            Results = result.Data ?? Array.Empty<PartsPriceByChassisResponse>();
+            searched = true;
+        }
+        else
+        {
+            Results = Array.Empty<PartsPriceByChassisResponse>();
+            searched = true;
+            await ToastService.Show(new ToastOption()
+            {
+                ShowHeader = true,
+                Category = ToastCategory.Warning,
+                Title = "استعلام بهای قطعات",
+                Content = result.Message,
+                Animation = true
+            });
+        }
+
+        isSearching = false;
+    }
+
+    private static string ToPersianMoney(float value)
+        => PersianDigits.ToPersian(string.Format("{0:#,##0}", value));
+
+    private static string Display(string? value)
+        => string.IsNullOrWhiteSpace(value) ? "خودرو" : value;
+
+    private static string DisplayVehicle(VehicleModelDto vehicle)
+    {
+        var name = Display(vehicle.SelectedVehicleCommonName);
+        return string.IsNullOrWhiteSpace(vehicle.VinNumber) ? name : $"{name} — {vehicle.VinNumber}";
     }
 }

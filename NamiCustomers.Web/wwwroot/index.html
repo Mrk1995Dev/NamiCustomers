@@ -60,6 +60,48 @@
     <script src="/js/toastr.js"></script>
 
     <script src="/js/lib-notify.js"></script>
+    <script>
+        window.namiAuth = {
+            toPersian: function (value) {
+                var persian = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+                var text = value || "";
+                var out = "";
+                for (var i = 0; i < text.length; i++) {
+                    var code = text.charCodeAt(i);
+                    if (code >= 48 && code <= 57) {
+                        out += persian[code - 48];
+                    } else if (code >= 1776 && code <= 1785) {
+                        out += text.charAt(i);
+                    } else if (code >= 1632 && code <= 1641) {
+                        out += persian[code - 1632];
+                    }
+                }
+                return out;
+            },
+            setValue: function (el, value) {
+                if (!el) return;
+                el.value = window.namiAuth.toPersian(value || "");
+            },
+            selectInput: function (el) {
+                if (el && typeof el.select === "function") {
+                    el.select();
+                }
+            },
+            bindPersian: function (el) {
+                if (!el || el.dataset.namiPersian === "1") return;
+                el.dataset.namiPersian = "1";
+                el.addEventListener("input", function () {
+                    var converted = window.namiAuth.toPersian(el.value);
+                    if (el.value === converted) return;
+                    var pos = el.selectionStart;
+                    el.value = converted;
+                    if (typeof pos === "number") {
+                        try { el.setSelectionRange(pos, pos); } catch (e) { }
+                    }
+                });
+            }
+        };
+    </script>
     <!--<script>navigator.serviceWorker.register('service-worker.js');</script>-->
 
 </body>

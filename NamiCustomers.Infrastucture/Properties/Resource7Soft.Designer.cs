@@ -97,6 +97,15 @@ namespace NamiCustomers.Infrastucture.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/Booking/CheckExistsReserveByMobileNumber?mobileNumber=.
+        /// </summary>
+        public static string CheckExistsReserveByMobileNumber {
+            get {
+                return ResourceManager.GetString("CheckExistsReserveByMobileNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to api/Booking/CheckExistsReserveVinNumber.
         /// </summary>
         public static string CheckExistsReserveVinNumber {

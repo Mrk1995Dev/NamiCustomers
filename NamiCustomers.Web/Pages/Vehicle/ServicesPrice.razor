@@ -1,217 +1,403 @@
 ﻿@page "/vehicle/servicesPrice"
+@using NamiCustomers.Web.Services.Dealer.Contract
 @using NamiCustomers.Web.Services.Dealer.Dto
+@using NamiCustomers.Web.Services.LocalStorage
+@using NamiCustomers.Web.Utilities
 
-@inject ISnackbar snackbar
 @inject NavigationManager Navigation
 @inject IDealerService dealerService
 @inject IVehicleService vehicleService
+@inject ILocalStorageService localStorageService
 @inject ToastService ToastService
 
 <PageTitle>استعلام بهای خدمات | نامی خودرو</PageTitle>
 
-<div class="container-service">
-    <div class="container direction-rtl">
-        <div class="card">
-            <div class="card-body p-2">
-                <div class="d-flex align-items-center justify-content-between">
-                    <small class="ms-1">استعلام بهای خدمات </small>
-                    <form action="#">
-                        <NavLink title="بازگشت" href="/"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></NavLink>
-                    </form>
-                </div>
-            </div>
+<div class="svc-page">
+    <div class="container">
+        <div class="svc-top">
+            <span class="svc-top__spacer" aria-hidden="true"></span>
+            <h1 class="svc-title">استعلام بهای خدمات</h1>
+            <NavLink class="svc-back" href="/" title="بازگشت">
+                <i class="bi bi-arrow-right"></i>
+            </NavLink>
         </div>
-    </div>
-    <br />
 
-    <div class="container direction-rtl">
-        <div class="cart-wrapper-area">
-            <div class="cart-table card mb-3">
-                <div class="table-responsive card-body">
-                    <EditForm Model="@Model" OnValidSubmit="SearchAsync">
-                        <DataAnnotationsValidator />
-                        <div class="text-danger"></div>
-                        <div class="form-group">
-                            <label class="custom-label">کد خدمت</label>
-                            <InputText style="color: #000" @bind-value="Model.ServiceCode" class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label class="custom-label">نام خدمت</label>
-                            <InputText style="color: #000" @bind-value="Model.ServiceName" class="form-control" />
-                        </div>
+        <section class="svc-card">
+            <p class="svc-card__hint">نمایندگی را انتخاب کنید، سپس کد یا نام خدمت را وارد کنید</p>
 
-                        <div class="custom-form-group">
-                            <label class="custom-label">نمایندگی</label>
+            <EditForm Model="@Model" OnValidSubmit="SearchAsync">
+                <DataAnnotationsValidator />
 
-                            <select class="custom-select" value="@Model.DealerId" @onchange="DealerChanged">
+                <div class="svc-field">
+                    <label class="svc-label">نمایندگی</label>
+                    <div class="svc-dd @(dealerOpen ? "is-open" : "")">
+                        <button type="button" class="svc-dd__trigger" @onclick="ToggleDealerMenu">
+                            <i class="bi bi-geo-alt-fill svc-field__icon" aria-hidden="true"></i>
+                            <span class="svc-dd__value @(SelectedDealer is null ? "is-placeholder" : "")">
+                                @(SelectedDealer is null ? "جستجو و انتخاب نمایندگی" : DisplayDealer(SelectedDealer))
+                            </span>
+                            <i class="bi bi-chevron-down svc-dd__chevron" aria-hidden="true"></i>
+                        </button>
 
-                                <option value="">انتخاب نمایندگی</option>
-
-                                @foreach (var dealer in Dealers)
-                                {
-                                    <option value="@dealer.DealerId">
-                                        @dealer.DealerName - @dealer.City
-                                    </option>
-                                }
-                            </select>
-                        </div>
-
-                        <div class="custom-form-group">
-                            <label class="custom-label">نمایندگی</label>
-
-                            <select class="custom-select"
-                                    @bind="Model.DealerId">
-
-                                <option value="">انتخاب شعبه</option>
-
-                                @foreach (var branche in Branches)
-                                {
-                                    <option value="@branche.BranchId">
-                                        @branche.BranchName - @branche.BranchNo
-                                    </option>
-                                }
-                            </select>
-                        </div>
-
-
-                        <hr />
-                        <div class="form-group">
-                            <input type="submit" value="جستجو" class="btn btn-primary w-100 mt-3" />
-                            <br />
-                        </div>
-                    </EditForm>
+                        @if (dealerOpen)
+                        {
+                            <div class="svc-dd__backdrop" @onclick="CloseDealerMenu"></div>
+                            <div class="svc-dd__menu">
+                                <div class="svc-dd__search">
+                                    <i class="bi bi-search" aria-hidden="true"></i>
+                                    <input @ref="dealerSearchInput"
+                                           class="svc-dd__search-input"
+                                           type="text"
+                                           autocomplete="off"
+                                           placeholder="نام، شهر یا شماره نمایندگی"
+                                           value="@dealerQuery"
+                                           @oninput="OnDealerQueryChanged" />
+                                </div>
+                                <div class="svc-dd__list">
+                                    @if (!Dealers.Any())
+                                    {
+                                        <div class="svc-dd__empty">نمایندگی‌ای یافت نشد</div>
+                                    }
+                                    else if (!FilteredDealers.Any())
+                                    {
+                                        <div class="svc-dd__empty">نتیجه‌ای برای این جستجو نیست</div>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var dealer in FilteredDealers)
+                                        {
+                                            <button type="button"
+                                                    class="svc-dd__item @(dealer.UniqueId == SelectedDealer?.UniqueId ? "is-active" : "")"
+                                                    @onclick="() => SelectDealerAsync(dealer)"
+                                                    @key="dealer.UniqueId">
+                                                <span class="svc-dd__item-title">@Display(dealer.DealerName)</span>
+                                                <span class="svc-dd__item-code">@DealerMeta(dealer)</span>
+                                            </button>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
                 </div>
-            </div>
-        </div>
+
+                @* <div class="svc-field">
+                    <label class="svc-label">شعبه</label>
+                    <div class="svc-dd @(branchOpen ? "is-open" : "")">
+                        <button type="button" class="svc-dd__trigger" @onclick="ToggleBranchMenu" disabled="@(!CanPickBranch)">
+                            <i class="bi bi-building svc-field__icon" aria-hidden="true"></i>
+                            <span class="svc-dd__value @(SelectedBranch is null ? "is-placeholder" : "")">
+                                @BranchTriggerText
+                            </span>
+                            <i class="bi bi-chevron-down svc-dd__chevron" aria-hidden="true"></i>
+                        </button>
+
+                        @if (branchOpen)
+                        {
+                            <div class="svc-dd__backdrop" @onclick="CloseBranchMenu"></div>
+                            <div class="svc-dd__menu">
+                                <div class="svc-dd__list">
+                                    @if (isLoadingBranches)
+                                    {
+                                        <div class="svc-dd__empty">در حال بارگذاری شعب...</div>
+                                    }
+                                    else if (!Branches.Any())
+                                    {
+                                        <div class="svc-dd__empty">شعبه‌ای برای این نمایندگی نیست</div>
+                                    }
+                                    else
+                                    {
+                                        @foreach (var branch in Branches)
+                                        {
+                                            <button type="button"
+                                                    class="svc-dd__item @(IsSameBranch(branch, SelectedBranch) ? "is-active" : "")"
+                                                    @onclick="() => SelectBranch(branch)">
+                                                <span class="svc-dd__item-title">@Display(branch.BranchName)</span>
+                                                <span class="svc-dd__item-code" dir="ltr">@branch.BranchNo</span>
+                                            </button>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div> *@
+
+                <div class="svc-field">
+                    <label class="svc-label" for="serviceCode">کد خدمت</label>
+                    <div class="svc-field__box">
+                        <i class="bi bi-hash svc-field__icon" aria-hidden="true"></i>
+                        <InputText id="serviceCode"
+                                   @bind-Value="Model.ServiceCode"
+                                   class="svc-input svc-input--ltr"
+                                   maxlength="40"
+                                   placeholder="مثال: ۱۲۳۴" />
+                    </div>
+                </div>
+
+                <div class="svc-field">
+                    <label class="svc-label" for="serviceName">نام خدمت</label>
+                    <div class="svc-field__box">
+                        <i class="bi bi-search svc-field__icon" aria-hidden="true"></i>
+                        <InputText id="serviceName"
+                                   @bind-Value="Model.ServiceName"
+                                   class="svc-input"
+                                   maxlength="80"
+                                   placeholder="مثال: تعویض روغن" />
+                    </div>
+                </div>
+
+                <button type="submit" class="svc-btn" disabled="@isSearching">
+                    @if (isSearching)
+                    {
+                        <span class="svc-btn__spinner" aria-hidden="true"></span>
+                        <span>در حال جستجو...</span>
+                    }
+                    else
+                    {
+                        <i class="bi bi-search"></i>
+                        <span>جستجو</span>
+                    }
+                </button>
+            </EditForm>
+        </section>
+
+        @if (searched)
+        {
+            @if (ServicesPriceList.Length == 0)
+            {
+                <section class="svc-empty">
+                    <i class="bi bi-inbox"></i>
+                    <h2>خدمتی پیدا نشد</h2>
+                    <p>کد یا نام دیگری را امتحان کنید.</p>
+                </section>
+            }
+            else
+            {
+                <div class="svc-results">
+                    @foreach (var item in ServicesPriceList)
+                    {
+                        <article class="svc-result">
+                            <div class="svc-result__head">
+                                <h3>@item.ServiceName</h3>
+                                <span dir="ltr">@item.ServiceCode</span>
+                            </div>
+                            <div class="svc-result__prices">
+                                <div>
+                                    <small>قیمت مشتری</small>
+                                    <strong>@ToPersianMoney(item.PriceCustomer)</strong>
+                                </div>
+                                <div>
+                                    <small>قیمت گارانتی</small>
+                                    <strong>@ToPersianMoney(item.PriceWarranty)</strong>
+                                </div>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+        }
     </div>
 </div>
-
-
-@if (showList)
-{
-    <br />
-
-    @if (ServicesPriceList.Any())
-    {
-        <div class="container">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <small class="ms-1">نمایش لیست قیمت </small>
-                        <NavLink title="بازگشت" href="/Vehicle/ServicesPrice"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></NavLink>
-                    </div>
-
-                    <hr />
-
-                    <table class="w-100" id="dataTable">
-                        <thead>
-                            <tr>
-                                <th>ردیف</th>
-                                <th> کد خدمت</th>
-                                <th> نام خدمت</th>
-                                <th>قیمت مشتری</th>
-                                <th>گارانتی قیمت</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in ServicesPriceList)
-                            {
-                                <tr>
-                                    <td>
-                                        @item.RowNumber
-                                    </td>
-                                    <td>
-                                        @item.ServiceCode
-                                    </td>
-                                    <td>
-                                        @item.ServiceName
-                                    </td>
-                                    <td>
-                                        @string.Format("{0:#,##0}", item.PriceCustomer)
-
-                                    </td>
-                                    <td>
-                                        @string.Format("{0:#,##0}", item.PriceWarranty)
-                                    </td>
-
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    }
-}
-
 
 @code {
     private ServicesPriceRequest Model = new();
     private DealerResponseDto[] Dealers = Array.Empty<DealerResponseDto>();
     private BranchesByDealerResponse[] Branches = Array.Empty<BranchesByDealerResponse>();
     private ServicesPriceResponse[] ServicesPriceList = Array.Empty<ServicesPriceResponse>();
-    private Guid? SelectedDealerId;
-    private bool showList;
+    private DealerResponseDto? SelectedDealer;
+    private BranchesByDealerResponse? SelectedBranch;
+    private ElementReference dealerSearchInput;
+    private string dealerQuery = string.Empty;
+    private bool dealerOpen;
+    private bool branchOpen;
+    private bool focusDealerSearch;
+    private bool isLoadingBranches;
+    private bool isSearching;
+    private bool searched;
+
+    private bool CanPickBranch => SelectedDealer?.DealerId is not null;
+
+    private string BranchTriggerText =>
+        SelectedDealer is null
+            ? "ابتدا نمایندگی را انتخاب کنید"
+            : SelectedBranch is null
+                ? "انتخاب شعبه"
+                : Display(SelectedBranch.BranchName);
+
+    private IEnumerable<DealerResponseDto> FilteredDealers
+    {
+        get
+        {
+            var query = dealerQuery.Trim();
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return Dealers;
+            }
+
+            return Dealers.Where(dealer =>
+                Contains(dealer.DealerName, query)
+                || Contains(dealer.City, query)
+                || Contains(dealer.SubCountry, query)
+                || Contains(dealer.DealerNo, query)
+                || Contains(dealer.BrancheName, query));
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
         await LoadAllDealerAsync();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (focusDealerSearch)
+        {
+            focusDealerSearch = false;
+            try
+            {
+                await dealerSearchInput.FocusAsync();
+            }
+            catch
+            {
+            }
+        }
+    }
+
     async Task LoadAllDealerAsync()
     {
         var result = await dealerService.GetAllDealerAsync();
         if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
-            Navigation.NavigateTo("/login");
-
-        else if (result.Succeeded)
-            Dealers = result.Data;
-
-        else
         {
-            //
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        Dealers = result.Succeeded ? result.Data ?? Array.Empty<DealerResponseDto>() : Array.Empty<DealerResponseDto>();
+    }
+
+    private void ToggleDealerMenu()
+    {
+        dealerOpen = !dealerOpen;
+        branchOpen = false;
+        if (dealerOpen)
+        {
+            dealerQuery = string.Empty;
+            focusDealerSearch = true;
         }
     }
 
-    private async Task DealerChanged(ChangeEventArgs e)
-    {
-        if (Guid.TryParse(e.Value?.ToString(), out var dealerId))
-        {
-            SelectedDealerId = dealerId;
+    private void CloseDealerMenu() => dealerOpen = false;
 
+    private void ToggleBranchMenu()
+    {
+        if (!CanPickBranch)
+        {
+            return;
+        }
+
+        branchOpen = !branchOpen;
+        dealerOpen = false;
+    }
+
+    private void CloseBranchMenu() => branchOpen = false;
+
+    private void OnDealerQueryChanged(ChangeEventArgs e)
+        => dealerQuery = e.Value?.ToString() ?? string.Empty;
+
+    private async Task SelectDealerAsync(DealerResponseDto dealer)
+    {
+        SelectedDealer = dealer;
+        Model.UniqueId = dealer.UniqueId ?? default;
+        dealerOpen = false;
+        dealerQuery = string.Empty;
+        SelectedBranch = null;
+        Model.BranchId = default;
+        Branches = Array.Empty<BranchesByDealerResponse>();
+
+        if (dealer.DealerId is Guid dealerId)
+        {
             await LoadBranchesByDealerAsync(dealerId);
         }
     }
 
+    private void SelectBranch(BranchesByDealerResponse branch)
+    {
+        SelectedBranch = branch;
+        if (TryGetBranchId(branch, out var branchId))
+        {
+            Model.BranchId = branchId;
+        }
+
+        branchOpen = false;
+    }
+
     async Task LoadBranchesByDealerAsync(Guid id)
     {
+        isLoadingBranches = true;
         var result = await dealerService.GetAllBranchesByDealerAsync(id);
+        isLoadingBranches = false;
+
         if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+        {
             Navigation.NavigateTo("/login");
+            return;
+        }
 
-        else if (result.Succeeded)
-            Branches = result.Data;
-
+        if (result.Succeeded)
+        {
+            Branches = result.Data ?? Array.Empty<BranchesByDealerResponse>();
+            if (Branches.Length == 1)
+            {
+                SelectBranch(Branches[0]);
+            }
+        }
         else
         {
-            //
+            Branches = Array.Empty<BranchesByDealerResponse>();
         }
     }
 
     async Task SearchAsync()
     {
-        var result = await vehicleService.GetServicesPriceList(Model);
-        if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
-            Navigation.NavigateTo("/login");
-
-        else if (result.Succeeded)
+        if (SelectedDealer is null || Model.UniqueId == Guid.Empty)
         {
-            showList = true;
-            ServicesPriceList = result.Data;
+            await ShowWarning("لطفاً نمایندگی را انتخاب کنید.");
+            return;
         }
 
+        // if (SelectedBranch is null || Model.BranchId == Guid.Empty)
+        // {
+        //     await ShowWarning("لطفاً شعبه را انتخاب کنید.");
+        //     return;
+        // }
+
+        if (string.IsNullOrWhiteSpace(Model.ServiceCode) && string.IsNullOrWhiteSpace(Model.ServiceName))
+        {
+            await ShowWarning("کد خدمت یا نام خدمت را وارد کنید.");
+            return;
+        }
+
+        isSearching = true;
+        searched = false;
+        Model.ChassisVinNumber = await localStorageService.GetItemAsync("vin") ?? string.Empty;
+
+        var result = await vehicleService.GetServicesPriceList(Model);
+        if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        if (result.Succeeded)
+        {
+            ServicesPriceList = result.Data ?? Array.Empty<ServicesPriceResponse>();
+            searched = true;
+        }
         else
         {
+            ServicesPriceList = Array.Empty<ServicesPriceResponse>();
+            searched = true;
             await ToastService.Show(new ToastOption()
             {
                 ShowClose = true,
@@ -222,5 +408,58 @@
                 Animation = true
             });
         }
+
+        isSearching = false;
     }
+
+    private Task ShowWarning(string content)
+        => ToastService.Show(new ToastOption()
+        {
+            ShowHeader = true,
+            Category = ToastCategory.Warning,
+            Title = "استعلام بهای خدمات",
+            Content = content,
+            Animation = true
+        });
+
+    private static bool Contains(string? source, string query)
+        => !string.IsNullOrWhiteSpace(source) && source.Contains(query, StringComparison.OrdinalIgnoreCase);
+
+    private static string Display(string? value)
+        => string.IsNullOrWhiteSpace(value) ? "—" : value;
+
+    private static string DisplayDealer(DealerResponseDto dealer)
+    {
+        var name = Display(dealer.DealerName);
+        return string.IsNullOrWhiteSpace(dealer.City) ? name : $"{name} — {dealer.City}";
+    }
+
+    private static string DealerMeta(DealerResponseDto dealer)
+    {
+        var city = string.IsNullOrWhiteSpace(dealer.City) ? dealer.SubCountry : dealer.City;
+        var no = dealer.DealerNo;
+        if (string.IsNullOrWhiteSpace(city))
+        {
+            return no ?? string.Empty;
+        }
+
+        return string.IsNullOrWhiteSpace(no) ? city : $"{city} · {no}";
+    }
+
+    private static bool IsSameBranch(BranchesByDealerResponse left, BranchesByDealerResponse? right)
+        => right is not null && TryGetBranchId(left, out var a) && TryGetBranchId(right, out var b) && a == b;
+
+    private static bool TryGetBranchId(BranchesByDealerResponse branch, out Guid id)
+    {
+        if (branch.BranchId is Guid guid)
+        {
+            id = guid;
+            return true;
+        }
+
+        return Guid.TryParse(branch.BranchId?.ToString(), out id);
+    }
+
+    private static string ToPersianMoney(float value)
+        => PersianDigits.ToPersian(string.Format("{0:#,##0}", value));
 }

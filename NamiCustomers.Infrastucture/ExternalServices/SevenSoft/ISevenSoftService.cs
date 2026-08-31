@@ -214,6 +214,8 @@ public interface ISevenSoftService
     /// </summary>
     /// <returns></returns>
     Task<AllOrderStatusTypeResponse[]> GetAllOrderStatusType();
+
+    Task<(bool, string)> CheckExistsReservePhoneNumber(string phoneNumber);
 }
 
 public class SevenSoftService : ISevenSoftService
@@ -404,7 +406,7 @@ public class SevenSoftService : ISevenSoftService
     {
         try
         {
-            var data = await RestUtility.GetData<SubCountryResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.GetAllSubCountries, $"?CountryId={CountryId}");
+            var data = await RestUtility.GetData<SubCountryResponse[]>(Resource7Soft.BaseUrlBooking, Resource7Soft.GetAllSubCountries, $"?CountryId={CountryId}");
             return ResultDto.Success<SubCountryResponse[]>(data);
         }
         catch (Exception ex)
@@ -451,11 +453,25 @@ public class SevenSoftService : ISevenSoftService
             return new(false, ex.Message);
         }
     }
+
+    public async Task<(bool, string)> CheckExistsReservePhoneNumber(string phoneNumber)
+    {
+        try
+        {
+            var data = await RestUtility.GetData<bool>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.CheckExistsReserveByMobileNumber, $"?mobileNumber={phoneNumber}");
+            return new(data, "");
+        }
+        catch (Exception ex)
+        {
+            return new(false, ex.Message);
+        }
+    }
+
     public async Task<(bool, string)> CheckIsValidKilometer(string VinNumber, int kilometer)
     {
         try
         {
-            var data = await RestUtility.GetData<bool>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.CheckIsValidKilometer, $"?VinNumber={VinNumber}&Kilometer={kilometer}");
+            var data = await RestUtility.GetData<bool>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.CheckIsValidKilometer, $"?VinNumber={VinNumber}&Kilometer={kilometer}");
             return new(true, "");
         }
         catch (Exception ex)
@@ -482,10 +498,10 @@ public class SevenSoftService : ISevenSoftService
 
 
 
-    public async Task<bool> CancelBooking(Guid bookingId, string vinNumber)
+    public async Task<bool> CancelBooking(Guid bookingId, string number)
     {
         using var client = new HttpClient();
-        var request = new HttpRequestMessage(HttpMethod.Get, $"{Infrastucture.Properties.Resource7Soft.BaseUrlBooking}{string.Format(Resource7Soft.CancelBooking, bookingId, vinNumber)}");
+        var request = new HttpRequestMessage(HttpMethod.Get, $"{Infrastucture.Properties.Resource7Soft.BaseUrlBooking}{string.Format(Resource7Soft.CancelBooking, bookingId, number)}");
         request.Headers.Add("Accept", "application/json");
         var response = await client.SendAsync(request);
         if (response.IsSuccessStatusCode)

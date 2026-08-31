@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NamiCustomers.Application.Services.Accounts;
 using NamiCustomers.Application.Services.Appointments;
+using NamiCustomers.Application.Services.Book.Contract;
 using NamiCustomers.Application.Services.Dealers;
 using NamiCustomers.Application.Services.Facades;
 using NamiCustomers.Application.Services.Subscribers;
@@ -21,6 +22,7 @@ namespace NamiCustomers.Application
             services.AddScoped<ISubscriberService, SubscriberService>();
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<IDealerService, DealerService>();
+            services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddTransient<ISevenSoftService, SevenSoftService>();

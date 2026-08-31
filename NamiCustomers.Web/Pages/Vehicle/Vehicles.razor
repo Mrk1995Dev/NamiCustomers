@@ -31,94 +31,134 @@ else
             </div>
         </div>
 
-        <!-- Top Products-->
         <div class="top-products-area product-list-wrap">
             <div class="container">
                 <div class="row g-3">
-                    <!-- Single Top Product Card Start -->
-                    @foreach (var item in Model)
+                    @if (Model.Count == 0)
                     {
                         <div class="col-12">
-                            <div class="card single-product-card">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-start">
+                            <div class="card">
+                                <div class="card-body text-center py-4">خودرویی ثبت نشده است</div>
+                            </div>
+                        </div>
+                    }
 
-                                        <div class="card-side-img">
-                                            <NavLink class="product-thumbnail d-block">
-                                                <img class="rounded">
-                                            </NavLink>
-                                        </div>
+                    @foreach (var item in Model)
+                    {
+                        var vehicleId = item.Id ?? 0;
+                        var orbit = GetOrbit(vehicleId);
 
-                                        <div class="flex-grow-1 px-4 py-2">
-
-                                            <div class="d-flex align-items-center gap-2 mb-2">
-                                                <p class="product-title mb-0">@item.VinNumber</p>
-
-                                                <span class="badge bg-primary" style="margin-top: 8px;">
-                                                    @item.ProductYear
-                                                </span>
+                        <div class="col-12" @key="vehicleId">
+                            <div class="card vehicle-card">
+                                <div class="card-body p-0">
+                                    <div class="car-orbit @(orbit.Dragging ? "is-dragging" : "")"
+                                         style="@OrbitStyle(orbit)"
+                                         @onpointerdown="e => OnOrbitDown(vehicleId, e)"
+                                         @onpointermove="e => OnOrbitMove(vehicleId, e)"
+                                         @onpointerup="() => OnOrbitUp(vehicleId)"
+                                         @onpointercancel="() => OnOrbitUp(vehicleId)"
+                                         @onpointerleave="() => OnOrbitUp(vehicleId)">
+                                        <div class="car-orbit__stage">
+                                            <div class="car-orbit__rig">
+                                                <div class="car-orbit__floor"></div>
+                                                <img class="car-orbit__car"
+                                                     src="@GetVehicleImage(item)"
+                                                     alt="@Display(item.SelectedVehicleCommonName)"
+                                                     draggable="false"
+                                                     @onerror="() => OnImageError(vehicleId)" />
                                             </div>
+                                        </div>
+                                        <span class="car-orbit__hint">برای چرخش بکشید</span>
+                                        @if (item.IsDefault)
+                                        {
+                                            <span class="car-orbit__badge">پیش‌فرض</span>
+                                        }
+                                    </div>
 
-                                            <div class="d-flex gap-2">
-                                                <NavLink class="btn btn-outline-primary btn-sm">
-                                                    مشاهده جزئیات
-                                                </NavLink>
-
-                                                @if (!item.IsDefault)
+                                    <div class="vehicle-card__body">
+                                        <div class="vehicle-card__head">
+                                            <h3 class="vehicle-card__title">@Display(item.SelectedVehicleCommonName)</h3>
+                                            <div class="vehicle-card__tags">
+                                                @if (!string.IsNullOrWhiteSpace(item.ProductYear))
                                                 {
-                                                    <NavLink class="btn btn-outline-primary btn-sm">
-                                                        پیش فرض
-                                                    </NavLink>
+                                                    <span class="vehicle-tag">@item.ProductYear</span>
+                                                }
+                                                @if (!string.IsNullOrWhiteSpace(item.ChassisUsageTypeName))
+                                                {
+                                                    <span class="vehicle-tag">@item.ChassisUsageTypeName</span>
                                                 }
                                             </div>
-
                                         </div>
 
+                                        @if (!string.IsNullOrWhiteSpace(item.SelectedVehicleDescription)
+                                             && !string.Equals(item.SelectedVehicleDescription, item.SelectedVehicleCommonName, StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <p class="vehicle-card__desc">@item.SelectedVehicleDescription</p>
+                                        }
+
+                                        <ul class="vehicle-specs">
+                                            <li>
+                                                <span>رنگ بدنه</span>
+                                                <strong>@Display(item.BodyColor)</strong>
+                                            </li>
+                                            <li>
+                                                <span>سیستم سوخت</span>
+                                                <strong>@Display(item.FullSystem)</strong>
+                                            </li>
+                                            <li>
+                                                <span>شماره موتور</span>
+                                                <strong class="ltr">@Display(item.MotorNumber)</strong>
+                                            </li>
+                                            @if (!string.IsNullOrWhiteSpace(item.VinNumber))
+                                            {
+                                                <li>
+                                                    <span>شماره شاسی</span>
+                                                    <strong class="ltr">@item.VinNumber</strong>
+                                                </li>
+                                            }
+                                            @if (!string.IsNullOrWhiteSpace(item.NationalCode))
+                                            {
+                                                <li>
+                                                    <span>کد ملی</span>
+                                                    <strong class="ltr">@item.NationalCode</strong>
+                                                </li>
+                                            }
+                                            @if (!string.IsNullOrWhiteSpace(item.Mobile))
+                                            {
+                                                <li>
+                                                    <span>موبایل</span>
+                                                    <strong class="ltr">@item.Mobile</strong>
+                                                </li>
+                                            }
+                                        </ul>
+
+                                        <div class="d-flex gap-2">
+                                            <NavLink class="btn btn-outline-primary btn-sm">
+                                                مشاهده جزئیات
+                                            </NavLink>
+
+                                            @if (!item.IsDefault)
+                                            {
+                                                <NavLink class="btn btn-outline-primary btn-sm">
+                                                    پیش فرض
+                                                </NavLink>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     }
-                    <!-- Single Top Product Card END-->
-
                 </div>
             </div>
         </div>
-
-        @* <!-- Pagination-->
-    <div class="shop-pagination pt-3">
-        <div class="container">
-            <div class="card">
-                <div class="card-body py-3">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination pagination-two justify-content-center">
-                            <li class="page-item">
-                                < class="page-link" href="#" aria-label="Previous">
-                                    <i class="bi bi-chevron-right"></i>
-                                </>
-                            </li>
-
-                            <li class="page-item active">
-                                <a class="page-link" style="color:#000000 !important;" href="#">1</a>
-                            </li>
-
-                            <li class="page-item">
-                                <a class="page-link" href="#" aria-label="Next">
-                                    <i class="bi bi-chevron-left"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div> *@
     </div>
 }
 
 @code {
     private List<VehicleModelDto> Model = new();
     private bool isLoading;
+    private readonly Dictionary<int, OrbitState> orbits = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -136,7 +176,7 @@ else
 
         else if (result.Succeeded)
         {
-            Model = result.Data;
+            Model = result.Data ?? new();
         }
 
         else
@@ -145,5 +185,70 @@ else
         }
 
         isLoading = false;
+    }
+
+    private OrbitState GetOrbit(int id)
+    {
+        if (!orbits.TryGetValue(id, out var state))
+        {
+            state = new OrbitState();
+            orbits[id] = state;
+        }
+
+        return state;
+    }
+
+    private static string OrbitStyle(OrbitState orbit)
+        => $"--yaw: {orbit.Yaw.ToString(System.Globalization.CultureInfo.InvariantCulture)}deg;";
+
+    private void OnOrbitDown(int id, PointerEventArgs e)
+    {
+        var orbit = GetOrbit(id);
+        orbit.Dragging = true;
+        orbit.LastX = e.ClientX;
+    }
+
+    private void OnOrbitMove(int id, PointerEventArgs e)
+    {
+        var orbit = GetOrbit(id);
+        if (!orbit.Dragging)
+        {
+            return;
+        }
+
+        orbit.Yaw += (float)(e.ClientX - orbit.LastX) * 0.45f;
+        orbit.LastX = e.ClientX;
+    }
+
+    private void OnOrbitUp(int id)
+    {
+        GetOrbit(id).Dragging = false;
+    }
+
+    private void OnImageError(int id)
+    {
+        var orbit = GetOrbit(id);
+        if (orbit.ImageFailed)
+        {
+            return;
+        }
+
+        orbit.ImageFailed = true;
+    }
+
+    private string GetVehicleImage(VehicleModelDto item)
+    {
+        return "img/vehicles/toyota-rav4.png";
+    }
+
+    private static string Display(string? value)
+        => string.IsNullOrWhiteSpace(value) ? "—" : value;
+
+    private sealed class OrbitState
+    {
+        public float Yaw;
+        public bool Dragging;
+        public double LastX;
+        public bool ImageFailed;
     }
 }

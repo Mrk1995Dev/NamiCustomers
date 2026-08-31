@@ -225,4 +225,7 @@
   <data name="GetSpOrderingPartSpOrderingCode" xml:space="preserve">
     <value>api/SpOrdering/GetSpOrderingPartSpOrderingCode?SpOrderingCode={0}</value>
   </data>
+  <data name="CheckExistsReserveByMobileNumber" xml:space="preserve">
+    <value>api/Booking/CheckExistsReserveByMobileNumber?mobileNumber=</value>
+  </data>
 </root>

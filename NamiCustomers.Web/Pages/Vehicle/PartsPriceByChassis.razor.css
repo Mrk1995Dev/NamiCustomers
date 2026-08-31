@@ -1,32 +1,393 @@
-﻿.title-part {
-    margin-top: 4.4rem;
-    font-size: 18px;
+﻿.parts-page {
+    padding: 4.6rem 0 5.6rem;
 }
 
-.search-form-container {
-    width: 32%;
-    margin: 0 auto;
-    padding: 1rem;
+.parts-top {
+    display: grid;
+    grid-template-columns: 40px 1fr 40px;
+    align-items: center;
+    direction: ltr !important;
+    min-height: 40px;
+    margin-bottom: 16px;
+}
+
+.parts-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 800;
+    line-height: 1.4;
+    text-align: center;
+    grid-column: 2;
+}
+
+.parts-back {
+    grid-column: 3;
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff !important;
+    text-decoration: none;
+}
+
+.parts-back ::deep i,
+.parts-back i {
+    color: #fff !important;
+}
+
+.parts-back:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff !important;
+}
+
+.parts-card,
+.parts-empty,
+.parts-result {
+    border-radius: 18px;
+    background: rgb(34 34 34);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.parts-card {
+    padding: 20px 16px 18px;
+}
+
+.parts-card__hint {
+    margin: 0 0 16px;
+    font-size: 13px;
+    opacity: 0.68;
+    text-align: center;
+}
+
+.parts-field {
+    margin-bottom: 26px;
+}
+
+.parts-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    text-align: right;
+}
+
+.parts-field__box {
+    position: relative;
+}
+
+.parts-field__icon {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    z-index: 2;
+    color: #8b9199;
+    font-size: 1.1rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: color 0.2s ease;
+}
+
+.parts-field__box:focus-within .parts-field__icon {
+    color: #df0a2a;
+}
+
+.parts-field ::deep .parts-input,
+.parts-input {
+    width: 100%;
+    height: 52px !important;
+    max-height: none !important;
+    padding: 0.75rem 2.85rem 0.75rem 1rem !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.14);
+    border-radius: 14px;
+    background: #ffffff;
+    color: #1c1c1c !important;
+    font-size: 15px;
+    font-weight: 500;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.parts-field ::deep .parts-input::placeholder,
+.parts-input::placeholder {
+    color: #8b9199 !important;
+    font-weight: 400;
+    text-align: end;
+    opacity: 1;
+}
+
+.parts-field ::deep .parts-input--ltr,
+.parts-input--ltr {
+    direction: ltr;
+    text-align: left;
+}
+
+.parts-field ::deep .parts-input--ltr::placeholder,
+.parts-input--ltr::placeholder {
+    text-align: left;
+}
+
+.parts-field ::deep .parts-input:hover,
+.parts-input:hover {
+    border-color: rgba(223, 10, 42, 0.35);
+}
+
+.parts-field ::deep .parts-input:focus,
+.parts-input:focus {
+    outline: none;
+    border-color: #df0a2a !important;
+    box-shadow: 0 0 0 4px rgba(223, 10, 42, 0.18), 0 10px 24px rgba(0, 0, 0, 0.18) !important;
+}
+
+.parts-dd {
+    position: relative;
+}
+
+.parts-dd__trigger {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 52px;
+    padding: 0 2.85rem 0 2.7rem;
+    border: 1.5px solid rgba(255, 255, 255, 0.14);
+    border-radius: 14px;
+    background: #ffffff;
+    color: #1c1c1c;
+    font-size: 15px;
+    font-weight: 500;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    cursor: pointer;
+    text-align: right;
+    direction: rtl;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.parts-dd.is-open .parts-dd__trigger,
+.parts-dd__trigger:hover {
+    border-color: rgba(223, 10, 42, 0.35);
+}
+
+.parts-dd.is-open .parts-dd__trigger {
+    border-color: #df0a2a;
+    box-shadow: 0 0 0 4px rgba(223, 10, 42, 0.18), 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.parts-dd.is-open .parts-field__icon {
+    color: #df0a2a;
+}
+
+.parts-dd__value {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.parts-dd__value.is-placeholder {
+    color: #8b9199;
+    font-weight: 400;
+}
+
+.parts-dd__chevron {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    color: #8b9199;
+    font-size: 13px;
+    transform: translateY(-50%);
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.parts-dd.is-open .parts-dd__chevron {
+    transform: translateY(-50%) rotate(180deg);
+    color: #df0a2a;
+}
+
+.parts-dd__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: transparent;
+}
+
+.parts-dd__menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    left: 0;
+    z-index: 21;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 6px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.22);
+}
+
+.parts-dd__empty {
+    padding: 16px 10px;
+    text-align: center;
+    font-size: 13px;
+    color: #8b9199;
+}
+
+.parts-dd__item {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: flex-end;
+    gap: 4px;
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 10px;
+    background: none;
+    color: #1c1c1c;
+    text-align: right;
+    cursor: pointer;
 }
 
-    .search-form-container .form-control {
-        height: 48px;
-        border-radius: 10px;
-    }
+.parts-dd__item:hover,
+.parts-dd__item.is-active {
+    background: rgba(223, 10, 42, 0.08);
+}
 
-.search-btn {
+.parts-dd__item-title {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.parts-dd__item-code {
+    font-size: 12px;
+    color: #8b9199;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.parts-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     width: 100%;
-    height: 44px;
-    border-radius: 8px;
+    height: 52px;
+    margin-top: 6px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(180deg, #f01a38 0%, #c50a26 100%);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    box-shadow: 0 12px 26px rgba(223, 10, 42, 0.38);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.parts-btn:hover:not(:disabled) {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+    color: #fff;
+}
+
+.parts-btn:disabled {
+    opacity: 0.72;
+    cursor: not-allowed;
+}
+
+.parts-btn__spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: parts-spin 0.7s linear infinite;
+}
+
+@keyframes parts-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.parts-results {
+    display: grid;
+    gap: 10px;
     margin-top: 14px;
 }
 
-@media (max-width: 999px) {
-    .search-form-container {
-        width: 100%;
-        padding: 16px;
-    }
+.parts-result {
+    padding: 14px 14px 12px;
+}
+
+.parts-result__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.parts-result__head h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.6;
+}
+
+.parts-result__head span {
+    flex-shrink: 0;
+    font-size: 12px;
+    opacity: 0.62;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.parts-result__prices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.parts-result__prices div {
+    padding: 10px 8px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    text-align: center;
+}
+
+.parts-result__prices small {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 11px;
+    opacity: 0.62;
+}
+
+.parts-result__prices strong {
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.parts-empty {
+    margin-top: 14px;
+    padding: 28px 18px;
+    text-align: center;
+}
+
+.parts-empty i {
+    font-size: 1.8rem;
+    color: #df0a2a;
+}
+
+.parts-empty h2 {
+    margin: 10px 0 6px;
+    font-size: 1.05rem;
+    font-weight: 800;
+}
+
+.parts-empty p {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.68;
 }

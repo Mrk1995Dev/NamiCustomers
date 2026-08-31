@@ -1,0 +1,58 @@
+.book-page {
+    padding: 4.6rem 0 5.6rem;
+}
+
+.book-stub__top {
+    display: grid;
+    grid-template-columns: 40px 1fr 40px;
+    align-items: center;
+    direction: ltr !important;
+    min-height: 40px;
+    margin-bottom: 16px;
+}
+
+.book-stub__top h1 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-align: center;
+    grid-column: 2;
+}
+
+.book-stub__back {
+    grid-column: 3;
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff !important;
+    text-decoration: none;
+}
+
+.book-stub__back i {
+    color: #fff !important;
+}
+
+.book-stub {
+    padding: 36px 20px;
+    border-radius: 18px;
+    background: rgb(34 34 34);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: center;
+}
+
+.book-stub i {
+    font-size: 1.8rem;
+    color: #df0a2a;
+}
+
+.book-stub p {
+    margin: 12px 0 0;
+    font-size: 13px;
+    line-height: 1.8;
+    opacity: 0.72;
+}

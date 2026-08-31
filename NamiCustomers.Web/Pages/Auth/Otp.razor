@@ -1,69 +1,242 @@
 ﻿@page "/otp"
+@attribute [AllowAnonymous]
+@using NamiCustomers.Web.Utilities
 @layout LoginLayout
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject IAuthService authService
 @inject ToastService toastService
+@inject IJSRuntime JS
 
 <div class="login-wrapper d-flex align-items-center justify-content-center">
     <div class="custom-container">
         <div class="text-center">
-            <img class="login-intro-img" src="/SiteTmeplate/img/bg-img/logo.png" alt="" />
-            <h3>کد تایید را وارد نمایید</h3>
-            <p class="mb-4">کد تایید به شماره همراه <strong>@MobileNumber</strong> ارسال گردید.</p>
+            <img class="login-intro-img" src="/SiteTmeplate/img/bg-img/logo.png" alt="نامی خودرو" />
+            <h3 class="otp-title">کد تایید را وارد نمایید</h3>
+            <p class="otp-hint mb-4">کد تایید به شماره همراه <strong>@MobileNumber</strong> ارسال گردید.</p>
         </div>
 
-        <div class="otp-verify-form mt-2" style="direction:rtl !important; gap: 4px;">
-            <div class="input-group mb-3 otp-input-group">
-                <input class="form-control"
-                       @bind="otpCode"
-                       @oninput="OnOtpInput"
-                       type="text" inputmode="numeric" pattern="[0-9]*"
-                       style="color:#000 !important; border-radius: 6px;"
-                       maxlength="5"
-                       autofocus />
+        <div class="otp-verify-form mt-2">
+            <div class="otp-boxes" dir="ltr">
+                @for (var i = 0; i < DigitCount; i++)
+                {
+                    var index = i;
+                    <input @key="index"
+                           type="text"
+                           inputmode="text"
+                           maxlength="5"
+                           autocomplete="@(index == 0 ? "one-time-code" : "off")"
+                           class="otp-box @(string.IsNullOrEmpty(digits[index]) ? "" : "is-filled")"
+                           dir="ltr"
+                           lang="fa"
+                           value="@PersianDigits.ToPersian(digits[index])"
+                           @ref="inputRefs[index]"
+                           @oninput="e => OnDigitInput(index, e)"
+                           @onkeydown="e => OnDigitKeyDown(index, e)"
+                           @onfocus="() => OnBoxFocus(index)"
+                           aria-label="@($"رقم {index + 1} از {DigitCount}")" />
+                }
             </div>
 
-            <button class="btn btn-primary w-100" type="submit" disabled="@isSubmitting" @onclick="ConfirmOtpAsync">
-                @(isSubmitting ? "در حال بررسی..." : "ورود به سامانه")
+            <button class="auth-btn" type="button" disabled="@isSubmitting" @onclick="ConfirmOtpAsync">
+                @if (isSubmitting)
+                {
+                    <span class="auth-btn-spinner" aria-hidden="true"></span>
+                    <span>در حال بررسی...</span>
+                }
+                else
+                {
+                    <span>ورود به سامانه</span>
+                    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                }
             </button>
         </div>
 
         <div class="login-meta-data text-center">
-            <p class="mt-3 mb-0">کد تایید را دریافت نکرده اید؟ <span class="otp-sec" id="resendOTP"></span></p>
+            <p class="otp-resend mt-3 mb-0">کد تایید را دریافت نکرده‌اید؟ <span class="otp-sec" id="resendOTP"></span></p>
         </div>
     </div>
 </div>
 
 @code {
+    private const int DigitCount = 5;
+
     [Parameter]
     [SupplyParameterFromQuery(Name = "mobile")]
     public string? MobileNumber { get; set; }
 
-    private string?[] digits = new string?[5];
-    private ElementReference[] inputRefs = new ElementReference[5];
+    private string[] digits = Enumerable.Repeat(string.Empty, DigitCount).ToArray();
+    private ElementReference[] inputRefs = new ElementReference[DigitCount];
     private bool isSubmitting = false;
-    private string? errorMessage;
-
     private string? otpCode;
+    private bool focusedOnFirstRender;
 
-    private void OnOtpInput(ChangeEventArgs e)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var value = e.Value?.ToString() ?? "";
-
-        value = new string(value.Where(char.IsDigit).ToArray());
-
-        if (value.Length > 5)
+        if (firstRender && !focusedOnFirstRender)
         {
-            value = value[..5];
+            focusedOnFirstRender = true;
+            try
+            {
+                for (var i = 0; i < DigitCount; i++)
+                {
+                    await JS.InvokeVoidAsync("namiAuth.bindPersian", inputRefs[i]);
+                }
+            }
+            catch
+            {
+            }
+
+            await FocusBox(0);
+        }
+    }
+
+    private async Task OnDigitInput(int index, ChangeEventArgs e)
+    {
+        var nums = PersianDigits.ToEnglish(e.Value?.ToString());
+
+        if (nums.Length == 0)
+        {
+            digits[index] = string.Empty;
+            SyncOtpCode();
+            await RefreshDigitDisplay(index);
+            return;
         }
 
-        otpCode = value.Trim();
+        if (nums.Length >= DigitCount)
+        {
+            FillFrom(0, nums);
+            await RefreshAllDigitDisplays();
+            await FocusBox(DigitCount - 1);
+            SyncOtpCode();
+            return;
+        }
+
+        if (nums.Length > 1)
+        {
+            FillFrom(index, nums);
+            await RefreshAllDigitDisplays();
+            await FocusBox(Math.Min(index + nums.Length, DigitCount - 1));
+            SyncOtpCode();
+            return;
+        }
+
+        digits[index] = nums;
+        SyncOtpCode();
+        await RefreshDigitDisplay(index);
+
+        if (index < DigitCount - 1)
+        {
+            await FocusBox(index + 1);
+        }
+    }
+
+    private async Task OnDigitKeyDown(int index, KeyboardEventArgs e)
+    {
+        if (e.Key == "Backspace")
+        {
+            if (string.IsNullOrEmpty(digits[index]) && index > 0)
+            {
+                digits[index - 1] = string.Empty;
+                SyncOtpCode();
+                await RefreshDigitDisplay(index - 1);
+                await FocusBox(index - 1);
+            }
+            else
+            {
+                digits[index] = string.Empty;
+                SyncOtpCode();
+                await RefreshDigitDisplay(index);
+            }
+        }
+        else if (e.Key == "ArrowLeft" && index > 0)
+        {
+            await FocusBox(index - 1);
+        }
+        else if (e.Key == "ArrowRight" && index < DigitCount - 1)
+        {
+            await FocusBox(index + 1);
+        }
+        else if (e.Key == "Enter")
+        {
+            await ConfirmOtpAsync();
+        }
+    }
+
+    private void FillFrom(int startIndex, string nums)
+    {
+        for (var i = 0; i < DigitCount; i++)
+        {
+            var source = i - startIndex;
+            digits[i] = source >= 0 && source < nums.Length
+                ? nums[source].ToString()
+                : (i < startIndex ? digits[i] : string.Empty);
+        }
+    }
+
+    private void SyncOtpCode()
+    {
+        otpCode = string.Concat(digits);
+    }
+
+    private async Task RefreshDigitDisplay(int index)
+    {
+        if (index < 0 || index >= DigitCount)
+        {
+            return;
+        }
+
+        try
+        {
+            await JS.InvokeVoidAsync("namiAuth.setValue", inputRefs[index], PersianDigits.ToPersian(digits[index]));
+        }
+        catch
+        {
+        }
+    }
+
+    private async Task RefreshAllDigitDisplays()
+    {
+        for (var i = 0; i < DigitCount; i++)
+        {
+            await RefreshDigitDisplay(i);
+        }
+    }
+
+    private async Task OnBoxFocus(int index)
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("namiAuth.selectInput", inputRefs[index]);
+        }
+        catch
+        {
+        }
+    }
+
+    private async Task FocusBox(int index)
+    {
+        if (index < 0 || index >= DigitCount)
+        {
+            return;
+        }
+
+        try
+        {
+            await inputRefs[index].FocusAsync();
+            await JS.InvokeVoidAsync("namiAuth.selectInput", inputRefs[index]);
+        }
+        catch
+        {
+            // Element may not be ready on first render.
+        }
     }
 
     async Task ConfirmOtpAsync()
     {
-        if (string.IsNullOrWhiteSpace(otpCode) || otpCode.Length < 5)
+        SyncOtpCode();
+
+        if (string.IsNullOrWhiteSpace(otpCode) || otpCode.Length < DigitCount)
         {
             await toastService.Show(new ToastOption()
             {
@@ -74,6 +247,7 @@
                 Content = "لطفا کد دو عاملی را وارد کنید.",
                 Animation = true
             });
+            return;
         }
 
         isSubmitting = true;

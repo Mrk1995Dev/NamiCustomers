@@ -1,0 +1,41 @@
+<div class="book-hub">
+    <div class="book-hub__top">
+        <span class="book-hub__spacer" aria-hidden="true"></span>
+        <h1 class="book-hub__title">نوبت‌دهی</h1>
+        <NavLink class="book-hub__back" href="@BackHref" title="بازگشت">
+            <i class="bi bi-arrow-right"></i>
+        </NavLink>
+    </div>
+
+    <p class="book-hub__lead">نوبت تعمیرگاه را رزرو کنید یا نوبت‌های قبلی را ببینید.</p>
+
+    <div class="book-hub__grid">
+        <NavLink class="book-action" href="@NewHref">
+            <span class="book-action__title">
+                <span class="book-action__icon" aria-hidden="true">
+                    <i class="bi bi-calendar-plus"></i>
+                </span>
+                <strong>نوبت جدید</strong>
+                <i class="bi bi-chevron-left book-action__chevron" aria-hidden="true"></i>
+            </span>
+            <small>رزرو نوبت در نمایندگی خدمات</small>
+        </NavLink>
+
+        <NavLink class="book-action" href="@ListHref">
+            <span class="book-action__title">
+                <span class="book-action__icon book-action__icon--list" aria-hidden="true">
+                    <i class="bi bi-calendar2-week"></i>
+                </span>
+                <strong>لیست نوبت‌ها</strong>
+                <i class="bi bi-chevron-left book-action__chevron" aria-hidden="true"></i>
+            </span>
+            <small>مشاهده و پیگیری نوبت‌های ثبت‌شده</small>
+        </NavLink>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string BackHref { get; set; } = "/";
+    [Parameter] public string NewHref { get; set; } = "/booking/new";
+    [Parameter] public string ListHref { get; set; } = "/booking/list";
+}

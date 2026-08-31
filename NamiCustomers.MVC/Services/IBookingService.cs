@@ -1,33 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
-using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
-using NamiCustomers.Infrastucture.Utilities;
 
 namespace NamiCustomers.MVC.Services;
 
 
 public interface IBookingService
 {
-
-
     /// <summary>
     /// دریافت نوبت
     /// </summary>
     /// <returns></returns>
     Task<ResultDto<BookingTurnResponse>> GetBookingTurnAsync(BookingTurnRequest filter);
-
-
-
 }
+
 public class BookingService(HttpClient httpClient, ISevenSoftService sevenSoftService) : IBookingService
 {
     public async Task<ResultDto<BookingTurnResponse>> GetBookingTurnAsync(BookingTurnRequest filter)
     {
-
-
-
-
         BookingTurnResponse response = new();
         filter.CountryId = new Guid("de5b7996-131d-44c5-88b9-fc3a511506a0");//todo
         if (filter.CountryId != null)
@@ -102,7 +91,6 @@ public class BookingTurnRequest
     public Guid? CityId { get; set; }
     public Guid? DealerId { get; set; }
     public Guid? BranchId { get; set; }
-
     public Guid? ServerGroupId { get; set; }
     public Guid? ServerGroupDateId { get; set; }
     public string? ServerGroupTimeId { get; set; }

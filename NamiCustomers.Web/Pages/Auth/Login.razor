@@ -1,8 +1,11 @@
 ﻿@page "/login"
+@attribute [AllowAnonymous]
+@using NamiCustomers.Web.Utilities
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
 @inject ISnackbar snackbar
 @inject ToastService toastService
+@inject IJSRuntime JS
 @layout LoginLayout
 
 <PageTitle>ورود به باشگاه مشتریان | نامی خودرو</PageTitle>
@@ -10,53 +13,70 @@
 <div class="login-wrapper d-flex align-items-center justify-content-center">
     <div class="custom-container">
         <div class="text-center px-4">
-            <img class="login-intro-img" src="/SiteTmeplate/img/bg-img/logo.png" alt="" />
+            <img class="login-intro-img" src="/SiteTmeplate/img/bg-img/logo.png" alt="نامی خودرو" />
         </div>
 
-        <!-- Register Form -->
         <div class="register-form mt-4">
-            <h6 class="mb-3 text-center">سامانه خدمات پس از فروش نامی خودرو پیشرو</h6>
+            <h6 class="auth-heading mb-3 text-center">سامانه خدمات پس از فروش نامی خودرو پیشرو</h6>
 
             <EditForm Model="@LoginModel" OnValidSubmit="() => HandleLogin()">
                 <DataAnnotationsValidator />
 
-                <div class="form-group">
-                    <InputText class="form-control" style="color:#000 !important;"
-                               @bind-Value="LoginModel.NationalCode"
-                               inputmode="numeric" pattern="[0-9]*"
-                               placeholder="کد ملی" />
-                    <ValidationMessage For="@(() => LoginModel.Password)" />
+                <div class="auth-field">
+                    <i class="bi bi-person auth-field-icon" aria-hidden="true"></i>
+                    <input class="auth-input"
+                           type="text"
+                           inputmode="text"
+                           @ref="nationalCodeInput"
+                           value="@PersianDigits.ToPersian(LoginModel.NationalCode)"
+                           @oninput="OnNationalCodeInput"
+                           maxlength="10"
+                           autocomplete="username"
+                           lang="fa"
+                           placeholder="کد ملی" />
+                    <ValidationMessage For="@(() => LoginModel.NationalCode)" />
                 </div>
 
-                <div class="form-group">
-                    <InputText class="form-control" style="color:#000 !important;"
-                               @bind-Value="LoginModel.PhoneNumber"
-                               inputmode="numeric" pattern="[0-9]*"
-                               placeholder="تلفن همراه" />
-                    <ValidationMessage For="@(() => LoginModel.Email)" />
+                <div class="auth-field">
+                    <i class="bi bi-phone auth-field-icon" aria-hidden="true"></i>
+                    <input class="auth-input"
+                           type="text"
+                           inputmode="text"
+                           @ref="phoneInput"
+                           value="@PersianDigits.ToPersian(LoginModel.PhoneNumber)"
+                           @oninput="OnPhoneNumberInput"
+                           maxlength="11"
+                           autocomplete="tel"
+                           lang="fa"
+                           placeholder="تلفن همراه" />
+                    <ValidationMessage For="@(() => LoginModel.PhoneNumber)" />
                 </div>
 
                 @if (!string.IsNullOrEmpty(ErrorMessage))
                 {
-                    <div class="alert alert-danger py-2">@ErrorMessage</div>
+                    <div class="auth-alert">@ErrorMessage</div>
                 }
 
-                <button class="btn btn-primary w-100" type="submit" disabled="@isSubmitting">
-                    @(isSubmitting ? "در حال ارسال" : "ورود")
+                <button class="auth-btn" type="submit" disabled="@isSubmitting">
+                    @if (isSubmitting)
+                    {
+                        <span class="auth-btn-spinner" aria-hidden="true"></span>
+                        <span>در حال ارسال...</span>
+                    }
+                    else
+                    {
+                        <span>ورود</span>
+                        <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                    }
                 </button>
             </EditForm>
         </div>
 
-        <!-- Login Meta -->
-        <div class="login-meta-data text-center" style="display: grid;">
-            <button @onclick="NavigateToForgotPassword" class="stretched-link forgot-password d-block mt-4 mb-1" style="color: #ffffff">
-                رمز عبور خود را فراموش کرده اید؟
+        <div class="login-meta-data text-center">
+            <button type="button" @onclick="NavigateToForgotPassword" class="auth-forgot">
+                رمز عبور خود را فراموش کرده‌اید؟
             </button>
         </div>
-
-        @* <div class="text-muted" style="text-align:center;">
-            Version @(System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version)
-        </div> *@
     </div>
 </div>
 
@@ -64,6 +84,50 @@
     private LoginRequestDto LoginModel = new();
     private string ErrorMessage = string.Empty;
     private bool isSubmitting = false;
+    private ElementReference nationalCodeInput;
+    private ElementReference phoneInput;
+    private bool persianBound;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (persianBound)
+        {
+            return;
+        }
+
+        try
+        {
+            await JS.InvokeVoidAsync("namiAuth.bindPersian", nationalCodeInput);
+            await JS.InvokeVoidAsync("namiAuth.bindPersian", phoneInput);
+            persianBound = true;
+        }
+        catch
+        {
+        }
+    }
+
+    private async Task OnNationalCodeInput(ChangeEventArgs e)
+    {
+        LoginModel.NationalCode = PersianDigits.ToEnglish(e.Value?.ToString());
+        await SetPersianValue(nationalCodeInput, LoginModel.NationalCode);
+    }
+
+    private async Task OnPhoneNumberInput(ChangeEventArgs e)
+    {
+        LoginModel.PhoneNumber = PersianDigits.ToEnglish(e.Value?.ToString());
+        await SetPersianValue(phoneInput, LoginModel.PhoneNumber);
+    }
+
+    private async Task SetPersianValue(ElementReference input, string value)
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("namiAuth.setValue", input, PersianDigits.ToPersian(value));
+        }
+        catch
+        {
+        }
+    }
 
     private async Task HandleLogin()
     {

@@ -3,7 +3,7 @@
 public class DealerResponseDto
 {
     public int? Code { get; set; }
-    public string? UniqueId { get; set; }
+    public Guid? UniqueId { get; set; }
     public object ApprovalOwnerId { get; set; }
     public object ApprovalOwnerAgentName { get; set; }
     public string? DealerName { get; set; }

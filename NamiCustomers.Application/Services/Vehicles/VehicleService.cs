@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using NamiCustomers.Abstractions.Dtos.Vehicles;
 using NamiCustomers.Application.Services.Accounts;
-using NamiCustomers.Application.Services.Subscribers;
 using NamiCustomers.Domain.Entities.Account;
 using NamiCustomers.Domain.Entities.Vehicles;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft;
-using static Dapper.SqlMapper;
 
 
 
@@ -174,7 +172,6 @@ public class VehicleService(IAppDbContext dbContext,
             data.VehicleAttachment = relatedAttach;
 
         var model = mapper.Map<VehicleModelDto>(data);
-        return   ResultDto.Success<VehicleModelDto>(model);
+        return ResultDto.Success<VehicleModelDto>(model);
     }
-
 }

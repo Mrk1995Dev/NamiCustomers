@@ -67,24 +67,21 @@ namespace NamiCustomers.Web.Services.Auth.AuthServices.Implementation
 
         public async Task LogoutAsync()
         {
-            var refreshToken = await tokenService.GetRefreshTokenAsync();
-            if (string.IsNullOrEmpty(refreshToken))
+            try
             {
-                throw new InvalidOperationException("Refresh token not found.");
+                var refreshToken = await tokenService.GetRefreshTokenAsync();
+                if (!string.IsNullOrEmpty(refreshToken))
+                {
+                    await httpClient.PostAsJsonAsync("Account/logout", new { RefreshToken = refreshToken });
+                }
             }
-
-            var response = await httpClient.PostAsJsonAsync("/Account/logout", new { RefreshToken = refreshToken });
-            if (response.IsSuccessStatusCode)
+            catch
+            {
+            }
+            finally
             {
                 await tokenService.ClearTokenAsync();
                 ((CustomAuthenticationStateProvider)authenticationStateProvider).UpdateAuthenticationState();
-
-            }
-            else
-            {
-                await tokenService.ClearTokenAsync();
-                ((CustomAuthenticationStateProvider)authenticationStateProvider).UpdateAuthenticationState();
-                throw new Exception("Failed to logout.");
             }
         }
 

@@ -3,6 +3,7 @@
 @using NamiCustomers.Web.Services.Vehicle.Contract
 @using NamiCustomers.Web.Services.LocalStorage
 @using NamiCustomers.Web.Services.Vehicle.Implementation
+@using NamiCustomers.Web.Utilities
 
 @inject IVehicleService vehicleService
 @inject ILocalStorageService localStorageService
@@ -14,119 +15,185 @@
 
 <PageTitle>استعلام گارانتی های فعال | نامی خودرو</PageTitle>
 
-    @if (!isLoading)
+@if (isLoading)
 {
     <div class="loader-container">
         <MudProgressCircular Rounded="true" Size="MudBlazor.Size.Medium" StrokeWidth="5" Style="color: #ffffff;" Indeterminate="true" />
     </div>
 }
-
-
 else
 {
-    @if (Model.ChassisGuaranteeListWarrantyStatus == "Has Guarantee")
-    {
-@*         <br />
+    <div class="guarantee-page">
         <div class="container">
-
-            <div class="divider divider-center-icon mt-3">
-                <i class="bi bi-gear"></i>
+            <div class="guarantee-top">
+                <NavLink class="guarantee-back" href="/" title="بازگشت">
+                    <i class="bi bi-arrow-right"></i>
+                </NavLink>
+                <h1 class="guarantee-title">استعلام گارانتی</h1>
+                <span class="guarantee-top__spacer" aria-hidden="true"></span>
             </div>
 
-        </div> *@
-        <br />
-        <div class="container">
-            <div class="container direction-rtl" style="padding: 0;">
-                <div class="card">
-                    <div class="card-body p-2">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <small class="ms-1">استعلام گارانتی</small>
-                            <form action="#">
-                                <NavLink title="بازگشت" href="/"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></NavLink>
-                            </form>
-                        </div>
+            @if (HasGuarantee)
+            {
+                <section class="guarantee-hero @HeroToneClass">
+                    <div class="guarantee-hero__icon" aria-hidden="true">
+                        <i class="bi bi-shield-check"></i>
                     </div>
-                </div>
-            </div>
-            <br />
-            <div class="card comparison-table-one">
-                <div class="card-body">
-                    <table class="table mb-0">
-                        <thead class="thead-light">
-                            <tr style="text-align:start">
-                                <th colspan="2">
-                                    <div style="display:flex; align-items:center; gap:6px; margin-bottom: 12px;">
-                                        <MudIcon Icon="@Icons.Material.Rounded.AutoFixHigh" Color="MudBlazor.Color.Default" Size="MudBlazor.Size.Small" />
-                                        <span>نتیجه استعلام گارانتی</span>
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>نوع گارانتی</th>
-                                <td>@Model.GuarantyTypeName</td>
-                            </tr>
-                            <tr>
-                                <th>تاریخ ثبت</th>
-                                <td>@Model.StrRegisterDateTime</td>
-                            </tr>
-                            <tr>
-                                <th>تاریخ انقضا</th>
-                                <td>@Model.StrExpireDateTime</td>
-                            </tr>
-                            <tr>
-                                <th>کیلومتر گارانتی</th>
-                                <td>@string.Format("{0:#,##0}", Model.GuaranteeMileage) کیلومتر</td>
-                            </tr>
-                            <tr>
-                                <th>مدت گارانتی</th>
-                                <td>@Model.GuaranteeDuration ماه</td>
-                            </tr>
-                            <tr>
-                                <th>وضعیت گارانتی</th>
-                                @if (Model.ChassisGuaranteeListWarrantyStatus == "Has Guarantee")
-                                {
-                                    <td><i class="text-success bi bi-check-lg fz-16"></i></td>
-                                }
-                                else
-                                {
-                                    <td><i class="text-danger bi bi-x-lg"></i></td>
-                                }
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    }
-    else if (!string.IsNullOrEmpty(Model.VinNumber))
-    {
-        <br />
-        <div class="container">
-            <div class="divider divider-center-icon mt-3">
-                <i class="bi bi-gear"></i>
-            </div>
-        </div>
-        <br />
-        <div class="container">
-            <div class="card comparison-table-one">
-                <div class="card-body">
-                    <div class="alert custom-alert-one alert-danger alert-dismissible fade show" role="alert">
-                        <i class="bi bi-x-circle"></i>
-                        هیچ موردی یافت نشد!
-                    </div>
-                </div>
-            </div>
-        </div>
+                    <p class="guarantee-hero__status">@HeroStatusText</p>
+                    <h2 class="guarantee-hero__name">@Display(Model.GuarantyTypeName)</h2>
+                    @if (!string.IsNullOrWhiteSpace(Model.VinNumber))
+                    {
+                        <p class="guarantee-vin" dir="ltr">@Model.VinNumber</p>
+                    }
 
-    }
+                    <div class="guarantee-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="@RemainingPercent">
+                        <span style="width: @(RemainingPercent.ToString(System.Globalization.CultureInfo.InvariantCulture))%"></span>
+                    </div>
+                    <p class="guarantee-remain">@RemainingLabel</p>
+                </section>
+
+                <div class="guarantee-dates">
+                    <article class="guarantee-date">
+                        <span>تاریخ ثبت</span>
+                        <strong>@ToPersian(Model.StrRegisterDateTime)</strong>
+                    </article>
+                    <article class="guarantee-date">
+                        <span>تاریخ انقضا</span>
+                        <strong>@ToPersian(Model.StrExpireDateTime)</strong>
+                    </article>
+                </div>
+
+                <div class="guarantee-stats">
+                    <article class="guarantee-stat">
+                        <span>کیلومتر گارانتی</span>
+                        <strong>@ToPersian(string.Format("{0:#,##0}", Model.GuaranteeMileage))</strong>
+                        <small>کیلومتر</small>
+                    </article>
+                    <article class="guarantee-stat">
+                        <span>مدت گارانتی</span>
+                        <strong>@ToPersian(Model.GuaranteeDuration.ToString())</strong>
+                        <small>ماه</small>
+                    </article>
+                </div>
+
+                <section class="guarantee-card">
+                    <ul class="guarantee-specs">
+                        @if (!string.IsNullOrWhiteSpace(Model.GuarantyGroupName))
+                        {
+                            <li>
+                                <span>گروه گارانتی</span>
+                                <strong>@Model.GuarantyGroupName</strong>
+                            </li>
+                        }
+                        <li>
+                            <span>وضعیت</span>
+                            <strong class="is-ok">فعال</strong>
+                        </li>
+                        @if (Model.ContinuityGuaranty)
+                        {
+                            <li>
+                                <span>پیوستگی</span>
+                                <strong>گارانتی پیوسته</strong>
+                            </li>
+                        }
+                    </ul>
+                </section>
+            }
+            else
+            {
+                <section class="guarantee-empty">
+                    <div class="guarantee-empty__icon" aria-hidden="true">
+                        <i class="bi bi-shield-x"></i>
+                    </div>
+                    <h2>گارانتی فعالی پیدا نشد</h2>
+                    <p>برای شاسی انتخاب‌شده گارانتی فعالی ثبت نشده است. خودرو را از هدر عوض کنید و دوباره امتحان کنید.</p>
+                    @if (!string.IsNullOrWhiteSpace(Model.VinNumber))
+                    {
+                        <p class="guarantee-vin" dir="ltr">@Model.VinNumber</p>
+                    }
+                    <NavLink class="guarantee-empty__btn" href="/">بازگشت به خانه</NavLink>
+                </section>
+            }
+        </div>
+    </div>
 }
 
 
 @code {
     private ActiveMainChassisGuaranteeResponse Model = new();
-    private bool isLoading;
+    private bool isLoading = true;
+
+    private bool HasGuarantee =>
+        string.Equals(Model.ChassisGuaranteeListWarrantyStatus, "Has Guarantee", StringComparison.OrdinalIgnoreCase);
+
+    private int RemainingDays
+    {
+        get
+        {
+            if (Model.ExpireDateTime == default)
+            {
+                return 0;
+            }
+
+            return (Model.ExpireDateTime.Date - DateTime.Today).Days;
+        }
+    }
+
+    private int RemainingPercent
+    {
+        get
+        {
+            if (Model.RegisterDateTime == default || Model.ExpireDateTime == default)
+            {
+                return HasGuarantee ? 100 : 0;
+            }
+
+            var total = (Model.ExpireDateTime - Model.RegisterDateTime).TotalDays;
+            if (total <= 0)
+            {
+                return 0;
+            }
+
+            var left = (Model.ExpireDateTime.Date - DateTime.Today).TotalDays;
+            return (int)Math.Clamp(Math.Round(left / total * 100), 0, 100);
+        }
+    }
+
+    private bool IsExpiringSoon =>
+        HasGuarantee && Model.ExpireDateTime != default && RemainingDays is >= 0 and <= 30;
+
+    private string HeroToneClass =>
+        Model.ExpireDateTime == default
+            ? "is-ok"
+            : RemainingDays < 0
+                ? "is-danger"
+                : IsExpiringSoon ? "is-warn" : "is-ok";
+
+    private string HeroStatusText =>
+        RemainingDays < 0 ? "گارانتی به پایان رسیده" : IsExpiringSoon ? "گارانتی به‌زودی تمام می‌شود" : "گارانتی فعال است";
+
+    private string RemainingLabel
+    {
+        get
+        {
+            if (Model.ExpireDateTime == default)
+            {
+                return "مدت باقی‌مانده مشخص نیست";
+            }
+
+            if (RemainingDays > 0)
+            {
+                return $"{ToPersian(RemainingDays.ToString())} روز تا پایان گارانتی";
+            }
+
+            if (RemainingDays == 0)
+            {
+                return "گارانتی امروز به پایان می‌رسد";
+            }
+
+            return "تاریخ انقضای گارانتی گذشته است";
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -136,6 +203,7 @@ else
 
     private async Task LoadWarrantyDataAsync()
     {
+        isLoading = true;
         string vin = await localStorageService.GetItemAsync("vin");
         if (string.IsNullOrWhiteSpace(vin))
         {
@@ -152,16 +220,16 @@ else
             return;
         }
 
-        isLoading = false;
         var result = await vehicleService.GetActiveMainChassisGuarantee(vin);
         if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
             Navigation.NavigateTo("/login");
 
         else if (result.Succeeded)
-            Model = result.Data;
+            Model = result.Data ?? new();
 
         else
         {
+            Model = new ActiveMainChassisGuaranteeResponse { VinNumber = vin };
             await ToastService.Show(new ToastOption()
             {
                 ShowHeader = true,
@@ -173,7 +241,7 @@ else
             });
         }
 
-        isLoading = true;
+        isLoading = false;
     }
 
     private async void OnVinChanged()
@@ -192,4 +260,10 @@ else
     {
         VehicleContext.VinChanged -= OnVinChanged;
     }
+
+    private static string Display(string? value)
+        => string.IsNullOrWhiteSpace(value) ? "گارانتی شاسی" : value;
+
+    private static string ToPersian(string? value)
+        => string.IsNullOrWhiteSpace(value) ? "—" : PersianDigits.ToPersian(value);
 }

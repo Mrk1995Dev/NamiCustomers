@@ -5,12 +5,15 @@
 @using NamiCustomers.Web.Services.Vehicle.Contract
 @using NamiCustomers.Web.Services.Vehicle.Dto
 @using NamiCustomers.Web.Services.Vehicle.Implementation
+@using NamiCustomers.Web.Services.Auth.AuthServices.Contract
+@using Microsoft.AspNetCore.Components.Authorization
 @inherits LayoutComponentBase
 
 @inject NavigationManager NavigationManager
 @inject IVehicleService VehicleService
 @inject ILocalStorageService localStorageService
 @inject VehicleContext VehicleContext
+@inject IAuthService AuthService
 
 <MudPopoverProvider />
 <MudDialogProvider></MudDialogProvider>
@@ -22,54 +25,55 @@
         <div class="container-fluid">
             <!-- Header Content -->
             <div class="header-content header-style-five position-relative d-flex align-items-center justify-content-between">
-                <!-- Logo Wrapper -->
-                <div class="logo-wrapper">
-                    <NavLink href="/">
-                        <img src="SiteTmeplate/img/core-img/LogoSign.png" alt="نامی خودرو پیشرو">
-                    </NavLink>
-                </div>
-                <div class="vin-selector @(isOpen ? "is-open" : "")">
-                    <button type="button" class="vin-selector__trigger" @onclick="ToggleOpen">
-                        <i class="bi bi-car-front-fill"></i>
-                        <span class="vin-selector__label">
-                            @(SelectedVin is null ? "انتخاب خودرو" : SelectedVin.VinNumber)
-                        </span>
-                        <i class="bi bi-chevron-down vin-selector__chevron"></i>
-                    </button>
+                <div class="header-brand">
+                    <div class="navbar--toggler" id="affanNavbarToggler" data-bs-toggle="offcanvas" data-bs-target="#NamioffCanvas"
+                         aria-controls="NamioffCanvas">
+                        <span class="d-block"></span>
+                        <span class="d-block"></span>
+                        <span class="d-block"></span>
+                    </div>
+                    <div class="vin-selector @(isOpen ? "is-open" : "")">
+                        <button type="button" class="vin-selector__trigger" @onclick="ToggleOpen">
+                            <i class="bi bi-car-front-fill"></i>
+                            <span class="vin-selector__label">
+                                @(SelectedVin is null ? "انتخاب خودرو" : SelectedVin.VinNumber)
+                            </span>
+                            <i class="bi bi-chevron-down vin-selector__chevron"></i>
+                        </button>
 
-                    @if (isOpen)
-                    {
-                        <div class="vin-selector__backdrop" @onclick="Close"></div>
+                        @if (isOpen)
+                        {
+                            <div class="vin-selector__backdrop" @onclick="Close"></div>
 
-                        <div class="vin-selector__menu">
-                            @if (Vins is null)
-                            {
-                                <div class="vin-selector__empty">در حال بارگذاری...</div>
-                            }
-                            else if (!Vins.Any())
-                            {
-                                <div class="vin-selector__empty">خودرویی ثبت نشده است</div>
-                            }
-                            else
-                            {
-                                @foreach (var vin in Vins)
+                            <div class="vin-selector__menu">
+                                @if (Vins is null)
                                 {
-                                    <button type="button" class="vin-selector__item @(vin.VinNumber == SelectedVin?.VinNumber ? "active" : "")"
-                                            @onclick="() => SelectVin(vin)">
-                                        <span class="vin-selector__item-title">@vin.SelectedVehicleCommonName</span>
-                                        <span class="vin-selector__item-code">@vin.VinNumber</span>
-                                    </button>
+                                    <div class="vin-selector__empty">در حال بارگذاری...</div>
                                 }
-                            }
-                        </div>
-                    }
-                </div>
-                <!-- Navbar Toggler -->
-                <div class="navbar--toggler" id="affanNavbarToggler" data-bs-toggle="offcanvas" data-bs-target="#NamioffCanvas"
-                     aria-controls="NamioffCanvas">
-                    <span class="d-block"></span>
-                    <span class="d-block"></span>
-                    <span class="d-block"></span>
+                                else if (!Vins.Any())
+                                {
+                                    <div class="vin-selector__empty">خودرویی ثبت نشده است</div>
+                                }
+                                else
+                                {
+                                    @foreach (var vin in Vins)
+                                    {
+                                        <button type="button" class="vin-selector__item @(vin.VinNumber == SelectedVin?.VinNumber ? "active" : "")"
+                                                @onclick="() => SelectVin(vin)">
+                                            <span class="vin-selector__item-title">@vin.SelectedVehicleCommonName</span>
+                                            <span class="vin-selector__item-code">@vin.VinNumber</span>
+                                        </button>
+                                    }
+                                }
+                            </div>
+                        }
+                    </div>
+
+                    <div class="logo-wrapper">
+                        <NavLink href="/">
+                            <img src="SiteTmeplate/img/core-img/LogoSign.png" alt="نامی خودرو پیشرو">
+                        </NavLink>
+                    </div>
                 </div>
             </div>
         </div>
@@ -96,12 +100,7 @@
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink class="nav-link text-dark" href="Subscriber/Profile">
-                            <i class="bi bi-person"></i> پروفایل
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink class="nav-link text-dark" href="Vehicle">
+                        <NavLink class="nav-link text-dark" href="/vehicle">
                             <i class="bi bi-car-front"></i> خودروهای من
                         </NavLink>
                     </li>
@@ -140,16 +139,28 @@
                         </NavLink>
                     </li>
 
-                    <li>
-                        <a class="nav-link text-dark" href="Account/Logout">
-                            <i class="bi bi-box-arrow-right"></i> خروج
-                        </a>
+                    <li class="sidenav-auth">
+                        <AuthorizeView>
+                            <Authorized>
+                                <div class="sidenav-auth-row">
+                                    <button class="sidenav-auth-btn sidenav-auth-btn--profile" @onclick="GoToProfile">
+                                        <i class="bi bi-person"></i>
+                                        <span>پروفایل</span>
+                                    </button>
+                                    <button type="button" class="sidenav-auth-btn sidenav-auth-btn--logout" @onclick="HandleLogout">
+                                        <i class="bi bi-box-arrow-right"></i>
+                                        خروج
+                                    </button>
+                                </div>
+                            </Authorized>
+                            <NotAuthorized>
+                                <NavLink class="sidenav-auth-btn sidenav-auth-btn--login" href="/login">
+                                    <i class="bi bi-box-arrow-in-left"></i>
+                                    ورود
+                                </NavLink>
+                            </NotAuthorized>
+                        </AuthorizeView>
                     </li>
-
-                    <li>
-                        <NavLink class="nav-link text-dark right" href="Account/LoginByMobile">ورود</NavLink>
-                    </li>
-
                 </ul>
 
                 <!-- Social Info -->
@@ -252,6 +263,33 @@
     private void ToggleOpen() => isOpen = !isOpen;
     private void Close() => isOpen = false;
 
+    private bool isLoggingOut;
+
+    private async Task HandleLogout()
+    {
+        if (isLoggingOut)
+        {
+            return;
+        }
+
+        isLoggingOut = true;
+        try
+        {
+            await AuthService.LogoutAsync();
+        }
+        catch
+        {
+        }
+        finally
+        {
+            NavigationManager.NavigateTo("/login", forceLoad: true);
+        }
+    }
+
+    void GoToProfile() 
+    {
+        NavigationManager.NavigateTo("/profile");
+    }
     private async Task SelectVin(VehicleModelDto vin)
     {
         isOpen = false;
