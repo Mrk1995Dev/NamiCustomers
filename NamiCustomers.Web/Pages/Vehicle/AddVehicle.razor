@@ -1,9 +1,204 @@
 ﻿@page "/add/vehicle"
 
+@using NamiCustomers.Web.Services.Subscriber.Contract
+@using NamiCustomers.Web.Utilities
+
+@inject IVehicleService vehicleService
+@inject ISubscriberService subscriberService
+@inject NavigationManager Navigation
+@inject ISnackbar snackbar
+@inject ToastService toastService
+
 <PageTitle>افزودن خودرو | نامی خودرو</PageTitle>
 
+<div class="add-page">
+    <div class="container">
+        <div class="add-top">
+            <span aria-hidden="true"></span>
+            <h1>افزودن خودرو</h1>
+            <NavLink class="add-back" href="/vehicle" title="بازگشت">
+                <i class="bi bi-arrow-right"></i>
+            </NavLink>
+        </div>
 
+        <section class="add-hero">
+            <div class="add-hero__icon" aria-hidden="true">
+                <i class="bi bi-plus-circle"></i>
+            </div>
+            <h2>ثبت خودرو با شماره شاسی</h2>
+            <p>فقط شماره شاسی (VIN) را وارد کنید. بقیه مشخصات از سامانه فروش خوانده می‌شود.</p>
+        </section>
+
+        <section class="add-card">
+            <label class="add-label" for="vin-input">شماره شاسی</label>
+            <div class="add-field">
+                <i class="bi bi-upc-scan add-field__icon" aria-hidden="true"></i>
+                <input id="vin-input"
+                       class="add-input"
+                       type="text"
+                       inputmode="text"
+                       autocomplete="off"
+                       maxlength="17"
+                       lang="fa"
+                       dir="rtl"
+                       placeholder="مثلاً NMTK..."
+                       value="@vinDisplay"
+                       disabled="@isSubmitting"
+                       @oninput="OnVinInput" />
+            </div>
+            <span class="add-hint">@ToPersian(vin.Length.ToString()) از ۱۷ کاراکتر</span>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="add-alert">@errorMessage</div>
+            }
+
+            <button type="button" class="add-btn" disabled="@isSubmitting" @onclick="SubmitAsync">
+                @if (isSubmitting)
+                {
+                    <span class="add-btn__spinner" aria-hidden="true"></span>
+                    <span>در حال ثبت...</span>
+                }
+                else
+                {
+                    <span>ثبت خودرو</span>
+                    <i class="bi bi-check2" aria-hidden="true"></i>
+                }
+            </button>
+        </section>
+    </div>
+</div>
 
 @code {
+    private string vin = string.Empty;
+    private string vinDisplay = string.Empty;
+    private string errorMessage = string.Empty;
+    private bool isSubmitting;
 
+    private void OnVinInput(ChangeEventArgs e)
+    {
+        vin = NormalizeVin(e.Value?.ToString());
+        vinDisplay = PersianDigits.ToPersian(vin);
+        errorMessage = string.Empty;
+    }
+
+    private async Task SubmitAsync()
+    {
+        if (isSubmitting)
+        {
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(vin))
+        {
+            errorMessage = "شماره شاسی را وارد کنید.";
+            await ShowErrorAsync(errorMessage);
+            return;
+        }
+
+        if (vin.Length < 8)
+        {
+            errorMessage = "شماره شاسی واردشده کامل نیست.";
+            await ShowErrorAsync(errorMessage);
+            return;
+        }
+
+        isSubmitting = true;
+        errorMessage = string.Empty;
+
+        var subscriber = await subscriberService.GetSubscriberInfoAsync();
+        if (subscriber.StatusCode == (int)HttpStatusCode.Unauthorized)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        var request = new VehicleModelDto
+        {
+            VinNumber = vin,
+            SubscriberId = subscriber.Data?.Id,
+            NationalCode = subscriber.Data?.NationalCode ?? string.Empty,
+            Mobile = subscriber.Data?.Mobile ?? string.Empty
+        };
+
+        var result = await vehicleService.RegisterAsync(request);
+
+        if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        if (result.Succeeded)
+        {
+            snackbar.Add("خودرو با موفقیت اضافه شد.", Severity.Success);
+            Navigation.NavigateTo("/vehicle");
+            return;
+        }
+
+        errorMessage = string.IsNullOrWhiteSpace(result.Message)
+            ? "امکان ثبت این خودرو وجود ندارد."
+            : result.Message;
+        await ShowErrorAsync(errorMessage);
+        isSubmitting = false;
+    }
+
+    private async Task ShowErrorAsync(string message)
+    {
+        await toastService.Show(new ToastOption
+        {
+            ShowClose = true,
+            ShowHeader = true,
+            Category = ToastCategory.Error,
+            Title = "افزودن خودرو",
+            Content = message,
+            Animation = true
+        });
+    }
+
+    private static string NormalizeVin(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return string.Empty;
+        }
+
+        var chars = new char[value.Length];
+        var count = 0;
+
+        foreach (var c in value)
+        {
+            char mapped;
+            if (c is >= '0' and <= '9')
+            {
+                mapped = c;
+            }
+            else if (c is >= '\u06F0' and <= '\u06F9')
+            {
+                mapped = (char)('0' + (c - '\u06F0'));
+            }
+            else if (c is >= '\u0660' and <= '\u0669')
+            {
+                mapped = (char)('0' + (c - '\u0660'));
+            }
+            else if (c is >= 'A' and <= 'Z' or >= 'a' and <= 'z')
+            {
+                mapped = char.ToUpperInvariant(c);
+            }
+            else
+            {
+                continue;
+            }
+
+            chars[count++] = mapped;
+            if (count == 17)
+            {
+                break;
+            }
+        }
+
+        return new string(chars, 0, count);
+    }
+
+    private static string ToPersian(string? value) => PersianDigits.ToPersian(value);
 }

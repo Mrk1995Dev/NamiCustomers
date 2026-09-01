@@ -262,21 +262,210 @@ public class SubscriberService(IMapper mapper, ITokenService tokenService, IHttp
 
     public async Task<ResultDto<SubscriberCodeDto>> GetOtpAsync(string nationalCode, string mobile)
     {
+        if (string.IsNullOrWhiteSpace(nationalCode) || string.IsNullOrWhiteSpace(mobile))
+            return ResultDto.Failure<SubscriberCodeDto>(Infrastucture.Properties.Resources.errInputInValid);
+
+        var subscriber = await dbContext.Subscribers
+            .FirstOrDefaultAsync(s => s.NationalCode == nationalCode);
+
+        if (subscriber is null)
+        {
+            var importResult = await ImportSubscriberFromSevenSoftAsync(nationalCode, mobile);
+            if (!importResult.Succeeded)
+                return ResultDto.Failure<SubscriberCodeDto>(importResult.Message);
+        }
 
         var Randowmpass = new PasswordUtility();
         string passnew = Randowmpass.RandomString(5);
         var newOtp = new SubscriberCode { AuthCode = passnew, Mobile = mobile, NationalCode = nationalCode, Used = false };
 
-
-
         await dbContext.SubscriberCodes.AddAsync(newOtp);
         await dbContext.SaveChangesAsync();
 
-
-
-        var result = await smsService.SendSms(newOtp.Mobile, $"کد یکبار مصرف ورود به نامی من: {newOtp.AuthCode} \n @my.namikhodro.com #{newOtp.AuthCode} \n لغو11");
+        await smsService.SendSms(newOtp.Mobile, $"کد یکبار مصرف ورود به نامی من: {newOtp.AuthCode} \n @my.namikhodro.com #{newOtp.AuthCode} \n لغو11");
 
         return ResultDto.Success(new SubscriberCodeDto { AuthCode = newOtp.AuthCode, Mobile = newOtp.Mobile, NationalCode = newOtp.NationalCode });
+    }
+
+    private async Task<ResultDto> ImportSubscriberFromSevenSoftAsync(string nationalCode, string mobile)
+    {
+        SevenSubscriberResponse sevenMember;
+        try
+        {
+            sevenMember = await sevenSoftService.GetSubscriberByNationalCode(nationalCode);
+        }
+        catch
+        {
+            return ResultDto.Failure("در حال حاضر امکان استعلام از سامانه وجود ندارد. لطفا بعدا تلاش کنید.");
+        }
+
+        if (!HasSevenSoftProfile(sevenMember))
+            return ResultDto.Failure("امکان ثبت‌نام وجود ندارد. اطلاعات شما در سامانه فروش یافت نشد.");
+
+        var newSubscriber = MapSevenSoftSubscriber(sevenMember, nationalCode, mobile);
+        await dbContext.Subscribers.AddAsync(newSubscriber);
+        await dbContext.SaveChangesAsync();
+
+        try
+        {
+            await SaveVehiclesFromSevenSoftAsync(newSubscriber, sevenMember, nationalCode);
+        }
+        catch
+        {
+            // مشترک ذخیره شده؛ ارسال OTP نباید به‌خاطر خودرو متوقف شود
+        }
+
+        return ResultDto.Success("مشترک با موفقیت از سامانه فروش ثبت شد.");
+    }
+
+    private static bool HasSevenSoftProfile(SevenSubscriberResponse? member)
+    {
+        if (member is null)
+            return false;
+
+        return !string.IsNullOrWhiteSpace(member.UniqueId)
+            || !string.IsNullOrWhiteSpace(member.NationalCode)
+            || !string.IsNullOrWhiteSpace(member.Name)
+            || !string.IsNullOrWhiteSpace(member.FirstName);
+    }
+
+    private static Subscriber MapSevenSoftSubscriber(SevenSubscriberResponse sevenMember, string nationalCode, string mobile)
+    {
+        var name = FirstNonEmpty(sevenMember.Name, sevenMember.FirstName, "نامشخص");
+        var family = FirstNonEmpty(sevenMember.LastName, "نامشخص");
+
+        return new Subscriber
+        {
+            Name = Truncate(name, 50),
+            Family = Truncate(family, 50),
+            Address = Truncate(sevenMember.Address, 250),
+            BrithDate = sevenMember.BirthDate == default ? null : sevenMember.BirthDate,
+            BrithDatePersian = sevenMember.StrBirthDate,
+            FathersName = Truncate(sevenMember.FatherName, 50),
+            IdNumber = Truncate(sevenMember.IdNumber, 10),
+            EconomicCode = Truncate(sevenMember.EconomicCode?.ToString(), 17),
+            Phone = Truncate(sevenMember.Tel, 15),
+            NationalCode = FirstNonEmpty(sevenMember.NationalCode, nationalCode),
+            Mobile = FirstNonEmpty(mobile, sevenMember.Mobile),
+            Sex = MapGender(sevenMember.Gender),
+            SubscriberType = sevenMember.IsLegalSubscriber ? (int)SubscriberType.Hogooghi : (int)SubscriberType.Haghighi
+        };
+    }
+
+    private async Task SaveVehiclesFromSevenSoftAsync(Subscriber subscriber, SevenSubscriberResponse sevenMember, string nationalCode)
+    {
+        var existingVins = (await dbContext.VehicleModels
+                .Where(v => !string.IsNullOrEmpty(v.VinNumber))
+                .Select(v => v.VinNumber)
+                .ToListAsync())
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var vehicles = new List<VehicleModel>();
+
+        ChassisInformationResponse[] chassiList;
+        try
+        {
+            chassiList = await sevenSoftService.GetAllChassisInformation(nationalCode) ?? [];
+        }
+        catch
+        {
+            chassiList = [];
+        }
+
+        foreach (var item in chassiList.Where(c => !string.IsNullOrWhiteSpace(c.VinNumber)))
+        {
+            if (existingVins.Contains(item.VinNumber))
+                continue;
+
+            vehicles.Add(MapChassisToVehicle(item, subscriber.Id));
+            existingVins.Add(item.VinNumber);
+        }
+
+        if (!string.IsNullOrWhiteSpace(sevenMember.VinNumber) && !existingVins.Contains(sevenMember.VinNumber))
+        {
+            vehicles.Add(MapSevenMemberVehicle(sevenMember, subscriber.Id));
+        }
+
+        if (vehicles.Count == 0)
+            return;
+
+        var hasDefault = await dbContext.VehicleModels.AnyAsync(v => v.SubscriberId == subscriber.Id && v.IsDefault);
+        if (!hasDefault)
+            vehicles[0].IsDefault = true;
+
+        await dbContext.VehicleModels.AddRangeAsync(vehicles);
+        await dbContext.SaveChangesAsync();
+    }
+
+    private VehicleModel MapChassisToVehicle(ChassisInformationResponse item, int subscriberId)
+    {
+        var vehicle = new VehicleModel
+        {
+            BodyColor = item.BodyColor,
+            ChassisUsageTypeName = item.ChassisUsageTypeName,
+            FullSystem = item.FullSystem,
+            MotorNumber = item.MotorNumber,
+            ProductYear = item.ProductYear,
+            SelectedVehicleCommonName = item.SelectedVehicleCommonName,
+            SelectedVehicleDescription = item.SelectedVehicleDescription,
+            VehicleModelIdSevenSoft = item.VehicleModelId,
+            VinNumber = item.VinNumber,
+            IsDefault = false,
+            SubscriberId = subscriberId
+        };
+
+        AttachVehicleIfNeeded(vehicle);
+        return vehicle;
+    }
+
+    private VehicleModel MapSevenMemberVehicle(SevenSubscriberResponse sevenMember, int subscriberId)
+    {
+        var vehicle = new VehicleModel
+        {
+            BodyColor = sevenMember.BodyColor,
+            MotorNumber = sevenMember.MotorNumber?.ToString(),
+            ProductYear = sevenMember.ProductYear?.ToString(),
+            SelectedVehicleCommonName = sevenMember.ChassisVehicleModelName?.ToString(),
+            VinNumber = sevenMember.VinNumber,
+            IsDefault = false,
+            SubscriberId = subscriberId
+        };
+
+        AttachVehicleIfNeeded(vehicle);
+        return vehicle;
+    }
+
+    private void AttachVehicleIfNeeded(VehicleModel vehicle)
+    {
+        if (!vehicle.VehicleModelIdSevenSoft.HasValue)
+            return;
+
+        var exists = dbContext.VehicleAttachments
+            .Any(c => c.VehicleModelIdSevenSoft == vehicle.VehicleModelIdSevenSoft);
+        if (!exists)
+            vehicle.VehicleAttachment = new VehicleAttachment { VehicleModelIdSevenSoft = vehicle.VehicleModelIdSevenSoft };
+    }
+
+    private static string? MapGender(int gender)
+    {
+        if (Enum.IsDefined(typeof(GenderType), gender))
+            return ((GenderType)gender).GetEnumDescription();
+
+        return null;
+    }
+
+    private static string FirstNonEmpty(params string?[] values)
+    {
+        return values.FirstOrDefault(v => !string.IsNullOrWhiteSpace(v))?.Trim() ?? string.Empty;
+    }
+
+    private static string? Truncate(string? value, int maxLength)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return value;
+
+        value = value.Trim();
+        return value.Length <= maxLength ? value : value[..maxLength];
     }
 
     public async Task<ResultDto<SubscriberDto>> GetByNationalCodeAsync(string nationalCode)

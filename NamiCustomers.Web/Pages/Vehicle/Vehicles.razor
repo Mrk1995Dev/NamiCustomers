@@ -3,7 +3,7 @@
 @inject IVehicleService vehicleService
 @inject NavigationManager Navigation
 
-<PageTitle> خودروهای من | نامی خودرو</PageTitle>
+<PageTitle>خودروهای من | نامی خودرو</PageTitle>
 @if (isLoading)
 {
     <div class="loader-container">
@@ -14,35 +14,30 @@
 else
 {
 
-    <div class="page-content-wrapper py-3">
-        <div class="shop-pagination pb-3">
-            <div class="container">
-                <div class="card">
-                    <div class="card-body p-2">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <small class="ms-1">لیست خودروها</small>
-                            <NavLink href="/add/vehicle" class="btn m-1 btn-primary btn-sm">
-                                <i class="bi bi-plus"></i>
-                                افزودن خودرو
-                            </NavLink>
-                        </div>
-                    </div>
-                </div>
+    <div class="vehicle-page">
+        <div class="container">
+            <div class="vehicle-top">
+                <NavLink class="vehicle-back" href="/" title="بازگشت">
+                    <i class="bi bi-arrow-right"></i>
+                </NavLink>
+                <h1>خودروهای من</h1>
+                <button @onclick="AddVehicle" class="vehicle-add">
+                    + افزودن خودرو
+                </button>
             </div>
-        </div>
 
-        <div class="top-products-area product-list-wrap">
-            <div class="container">
+            @if (Model.Count == 0)
+            {
+                <section class="vehicle-empty">
+                    <i class="bi bi-car-front"></i>
+                    <h2>خودرویی ثبت نشده است</h2>
+                    <p>برای افزودن خودرو فقط شماره شاسی را وارد کنید.</p>
+                    <NavLink class="vehicle-empty__btn" href="/add/vehicle">افزودن خودرو</NavLink>
+                </section>
+            }
+            else
+            {
                 <div class="row g-3">
-                    @if (Model.Count == 0)
-                    {
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body text-center py-4">خودرویی ثبت نشده است</div>
-                            </div>
-                        </div>
-                    }
-
                     @foreach (var item in Model)
                     {
                         var vehicleId = item.Id ?? 0;
@@ -150,7 +145,7 @@ else
                         </div>
                     }
                 </div>
-            </div>
+            }
         </div>
     </div>
 }
@@ -251,4 +246,6 @@ else
         public double LastX;
         public bool ImageFailed;
     }
+
+    void AddVehicle() => Navigation.NavigateTo("/add/vehicle");
 }

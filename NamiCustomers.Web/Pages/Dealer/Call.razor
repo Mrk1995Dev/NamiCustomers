@@ -1,72 +1,117 @@
 ﻿@page "/call"
 @using NamiCustomers.Web.Services.LocalStorage
+@using NamiCustomers.Web.Services.Vehicle.Implementation
+@using NamiCustomers.Web.Utilities
 
 @inject NavigationManager Navigation
 @inject ISnackbar snackbar
 @inject IVehicleService vehicleService
 @inject ToastService toastService
-@inject ILocalStorageService localStorgeService
+@inject ILocalStorageService localStorageService
+@inject VehicleContext VehicleContext
+@implements IDisposable
 
 <PageTitle>فراخوان | نامی خودرو</PageTitle>
 
-@if (!isLoading)
+@if (isLoading)
 {
     <div class="loader-container">
         <MudProgressCircular Rounded="true" Size="MudBlazor.Size.Medium" StrokeWidth="5" Style="color: #ffffff;" Indeterminate="true" />
     </div>
 }
-
 else
 {
-    <br />
-
-    <div class="container direction-rtl">
-        <div class="card">
-            <div class="card-body p-2">
-                <div class="d-flex align-items-center justify-content-between">
-                    <small class="ms-1">اطلاعیه و فراخوان </small>
-                    <NavLink title="بازگشت" href="/"> <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i></NavLink>
-                </div>
+    <div class="call-page">
+        <div class="container">
+            <div class="call-top">
+                <NavLink class="call-back" href="/" title="بازگشت">
+                    <i class="bi bi-arrow-right"></i>
+                </NavLink>
+                <h1>اطلاعیه و فراخوان</h1>
+                <span class="call-top__spacer" aria-hidden="true"></span>
             </div>
-        </div>
-    </div>  
-    <br />
 
-    <div class="container">
-        <div class="card">
-            <div class="card-body">
-
-                @foreach (var (item, index) in Model.Select((item, index) => (item, index)))
+            @if (HasCalls)
+            {
+                <p class="call-lead">پیام‌های مربوط به شاسی انتخاب‌شده</p>
+                @if (!string.IsNullOrWhiteSpace(vinNumber))
                 {
-                    <div class="alert custom-alert-one alert-dark alert-dismissible fade show mb-0" role="alert">
-                        <i class="bi bi-check-circle"></i>
-                        @item
-                    </div>
-                    <br />
+                    <p class="call-vin" dir="ltr">@vinNumber</p>
                 }
-            </div>
+
+                <div class="call-list">
+                    @for (var i = 0; i < Model.Length; i++)
+                    {
+                        var item = Model[i];
+                        var number = i + 1;
+                        <article class="call-item" @key="number">
+                            <div class="call-item__head">
+                                <span class="call-item__num">@ToPersian(number)</span>
+                                <span class="call-item__label">فراخوان @ToPersian(number)</span>
+                                <i class="bi bi-megaphone call-item__icon" aria-hidden="true"></i>
+                            </div>
+                            <p>@item</p>
+                        </article>
+                    }
+                </div>
+            }
+            else
+            {
+                <section class="call-empty">
+                    <div class="call-empty__icon" aria-hidden="true">
+                        <i class="bi bi-megaphone"></i>
+                    </div>
+                    <h2>فراخوانی ثبت نشده</h2>
+                    <p>@EmptyMessage</p>
+                    @if (!string.IsNullOrWhiteSpace(vinNumber))
+                    {
+                        <span class="call-vin" dir="ltr">@vinNumber</span>
+                    }
+                </section>
+            }
         </div>
     </div>
 }
 
 @code {
     private string[] Model = Array.Empty<string>();
-    private bool isLoading;
-    private string vinNumber;
+    private bool isLoading = true;
+    private string? vinNumber;
+
+    private bool HasCalls
+        => Model.Length > 0 && (Model.Length > 1 || !IsDefaultEmptyMessage(Model[0]));
+
+    private string EmptyMessage
+        => Model.Length > 0 && !string.IsNullOrWhiteSpace(Model[0])
+            ? Model[0]
+            : "برای این خودرو فراخوانی ثبت نشده است.";
 
     protected override async Task OnInitializedAsync()
     {
-        isLoading = true;
+        VehicleContext.VinChanged += OnVinChanged;
         await LoadSubscriberCallsAsync();
-        isLoading = false;
     }
 
-    async Task LoadSubscriberCallsAsync()
+    private async void OnVinChanged()
     {
-        vinNumber = await localStorgeService.GetItemAsync("vin");
-
-        if(string.IsNullOrWhiteSpace(vinNumber))
+        if (VehicleContext.SelectedVin is null)
         {
+            return;
+        }
+
+        await LoadSubscriberCallsAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task LoadSubscriberCallsAsync()
+    {
+        isLoading = true;
+        Model = Array.Empty<string>();
+        vinNumber = await localStorageService.GetItemAsync("vin");
+
+        if (string.IsNullOrWhiteSpace(vinNumber))
+        {
+            isLoading = false;
             Navigation.NavigateTo("/");
             await toastService.Show(new ToastOption()
             {
@@ -74,32 +119,53 @@ else
                 ShowHeader = true,
                 Category = ToastCategory.Error,
                 Title = "فراخوان",
-                Content = "کاربر گرامی, لطفا خودرو خود را انتخاب بفرمایید.",
+                Content = "کاربر گرامی، لطفا خودرو خود را انتخاب بفرمایید.",
                 Animation = true
             });
-
             return;
         }
 
         var result = await vehicleService.GetSpecificCasesAsync(vinNumber);
         if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+        {
             Navigation.NavigateTo("/login");
+            return;
+        }
 
-
-        else if(result.Succeeded)
-            Model = result.Data;
-
+        if (result.Succeeded)
+        {
+            Model = result.Data ?? Array.Empty<string>();
+        }
         else
         {
-            await toastService.Show(new ToastOption()
-            {
-                ShowClose = true,
-                ShowHeader = true,
-                Category = ToastCategory.Error,
-                Title = "فراخوان",
-                Content = result.Message,
-                Animation = true
-            });
+            Model = string.IsNullOrWhiteSpace(result.Message)
+                ? Array.Empty<string>()
+                : new[] { result.Message };
         }
+
+        isLoading = false;
+    }
+
+    private static bool IsDefaultEmptyMessage(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return true;
+        }
+
+        return text.Contains("فراخوان موجود", StringComparison.Ordinal)
+            || text.Contains("موجود نمی‌باشد", StringComparison.Ordinal)
+            || text.Contains("موجود نمي‌باشد", StringComparison.Ordinal)
+            || text.Contains("هیچ رکوردی وجود ندارد", StringComparison.Ordinal);
+    }
+
+    private static string ToPersian(int number)
+    {
+        return PersianDigits.ToPersian(number.ToString());
+    }
+
+    public void Dispose()
+    {
+        VehicleContext.VinChanged -= OnVinChanged;
     }
 }

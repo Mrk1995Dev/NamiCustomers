@@ -22,18 +22,21 @@ namespace NamiCustomers.Web.Services.Auth.AuthServices.Implementation
 
         public async Task<ResultDto<SubscriberCodeDto>> LoginAsync(LoginRequestDto loginRequest)
         {
-            var result = new ResultDto<SubscriberCodeDto>("", false);
             var response = await httpClient.GetAsync($"Account/GetOtp?nationalCode={loginRequest.NationalCode}&mobile={loginRequest.PhoneNumber}");
-            if (response.IsSuccessStatusCode)
+            ResultDto<SubscriberCodeDto>? result = null;
+            try
             {
                 result = await response.Content.ReadFromJsonAsync<ResultDto<SubscriberCodeDto>>();
-                return new ResultDto<SubscriberCodeDto>(result.Message, result.Succeeded);
+            }
+            catch
+            {
             }
 
-            else
-            {
+            if (result is not null)
                 return new ResultDto<SubscriberCodeDto>(result.Message, result.Succeeded);
-            }
+
+            return ResultDto.Failure<SubscriberCodeDto>(
+                "امکان ثبت‌نام وجود ندارد. اطلاعات شما در سامانه فروش یافت نشد.");
         }
 
         public async Task<ResultDto<LoginResponseDto>> ConfirmOtpAsync(string otp)

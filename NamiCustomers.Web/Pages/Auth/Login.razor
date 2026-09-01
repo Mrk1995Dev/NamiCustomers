@@ -146,6 +146,7 @@
         }
 
         isSubmitting = true;
+        ErrorMessage = string.Empty;
         var result = await AuthService.LoginAsync(LoginModel);
         if(result.Succeeded)
         {
@@ -164,7 +165,19 @@
 
         else
         {
-            ErrorMessage = result?.Message ?? "";
+            ErrorMessage = string.IsNullOrWhiteSpace(result?.Message)
+                ? "امکان ثبت‌نام وجود ندارد. اطلاعات شما در سامانه فروش یافت نشد."
+                : result.Message;
+
+            await toastService.Show(new ToastOption()
+            {
+                ShowClose = true,
+                ShowHeader = true,
+                Category = ToastCategory.Error,
+                Title = "ورود",
+                Content = ErrorMessage,
+                Animation = true
+            });
         }
 
         isSubmitting = false;

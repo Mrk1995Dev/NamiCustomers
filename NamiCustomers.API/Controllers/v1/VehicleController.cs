@@ -44,6 +44,22 @@ public class VehicleController(IVehicleService vehicleService,
     [HttpPost("[action]")]
     public async Task<IActionResult> Register(VehicleModelDto vehicleModelDto)
     {
+        if (vehicleModelDto is null || string.IsNullOrWhiteSpace(vehicleModelDto.VinNumber))
+        {
+            return BadRequest(ResultDto.Failure<VehicleModelDto>("شماره شاسی را وارد کنید."));
+        }
+
+        vehicleModelDto.VinNumber = vehicleModelDto.VinNumber.Trim().ToUpperInvariant();
+
+        if (int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var subscriberId))
+            vehicleModelDto.SubscriberId = subscriberId;
+
+        if (string.IsNullOrWhiteSpace(vehicleModelDto.NationalCode))
+            vehicleModelDto.NationalCode = User.FindFirst("NationalCode")?.Value ?? string.Empty;
+
+        if (string.IsNullOrWhiteSpace(vehicleModelDto.Mobile))
+            vehicleModelDto.Mobile = User.FindFirst("Mobile")?.Value ?? string.Empty;
+
         var result = await vehicleService.RegisterAsync(vehicleModelDto);
         if (result.Succeeded)
         {
@@ -107,14 +123,16 @@ public class VehicleController(IVehicleService vehicleService,
         var nationalCodeOrEconomicCode = User.FindFirst("NationalCode")?.Value;
         var mobile = User.FindFirst("Mobile")?.Value;
         var result = await sevenSoftService.GetSpecificCases(vinNumber, nationalCodeOrEconomicCode, mobile);
-        if (result == null)
-            return BadRequest(ResultDto.Failure<string[]>(
-       Infrastucture.Properties.Resources.errNotFound));
+
+       // if (result == null)
+       //     return BadRequest(ResultDto.Failure<string[]>(
+       //Infrastucture.Properties.Resources.errNotFound));
 
         return Ok(ResultDto.Success<string[]>(mapper.Map<string[]>(result))
        );
 
     }
+
     [HttpGet("[action]")]
     public async Task<ResultDto<ActiveMainChassisGuaranteeResponse>> GetActiveMainChassisGuarantee([FromQuery] string vinNumber)
     {

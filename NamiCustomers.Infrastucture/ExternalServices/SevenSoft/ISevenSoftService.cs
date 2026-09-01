@@ -220,7 +220,7 @@ public interface ISevenSoftService
 
 public class SevenSoftService : ISevenSoftService
 {
-    
+
     public async Task<ResultDto<PartsPriceByChassisResponse[]>> GetPartsPriceByChassis(PartsPriceByChassisRequest getPartsPriceByChassisRequest)
     {
         try
@@ -298,11 +298,11 @@ public class SevenSoftService : ISevenSoftService
         try
         {
             var data = await RestUtility.PostData<InsertBookingResponse>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.InsertBooking, request);
-            return   ResultDto.Success<InsertBookingResponse>(data);
+            return ResultDto.Success<InsertBookingResponse>(data);
         }
         catch (Exception ex)
         {
-            return  ResultDto.Failure<InsertBookingResponse>(ex.Message);
+            return ResultDto.Failure<InsertBookingResponse>(ex.Message);
         }
     }
 
@@ -320,7 +320,17 @@ public class SevenSoftService : ISevenSoftService
     public async Task<string[]> GetSpecificCases(string? chassisVinNumber, string? nationalCodeOrEconomicCode, string? mobile)
     {
         string qStr = $"?ChassisVinNumber={chassisVinNumber}&NationalCodeOrEconomicCode={nationalCodeOrEconomicCode}&Mobile={mobile}";
-        return await RestUtility.GetData<string[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetSpecificCases, qStr);
+        var result = await RestUtility.GetData<string[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetSpecificCases, qStr);
+        if (result is null)
+        {
+            string[] message =
+            {
+                $"برای خودرو به شماره شاسی {chassisVinNumber} فراخوان موجود نمی‌باشد."
+            };
+            return message;
+        }
+
+        return result;
     }
 
     public async Task<ResultDto<ReceptionsPartsInformationByReceptionCodeResponse[]>> GetReceptionsPartsInformationByReceptionCode(string ReceptionCode, string NationalCodeOrEconomicCode)
@@ -328,12 +338,12 @@ public class SevenSoftService : ISevenSoftService
         try
         {
             var data = await RestUtility.GetData<ReceptionsPartsInformationByReceptionCodeResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetReceptionsPartsInformationByReceptionCode, $"?ReceptionCode={ReceptionCode}&NationalCodeOrEconomicCode={NationalCodeOrEconomicCode}");
-            return   ResultDto.Success<ReceptionsPartsInformationByReceptionCodeResponse[]>(data);
+            return ResultDto.Success<ReceptionsPartsInformationByReceptionCodeResponse[]>(data);
         }
         catch (Exception ex)
         {
 
-            return   ResultDto.Failure<ReceptionsPartsInformationByReceptionCodeResponse[]>(ex.Message);
+            return ResultDto.Failure<ReceptionsPartsInformationByReceptionCodeResponse[]>(ex.Message);
         }
 
     }
@@ -349,7 +359,7 @@ public class SevenSoftService : ISevenSoftService
         catch (Exception ex)
         {
 
-            return   ResultDto.Failure<ReceptionsInServicesInformationByReceptionCodeResponse[]>(ex.Message);
+            return ResultDto.Failure<ReceptionsInServicesInformationByReceptionCodeResponse[]>(ex.Message);
         }
 
     }
@@ -481,9 +491,9 @@ public class SevenSoftService : ISevenSoftService
             var data = await RestUtility.GetData<BookingResponse>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, string.Format(Resource7Soft.GetBooking, vinNumber), "");
             if (data != null)
             {
-                return   ResultDto.Success<BookingResponse>(data);
+                return ResultDto.Success<BookingResponse>(data);
             }
-            return   ResultDto.Failure<BookingResponse>(Infrastucture.Properties.Resources.errNotFound);
+            return ResultDto.Failure<BookingResponse>(Infrastucture.Properties.Resources.errNotFound);
         }
         catch (Exception ex)
         {
@@ -508,7 +518,7 @@ public class SevenSoftService : ISevenSoftService
         try
         {
             var data = await RestUtility.GetData<AllServerGroupTimeResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.GetAllServerGroupTime, $"?WorkShopTimeTableId={WorkShopTimeTableId}&ServerGroupId={ServerGroupId}");
-            return   ResultDto.Success<AllServerGroupTimeResponse[]>(data);
+            return ResultDto.Success<AllServerGroupTimeResponse[]>(data);
         }
         catch (Exception ex)
         {
@@ -532,11 +542,11 @@ public class SevenSoftService : ISevenSoftService
         try
         {
             var data = await RestUtility.GetData<AllServerGroupResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, Resource7Soft.GetAllServerGroup, $"?branchId={branchId}");
-            return   ResultDto.Success<AllServerGroupResponse[]>(data);
+            return ResultDto.Success<AllServerGroupResponse[]>(data);
         }
         catch (Exception ex)
         {
-            return   ResultDto.Failure<AllServerGroupResponse[]>(ex.Message);
+            return ResultDto.Failure<AllServerGroupResponse[]>(ex.Message);
         }
     }
     public async Task<ResultDto<BranchResponse[]>> GetAllBranch(Guid DealerId)

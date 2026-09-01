@@ -194,5 +194,24 @@ namespace NamiCustomers.Web.Services.Vehicle.Implementation
 
             return ResultDto.Failure<SpOrderingsBySubscriberDto[]>("دریافت لیست سفارشات با خطا مواجه شد.");
         }
+
+        public async Task<ResultDto<VehicleModelDto>> RegisterAsync(VehicleModelDto vehicleModelDto)
+        {
+            var response = await httpClient.PostAsJsonAsync("Vehicle/Register", vehicleModelDto);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return new ResultDto<VehicleModelDto>("", false)
+                {
+                    StatusCode = (int)HttpStatusCode.Unauthorized
+                };
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<ResultDto<VehicleModelDto>>();
+            if (result is not null)
+                return result;
+
+            return ResultDto.Failure<VehicleModelDto>("ثبت خودرو با خطا مواجه شد.");
+        }
     }
 }
