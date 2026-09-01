@@ -135,9 +135,11 @@ public class VehicleController(IVehicleService vehicleService,
         return result;
     }
     [HttpGet("[action]")]
-    public async Task<SpOrderingsBySubscriberResponse[]> GetSpOrderingsBySubscriber(string chassisVinNumber, string nationalCodeOrEconomicCode)
+    public async Task<SpOrderingsBySubscriberResponse[]> GetSpOrderingsBySubscriber(
+        [FromQuery] string chassisVinNumber,
+        [FromQuery] string nationalCodeOrEconomicCode)
     {
-        var result = await sevenSoftService.GetSpOrderingsBySubscriber(chassisVinNumber,nationalCodeOrEconomicCode);
+        var result = await sevenSoftService.GetSpOrderingsBySubscriber(chassisVinNumber, nationalCodeOrEconomicCode);
         return result;
     }
     [HttpGet("[action]")]

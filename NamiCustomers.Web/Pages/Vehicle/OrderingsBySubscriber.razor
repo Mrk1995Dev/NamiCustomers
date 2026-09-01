@@ -1,0 +1,392 @@
+@page "/Vehicle/OrderingsBySubscriber"
+
+@using System.Text.Json
+@using NamiCustomers.Web.Services.Subscriber.Contract
+@using NamiCustomers.Web.Utilities
+
+@inject IVehicleService vehicleService
+@inject ISubscriberService subscriberService
+@inject NavigationManager Navigation
+@inject ISnackbar snackbar
+
+<PageTitle>لیست سفارشات | نامی خودرو</PageTitle>
+
+@if (isLoading)
+{
+    <div class="loader-container">
+        <MudProgressCircular Rounded="true" Size="MudBlazor.Size.Medium" StrokeWidth="5" Style="color: #ffffff;" Indeterminate="true" />
+    </div>
+}
+else
+{
+    <div class="book-page">
+        <div class="container">
+            <div class="book-top">
+                @if (selectedVehicle is null)
+                {
+                    <span aria-hidden="true"></span>
+                    <h1>لیست سفارشات</h1>
+                    <NavLink class="book-back" href="/" title="بازگشت">
+                        <i class="bi bi-arrow-right"></i>
+                    </NavLink>
+                }
+                else
+                {
+                    <span aria-hidden="true"></span>
+                    <h1>سفارش‌های خودرو</h1>
+                    <button type="button" class="book-back" title="بازگشت به خودروها" @onclick="BackToVehicles">
+                        <i class="bi bi-arrow-right"></i>
+                    </button>
+                }
+            </div>
+
+            @if (selectedVehicle is null)
+            {
+                <p class="book-lead">خودرو را انتخاب کنید تا سفارش‌های همان شاسی نمایش داده شود.</p>
+
+                @if (vehicles.Count == 0)
+                {
+                    <section class="book-empty">
+                        <i class="bi bi-car-front"></i>
+                        <h2>خودرویی ثبت نشده است</h2>
+                        <p>برای مشاهده سفارش‌ها ابتدا یک خودرو با شماره شاسی اضافه کنید.</p>
+                        <NavLink class="book-empty__btn" href="/vehicle">خودروهای من</NavLink>
+                    </section>
+                }
+                else
+                {
+                    <div class="book-vehicle-grid">
+                        @foreach (var item in vehicles)
+                        {
+                            var vehicleId = item.Id ?? 0;
+                            <button type="button"
+                                    class="book-vehicle"
+                                    @key="vehicleId"
+                                    disabled="@isSelecting"
+                                    @onclick="() => SelectVehicleAsync(item)">
+                                <div class="book-vehicle__media">
+                                    <img src="@GetVehicleImage(item)"
+                                         alt="@Display(item.SelectedVehicleCommonName)"
+                                         @onerror="() => OnImageError(vehicleId)" />
+                                    @if (item.IsDefault)
+                                    {
+                                        <span class="book-vehicle__badge">پیش‌فرض</span>
+                                    }
+                                </div>
+                                <div class="book-vehicle__body">
+                                    <div class="book-vehicle__info">
+                                        <h2>@Display(item.SelectedVehicleCommonName)</h2>
+                                        @if (!string.IsNullOrWhiteSpace(item.VinNumber))
+                                        {
+                                            <p class="book-vehicle__vin">@item.VinNumber</p>
+                                        }
+                                        else
+                                        {
+                                            <p class="book-vehicle__vin is-missing">شماره شاسی ثبت نشده</p>
+                                        }
+                                        <ul class="book-vehicle__meta">
+                                            @if (!string.IsNullOrWhiteSpace(item.ProductYear))
+                                            {
+                                                <li>@ToPersian(item.ProductYear)</li>
+                                            }
+                                            @if (!string.IsNullOrWhiteSpace(item.BodyColor))
+                                            {
+                                                <li>@item.BodyColor</li>
+                                            }
+                                            @if (!string.IsNullOrWhiteSpace(item.ChassisUsageTypeName))
+                                            {
+                                                <li>@item.ChassisUsageTypeName</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                    <i class="bi bi-chevron-left book-vehicle__chevron" aria-hidden="true"></i>
+                                </div>
+                            </button>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <section class="book-selected">
+                    <div>
+                        <strong>@Display(selectedVehicle.SelectedVehicleCommonName)</strong>
+                        <span>@Display(selectedVehicle.VinNumber)</span>
+                    </div>
+                    <img src="@GetVehicleImage(selectedVehicle)"
+                         alt="@Display(selectedVehicle.SelectedVehicleCommonName)"
+                         @onerror="() => OnImageError(selectedVehicle.Id ?? 0)" />
+                </section>
+
+                @if (orders.Count == 0)
+                {
+                    <section class="book-empty">
+                        <i class="bi bi-bag-x"></i>
+                        <h2>سفارشی پیدا نشد</h2>
+                        <p>@(string.IsNullOrWhiteSpace(errorMessage) ? "برای این شاسی سفارشی ثبت نشده است." : errorMessage)</p>
+                    </section>
+                }
+                else
+                {
+                    <div class="book-order-list">
+                        @foreach (var order in orders)
+                        {
+                            <article class="book-card" @key="order.UniqueId ?? order.Code.ToString()">
+                                <div class="book-card__status">
+                                    <span>@Display(order.OrderStatusTypeLocalizedName)</span>
+                                    <strong dir="ltr">@Text(order.SporderingCode)</strong>
+                                </div>
+                                <ul class="book-specs">
+                                    <li>
+                                        <span>تاریخ سفارش</span>
+                                        <strong>@ToPersian(Display(order.StrDate))</strong>
+                                    </li>
+                                    <li>
+                                        <span>ساعت</span>
+                                        <strong>@ToPersian(Display(order.StrTime))</strong>
+                                    </li>
+                                    @if (!string.IsNullOrWhiteSpace(order.OrderTypeLocalizedName))
+                                    {
+                                        <li>
+                                            <span>نوع سفارش</span>
+                                            <strong>@order.OrderTypeLocalizedName</strong>
+                                        </li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(order.OrderReceiveTypeLocalizedName))
+                                    {
+                                        <li>
+                                            <span>نحوه دریافت</span>
+                                            <strong>@order.OrderReceiveTypeLocalizedName</strong>
+                                        </li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(order.PaymentTypeLocalizedName))
+                                    {
+                                        <li>
+                                            <span>نوع پرداخت</span>
+                                            <strong>@order.PaymentTypeLocalizedName</strong>
+                                        </li>
+                                    }
+                                    @if (HasText(order.DealerName))
+                                    {
+                                        <li>
+                                            <span>عاملیت</span>
+                                            <strong>@Text(order.DealerName)</strong>
+                                        </li>
+                                    }
+                                    @if (HasText(order.BranchName))
+                                    {
+                                        <li>
+                                            <span>شعبه</span>
+                                            <strong>@Text(order.BranchName)</strong>
+                                        </li>
+                                    }
+                                    <li>
+                                        <span>مبلغ نهایی</span>
+                                        <strong>@ToPersian(order.EndFee.ToString("N0"))</strong>
+                                    </li>
+                                    @if (order.Discount > 0)
+                                    {
+                                        <li>
+                                            <span>تخفیف</span>
+                                            <strong>@ToPersian(order.Discount.ToString("N0"))</strong>
+                                        </li>
+                                    }
+                                    @if (order.Sent)
+                                    {
+                                        <li>
+                                            <span>تاریخ ارسال</span>
+                                            <strong>@ToPersian(Display(order.StrSentDate))</strong>
+                                        </li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(order.PersonnelName))
+                                    {
+                                        <li>
+                                            <span>کارشناس</span>
+                                            <strong>@order.PersonnelName</strong>
+                                        </li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(order.StatusDescription))
+                                    {
+                                        <li class="is-block">
+                                            <span>توضیحات وضعیت</span>
+                                            <strong>@order.StatusDescription</strong>
+                                        </li>
+                                    }
+                                </ul>
+                            </article>
+                        }
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
+
+@code {
+    private List<VehicleModelDto> vehicles = new();
+    private List<SpOrderingsBySubscriberDto> orders = new();
+    private readonly HashSet<int> failedImages = new();
+    private VehicleModelDto? selectedVehicle;
+    private string? subscriberNationalCode;
+    private bool isLoading;
+    private bool isSelecting;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+
+        var vehiclesTask = vehicleService.GetSubscriberVehicleAsync();
+        var subscriberTask = subscriberService.GetSubscriberInfoAsync();
+        await Task.WhenAll(vehiclesTask, subscriberTask);
+
+        var vehicleResult = vehiclesTask.Result;
+        if (vehicleResult.StatusCode == (int)HttpStatusCode.Unauthorized)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        if (vehicleResult.Succeeded)
+        {
+            vehicles = vehicleResult.Data ?? new();
+        }
+        else
+        {
+            vehicles = new();
+            snackbar.Add(vehicleResult.Message ?? "دریافت لیست خودروها با خطا مواجه شد.", Severity.Error);
+        }
+
+        var subscriberResult = subscriberTask.Result;
+        if (subscriberResult.Succeeded)
+        {
+            subscriberNationalCode = subscriberResult.Data?.NationalCode;
+        }
+
+        isLoading = false;
+    }
+
+    private async Task SelectVehicleAsync(VehicleModelDto vehicle)
+    {
+        if (isSelecting)
+        {
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(vehicle.VinNumber))
+        {
+            snackbar.Add("برای این خودرو شماره شاسی ثبت نشده است.", Severity.Warning);
+            return;
+        }
+
+        var nationalCode = FirstNonEmpty(vehicle.NationalCode, subscriberNationalCode);
+        if (string.IsNullOrWhiteSpace(nationalCode))
+        {
+            snackbar.Add("کد ملی برای این خودرو یافت نشد.", Severity.Warning);
+            return;
+        }
+
+        isSelecting = true;
+        isLoading = true;
+        errorMessage = null;
+        orders = new();
+
+        var result = await vehicleService.GetSpOrderingsBySubscriberAsync(vehicle.VinNumber, nationalCode);
+
+        if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        selectedVehicle = vehicle;
+
+        if (result.Succeeded)
+        {
+            orders = result.Data?.ToList() ?? new();
+        }
+        else
+        {
+            errorMessage = result.Message;
+        }
+
+        isLoading = false;
+        isSelecting = false;
+    }
+
+    private void BackToVehicles()
+    {
+        selectedVehicle = null;
+        orders = new();
+        errorMessage = null;
+    }
+
+    private void OnImageError(int id)
+    {
+        if (failedImages.Add(id))
+        {
+            StateHasChanged();
+        }
+    }
+
+    private string GetVehicleImage(VehicleModelDto item)
+    {
+        var id = item.Id ?? 0;
+        if (failedImages.Contains(id))
+        {
+            return "img/vehicles/toyota-rav4.png";
+        }
+
+        var path = FirstNonEmpty(item.VehicleAttachment?.ImagePath, item.VehicleAttachment?.ThumbnailPath);
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return "img/vehicles/toyota-rav4.png";
+        }
+
+        if (path.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith("data:", StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith("/")
+            || path.StartsWith("img/", StringComparison.OrdinalIgnoreCase))
+        {
+            return path;
+        }
+
+        return $"img/vehicles/{path}";
+    }
+
+    private static string Display(string? value)
+        => string.IsNullOrWhiteSpace(value) ? "—" : value;
+
+    private static string ToPersian(string? value)
+        => string.IsNullOrWhiteSpace(value) ? "—" : PersianDigits.ToPersian(value);
+
+    private static string? FirstNonEmpty(params string?[] values)
+        => values.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value));
+
+    private static bool HasText(object? value)
+        => Text(value) != "—";
+
+    private static string Text(object? value)
+    {
+        if (value is null)
+        {
+            return "—";
+        }
+
+        if (value is JsonElement element)
+        {
+            return element.ValueKind switch
+            {
+                JsonValueKind.String when !string.IsNullOrWhiteSpace(element.GetString()) => element.GetString()!,
+                JsonValueKind.Number => element.ToString(),
+                JsonValueKind.True => "بله",
+                JsonValueKind.False => "خیر",
+                _ => "—"
+            };
+        }
+
+        var text = value.ToString();
+        return string.IsNullOrWhiteSpace(text) ? "—" : text;
+    }
+}

@@ -12,5 +12,6 @@ namespace NamiCustomers.Web.Services.Vehicle.Contract
         Task<ResultDto<PartsPriceByChassisResponse[]>> GetPartsPriceByChassisAsync(PartsPriceByChassisRequest getPartsPriceByChassisRequest);
         Task<ResultDto<ServicesPriceResponse[]>> GetServicesPriceList(ServicesPriceRequest request);
         Task<ResultDto<string[]>> GetSpecificCasesAsync(string vinNumber);
+        Task<ResultDto<SpOrderingsBySubscriberDto[]>> GetSpOrderingsBySubscriberAsync(string chassisVinNumber, string nationalCodeOrEconomicCode);
     }
 }

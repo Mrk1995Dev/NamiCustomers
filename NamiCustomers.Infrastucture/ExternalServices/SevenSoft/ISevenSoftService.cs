@@ -275,11 +275,6 @@ public class SevenSoftService : ISevenSoftService
             return ResultDto.Failure<ServicesPriceResponse[]>(ex.Message);
         }
     }
-
-
-
-
-
     public async Task<DealerResponse[]> GetDealers()
     {
         return await RestUtility.GetData<DealerResponse[]>(Infrastucture.Properties.Resource7Soft.BaseUrlCrm, Resource7Soft.GetDealers, "");
@@ -495,9 +490,6 @@ public class SevenSoftService : ISevenSoftService
             return ResultDto.Failure<BookingResponse>(ex.Message);
         }
     }
-
-
-
     public async Task<bool> CancelBooking(Guid bookingId, string number)
     {
         using var client = new HttpClient();
@@ -511,7 +503,6 @@ public class SevenSoftService : ISevenSoftService
         }
         return false;
     }
-
     public async Task<ResultDto<AllServerGroupTimeResponse[]>> GetAllServerGroupTime(Guid WorkShopTimeTableId, Guid ServerGroupId)
     {
         try

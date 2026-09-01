@@ -172,5 +172,27 @@ namespace NamiCustomers.Web.Services.Vehicle.Implementation
                 return result;
             }
         }
+
+        public async Task<ResultDto<SpOrderingsBySubscriberDto[]>> GetSpOrderingsBySubscriberAsync(string chassisVinNumber, string nationalCodeOrEconomicCode)
+        {
+            var url = $"Vehicle/GetSpOrderingsBySubscriber?chassisVinNumber={Uri.EscapeDataString(chassisVinNumber)}&nationalCodeOrEconomicCode={Uri.EscapeDataString(nationalCodeOrEconomicCode)}";
+            var response = await httpClient.GetAsync(url);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return new ResultDto<SpOrderingsBySubscriberDto[]>("", false)
+                {
+                    StatusCode = (int)HttpStatusCode.Unauthorized
+                };
+            }
+
+            if (response.IsSuccessStatusCode)
+            {
+                var data = await response.Content.ReadFromJsonAsync<SpOrderingsBySubscriberDto[]>();
+                return ResultDto.Success(data ?? Array.Empty<SpOrderingsBySubscriberDto>());
+            }
+
+            return ResultDto.Failure<SpOrderingsBySubscriberDto[]>("دریافت لیست سفارشات با خطا مواجه شد.");
+        }
     }
 }
