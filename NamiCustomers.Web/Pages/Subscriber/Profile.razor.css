@@ -233,7 +233,7 @@
 }
 
 .profile-specs li.is-block {
-    flex-direction: column;
+    flex-direction: row;
     align-items: stretch;
 }
 
