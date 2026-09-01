@@ -2,10 +2,13 @@
 
 @using NamiCustomers.Web.Services.Subscriber.Contract
 @using NamiCustomers.Web.Services.Subscriber.Dto
+@using NamiCustomers.Web.Utilities
 
 @inject NavigationManager Navigation
 @inject ISnackbar snackbar
 @inject ISubscriberService subscriberService
+@inject IJSRuntime JS
+@inject ToastService toastService
 
 <PageTitle>پروفایل کاربری | نامی خودرو</PageTitle>
 
@@ -15,95 +18,250 @@
         <MudProgressCircular Rounded="true" Size="MudBlazor.Size.Medium" StrokeWidth="5" Style="color: #ffffff;" Indeterminate="true" />
     </div>
 }
-
 else
 {
-    <div class="container direction-rtl" style="margin-top: 5.2rem;">
-        <div class="card">
-            <div class="card-body p-2">
-                <div class="d-flex align-items-center justify-content-between">
-                    <small class="ms-1">پروفایل کاربری</small>
-                    <NavLink title="بازگشت" href="/">
-                        <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i>
-                    </NavLink>
-                </div>
+    <div class="profile-page">
+        <div class="container">
+            <div class="profile-top">
+                <NavLink class="profile-back" href="/" title="بازگشت">
+                    <i class="bi bi-arrow-right"></i>
+                </NavLink>
+                <h1>پروفایل کاربری</h1>
+                <span class="profile-top__spacer" aria-hidden="true"></span>
             </div>
-        </div>
-    </div>
-    <br />
-    <div class="container">
-        <!-- User Information-->
-        <div class="card user-info-card mb-3">
-            <div class="card-body d-flex align-items-center">
-                <div class="user-profile me-3">
-                    <img src="sitetmeplate/img/bg-img/2.jpg" alt="">
-                    <i class="bi bi-pencil"></i>
-                </div>
-                <div class="user-info">
-                    <div class="d-flex align-items-center">
-                        <h5 class="mb-1">@model.Name - @model.Family</h5>
-                        @* <span class="badge bg-warning ms-2 rounded-pill">Pro</span> *@
-                    </div>
-                    <p class="mb-0">مشتری</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="card user-data-card">
-            <div class="card-body">
 
-                <div class="form-group mb-3">
-                    <label class="form-label" style="color: #fff !important;">نام</label>
-                    <input class="form-control" id="@model.Name" type="text" style="color: #000 !important;" @bind-value="@model.Name" placeholder="@model.Name" disabled>
+            <section class="profile-hero">
+                <div class="profile-avatar" aria-hidden="true">@Initials</div>
+                <h2 class="profile-hero__name">@Display(FullName)</h2>
+                <p class="profile-hero__role">مشتری باشگاه نامی خودرو</p>
+                <div class="profile-hero__chips">
+                    @if (!string.IsNullOrWhiteSpace(model.CityName))
+                    {
+                        <span class="profile-chip">
+                            <i class="bi bi-geo-alt"></i>
+                            @model.CityName
+                        </span>
+                    }
+                    <span class="profile-chip">
+                        <i class="bi bi-car-front"></i>
+                        @ToPersian(VehicleCount.ToString()) خودرو
+                    </span>
                 </div>
+            </section>
 
-                <div class="form-group mb-3">
-                    <label class="form-label" style="color: #fff !important;">نام خانوادگی</label>
-                    <input class="form-control" id="@model.Family" type="text" style="color: #000 !important;" @bind-value="@model.Family" placeholder="@model.Family" disabled>
-                </div>
-                <div class="form-group mb-3">
-                    <label class="form-label" style="color: #fff !important;">کدملی</label>
-                    <input class="form-control" type="text" style="color: #000 !important;" value="@model.NationalCode" placeholder="@model.NationalCode" disabled>
-                </div>
-                <div class="form-group mb-3">
-                    <label class="form-label" style="color: #fff !important;">شماره همراه</label>
-                    <input class="form-control" id="@model.Mobile" type="text" style="color: #000 !important;" value=" @model.Mobile" placeholder="@model.Mobile" disabled>
-                </div>
-                <div class="form-group mb-3">
-                    <label class="form-label" style="color: #fff !important;">تلفن منزل</label>
-                    <input class="form-control" type="text" style="color: #000 !important;" value="@model.Phone" placeholder="model.Phone" disabled>
-                </div>
-                <div class="form-group mb-3">
-                    <label class="form-label" style="color: #fff !important;">نشانی محل سکونت</label>
-                    <input class="form-control" id="@model.Address" type="text" style="color: #000 !important;" value=" @model.Address" placeholder="@model.Address" disabled>
-                </div>
+            <section class="profile-card">
+                <h3 class="profile-card__title">اطلاعات فردی</h3>
+                <ul class="profile-specs">
+                    <li>
+                        <span>
+                            <i class="bi bi-person"></i>
+                            نام
+                        </span>
+                        <strong>@Display(model.Name)</strong>
+                    </li>
+                    <li>
+                        <span>
+                            <i class="bi bi-person-badge"></i>
+                            نام خانوادگی
+                        </span>
+                        <strong>@Display(model.Family)</strong>
+                    </li>
+                    <li>
+                        <span>
+                            <i class="bi bi-credit-card-2-front"></i>
+                            کد ملی
+                        </span>
+                        <div class="profile-value">
+                            <strong class="ltr">@ToPersian(Display(model.NationalCode))</strong>
+                            @if (!string.IsNullOrWhiteSpace(model.NationalCode))
+                            {
+                                <button type="button" class="profile-copy" title="کپی کد ملی" @onclick="CopyNationalCodeAsync">
+                                    <i class="bi @(CopiedField == "national" ? "bi-check-lg" : "bi-copy")"></i>
+                                </button>
+                            }
+                        </div>
+                    </li>
+                    @if (!string.IsNullOrWhiteSpace(model.Sex))
+                    {
+                        <li>
+                            <span>
+                                <i class="bi bi-gender-ambiguous"></i>
+                                جنسیت
+                            </span>
+                            <strong>@model.Sex</strong>
+                        </li>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(model.BrithDatePersian))
+                    {
+                        <li>
+                            <span>
+                                <i class="bi bi-calendar3"></i>
+                                تاریخ تولد
+                            </span>
+                            <strong>@ToPersian(model.BrithDatePersian)</strong>
+                        </li>
+                    }
+                </ul>
+            </section>
 
-            </div>
+            <section class="profile-card">
+                <h3 class="profile-card__title">اطلاعات تماس</h3>
+                <ul class="profile-specs">
+                    <li>
+                        <span>
+                            <i class="bi bi-phone"></i>
+                            شماره همراه
+                        </span>
+                        <div class="profile-value">
+                            @if (!string.IsNullOrWhiteSpace(model.Mobile))
+                            {
+                                <a class="profile-link ltr" href="@MobileTelHref">@ToPersian(model.Mobile)</a>
+                                <button type="button" class="profile-copy" title="کپی شماره همراه" @onclick="CopyMobileAsync">
+                                    <i class="bi @(CopiedField == "mobile" ? "bi-check-lg" : "bi-copy")"></i>
+                                </button>
+                            }
+                            else
+                            {
+                                <strong>—</strong>
+                            }
+                        </div>
+                    </li>
+                    <li>
+                        <span>
+                            <i class="bi bi-telephone"></i>
+                            تلفن منزل
+                        </span>
+                        <div class="profile-value">
+                            @if (!string.IsNullOrWhiteSpace(model.Phone))
+                            {
+                                <a class="profile-link ltr" href="@PhoneTelHref">@ToPersian(model.Phone)</a>
+                            }
+                            else
+                            {
+                                <strong>—</strong>
+                            }
+                        </div>
+                    </li>
+                    @if (!string.IsNullOrWhiteSpace(model.CityName))
+                    {
+                        <li>
+                            <span>
+                                <i class="bi bi-geo-alt"></i>
+                                شهر
+                            </span>
+                            <strong>@model.CityName</strong>
+                        </li>
+                    }
+                    <li class="is-block">
+                        <span>
+                            <i class="bi bi-house"></i>
+                            نشانی محل سکونت
+                        </span>
+                        <strong>@Display(model.Address)</strong>
+                    </li>
+                </ul>
+            </section>
         </div>
     </div>
 }
 
-
 @code {
     private SubscriberDto model = new();
     private bool isLoading;
+    private string? CopiedField;
+
+    private string FullName
+        => string.Join(" ", new[] { model.Name, model.Family }.Where(value => !string.IsNullOrWhiteSpace(value)));
+
+    private int VehicleCount => model.VehicleModels?.Count ?? 0;
+
+    private string MobileTelHref => $"tel:{model.Mobile}";
+
+    private string PhoneTelHref => $"tel:{model.Phone}";
+
+    private string Initials
+    {
+        get
+        {
+            var first = FirstLetter(model.Name);
+            var last = FirstLetter(model.Family);
+            var initials = $"{first}{last}";
+            return string.IsNullOrWhiteSpace(initials) ? "ن" : initials;
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
         isLoading = true;
         var result = await subscriberService.GetSubscriberInfoAsync();
+
         if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+        {
             Navigation.NavigateTo("/login");
+            return;
+        }
 
-        else if (result.Succeeded)
-            model = result.Data;
-
+        if (result.Succeeded)
+        {
+            model = result.Data ?? new();
+        }
         else
         {
-
+            snackbar.Add(result.Message ?? "دریافت اطلاعات پروفایل با خطا مواجه شد.", Severity.Error);
         }
 
         isLoading = false;
     }
+
+    private Task CopyNationalCodeAsync() => CopyAsync(model.NationalCode, "national");
+
+    private Task CopyMobileAsync() => CopyAsync(model.Mobile, "mobile");
+
+    private async Task CopyAsync(string? value, string field)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return;
+        }
+
+        try
+        {
+            await JS.InvokeVoidAsync("navigator.clipboard.writeText", value);
+            CopiedField = field;
+            await toastService.Show(new ToastOption()
+            {
+                ShowClose = true,
+                ShowHeader = true,
+                Category = ToastCategory.Success,
+                Title = "اعلان",
+                Content = "کپی شد.",
+                Animation = true
+            });
+            await Task.Delay(2000);
+            if (CopiedField == field)
+            {
+                CopiedField = null;
+            }
+        }
+        catch
+        {
+            //
+        }
+    }
+
+    private static string FirstLetter(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return string.Empty;
+        }
+
+        return value.Trim()[0].ToString();
+    }
+
+    private static string Display(string? value)
+        => string.IsNullOrWhiteSpace(value) ? "—" : value.Trim();
+
+    private static string ToPersian(string? value)
+        => string.IsNullOrWhiteSpace(value) ? "—" : PersianDigits.ToPersian(value);
 }

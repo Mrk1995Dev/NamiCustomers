@@ -3,6 +3,8 @@ using NamiCustomers.Web.Services.Account.Contract;
 using NamiCustomers.Web.Services.Auth.AuthServices.Contract;
 using NamiCustomers.Web.Services.Auth.AuthServices.Implementation;
 using NamiCustomers.Web.Services.Auth.TokenServices;
+using NamiCustomers.Web.Services.Booking.Contract;
+using NamiCustomers.Web.Services.Booking.Implementation;
 using NamiCustomers.Web.Services.CustomerService.Implementation;
 using NamiCustomers.Web.Services.Dealer.Contract;
 using NamiCustomers.Web.Services.Dealer.Implementation;
@@ -46,6 +48,12 @@ namespace NamiCustomers.Web
             services.AddHttpClient<IVehicleService, VehicleService>("ApiWithAuth", configureClient =>
             {
                 configureClient.BaseAddress = new Uri(baseUrl);
+            });
+
+            services.AddScoped<IBookingService, BookingService>(sp =>
+            {
+                var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient("ApiWithAuth");
+                return new BookingService(httpClient);
             });
 
             services.AddHttpClient<IDealerService, DealerService>("ApiWithAuth", configureClient =>

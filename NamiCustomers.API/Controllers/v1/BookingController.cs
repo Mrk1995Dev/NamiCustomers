@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using NamiCustomers.Application.Services.Book.Contract;
 using NamiCustomers.Infrastucture.ExternalServices.SevenSoft.Dtos;
 
@@ -13,6 +12,12 @@ namespace NamiCustomers.API.Controllers.v1
     {
         [HttpGet("[action]")]
         public async Task<IActionResult> GetBook([FromQuery] string vinNumber)
+        {
+            return Ok(await bookingService.GetBookingAsync(vinNumber));
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetBookByVinNumber([FromQuery] string vinNumber)
         {
             return Ok(await bookingService.GetBookingAsync(vinNumber));
         }
