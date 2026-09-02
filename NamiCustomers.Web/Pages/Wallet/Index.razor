@@ -1,0 +1,286 @@
+@page "/wallet"
+
+@using NamiCustomers.Web.Services.Wallet.Contract
+@using NamiCustomers.Web.Services.Wallet.Dto
+@using NamiCustomers.Web.Utilities
+
+@inject IWalletService WalletService
+@inject ISnackbar snackbar
+
+<PageTitle>کیف پول | نامی خودرو</PageTitle>
+
+@if (isLoading)
+{
+    <div class="loader-container">
+        <MudProgressCircular Rounded="true" Size="MudBlazor.Size.Medium" StrokeWidth="5" Style="color: #ffffff;" Indeterminate="true" />
+    </div>
+}
+else
+{
+    <div class="wallet-page">
+        <div class="container">
+            <div class="wallet-top">
+                <span class="wallet-top__spacer" aria-hidden="true"></span>
+                <h1>کیف پول</h1>
+                <NavLink class="wallet-back" href="/" title="بازگشت">
+                    <i class="bi bi-arrow-right"></i>
+                </NavLink>
+            </div>
+
+            <section class="wallet-total">
+                <span class="wallet-total__label">مجموع موجودی</span>
+                <strong class="wallet-total__value">@FormatAmount(overview.TotalBalance) <small>تومان</small></strong>
+                <span class="wallet-total__badge">نمایش آزمایشی</span>
+            </section>
+
+            <div class="wallet-cards">
+                @foreach (var account in overview.Accounts)
+                {
+                    var isActive = selectedType == account.Type;
+                    <article class="wallet-card wallet-card--@CssType(account.Type) @(isActive ? "is-active" : "")"
+                             @key="account.Type">
+                        <button type="button" class="wallet-card__select" @onclick="() => SelectWallet(account.Type)">
+                            <div class="wallet-card__head">
+                                <span class="wallet-card__icon" aria-hidden="true">
+                                    <i class="bi @(account.Type == WalletType.Gift ? "bi-gift" : "bi-wallet2")"></i>
+                                </span>
+                                <div>
+                                    <h2>@account.Title</h2>
+                                    @if (!string.IsNullOrWhiteSpace(account.ExpiresAtPersian))
+                                    {
+                                        <p>اعتبار تا @ToPersian(account.ExpiresAtPersian)</p>
+                                    }
+                                    else
+                                    {
+                                        <p>@account.Description</p>
+                                    }
+                                </div>
+                            </div>
+                            <div class="wallet-card__balance">
+                                <span>موجودی</span>
+                                <strong>@FormatAmount(account.Balance) <small>تومان</small></strong>
+                            </div>
+                        </button>
+
+                        @if (account.CanCharge)
+                        {
+                            <button type="button" class="wallet-card__charge" @onclick="OpenChargeSheet">
+                                افزایش موجودی
+                                <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                            </button>
+                        }
+                        else
+                        {
+                            <p class="wallet-card__note">فقط برای خدمات و قطعات قابل استفاده است</p>
+                        }
+                    </article>
+                }
+            </div>
+
+            <section class="wallet-history">
+                <div class="wallet-history__head">
+                    <h3>تراکنش‌ها</h3>
+                    <div class="wallet-tabs" role="tablist">
+                        <button type="button" class="@(selectedType is null ? "is-active" : "")" @onclick="() => SelectWallet(null)">همه</button>
+                        <button type="button" class="@(selectedType == WalletType.Toman ? "is-active" : "")" @onclick="() => SelectWallet(WalletType.Toman)">تومانی</button>
+                        <button type="button" class="@(selectedType == WalletType.Gift ? "is-active" : "")" @onclick="() => SelectWallet(WalletType.Gift)">هدیه</button>
+                    </div>
+                </div>
+
+                @if (VisibleTransactions.Count == 0)
+                {
+                    <div class="wallet-empty">
+                        <i class="bi bi-receipt"></i>
+                        <p>تراکنشی برای این کیف پول ثبت نشده است.</p>
+                    </div>
+                }
+                else
+                {
+                    <ul class="wallet-tx">
+                        @foreach (var item in VisibleTransactions)
+                        {
+                            <li class="@(item.IsCredit ? "is-credit" : "is-debit")" @key="item.Id">
+                                <span class="wallet-tx__icon" aria-hidden="true">
+                                    <i class="bi @(item.IsCredit ? "bi-arrow-down-left" : "bi-arrow-up-right")"></i>
+                                </span>
+                                <div class="wallet-tx__body">
+                                    <strong>@item.Title</strong>
+                                    <span>@item.Description</span>
+                                    <small>@ToPersian(item.DatePersian) — @ToPersian(item.TimePersian) · @WalletLabel(item.WalletType)</small>
+                                </div>
+                                <em>@(item.IsCredit ? "+" : "−")@FormatAmount(item.Amount)</em>
+                            </li>
+                        }
+                    </ul>
+                }
+            </section>
+        </div>
+    </div>
+}
+
+@if (showChargeSheet)
+{
+    <div class="wallet-sheet" role="dialog" aria-modal="true" aria-labelledby="charge-title">
+        <button type="button" class="wallet-sheet__backdrop" @onclick="CloseChargeSheet" aria-label="بستن"></button>
+        <div class="wallet-sheet__panel">
+            <div class="wallet-sheet__handle" aria-hidden="true"></div>
+            <h2 id="charge-title">افزایش موجودی تومانی</h2>
+            <p>مبلغ را انتخاب کنید. پرداخت فعلاً آزمایشی است.</p>
+
+            <div class="wallet-amounts">
+                @foreach (var amount in ChargePresets)
+                {
+                    <button type="button"
+                            class="@(selectedChargeAmount == amount ? "is-active" : "")"
+                            @onclick="() => SelectChargeAmount(amount)">
+                        @FormatAmount(amount)
+                    </button>
+                }
+            </div>
+
+            <label class="wallet-custom" for="custom-amount">مبلغ دلخواه (تومان)</label>
+            <input id="custom-amount"
+                   class="wallet-input"
+                   type="text"
+                   inputmode="numeric"
+                   maxlength="12"
+                   placeholder="مثلاً ۵۰۰۰۰۰"
+                   value="@customAmountDisplay"
+                   disabled="@isCharging"
+                   @oninput="OnCustomAmountInput" />
+
+            @if (!string.IsNullOrWhiteSpace(chargeError))
+            {
+                <div class="wallet-alert">@chargeError</div>
+            }
+
+            <button type="button" class="wallet-submit" disabled="@isCharging" @onclick="ChargeAsync">
+                @if (isCharging)
+                {
+                    <span class="wallet-submit__spinner" aria-hidden="true"></span>
+                    <span>در حال ثبت...</span>
+                }
+                else
+                {
+                    <span>تأیید شارژ</span>
+                    <i class="bi bi-check2" aria-hidden="true"></i>
+                }
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    private static readonly long[] ChargePresets = [500_000, 1_000_000, 2_000_000, 5_000_000];
+
+    private WalletOverviewDto overview = new();
+    private WalletType? selectedType;
+    private bool isLoading = true;
+    private bool showChargeSheet;
+    private bool isCharging;
+    private long selectedChargeAmount;
+    private string customAmountDisplay = string.Empty;
+    private string chargeError = string.Empty;
+
+    private List<WalletTransactionDto> VisibleTransactions
+        => selectedType is null
+            ? overview.Transactions
+            : overview.Transactions.Where(item => item.WalletType == selectedType).ToList();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await WalletService.GetOverviewAsync();
+        if (result.Succeeded && result.Data is not null)
+        {
+            overview = result.Data;
+        }
+        else
+        {
+            snackbar.Add(result.Message ?? "دریافت کیف پول با خطا مواجه شد.", Severity.Error);
+        }
+
+        isLoading = false;
+    }
+
+    private void SelectWallet(WalletType? type) => selectedType = type;
+
+    private void OpenChargeSheet()
+    {
+        selectedType = WalletType.Toman;
+        selectedChargeAmount = ChargePresets[0];
+        customAmountDisplay = string.Empty;
+        chargeError = string.Empty;
+        showChargeSheet = true;
+    }
+
+    private void CloseChargeSheet()
+    {
+        if (isCharging)
+        {
+            return;
+        }
+
+        showChargeSheet = false;
+    }
+
+    private void SelectChargeAmount(long amount)
+    {
+        selectedChargeAmount = amount;
+        customAmountDisplay = string.Empty;
+        chargeError = string.Empty;
+    }
+
+    private void OnCustomAmountInput(ChangeEventArgs e)
+    {
+        var raw = PersianDigits.ToEnglish(e.Value?.ToString());
+        customAmountDisplay = string.IsNullOrWhiteSpace(raw) ? string.Empty : PersianDigits.ToPersian(raw);
+        if (long.TryParse(raw, out var amount))
+        {
+            selectedChargeAmount = amount;
+            chargeError = string.Empty;
+        }
+        else if (string.IsNullOrWhiteSpace(raw))
+        {
+            selectedChargeAmount = 0;
+        }
+    }
+
+    private async Task ChargeAsync()
+    {
+        if (isCharging)
+        {
+            return;
+        }
+
+        if (selectedChargeAmount <= 0)
+        {
+            chargeError = "مبلغ شارژ را انتخاب یا وارد کنید.";
+            return;
+        }
+
+        isCharging = true;
+        var result = await WalletService.ChargeTomanAsync(selectedChargeAmount);
+        isCharging = false;
+
+        if (!result.Succeeded || result.Data is null)
+        {
+            chargeError = result.Message ?? "شارژ کیف پول انجام نشد.";
+            return;
+        }
+
+        overview = result.Data;
+        showChargeSheet = false;
+        selectedType = WalletType.Toman;
+        snackbar.Add(string.IsNullOrWhiteSpace(result.Message) ? "شارژ با موفقیت ثبت شد." : result.Message, Severity.Success);
+    }
+
+    private static string CssType(WalletType type) => type == WalletType.Gift ? "gift" : "toman";
+
+    private static string WalletLabel(WalletType type) => type == WalletType.Gift ? "هدیه" : "تومانی";
+
+    private static string FormatAmount(long amount)
+        => PersianDigits.ToPersian(Math.Abs(amount).ToString("N0"));
+
+    private static string ToPersian(string? value)
+        => string.IsNullOrWhiteSpace(value) ? "—" : PersianDigits.ToPersian(value);
+}

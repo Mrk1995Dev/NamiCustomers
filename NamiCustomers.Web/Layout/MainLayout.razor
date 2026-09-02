@@ -104,6 +104,11 @@
                             <i class="bi bi-car-front"></i> خودروهای من
                         </NavLink>
                     </li>
+                    <li>
+                        <NavLink class="nav-link text-dark" href="/wallet">
+                            <i class="bi bi-wallet2"></i> کیف پول
+                        </NavLink>
+                    </li>
 
                     <li>
                         <a href="#" class="nav-url">
@@ -326,23 +331,29 @@
     protected override async Task OnInitializedAsync()
     {
         isLoading = true;
-        await localStorageService.RemoveItemAsync("vin");
-        var result = await VehicleService.GetSubscriberVehicleAsync();
-        if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
-            NavigationManager.NavigateTo("/login");
-
-        else if (result.Succeeded)
+        try
         {
-            SelectedVin = null;
-            Vins = result.Data;
-        }
+            await localStorageService.RemoveItemAsync("vin");
+            var result = await VehicleService.GetSubscriberVehicleAsync();
+            if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+            {
+                NavigationManager.NavigateTo("/login");
+                return;
+            }
 
-        else
+            if (result.Succeeded)
+            {
+                SelectedVin = null;
+                Vins = result.Data;
+            }
+        }
+        catch
         {
-
         }
-
-        isLoading = false;
+        finally
+        {
+            isLoading = false;
+        }
     }
 
 }

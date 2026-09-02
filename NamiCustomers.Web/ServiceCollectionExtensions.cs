@@ -12,6 +12,8 @@ using NamiCustomers.Web.Services.LocalStorage;
 using NamiCustomers.Web.Services.Subscriber.Contract;
 using NamiCustomers.Web.Services.Vehicle.Contract;
 using NamiCustomers.Web.Services.Vehicle.Implementation;
+using NamiCustomers.Web.Services.Wallet.Contract;
+using NamiCustomers.Web.Services.Wallet.Implementation;
 
 namespace NamiCustomers.Web
 {
@@ -70,6 +72,8 @@ namespace NamiCustomers.Web
             {
                 configureClient.BaseAddress = new Uri(baseUrl);
             });
+
+            services.AddScoped<IWalletService, MockWalletService>();
 
             return services;
         }
