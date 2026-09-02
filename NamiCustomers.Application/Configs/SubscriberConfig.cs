@@ -1,5 +1,4 @@
-﻿
-using NamiCustomers.Domain.Entities.Subscribers;
+﻿using NamiCustomers.Domain.Entities.Subscribers;
 
 namespace NamiCustomers.Application.Configs;
 

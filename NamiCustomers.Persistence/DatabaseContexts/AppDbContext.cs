@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using NamiCustomers.Domain.Entities.Account;
+using NamiCustomers.Domain.Entities.Dealers;
 using NamiCustomers.Domain.Entities.Subscribers;
 using NamiCustomers.Domain.Entities.Vehicles;
-using NamiVIP.Application.Configs;
 using System.Data;
 using System.Reflection;
 
@@ -16,7 +16,9 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<VehicleAttachment> VehicleAttachments { get; set; }
     public DbSet<Subscriber> Subscribers { get; set; }
     public DbSet<SubscriberCode> SubscriberCodes { get; set; }
+    public DbSet<Province> Provinces { get; set; }
     public DbSet<City> Cities { get; set; }
+    public DbSet<Dealer> Dealers { get; set; }
     public DbSet<Domain.Entities.Account.ApplicationUser> Users { get; set; }
     public DbSet<Appointment> Appointments { get; set; }
     public DbSet<VehicleModel> VehicleModels { get; set; }
@@ -56,12 +58,12 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
                 modelBuilder.Entity<Subscriber>().HasQueryFilter(b => !EF.Property<bool>(b, "IsRemoved"));
                 modelBuilder.Entity<VehicleModel>().HasQueryFilter(b => !EF.Property<bool>(b, "IsRemoved"));
             }
-
-
         }
 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(SubscriberConfig)));
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(ApplicationUserTokenConfig)));
+        //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(CityConfig)));
+        //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(ProvinceConfig)));
+        //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(DealerConfig)));
 
         base.OnModelCreating(modelBuilder);
         // Seed initial roles
