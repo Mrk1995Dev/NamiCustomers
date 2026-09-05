@@ -43,6 +43,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\Book\Dto\" />
-    <Folder Include="Services\Book\Implementation\" />
   </ItemGroup>
 </Project>
