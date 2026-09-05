@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NamiCustomers.Application.Services.Accounts;
 using NamiCustomers.Application.Services.Appointments;
 using NamiCustomers.Application.Services.Book.Contract;
+using NamiCustomers.Application.Services.Book.Implementation;
 using NamiCustomers.Application.Services.Dealers;
 using NamiCustomers.Application.Services.Facades;
 using NamiCustomers.Application.Services.Subscribers;
