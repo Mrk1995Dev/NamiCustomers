@@ -15,7 +15,11 @@
         <div class="text-center">
             <img class="login-intro-img" src="/SiteTmeplate/img/bg-img/logo.png" alt="نامی خودرو" />
             <h3 class="otp-title">کد تایید را وارد نمایید</h3>
-            <p class="otp-hint mb-4">کد تایید به شماره همراه <strong>@MobileNumber</strong> ارسال گردید.</p>
+            <p class="otp-hint mb-4">
+                کد تایید به شماره همراه
+                <strong class="otp-phone" dir="ltr">@MobileNumber</strong>
+                ارسال گردید.
+            </p>
         </div>
 
         <div class="otp-verify-form mt-2">
@@ -52,27 +56,28 @@
                     <i class="bi bi-arrow-left" aria-hidden="true"></i>
                 }
             </button>
-        </div>
 
-        <div class="login-meta-data text-center">
-            <p class="otp-resend mt-3 mb-0">
-                کد تایید را دریافت نکرده‌اید؟
-                <span class="otp-sec @(secondsRemaining <= 10 && secondsRemaining > 0 ? "otp-sec-urgent" : null)">
-                    @if (secondsRemaining > 0)
-                    {
-                        @($"{secondsRemaining / 60}:{(secondsRemaining % 60):D2} تا دریافت مجدد کد")
-                    }
-                    else
-                    {
-                        <button type="button"
-                                class="resendOTP"
-                                disabled="@isResending"
-                                @onclick="ResendOtpAsync">
-                            @(isResending ? "در حال ارسال..." : "دریافت مجدد کد")
-                        </button>
-                    }
-                </span>
-            </p>
+            <div class="otp-resend-wrap text-center">
+                <p class="otp-resend mt-3 mb-0">
+                    کد تایید را دریافت نکرده‌اید؟
+                    <span class="otp-sec @(secondsRemaining <= 10 && secondsRemaining > 0 ? "otp-sec-urgent" : null)">
+                        @if (secondsRemaining > 0)
+                        {
+                            <span class="otp-countdown" dir="ltr">@($"{secondsRemaining / 60}:{(secondsRemaining % 60):D2}")</span>
+                            <span> تا دریافت مجدد کد</span>
+                        }
+                        else
+                        {
+                            <button type="button"
+                                    class="resendOTP"
+                                    disabled="@isResending"
+                                    @onclick="ResendOtpAsync">
+                                @(isResending ? "در حال ارسال..." : "دریافت مجدد کد")
+                            </button>
+                        }
+                    </span>
+                </p>
+            </div>
         </div>
     </div>
 </div>

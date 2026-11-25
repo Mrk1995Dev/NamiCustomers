@@ -30,7 +30,10 @@ if (resendOTP) {
                 });
             }
         } else {
-            resendOTP.innerHTML = formattedTime + " تا دریافت مجدد کد";
+            resendOTP.innerHTML =
+                '<span class="otp-countdown" dir="ltr" style="display:inline-block;direction:ltr;unicode-bidi:isolate;">' +
+                formattedTime +
+                "</span> تا دریافت مجدد کد";
         }
 
         if (optcount <= 10) {
