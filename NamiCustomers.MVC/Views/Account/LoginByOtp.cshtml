@@ -91,6 +91,10 @@
                 <div class="login-meta-data text-center">
                     <p class="mt-3 mb-0">کد تایید را دریافت نکرده اید؟ <span class="otp-sec" id="resendOTP"></span></p>
                 </div>
+                <form id="resendOtpForm" asp-action="GetOtp" asp-controller="Account" method="post" class="d-none">
+                    <input type="hidden" name="mobile" value="@Model.Data?.Mobile" />
+                    <input type="hidden" name="nationalcode" value="@Model.Data?.NationalCode" />
+                </form>
             </div>
         </div>
     <!-- All JavaScript Files -->

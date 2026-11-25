@@ -85,7 +85,7 @@ public class AccountController(IAuthService authService, IUrlHelperFactory urlHe
         }
 
 
-        return View("~/Views/Account/LoginByOtp.cshtml", ResultDto.Success<LoginResponseDto>(new LoginResponseDto { Mobile = mobile }));
+        return View("~/Views/Account/LoginByOtp.cshtml", ResultDto.Success<LoginResponseDto>(new LoginResponseDto { Mobile = mobile, NationalCode = nationalcode }));
     }
     [HttpGet]
     public async Task<IActionResult> LoginByOtp(string mobile)

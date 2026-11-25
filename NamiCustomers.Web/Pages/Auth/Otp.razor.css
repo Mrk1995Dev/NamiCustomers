@@ -126,6 +126,26 @@
     font-size: 13px;
 }
 
+.otp-sec-urgent {
+    color: #ff6b6b;
+    font-weight: 700;
+}
+
+.otp-resend .resendOTP {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.otp-resend .resendOTP:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
 @media (max-width: 380px) {
     .otp-boxes {
         gap: 6px;

@@ -151,6 +151,7 @@ public static class ServicesRegisteration
         });
 
         services.Configure<List<SmsSetting>>(configuration.GetSection("SmsSettings"));
+        services.Configure<SmsServiceOptions>(configuration.GetSection("SmsService"));
         services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
         services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
         return services;
