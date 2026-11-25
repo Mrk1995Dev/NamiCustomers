@@ -34,8 +34,17 @@ namespace NamiCustomers.Application
 
             services.AddScoped<JiringSmsService>();
             services.AddScoped<KaraShobSmsService>();
+            services.AddScoped<SmsService>();
             services.AddScoped<ISmsService>(serviceProvider =>
             {
+                // Prefer Winno SmsService when ApiKey/BaseUrl are configured.
+                var smsOptions = configuration.GetSection("SmsService");
+                if (!string.IsNullOrWhiteSpace(smsOptions["BaseUrl"]) &&
+                    !string.IsNullOrWhiteSpace(smsOptions["ApiKey"]))
+                {
+                    return serviceProvider.GetRequiredService<SmsService>();
+                }
+
                 var smsProviders = configuration.ReadSmsSettings();
                 var provider = smsProviders.Single(c => c.IsDefault);
                 return provider.ProviderName switch
@@ -46,6 +55,7 @@ namespace NamiCustomers.Application
                 };
             });
             #endregion
+
 
 
             return services;

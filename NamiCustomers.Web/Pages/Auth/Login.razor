@@ -160,7 +160,7 @@
                 Animation = true
             });
 
-            Navigation.NavigateTo($"/otp?mobile={LoginModel.Email}");
+            Navigation.NavigateTo($"/otp?mobile={Uri.EscapeDataString(LoginModel.PhoneNumber)}&nationalCode={Uri.EscapeDataString(LoginModel.NationalCode)}");
         }
 
         else

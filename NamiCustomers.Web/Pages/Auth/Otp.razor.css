@@ -10,9 +10,19 @@
     line-height: 1.8;
 }
 
-.otp-hint strong {
+.otp-hint strong,
+.otp-hint .otp-phone {
     color: #ffffff;
     letter-spacing: 0.04em;
+}
+
+/* Keep phone digits LTR inside RTL Persian copy */
+.otp-phone {
+    display: inline-block;
+    direction: ltr;
+    unicode-bidi: isolate;
+    text-align: left;
+    white-space: nowrap;
 }
 
 .otp-boxes {
@@ -121,9 +131,40 @@
     }
 }
 
+.otp-resend-wrap {
+    margin-top: 0.25rem;
+}
+
 .otp-resend {
     color: rgba(255, 255, 255, 0.72);
     font-size: 13px;
+}
+
+.otp-countdown {
+    display: inline-block;
+    direction: ltr;
+    unicode-bidi: isolate;
+    font-variant-numeric: tabular-nums;
+}
+
+.otp-sec-urgent {
+    color: #ff6b6b;
+    font-weight: 700;
+}
+
+.otp-resend .resendOTP {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.otp-resend .resendOTP:disabled {
+    opacity: 0.6;
+    cursor: wait;
 }
 
 @media (max-width: 380px) {

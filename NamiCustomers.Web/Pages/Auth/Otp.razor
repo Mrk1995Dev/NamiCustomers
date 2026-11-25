@@ -1,6 +1,8 @@
 ﻿@page "/otp"
 @attribute [AllowAnonymous]
 @using NamiCustomers.Web.Utilities
+@using NamiCustomers.Web.Services.Auth.AuthServices.Dto
+@implements IDisposable
 @layout LoginLayout
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
@@ -13,7 +15,11 @@
         <div class="text-center">
             <img class="login-intro-img" src="/SiteTmeplate/img/bg-img/logo.png" alt="نامی خودرو" />
             <h3 class="otp-title">کد تایید را وارد نمایید</h3>
-            <p class="otp-hint mb-4">کد تایید به شماره همراه <strong>@MobileNumber</strong> ارسال گردید.</p>
+            <p class="otp-hint mb-4">
+                کد تایید به شماره همراه
+                <strong class="otp-phone" dir="ltr">@MobileNumber</strong>
+                ارسال گردید.
+            </p>
         </div>
 
         <div class="otp-verify-form mt-2">
@@ -50,26 +56,57 @@
                     <i class="bi bi-arrow-left" aria-hidden="true"></i>
                 }
             </button>
-        </div>
 
-        <div class="login-meta-data text-center">
-            <p class="otp-resend mt-3 mb-0">کد تایید را دریافت نکرده‌اید؟ <span class="otp-sec" id="resendOTP"></span></p>
+            <div class="otp-resend-wrap text-center">
+                <p class="otp-resend mt-3 mb-0">
+                    کد تایید را دریافت نکرده‌اید؟
+                    <span class="otp-sec @(secondsRemaining <= 10 && secondsRemaining > 0 ? "otp-sec-urgent" : null)">
+                        @if (secondsRemaining > 0)
+                        {
+                            <span class="otp-countdown" dir="ltr">@($"{secondsRemaining / 60}:{(secondsRemaining % 60):D2}")</span>
+                            <span> تا دریافت مجدد کد</span>
+                        }
+                        else
+                        {
+                            <button type="button"
+                                    class="resendOTP"
+                                    disabled="@isResending"
+                                    @onclick="ResendOtpAsync">
+                                @(isResending ? "در حال ارسال..." : "دریافت مجدد کد")
+                            </button>
+                        }
+                    </span>
+                </p>
+            </div>
         </div>
     </div>
 </div>
 
 @code {
     private const int DigitCount = 5;
+    private const int ResendCooldownSeconds = 120;
 
     [Parameter]
     [SupplyParameterFromQuery(Name = "mobile")]
     public string? MobileNumber { get; set; }
 
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "nationalCode")]
+    public string? NationalCode { get; set; }
+
     private string[] digits = Enumerable.Repeat(string.Empty, DigitCount).ToArray();
     private ElementReference[] inputRefs = new ElementReference[DigitCount];
     private bool isSubmitting = false;
+    private bool isResending = false;
     private string? otpCode;
     private bool focusedOnFirstRender;
+    private int secondsRemaining = ResendCooldownSeconds;
+    private System.Threading.Timer? resendTimer;
+
+    protected override void OnInitialized()
+    {
+        StartResendTimer();
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -89,6 +126,103 @@
 
             await FocusBox(0);
         }
+    }
+
+    private void StartResendTimer()
+    {
+        resendTimer?.Dispose();
+        secondsRemaining = ResendCooldownSeconds;
+        resendTimer = new System.Threading.Timer(_ =>
+        {
+            if (secondsRemaining <= 0)
+            {
+                resendTimer?.Dispose();
+                return;
+            }
+
+            secondsRemaining--;
+            _ = InvokeAsync(StateHasChanged);
+        }, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
+    }
+
+    private async Task ResendOtpAsync()
+    {
+        if (secondsRemaining > 0 || isResending)
+            return;
+
+        if (string.IsNullOrWhiteSpace(MobileNumber) || string.IsNullOrWhiteSpace(NationalCode))
+        {
+            await toastService.Show(new ToastOption()
+            {
+                ShowClose = true,
+                ShowHeader = true,
+                Category = ToastCategory.Error,
+                Title = "ارسال مجدد",
+                Content = "اطلاعات ورود ناقص است. لطفا دوباره وارد شوید.",
+                Animation = true
+            });
+            NavigationManager.NavigateTo("/login");
+            return;
+        }
+
+        isResending = true;
+        try
+        {
+            var result = await authService.LoginAsync(new LoginRequestDto
+            {
+                NationalCode = NationalCode,
+                PhoneNumber = MobileNumber
+            });
+
+            if (result.Succeeded)
+            {
+                StartResendTimer();
+                await toastService.Show(new ToastOption()
+                {
+                    ShowClose = true,
+                    ShowHeader = true,
+                    Category = ToastCategory.Success,
+                    Title = "ارسال مجدد",
+                    Content = $"کد ورود به شماره {MobileNumber} ارسال شد.",
+                    Animation = true
+                });
+            }
+            else
+            {
+                await toastService.Show(new ToastOption()
+                {
+                    ShowClose = true,
+                    ShowHeader = true,
+                    Category = ToastCategory.Error,
+                    Title = "ارسال مجدد",
+                    Content = string.IsNullOrWhiteSpace(result.Message)
+                        ? "ارسال مجدد کد با خطا مواجه شد."
+                        : result.Message,
+                    Animation = true
+                });
+            }
+        }
+        catch
+        {
+            await toastService.Show(new ToastOption()
+            {
+                ShowClose = true,
+                ShowHeader = true,
+                Category = ToastCategory.Error,
+                Title = "ارسال مجدد",
+                Content = "خطا در برقراری ارتباط با سرور",
+                Animation = true
+            });
+        }
+        finally
+        {
+            isResending = false;
+        }
+    }
+
+    public void Dispose()
+    {
+        resendTimer?.Dispose();
     }
 
     private async Task OnDigitInput(int index, ChangeEventArgs e)
