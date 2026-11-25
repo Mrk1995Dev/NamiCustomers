@@ -29,8 +29,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamiCustomers.MVC", "NamiCu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamiCustomers.Abstractions", "NamiCustomers.Abstractions\NamiCustomers.Abstractions.csproj", "{C26131E5-F510-43DD-B06F-28005E335ED1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamiCustomers.BackOffice", "NamiCustomers.BackOffice\NamiCustomers.BackOffice.csproj", "{B8E4C1A2-9F3D-4E6B-8A1C-7D2E5F0A4B91}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,10 +71,6 @@ Global
 		{C26131E5-F510-43DD-B06F-28005E335ED1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C26131E5-F510-43DD-B06F-28005E335ED1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C26131E5-F510-43DD-B06F-28005E335ED1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B8E4C1A2-9F3D-4E6B-8A1C-7D2E5F0A4B91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B8E4C1A2-9F3D-4E6B-8A1C-7D2E5F0A4B91}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B8E4C1A2-9F3D-4E6B-8A1C-7D2E5F0A4B91}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B8E4C1A2-9F3D-4E6B-8A1C-7D2E5F0A4B91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,7 +85,6 @@ Global
 		{D192945A-C02E-20BE-EE35-F5E3F9C40505} = {7E62B90F-CB7C-42C6-A528-08D00F37260C}
 		{D20E4B51-A622-4724-B126-697779C1E1EB} = {7E62B90F-CB7C-42C6-A528-08D00F37260C}
 		{C26131E5-F510-43DD-B06F-28005E335ED1} = {F32EE3DC-67C3-4B53-B6F9-17C3032EBD23}
-		{B8E4C1A2-9F3D-4E6B-8A1C-7D2E5F0A4B91} = {7E62B90F-CB7C-42C6-A528-08D00F37260C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3838700-8F11-4C49-ABA1-2A4851C1FA52}
