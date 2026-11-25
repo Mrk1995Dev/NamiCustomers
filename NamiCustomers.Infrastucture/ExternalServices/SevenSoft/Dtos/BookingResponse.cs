@@ -19,6 +19,7 @@ public string BookingFirstName { get; set; }
 public string BookingLastName { get; set; }
 public object BookingNationalCode { get; set; }
 public string BookingVinNumber { get; set; }
+public string Last8DigitsOfChassisNo { get; set; }
 public object BookingPersonnelReliefLocation { get; set; }
 public object RepairPlaceCode { get; set; }
 public string BookingVehicleModelId { get; set; }

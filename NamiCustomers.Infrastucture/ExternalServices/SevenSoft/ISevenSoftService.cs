@@ -178,11 +178,11 @@ public interface ISevenSoftService
     /// <returns></returns>
     Task<bool> CancelBooking(Guid bookingId, string vinNumber);
     /// <summary>
-    /// مشاهده لیست رزرو اینترنت
+    /// مشاهده لیست رزرو اینترنت (GetBooking)
     /// </summary>
-    /// <param name="vinNumber"></param>
-    /// <returns></returns>
-    Task<ResultDto<BookingResponse>> GetBooking(string vinNumber);
+    /// <param name="vinNumber">شماره شاسی کامل یا ارقام انتهایی</param>
+    /// <param name="bookingCode">شماره نوبت‌دهی (اختیاری؛ در صورت ارسال به Sevensoft و فیلتر محلی اعمال می‌شود)</param>
+    Task<ResultDto<BookingResponse>> GetBooking(string vinNumber, string? bookingCode = null);
     Task<ChassisInformationResponse[]> GetAllChassisInformation(string nationalCode);
     /// <summary>
     /// قطعات
@@ -484,21 +484,78 @@ public class SevenSoftService : ISevenSoftService
             return new(false, ex.Message);
         }
     }
-    public async Task<ResultDto<BookingResponse>> GetBooking(string vinNumber)
+    public async Task<ResultDto<BookingResponse>> GetBooking(string vinNumber, string? bookingCode = null)
     {
         try
         {
-            var data = await RestUtility.GetData<BookingResponse>(Infrastucture.Properties.Resource7Soft.BaseUrlBooking, string.Format(Resource7Soft.GetBooking, vinNumber), "");
-            if (data != null)
+            if (string.IsNullOrWhiteSpace(vinNumber))
             {
-                return ResultDto.Success<BookingResponse>(data);
+                return ResultDto.Failure<BookingResponse>("شماره شاسی الزامی است.");
             }
-            return ResultDto.Failure<BookingResponse>(Infrastucture.Properties.Resources.errNotFound);
+
+            var path = string.Format(
+                Resource7Soft.GetBooking,
+                Uri.EscapeDataString(vinNumber.Trim()));
+
+            if (!string.IsNullOrWhiteSpace(bookingCode))
+            {
+                path += $"&BookingCode={Uri.EscapeDataString(bookingCode.Trim())}";
+            }
+
+            var data = await RestUtility.GetData<BookingResponse>(
+                Infrastucture.Properties.Resource7Soft.BaseUrlBooking,
+                path,
+                "");
+
+            if (data == null || string.IsNullOrWhiteSpace(data.UniqueId))
+            {
+                return ResultDto.Failure<BookingResponse>(Infrastucture.Properties.Resources.errNotFound);
+            }
+
+            if (!string.IsNullOrWhiteSpace(bookingCode) &&
+                !BookingMatchesCode(data, bookingCode))
+            {
+                return ResultDto.Failure<BookingResponse>(Infrastucture.Properties.Resources.errNotFound);
+            }
+
+            if (!BookingMatchesChassis(data, vinNumber))
+            {
+                return ResultDto.Failure<BookingResponse>(Infrastucture.Properties.Resources.errNotFound);
+            }
+
+            return ResultDto.Success<BookingResponse>(data);
         }
         catch (Exception ex)
         {
             return ResultDto.Failure<BookingResponse>(ex.Message);
         }
+    }
+
+    private static bool BookingMatchesCode(BookingResponse booking, string bookingCode)
+    {
+        var code = bookingCode.Trim();
+        return string.Equals(booking.BookingCode?.Trim(), code, StringComparison.OrdinalIgnoreCase)
+               || string.Equals(booking.ReversedBookingCode?.Trim(), code, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool BookingMatchesChassis(BookingResponse booking, string chassis)
+    {
+        var needle = chassis.Trim();
+        if (string.IsNullOrEmpty(needle))
+            return false;
+
+        var vin = booking.BookingVinNumber?.Trim() ?? string.Empty;
+        var last8 = booking.Last8DigitsOfChassisNo?.Trim();
+        if (string.IsNullOrWhiteSpace(last8) && vin.Length >= 8)
+            last8 = vin[^8..];
+
+        // If Sevensoft returned no chassis fields, trust its VinNumber query filter.
+        if (string.IsNullOrEmpty(vin) && string.IsNullOrWhiteSpace(last8))
+            return true;
+
+        return vin.Equals(needle, StringComparison.OrdinalIgnoreCase)
+               || (!string.IsNullOrWhiteSpace(last8) && last8.Equals(needle, StringComparison.OrdinalIgnoreCase))
+               || vin.EndsWith(needle, StringComparison.OrdinalIgnoreCase);
     }
     public async Task<bool> CancelBooking(Guid bookingId, string number)
     {

@@ -1,0 +1,275 @@
+.vstatus-page {
+    padding: 4.6rem 0 5.6rem;
+    direction: rtl;
+}
+
+.vstatus-top {
+    display: grid;
+    grid-template-columns: 40px 1fr 40px;
+    align-items: center;
+    direction: ltr !important;
+    min-height: 40px;
+    margin-bottom: 16px;
+}
+
+.vstatus-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 800;
+    line-height: 1.4;
+    text-align: center;
+    grid-column: 2;
+}
+
+.vstatus-back {
+    grid-column: 3;
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff !important;
+    text-decoration: none;
+}
+
+.vstatus-back i {
+    color: #fff !important;
+}
+
+.vstatus-card,
+.vstatus-empty,
+.vstatus-item {
+    border-radius: 18px;
+    background: rgb(34 34 34);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.vstatus-card {
+    padding: 20px 16px 18px;
+}
+
+.vstatus-card__hint {
+    margin: 0 0 16px;
+    font-size: 13px;
+    opacity: 0.68;
+    text-align: center;
+}
+
+.vstatus-field {
+    margin-bottom: 20px;
+}
+
+.vstatus-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    text-align: right;
+}
+
+.vstatus-field__box {
+    position: relative;
+}
+
+.vstatus-field__icon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.vstatus-input {
+    width: 100%;
+    height: 48px;
+    padding: 0 42px 0 14px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.28);
+    color: #fff;
+    font: inherit;
+}
+
+.vstatus-input--ltr {
+    direction: ltr;
+    text-align: left;
+    padding: 0 14px 0 42px;
+}
+
+.vstatus-field__box:has(.vstatus-input--ltr) .vstatus-field__icon {
+    right: auto;
+    left: 14px;
+}
+
+.vstatus-input:focus {
+    outline: none;
+    border-color: rgba(223, 10, 42, 0.65);
+}
+
+.vstatus-error {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #ff8a8a;
+}
+
+.vstatus-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 48px;
+    margin-top: 4px;
+    border: 0;
+    border-radius: 12px;
+    background: #df0a2a;
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.vstatus-btn:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.vstatus-btn__spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: vstatus-spin 0.7s linear infinite;
+}
+
+@keyframes vstatus-spin {
+    to { transform: rotate(360deg); }
+}
+
+.vstatus-empty {
+    margin-top: 16px;
+    padding: 28px 18px;
+    text-align: center;
+}
+
+.vstatus-empty i {
+    font-size: 2rem;
+    opacity: 0.55;
+}
+
+.vstatus-empty h2 {
+    margin: 12px 0 8px;
+    font-size: 1.05rem;
+}
+
+.vstatus-empty p {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.7;
+    line-height: 1.8;
+}
+
+.vstatus-list {
+    margin-top: 16px;
+    display: grid;
+    gap: 12px;
+}
+
+.vstatus-item__head {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    padding: 16px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: right;
+    cursor: pointer;
+}
+
+.vstatus-item__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.vstatus-item__summary strong {
+    font-size: 0.95rem;
+}
+
+.vstatus-item__summary span {
+    font-size: 12px;
+    opacity: 0.75;
+}
+
+.vstatus-item__meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.vstatus-item__meta i {
+    margin-right: auto;
+}
+
+.vstatus-specs {
+    list-style: none;
+    margin: 0;
+    padding: 0 16px 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 12px;
+}
+
+.vstatus-specs li {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.vstatus-specs li.is-block {
+    grid-column: 1 / -1;
+}
+
+.vstatus-specs span {
+    font-size: 11px;
+    opacity: 0.62;
+}
+
+.vstatus-specs strong {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.vstatus-specs .ltr {
+    direction: ltr;
+    unicode-bidi: isolate;
+    text-align: left;
+}
+
+.vstatus-desc {
+    white-space: pre-wrap;
+}
+
+@media (max-width: 480px) {
+    .vstatus-specs {
+        grid-template-columns: 1fr;
+    }
+}

@@ -11,6 +11,30 @@ namespace NamiCustomers.Application.Services.Book.Implementation
             return await sevenSoftService.GetBooking(vinNumber);
         }
 
+        public async Task<ResultDto<BookingResponse[]>> GetBookingByCodeAndChassisAsync(string bookingCode, string chassisNumber)
+        {
+            if (string.IsNullOrWhiteSpace(bookingCode))
+            {
+                return ResultDto.Failure<BookingResponse[]>("شماره نوبت‌دهی الزامی است.");
+            }
+
+            if (string.IsNullOrWhiteSpace(chassisNumber))
+            {
+                return ResultDto.Failure<BookingResponse[]>("شماره شاسی الزامی است.");
+            }
+
+            var result = await sevenSoftService.GetBooking(chassisNumber.Trim(), bookingCode.Trim());
+            if (!result.Succeeded || result.Data is null)
+            {
+                return ResultDto.Failure<BookingResponse[]>(
+                    string.IsNullOrWhiteSpace(result.Message)
+                        ? "نوبتی با این مشخصات یافت نشد."
+                        : result.Message);
+            }
+
+            return ResultDto.Success(new[] { result.Data });
+        }
+
         public async Task<(bool, string)> CheckExistsReserveVinNumberAsync(string VinNumber)
         {
             return await sevenSoftService.CheckExistsReserveVinNumber(VinNumber);

@@ -1,0 +1,301 @@
+@page "/Vehicle/VehicleStatus"
+@page "/vehicle/status"
+@using System.ComponentModel.DataAnnotations
+@using System.Net
+@using NamiCustomers.Web.Services.Booking.Contract
+@using NamiCustomers.Web.Services.Booking.Dto
+@using NamiCustomers.Web.Utilities
+
+@inject IBookingService bookingService
+@inject NavigationManager Navigation
+@inject ISnackbar snackbar
+
+<PageTitle>وضعیت خودروها | نامی خودرو</PageTitle>
+
+<div class="vstatus-page">
+    <div class="container">
+        <div class="vstatus-top">
+            <span class="vstatus-top__spacer" aria-hidden="true"></span>
+            <h1 class="vstatus-title">وضعیت خودروها</h1>
+            <NavLink class="vstatus-back" href="/" title="بازگشت">
+                <i class="bi bi-arrow-right"></i>
+            </NavLink>
+        </div>
+
+        <section class="vstatus-card">
+            <p class="vstatus-card__hint">شماره نوبت‌دهی و شماره شاسی را وارد کنید</p>
+
+            <EditForm Model="@Model" OnValidSubmit="SearchAsync">
+                <DataAnnotationsValidator />
+
+                <div class="vstatus-field">
+                    <label class="vstatus-label" for="bookingCode">شماره نوبت‌دهی</label>
+                    <div class="vstatus-field__box">
+                        <i class="bi bi-ticket-perforated vstatus-field__icon" aria-hidden="true"></i>
+                        <InputText id="bookingCode"
+                                   @bind-Value="Model.BookingCode"
+                                   class="vstatus-input vstatus-input--ltr"
+                                   maxlength="40"
+                                   placeholder="مثال: 1-1001-11" />
+                    </div>
+                    <ValidationMessage For="@(() => Model.BookingCode)" class="vstatus-error" />
+                </div>
+
+                <div class="vstatus-field">
+                    <label class="vstatus-label" for="chassisNumber">شماره شاسی</label>
+                    <div class="vstatus-field__box">
+                        <i class="bi bi-upc-scan vstatus-field__icon" aria-hidden="true"></i>
+                        <InputText id="chassisNumber"
+                                   @bind-Value="Model.ChassisNumber"
+                                   class="vstatus-input vstatus-input--ltr"
+                                   maxlength="32"
+                                   placeholder="کامل یا ۸ رقم انتهایی" />
+                    </div>
+                    <ValidationMessage For="@(() => Model.ChassisNumber)" class="vstatus-error" />
+                </div>
+
+                <button type="submit" class="vstatus-btn" disabled="@isSearching">
+                    @if (isSearching)
+                    {
+                        <span class="vstatus-btn__spinner" aria-hidden="true"></span>
+                        <span>در حال جستجو...</span>
+                    }
+                    else
+                    {
+                        <i class="bi bi-search"></i>
+                        <span>جستجو</span>
+                    }
+                </button>
+            </EditForm>
+        </section>
+
+        @if (searched)
+        {
+            @if (Results.Count == 0)
+            {
+                <section class="vstatus-empty">
+                    <i class="bi bi-calendar2-x"></i>
+                    <h2>نتیجه‌ای یافت نشد</h2>
+                    <p>@(string.IsNullOrWhiteSpace(errorMessage) ? "نوبتی با این مشخصات ثبت نشده است." : errorMessage)</p>
+                </section>
+            }
+            else
+            {
+                <div class="vstatus-list">
+                    @foreach (var item in Results)
+                    {
+                        var id = item.UniqueId ?? item.BookingCode ?? Guid.NewGuid().ToString();
+                        var isOpen = string.Equals(selectedId, id, StringComparison.Ordinal);
+                        <article class="vstatus-item @(isOpen ? "is-open" : "")" @key="id">
+                            <button type="button" class="vstatus-item__head" @onclick="() => ToggleDetail(id)">
+                                <div class="vstatus-item__summary">
+                                    <strong dir="ltr">@Display(item.BookingCode)</strong>
+                                    <span>@Display(item.BookingStatus)</span>
+                                </div>
+                                <div class="vstatus-item__meta">
+                                    <span>@ToPersian(Display(item.StrBookingDate))</span>
+                                    <span>@ToPersian(Display(item.StrBookingTime))</span>
+                                    <i class="bi @(isOpen ? "bi-chevron-up" : "bi-chevron-down")" aria-hidden="true"></i>
+                                </div>
+                            </button>
+
+                            @if (isOpen)
+                            {
+                                <ul class="vstatus-specs">
+                                    <li>
+                                        <span>نام کاربر</span>
+                                        <strong>@Display(SubscriberName(item))</strong>
+                                    </li>
+                                    <li>
+                                        <span>موبایل</span>
+                                        <strong class="ltr" dir="ltr">@ToPersian(Display(Mobile(item)))</strong>
+                                    </li>
+                                    <li>
+                                        <span>مدل خودرو</span>
+                                        <strong>@Display(VehicleModel(item))</strong>
+                                    </li>
+                                    <li>
+                                        <span>شماره شاسی</span>
+                                        <strong class="ltr" dir="ltr">@Display(item.BookingVinNumber)</strong>
+                                    </li>
+                                    @if (!string.IsNullOrWhiteSpace(item.BookingChassisPlate))
+                                    {
+                                        <li>
+                                            <span>پلاک</span>
+                                            <strong>@item.BookingChassisPlate</strong>
+                                        </li>
+                                    }
+                                    <li>
+                                        <span>وضعیت</span>
+                                        <strong>@Display(item.BookingStatus)</strong>
+                                    </li>
+                                    <li>
+                                        <span>تاریخ رزرو</span>
+                                        <strong>@ToPersian(Display(item.StrBookingDate))</strong>
+                                    </li>
+                                    <li>
+                                        <span>ساعت</span>
+                                        <strong>@ToPersian(Display(item.StrBookingTime))</strong>
+                                    </li>
+                                    @if (!string.IsNullOrWhiteSpace(item.BookingServerGroupLocalizedName))
+                                    {
+                                        <li>
+                                            <span>گروه سرویس</span>
+                                            <strong>@item.BookingServerGroupLocalizedName</strong>
+                                        </li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(item.DealerName))
+                                    {
+                                        <li>
+                                            <span>نمایندگی</span>
+                                            <strong>@item.DealerName</strong>
+                                        </li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(item.BranchName))
+                                    {
+                                        <li>
+                                            <span>شعبه</span>
+                                            <strong>@item.BranchName</strong>
+                                        </li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(Adviser(item)))
+                                    {
+                                        <li>
+                                            <span>مشاور تعمیر</span>
+                                            <strong>@Adviser(item)</strong>
+                                        </li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(Address(item)))
+                                    {
+                                        <li class="is-block">
+                                            <span>آدرس</span>
+                                            <strong>@Address(item)</strong>
+                                        </li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(item.BranchShopPhoneNumber))
+                                    {
+                                        <li>
+                                            <span>تلفن شعبه</span>
+                                            <strong class="ltr" dir="ltr">@ToPersian(item.BranchShopPhoneNumber)</strong>
+                                        </li>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(Description(item)))
+                                    {
+                                        <li class="is-block">
+                                            <span>توضیحات</span>
+                                            <strong class="vstatus-desc">@Description(item)</strong>
+                                        </li>
+                                    }
+                                    @if (item.BookingCustomerStatement is { Length: > 0 })
+                                    {
+                                        <li class="is-block">
+                                            <span>اظهارات مشتری</span>
+                                            <strong>
+                                                @string.Join(" / ", item.BookingCustomerStatement
+                                                    .Select(s => FirstNonEmpty(s.BookingCustomerStatementDescription, s.CustomerStatementsTypeLocalizedName))
+                                                    .Where(s => !string.IsNullOrWhiteSpace(s)))
+                                            </strong>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </article>
+                    }
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    private readonly SearchModel Model = new();
+    private readonly List<BookingDto> Results = new();
+    private bool isSearching;
+    private bool searched;
+    private string? errorMessage;
+    private string? selectedId;
+
+    private async Task SearchAsync()
+    {
+        isSearching = true;
+        searched = false;
+        errorMessage = null;
+        Results.Clear();
+        selectedId = null;
+
+        var bookingCode = PersianDigits.ToEnglish(Model.BookingCode?.Trim() ?? string.Empty);
+        var chassis = PersianDigits.ToEnglish(Model.ChassisNumber?.Trim() ?? string.Empty);
+
+        var result = await bookingService.GetBookingByCodeAndChassisAsync(bookingCode, chassis);
+
+        if (result.StatusCode == (int)HttpStatusCode.Unauthorized)
+        {
+            Navigation.NavigateTo("/login");
+            return;
+        }
+
+        searched = true;
+
+        if (result.Succeeded && result.Data is { Length: > 0 })
+        {
+            Results.AddRange(result.Data.Where(x => x is not null && !string.IsNullOrWhiteSpace(x.UniqueId)));
+            if (Results.Count == 1)
+            {
+                selectedId = Results[0].UniqueId ?? Results[0].BookingCode;
+            }
+        }
+        else
+        {
+            errorMessage = result.Message;
+            if (!string.IsNullOrWhiteSpace(result.Message))
+            {
+                snackbar.Add(result.Message, Severity.Warning);
+            }
+        }
+
+        isSearching = false;
+    }
+
+    private void ToggleDetail(string id)
+    {
+        selectedId = string.Equals(selectedId, id, StringComparison.Ordinal) ? null : id;
+    }
+
+    private static string SubscriberName(BookingDto item)
+        => FirstNonEmpty(
+            item.BookingSubscriberName,
+            string.Join(' ', new[] { item.BookingFirstName, item.BookingLastName }.Where(s => !string.IsNullOrWhiteSpace(s))));
+
+    private static string Mobile(BookingDto item)
+        => item.BookingMobile?.ToString() ?? string.Empty;
+
+    private static string VehicleModel(BookingDto item)
+        => FirstNonEmpty(item.AbreviatedName, item.BookingVehicleTypeName, item.BookingVehicleModelName, item.BookingVehicleModel);
+
+    private static string Adviser(BookingDto item)
+        => FirstNonEmpty(item.BookingRepairAdviser, item.PersonnelReception);
+
+    private static string Address(BookingDto item)
+        => FirstNonEmpty(item.BookingDealerAddress, item.BranchShopAddress, item.BookingListFullAddress, item.Location);
+
+    private static string Description(BookingDto item)
+        => item.BookingDescription?.ToString()?.Trim() ?? string.Empty;
+
+    private static string Display(string? value)
+        => string.IsNullOrWhiteSpace(value) ? "—" : value;
+
+    private static string ToPersian(string? value)
+        => string.IsNullOrWhiteSpace(value) || value == "—" ? (value ?? "—") : PersianDigits.ToPersian(value);
+
+    private static string FirstNonEmpty(params string?[] values)
+        => values.FirstOrDefault(v => !string.IsNullOrWhiteSpace(v)) ?? string.Empty;
+
+    private sealed class SearchModel
+    {
+        [Required(ErrorMessage = "شماره نوبت‌دهی الزامی است.")]
+        public string? BookingCode { get; set; }
+
+        [Required(ErrorMessage = "شماره شاسی الزامی است.")]
+        public string? ChassisNumber { get; set; }
+    }
+}

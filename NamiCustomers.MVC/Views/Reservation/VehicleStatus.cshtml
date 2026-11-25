@@ -1,0 +1,134 @@
+@model NamiCustomers.MVC.Models.VehicleStatusSearchViewModel
+@{
+    ViewData["Title"] = "وضعیت خودروها";
+}
+
+<br />
+<div class="container direction-rtl">
+    <div class="card mb-3">
+        <div class="card-body p-2">
+            <div class="d-flex align-items-center justify-content-between">
+                <small class="ms-1">وضعیت خودروها</small>
+                <a title="بازگشت" href="/">
+                    <i class="bi bi-arrow-left-short" style="font-size:2rem !important;line-height:1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <form asp-action="VehicleStatus" asp-controller="Reservation" method="post">
+                @Html.AntiForgeryToken()
+                <div class="mb-3">
+                    <label asp-for="BookingCode" class="form-label"></label>
+                    <input asp-for="BookingCode" class="form-control" dir="ltr" placeholder="مثال: 1-1001-11" />
+                    <span asp-validation-for="BookingCode" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="ChassisNumber" class="form-label"></label>
+                    <input asp-for="ChassisNumber" class="form-control" dir="ltr" placeholder="کامل یا ۸ رقم انتهایی" />
+                    <span asp-validation-for="ChassisNumber" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">جستجو</button>
+            </form>
+        </div>
+    </div>
+
+    @if (Model.Searched)
+    {
+        if (Model.Results is null || Model.Results.Length == 0)
+        {
+            <div class="card">
+                <div class="card-body text-center">
+                    <p class="mb-0">@(string.IsNullOrWhiteSpace(Model.ErrorMessage) ? "نوبتی با این مشخصات یافت نشد." : Model.ErrorMessage)</p>
+                </div>
+            </div>
+        }
+        else
+        {
+            foreach (var item in Model.Results)
+            {
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table mb-0">
+                                <thead class="thead-light">
+                                    <tr style="text-align:center">
+                                        <th colspan="2">
+                                            نوبت @item.BookingCode
+                                            — @item.StrBookingDate @item.StrBookingTime
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>وضعیت</th>
+                                        <td>@item.BookingStatus</td>
+                                    </tr>
+                                    <tr>
+                                        <th>نام کاربر</th>
+                                        <td>@(string.IsNullOrWhiteSpace(item.BookingSubscriberName) ? $"{item.BookingFirstName} {item.BookingLastName}" : item.BookingSubscriberName)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>موبایل</th>
+                                        <td dir="ltr">@item.BookingMobile</td>
+                                    </tr>
+                                    <tr>
+                                        <th>مدل خودرو</th>
+                                        <td>@(string.IsNullOrWhiteSpace(item.AbreviatedName) ? item.BookingVehicleModel : item.AbreviatedName)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>شماره شاسی</th>
+                                        <td dir="ltr">@item.BookingVinNumber</td>
+                                    </tr>
+                                    <tr>
+                                        <th>پلاک</th>
+                                        <td>@item.BookingChassisPlate</td>
+                                    </tr>
+                                    <tr>
+                                        <th>گروه سرویس</th>
+                                        <td>@item.BookingServerGroupLocalizedName</td>
+                                    </tr>
+                                    <tr>
+                                        <th>نمایندگی / شعبه</th>
+                                        <td>@item.DealerName — @item.BranchName</td>
+                                    </tr>
+                                    <tr>
+                                        <th>مشاور تعمیر</th>
+                                        <td>@(string.IsNullOrWhiteSpace(item.BookingRepairAdviser) ? item.PersonnelReception : item.BookingRepairAdviser)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>آدرس</th>
+                                        <td>@(string.IsNullOrWhiteSpace(item.BookingDealerAddress) ? item.BranchShopAddress : item.BookingDealerAddress)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>تلفن شعبه</th>
+                                        <td dir="ltr">@item.BranchShopPhoneNumber</td>
+                                    </tr>
+                                    <tr>
+                                        <th>توضیحات</th>
+                                        <td style="white-space:pre-wrap">@item.BookingDescription</td>
+                                    </tr>
+                                    @if (item.BookingCustomerStatement is { Length: > 0 })
+                                    {
+                                        <tr>
+                                            <th>اظهارات مشتری</th>
+                                            <td>
+                                                @string.Join(" / ", item.BookingCustomerStatement
+                                                    .Select(s => string.IsNullOrWhiteSpace(s.BookingCustomerStatementDescription)
+                                                        ? s.CustomerStatementsTypeLocalizedName
+                                                        : s.BookingCustomerStatementDescription)
+                                                    .Where(s => !string.IsNullOrWhiteSpace(s)))
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    }
+</div>
